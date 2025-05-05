@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "mamafit",
+    "name": "Mama Fit",
     "slug": "mamafit",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.mamafit.app"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +38,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "643673d8-d154-4513-9e28-c1404b809df9"
+      }
     }
   }
 }
