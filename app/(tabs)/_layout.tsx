@@ -1,0 +1,87 @@
+import Feather from '@expo/vector-icons/Feather'
+import { Tabs } from 'expo-router'
+import { View } from 'react-native'
+import { Text } from '~/components/ui/text'
+import { cn } from '~/lib/utils'
+
+const TabIcon = ({ focused, icon, title }: { focused: boolean; icon: React.ReactNode; title: string }) => {
+  return (
+    <View className='flex-1 mt-2 flex flex-col items-center'>
+      {icon}
+      <Text
+        className={cn(
+          'text-xs w-full text-center mt-1 font-roboto',
+          focused ? 'text-primary font-roboto-medium' : 'text-muted-foreground'
+        )}
+      >
+        {title}
+      </Text>
+    </View>
+  )
+}
+
+const navigationOptions = [
+  {
+    id: 1,
+    name: 'index',
+    title: 'Trang chủ',
+    icon: (focused: boolean) => <Feather name='home' size={22} color={focused ? 'hsl(221.2 83.2% 53.3%)' : 'gray'} />
+  },
+  {
+    id: 2,
+    name: 'calendar',
+    title: 'Lịch',
+    icon: (focused: boolean) => (
+      <Feather name='calendar' size={22} color={focused ? 'hsl(221.2 83.2% 53.3%)' : 'gray'} />
+    )
+  },
+  {
+    id: 3,
+    name: 'canvases',
+    title: 'Canvas',
+    icon: (focused: boolean) => <Feather name='layout' size={22} color={focused ? 'hsl(221.2 83.2% 53.3%)' : 'gray'} />
+  },
+  {
+    id: 4,
+    name: 'notifications',
+    title: 'Thông báo',
+    icon: (focused: boolean) => <Feather name='bell' size={22} color={focused ? 'hsl(221.2 83.2% 53.3%)' : 'gray'} />
+  },
+  {
+    id: 5,
+    name: 'profile',
+    title: 'Tôi',
+    icon: (focused: boolean) => <Feather name='user' size={22} color={focused ? 'hsl(221.2 83.2% 53.3%)' : 'gray'} />
+  }
+]
+
+export default function TabsLayout() {
+  return (
+    <Tabs
+      initialRouteName='index'
+      screenOptions={{
+        headerShown: false,
+        animation: 'shift',
+        tabBarShowLabel: false,
+        headerPressColor: 'transparent',
+        tabBarStyle: {
+          backgroundColor: 'white',
+          position: 'absolute',
+          borderTopWidth: 1,
+          minHeight: 70
+        }
+      }}
+    >
+      {navigationOptions.map((option) => (
+        <Tabs.Screen
+          key={option.id}
+          name={option.name}
+          options={{
+            title: option.title,
+            tabBarIcon: ({ focused }) => <TabIcon focused={focused} icon={option.icon(focused)} title={option.title} />
+          }}
+        />
+      ))}
+    </Tabs>
+  )
+}
