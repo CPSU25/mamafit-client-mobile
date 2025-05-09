@@ -2,6 +2,7 @@ import Feather from '@expo/vector-icons/Feather'
 import { Tabs } from 'expo-router'
 import { View } from 'react-native'
 import { Text } from '~/components/ui/text'
+import { useColorScheme } from '~/hooks/use-color-scheme'
 import { cn } from '~/lib/utils'
 
 const TabIcon = ({ focused, icon, title }: { focused: boolean; icon: React.ReactNode; title: string }) => {
@@ -56,6 +57,8 @@ const navigationOptions = [
 ]
 
 export default function TabsLayout() {
+  const { isDarkColorScheme } = useColorScheme()
+
   return (
     <Tabs
       initialRouteName='index'
@@ -65,7 +68,7 @@ export default function TabsLayout() {
         tabBarShowLabel: false,
         headerPressColor: 'transparent',
         tabBarStyle: {
-          backgroundColor: 'white',
+          backgroundColor: isDarkColorScheme ? 'hsl(222.2 84% 4.9%)' : 'white',
           position: 'absolute',
           borderTopWidth: 1,
           minHeight: 70
