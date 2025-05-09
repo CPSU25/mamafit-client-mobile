@@ -1,4 +1,5 @@
 import QueryProvider from './query.provider'
+import NotificationProvider from './notifications.provider'
 import { useEffect } from 'react'
 import { AppState, AppStateStatus, Platform } from 'react-native'
 import { focusManager } from '@tanstack/react-query'
@@ -20,7 +21,9 @@ export default function AppProvider({ children }: { children: React.ReactNode })
 
   return (
     <Provider store={store}>
-      <QueryProvider>{children}</QueryProvider>
+      <NotificationProvider>
+        <QueryProvider>{children}</QueryProvider>
+      </NotificationProvider>
     </Provider>
   )
 }
