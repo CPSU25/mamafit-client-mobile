@@ -37,7 +37,7 @@ SplashScreen.preventAutoHideAsync()
 export default function RootLayout() {
   const hasMounted = React.useRef(false)
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false)
-  const { isDarkColorScheme } = useColorScheme()
+  const { colorScheme, isDarkColorScheme } = useColorScheme()
   const [fontsLoaded] = useFonts({
     'Roboto-Light': require('~/assets/fonts/Roboto-Light.ttf'),
     'Roboto-Regular': require('~/assets/fonts/Roboto-Regular.ttf'),
@@ -74,9 +74,15 @@ export default function RootLayout() {
     <AppProvider>
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-        <Stack screenOptions={{ animation: 'slide_from_right' }}>
-          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-          <Stack.Screen name='product/[id]' options={{ title: 'Product Detail', headerShown: false }} />
+        <Stack>
+          <Stack.Screen name='(tabs)' options={{ headerShown: false, animation: 'slide_from_bottom' }} />
+          <Stack.Screen
+            name='product/[id]'
+            options={{ title: 'Product Detail', headerShown: false, animation: 'slide_from_bottom' }}
+          />
+          <Stack.Screen name='search' options={{ title: 'Search', headerShown: false, animation: 'none' }} />
+          <Stack.Screen name='chat' options={{ title: 'Chat', headerShown: false, animation: 'slide_from_bottom' }} />
+          <Stack.Screen name='cart' options={{ title: 'Cart', headerShown: false, animation: 'slide_from_bottom' }} />
         </Stack>
       </ThemeProvider>
     </AppProvider>

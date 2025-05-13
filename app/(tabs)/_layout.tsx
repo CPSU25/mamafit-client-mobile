@@ -68,7 +68,7 @@ export default function TabsLayout() {
         tabBarShowLabel: false,
         headerPressColor: 'transparent',
         tabBarStyle: {
-          backgroundColor: isDarkColorScheme ? 'hsl(222.2 84% 4.9%)' : 'white',
+          backgroundColor: isDarkColorScheme ? 'black' : 'white',
           position: 'absolute',
           borderTopWidth: 1,
           minHeight: 70
