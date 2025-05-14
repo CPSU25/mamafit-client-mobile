@@ -4,7 +4,7 @@
     "slug": "mamafit-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/mamafit.png",
+    "icon": "./assets/images/mamafit-app-icon.png",
     "scheme": "mamafit",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/mamafit.png",
+        "foregroundImage": "./assets/images/mamafit-app-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -30,7 +30,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/mamafit.png",
+          "image": "./assets/images/mamafit-splash-screen.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
