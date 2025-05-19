@@ -20,7 +20,7 @@ export default function SearchScreen() {
       <Wrapper className='px-3'>
         <View className='flex flex-row items-center gap-3'>
           <Pressable onPress={handleGoBack}>
-            <Feather name='arrow-left' size={24} color='hsl(221.2 83.2% 53.3%)' />
+            <Feather name='arrow-left' size={24} color='hsl(346.8 77.2% 49.8%)' />
           </Pressable>
           <Input
             placeholder='Tìm kiếm'
