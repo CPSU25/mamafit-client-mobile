@@ -10,14 +10,14 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView>
-      <Wrapper className='bg-blue-500'>
+      <Wrapper className='bg-primary'>
         <View className='flex flex-row items-center gap-4'>
           <Pressable
             onPress={() => router.push('/search?autoFocus=true')}
             className='flex flex-row flex-1 items-center h-12 border border-input rounded-xl px-3 bg-background'
           >
             <View className='flex flex-row items-center gap-2'>
-              <Feather name='search' size={18} color='hsl(221.2 83.2% 53.3%)' />
+              <Feather name='search' size={18} color='hsl(346.8 77.2% 49.8%)' />
               <Text className='font-roboto text-sm text-muted-foreground'>Tìm kiếm</Text>
             </View>
           </Pressable>
