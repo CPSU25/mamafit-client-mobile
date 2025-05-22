@@ -39,12 +39,12 @@ export default function RootLayout() {
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false)
   const { colorScheme, isDarkColorScheme } = useColorScheme()
   const [fontsLoaded] = useFonts({
-    'Roboto-Light': require('~/assets/fonts/Roboto-Light.ttf'),
-    'Roboto-Regular': require('~/assets/fonts/Roboto-Regular.ttf'),
-    'Roboto-Medium': require('~/assets/fonts/Roboto-Medium.ttf'),
-    'Roboto-SemiBold': require('~/assets/fonts/Roboto-SemiBold.ttf'),
-    'Roboto-Bold': require('~/assets/fonts/Roboto-Bold.ttf'),
-    'Roboto-ExtraBold': require('~/assets/fonts/Roboto-ExtraBold.ttf')
+    'Inter-Light': require('~/assets/fonts/Inter-Light.ttf'),
+    'Inter-Regular': require('~/assets/fonts/Inter-Regular.ttf'),
+    'Inter-Medium': require('~/assets/fonts/Inter-Medium.ttf'),
+    'Inter-SemiBold': require('~/assets/fonts/Inter-SemiBold.ttf'),
+    'Inter-Bold': require('~/assets/fonts/Inter-Bold.ttf'),
+    'Inter-ExtraBold': require('~/assets/fonts/Inter-ExtraBold.ttf')
   })
 
   useIsomorphicLayoutEffect(() => {
@@ -84,12 +84,8 @@ export default function RootLayout() {
           <Stack.Screen name='chat' options={{ title: 'Chat', headerShown: false, animation: 'slide_from_bottom' }} />
           <Stack.Screen name='cart' options={{ title: 'Cart', headerShown: false, animation: 'slide_from_bottom' }} />
           <Stack.Screen
-            name='(auth)/sign-in'
-            options={{ title: 'Sign In', headerShown: false, animation: 'slide_from_bottom' }}
-          />
-          <Stack.Screen
-            name='(auth)/sign-up'
-            options={{ title: 'Sign Up', headerShown: false, animation: 'slide_from_bottom' }}
+            name='auth'
+            options={{ title: 'Auth Screen', headerShown: false, animation: 'slide_from_bottom' }}
           />
         </Stack>
       </ThemeProvider>
