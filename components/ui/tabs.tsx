@@ -32,7 +32,7 @@ function TabsTrigger({
   return (
     <TextClassContext.Provider
       value={cn(
-        'text-sm native:text-base font-roboto-medium text-muted-foreground web:transition-all',
+        'text-sm native:text-base font-inter-medium text-muted-foreground web:transition-all',
         value === props.value && 'text-foreground'
       )}
     >

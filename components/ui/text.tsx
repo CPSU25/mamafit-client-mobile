@@ -10,7 +10,11 @@ const Text = React.forwardRef<TextRef, SlottableTextProps>(({ className, asChild
   const textClass = React.useContext(TextClassContext)
   const Component = asChild ? Slot.Text : RNText
   return (
-    <Component className={cn('text-base text-foreground web:select-text', textClass, className)} ref={ref} {...props} />
+    <Component
+      className={cn('text-sm font-inter text-foreground web:select-text', textClass, className)}
+      ref={ref}
+      {...props}
+    />
   )
 })
 Text.displayName = 'Text'

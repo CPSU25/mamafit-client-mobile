@@ -32,15 +32,15 @@ export default function ProfileScreen() {
           </Avatar>
           <View className='flex flex-row items-center gap-2'>
             <Button className='w-32' variant='outline' onPress={() => router.push('/auth?focus=sign-in')} size='sm'>
-              <Text className='font-roboto'>Sign In</Text>
+              <Text className='font-inter'>Sign In</Text>
             </Button>
             <Button className='w-32' variant='default' onPress={() => router.push('/auth?focus=register')} size='sm'>
-              <Text className='font-roboto'>Register</Text>
+              <Text className='font-inter'>Register</Text>
             </Button>
           </View>
         </View>
         <View className='flex-row items-center justify-between'>
-          <Label nativeID='dark-mode' onPress={toggleColorScheme} className='font-roboto'>
+          <Label nativeID='dark-mode' onPress={toggleColorScheme} className='font-inter'>
             Chế độ tối
           </Label>
           <Switch checked={checked} onCheckedChange={toggleColorScheme} nativeID='dark-mode' />

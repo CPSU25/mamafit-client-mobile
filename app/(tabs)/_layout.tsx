@@ -12,8 +12,8 @@ const TabIcon = ({ focused, icon, title }: { focused: boolean; icon: React.React
       {icon}
       <Text
         className={cn(
-          'text-xs w-full text-center mt-1 font-roboto',
-          focused ? 'text-primary font-roboto-medium' : 'text-muted-foreground'
+          'text-xs w-full text-center mt-1 font-inter',
+          focused ? 'text-primary font-inter-medium' : 'text-muted-foreground'
         )}
       >
         {title}
