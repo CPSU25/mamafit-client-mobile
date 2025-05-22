@@ -10,6 +10,7 @@ import { StatusBar } from 'expo-status-bar'
 import { Platform } from 'react-native'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { NAV_THEME } from '~/lib/constants'
+import { Feather } from '@expo/vector-icons'
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -39,6 +40,7 @@ export default function RootLayout() {
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false)
   const { colorScheme, isDarkColorScheme } = useColorScheme()
   const [fontsLoaded] = useFonts({
+    ...Feather.font,
     'Inter-Light': require('~/assets/fonts/Inter-Light.ttf'),
     'Inter-Regular': require('~/assets/fonts/Inter-Regular.ttf'),
     'Inter-Medium': require('~/assets/fonts/Inter-Medium.ttf'),
