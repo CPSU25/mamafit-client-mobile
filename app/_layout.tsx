@@ -84,12 +84,8 @@ export default function RootLayout() {
           <Stack.Screen name='chat' options={{ title: 'Chat', headerShown: false, animation: 'slide_from_bottom' }} />
           <Stack.Screen name='cart' options={{ title: 'Cart', headerShown: false, animation: 'slide_from_bottom' }} />
           <Stack.Screen
-            name='(auth)/sign-in'
-            options={{ title: 'Sign In', headerShown: false, animation: 'slide_from_bottom' }}
-          />
-          <Stack.Screen
-            name='(auth)/sign-up'
-            options={{ title: 'Sign Up', headerShown: false, animation: 'slide_from_bottom' }}
+            name='auth'
+            options={{ title: 'Auth Screen', headerShown: false, animation: 'slide_from_bottom' }}
           />
         </Stack>
       </ThemeProvider>

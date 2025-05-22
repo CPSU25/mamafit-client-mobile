@@ -31,11 +31,11 @@ export default function ProfileScreen() {
             </AvatarFallback>
           </Avatar>
           <View className='flex flex-row items-center gap-2'>
-            <Button className='w-32' variant='outline' onPress={() => router.push('/(auth)/sign-in')} size='sm'>
-              <Text className='font-roboto'>Đăng nhập</Text>
+            <Button className='w-32' variant='outline' onPress={() => router.push('/auth?focus=sign-in')} size='sm'>
+              <Text className='font-roboto'>Sign In</Text>
             </Button>
-            <Button className='w-32' variant='default' onPress={() => router.push('/(auth)/sign-up')} size='sm'>
-              <Text className='font-roboto'>Đăng ký</Text>
+            <Button className='w-32' variant='default' onPress={() => router.push('/auth?focus=register')} size='sm'>
+              <Text className='font-roboto'>Register</Text>
             </Button>
           </View>
         </View>
