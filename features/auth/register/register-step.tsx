@@ -1,15 +1,22 @@
 import { Feather } from '@expo/vector-icons'
-import { useState } from 'react'
-import { Controller, FieldName } from 'react-hook-form'
-import { View } from 'react-native'
+import { useEffect } from 'react'
+import { Controller, FieldName, SubmitHandler } from 'react-hook-form'
+import { AppState, View } from 'react-native'
+import { OtpInput } from 'react-native-otp-entry'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
+import { useCountDown } from '~/hooks/use-count-down'
 import { PRIMARY_COLOR } from '~/lib/constants'
 import { useRegister } from './use-register'
 import { RegisterFormSchema } from './validations'
 
-const steps = [
+interface RegisterStepProps {
+  currentStep: number
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>
+}
+
+export const steps = [
   { id: 1, name: 'Email', field: ['email'] },
   {
     id: 2,
@@ -19,15 +26,16 @@ const steps = [
   {
     id: 3,
     name: 'Password',
-    field: ['password', 'confirmPassword']
+    field: ['password']
   }
 ]
 
-export default function RegisterStep() {
-  const [currentStep, setCurrentStep] = useState(1)
+export default function RegisterStep({ currentStep, setCurrentStep }: RegisterStepProps) {
   const {
-    methods: { control, handleSubmit, reset, trigger }
+    methods: { control, handleSubmit, trigger, watch }
   } = useRegister()
+  const { timeLeft, isReady, start, reset: resetCountdown } = useCountDown({ seconds: 30, autoStart: false })
+  const email = watch('email')
 
   const next = async () => {
     const fields = steps[currentStep - 1].field
@@ -44,23 +52,125 @@ export default function RegisterStep() {
   const prev = () => {
     if (currentStep > 1) {
       setCurrentStep((prev) => prev - 1)
+      if (currentStep === 2) {
+        resetCountdown()
+      }
     }
+  }
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active' && currentStep === 2) {
+        resetCountdown()
+        start()
+      }
+    })
+
+    return () => {
+      subscription.remove()
+    }
+  }, [currentStep, resetCountdown, start])
+
+  useEffect(() => {
+    if (currentStep === 2) {
+      resetCountdown()
+      start()
+    } else {
+      resetCountdown()
+    }
+  }, [currentStep, resetCountdown, start])
+
+  useEffect(() => {
+    if (!email) {
+      setCurrentStep(1)
+    }
+  }, [email, setCurrentStep])
+
+  const onSubmit: SubmitHandler<RegisterFormSchema> = (data) => {
+    console.log(data)
   }
 
   switch (currentStep) {
     case 2:
       return (
-        <View>
-          <Button onPress={prev}>
-            <Text>Go back</Text>
+        <View className='flex-1 flex flex-col mt-6'>
+          <Text className='text-center mb-4'>We have just sent 6-digit code to {email}, enter it below:</Text>
+          <Controller
+            control={control}
+            name='code'
+            render={({ field }) => (
+              <OtpInput
+                numberOfDigits={6}
+                onTextChange={field.onChange}
+                onFilled={next}
+                focusColor={PRIMARY_COLOR.LIGHT}
+                autoFocus
+                hideStick
+                blurOnFilled
+                type='numeric'
+                secureTextEntry={false}
+                focusStickBlinkingDuration={500}
+                textInputProps={{
+                  accessibilityLabel: 'One-Time Password'
+                }}
+                textProps={{
+                  accessibilityRole: 'text',
+                  accessibilityLabel: 'OTP digit',
+                  allowFontScaling: false
+                }}
+                theme={{
+                  containerStyle: {
+                    paddingHorizontal: 40
+                  },
+                  pinCodeContainerStyle: {
+                    borderTopWidth: 0,
+                    borderLeftWidth: 0,
+                    borderRightWidth: 0,
+                    borderBottomWidth: 2,
+                    width: 36,
+                    borderBottomColor: PRIMARY_COLOR.LIGHT,
+                    borderRadius: 0
+                  },
+                  pinCodeTextStyle: {
+                    color: PRIMARY_COLOR.LIGHT,
+                    fontFamily: 'Inter-Bold',
+                    fontSize: 30
+                  }
+                }}
+              />
+            )}
+          />
+          <Text className='text-center mt-8' onPress={prev}>
+            Wrong email? <Text className='text-primary font-inter-semibold'>Send to different email</Text>
+          </Text>
+          <View className='flex-1' />
+          <Button onPress={start} disabled={!isReady} className='mb-6'>
+            <Text className='font-inter-medium'>{isReady ? 'Send again' : `Resend in (${timeLeft}s)`} </Text>
           </Button>
         </View>
       )
     case 3:
       return (
-        <View>
-          <Button onPress={prev}>
-            <Text>Go back</Text>
+        <View className='flex-1 flex flex-col gap-4 mt-6'>
+          <Controller
+            control={control}
+            name='password'
+            render={({ field: { onChange, value, ...field } }) => (
+              <Input
+                {...field}
+                value={value}
+                onChangeText={onChange}
+                placeholder='Enter your password'
+                StartIcon={<Feather name='lock' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                autoFocus
+                spellCheck={false}
+                secureTextEntry
+              />
+            )}
+          />
+          <View className='flex-1' />
+          <Button onPress={handleSubmit(onSubmit)} className='mb-6'>
+            <Text className='font-inter-medium'>Create account</Text>
           </Button>
         </View>
       )

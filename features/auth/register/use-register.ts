@@ -4,7 +4,12 @@ import { registerFormSchema, RegisterFormSchema } from './validations'
 
 export const useRegister = () => {
   const methods = useForm<RegisterFormSchema>({
-    resolver: zodResolver(registerFormSchema)
+    resolver: zodResolver(registerFormSchema),
+    defaultValues: {
+      email: '',
+      code: '',
+      password: ''
+    }
   })
 
   return {

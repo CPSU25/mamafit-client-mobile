@@ -3,7 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start --tunnel",
+    "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -55,6 +55,7 @@
     "react-hook-form": "^7.56.4",
     "react-native": "0.79.2",
     "react-native-gesture-handler": "~2.24.0",
+    "react-native-otp-entry": "^1.8.4",
     "react-native-reanimated": "^3.17.5",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.10.0",
