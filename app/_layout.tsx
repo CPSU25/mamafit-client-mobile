@@ -39,12 +39,12 @@ export default function RootLayout() {
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false)
   const { colorScheme, isDarkColorScheme } = useColorScheme()
   const [fontsLoaded] = useFonts({
-    'Roboto-Light': require('~/assets/fonts/Roboto-Light.ttf'),
-    'Roboto-Regular': require('~/assets/fonts/Roboto-Regular.ttf'),
-    'Roboto-Medium': require('~/assets/fonts/Roboto-Medium.ttf'),
-    'Roboto-SemiBold': require('~/assets/fonts/Roboto-SemiBold.ttf'),
-    'Roboto-Bold': require('~/assets/fonts/Roboto-Bold.ttf'),
-    'Roboto-ExtraBold': require('~/assets/fonts/Roboto-ExtraBold.ttf')
+    'Inter-Light': require('~/assets/fonts/Inter-Light.ttf'),
+    'Inter-Regular': require('~/assets/fonts/Inter-Regular.ttf'),
+    'Inter-Medium': require('~/assets/fonts/Inter-Medium.ttf'),
+    'Inter-SemiBold': require('~/assets/fonts/Inter-SemiBold.ttf'),
+    'Inter-Bold': require('~/assets/fonts/Inter-Bold.ttf'),
+    'Inter-ExtraBold': require('~/assets/fonts/Inter-ExtraBold.ttf')
   })
 
   useIsomorphicLayoutEffect(() => {

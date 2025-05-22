@@ -8,12 +8,12 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'roboto-light': ['Roboto-Light', 'sans-serif'],
-        roboto: ['Roboto-Regular', 'sans-serif'],
-        'roboto-medium': ['Roboto-Medium', 'sans-serif'],
-        'roboto-bold': ['Roboto-Bold', 'sans-serif'],
-        'roboto-semibold': ['Roboto-SemiBold', 'sans-serif'],
-        'roboto-extrabold': ['Roboto-ExtraBold', 'sans-serif']
+        'inter-light': ['Inter-Light', 'sans-serif'],
+        inter: ['Inter-Regular', 'sans-serif'],
+        'inter-medium': ['Inter-Medium', 'sans-serif'],
+        'inter-bold': ['Inter-Bold', 'sans-serif'],
+        'inter-semibold': ['Inter-SemiBold', 'sans-serif'],
+        'inter-extrabold': ['Inter-ExtraBold', 'sans-serif']
       },
       colors: {
         border: 'hsl(var(--border))',
