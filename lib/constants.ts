@@ -16,3 +16,8 @@ export const NAV_THEME = {
     text: 'hsl(0 0% 98%)' // foreground
   }
 }
+
+export const PRIMARY_COLOR = {
+  LIGHT: 'hsl(262.1 83.3% 57.8%)',
+  DARK: 'hsl(263.4 70% 50.4%)'
+}

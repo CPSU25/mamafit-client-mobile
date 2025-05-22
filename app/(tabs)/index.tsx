@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router'
 import { Pressable, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Text } from '~/components/ui/text'
+import { PRIMARY_COLOR } from '~/lib/constants'
 
 export default function HomeScreen() {
   const router = useRouter()
@@ -17,7 +18,7 @@ export default function HomeScreen() {
             className='flex flex-row flex-1 items-center h-12 border border-input rounded-xl px-3 bg-background'
           >
             <View className='flex flex-row items-center gap-2'>
-              <Feather name='search' size={18} color='hsl(346.8 77.2% 49.8%)' />
+              <Feather name='search' size={18} color={PRIMARY_COLOR.LIGHT} />
               <Text className='font-roboto text-sm text-muted-foreground'>Tìm kiếm</Text>
             </View>
           </Pressable>

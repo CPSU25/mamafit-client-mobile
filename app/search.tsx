@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Pressable, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Input } from '~/components/ui/input'
+import { PRIMARY_COLOR } from '~/lib/constants'
 
 export default function SearchScreen() {
   const router = useRouter()
@@ -20,7 +21,7 @@ export default function SearchScreen() {
       <Wrapper className='px-3'>
         <View className='flex flex-row items-center gap-3'>
           <Pressable onPress={handleGoBack}>
-            <Feather name='arrow-left' size={24} color='hsl(346.8 77.2% 49.8%)' />
+            <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
           </Pressable>
           <Input
             placeholder='Tìm kiếm'
