@@ -1,3 +1,4 @@
+import RegisterStep from '~/features/auth/register/register-step'
 import SignInForm from '~/features/auth/sign-in/sign-in-form'
 import { useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -54,7 +55,9 @@ export default function AuthScreen() {
           <TabsContent value='sign-in' className='flex-1 flex'>
             <SignInForm />
           </TabsContent>
-          <TabsContent value='register' className='flex-1'></TabsContent>
+          <TabsContent value='register' className='flex-1'>
+            <RegisterStep />
+          </TabsContent>
         </Tabs>
       </View>
     </View>
