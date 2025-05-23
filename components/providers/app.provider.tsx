@@ -5,6 +5,7 @@ import { AppState, AppStateStatus, Platform } from 'react-native'
 import { focusManager } from '@tanstack/react-query'
 import { Provider } from 'react-redux'
 import { store } from '~/lib/redux-toolkit/store'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 const onAppStateChange = (status: AppStateStatus) => {
   if (Platform.OS !== 'web') {
@@ -20,10 +21,12 @@ export default function AppProvider({ children }: { children: React.ReactNode })
   }, [])
 
   return (
-    <Provider store={store}>
-      <NotificationProvider>
-        <QueryProvider>{children}</QueryProvider>
-      </NotificationProvider>
-    </Provider>
+    <GestureHandlerRootView>
+      <Provider store={store}>
+        <NotificationProvider>
+          <QueryProvider>{children}</QueryProvider>
+        </NotificationProvider>
+      </Provider>
+    </GestureHandlerRootView>
   )
 }

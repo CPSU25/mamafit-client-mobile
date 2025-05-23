@@ -1,10 +1,18 @@
 import Feather from '@expo/vector-icons/Feather'
+import DressCard from '~/components/dress-card'
 import Wrapper from '~/components/wrapper'
 import { useRouter } from 'expo-router'
-import { Pressable, TouchableOpacity, View } from 'react-native'
+import { FlatList, Pressable, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Text } from '~/components/ui/text'
 import { PRIMARY_COLOR } from '~/lib/constants'
+
+// Sample data for dresses
+const dresses = Array(8)
+  .fill(null)
+  .map((_, index) => ({
+    id: index.toString()
+  }))
 
 export default function HomeScreen() {
   const router = useRouter()
@@ -12,6 +20,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView>
       <Wrapper>
+        {/* Header */}
         <View className='flex flex-row items-center gap-4'>
           <Pressable
             onPress={() => router.push('/search?autoFocus=true')}
@@ -31,6 +40,21 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
         </View>
+        {/* Carousel */}
+        {/* <HomeCarousel /> */}
+        {/* List of dresses */}
+        <FlatList
+          data={dresses}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View className='flex-1'>
+              <DressCard className='w-full' />
+            </View>
+          )}
+          columnWrapperClassName='gap-2'
+          contentContainerClassName='pb-48 gap-2'
+        />
       </Wrapper>
     </SafeAreaView>
   )
