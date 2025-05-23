@@ -26,13 +26,13 @@ const navigationOptions = [
   {
     id: 1,
     name: 'index',
-    title: 'Trang chủ',
+    title: 'Home',
     icon: (focused: boolean) => <Feather name='home' size={22} color={focused ? PRIMARY_COLOR.LIGHT : 'gray'} />
   },
   {
     id: 2,
     name: 'calendar',
-    title: 'Lịch',
+    title: 'Calendar',
     icon: (focused: boolean) => <Feather name='calendar' size={22} color={focused ? PRIMARY_COLOR.LIGHT : 'gray'} />
   },
   {
@@ -44,13 +44,13 @@ const navigationOptions = [
   {
     id: 4,
     name: 'notifications',
-    title: 'Thông báo',
+    title: 'Notifications',
     icon: (focused: boolean) => <Feather name='bell' size={22} color={focused ? PRIMARY_COLOR.LIGHT : 'gray'} />
   },
   {
     id: 5,
     name: 'profile',
-    title: 'Tôi',
+    title: 'Profile',
     icon: (focused: boolean) => <Feather name='user' size={22} color={focused ? PRIMARY_COLOR.LIGHT : 'gray'} />
   }
 ]

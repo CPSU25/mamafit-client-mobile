@@ -41,7 +41,7 @@ export default function ProfileScreen() {
         </View>
         <View className='flex-row items-center justify-between'>
           <Label nativeID='dark-mode' onPress={toggleColorScheme} className='font-inter'>
-            Chế độ tối
+            Dark Mode
           </Label>
           <Switch checked={checked} onCheckedChange={toggleColorScheme} nativeID='dark-mode' />
         </View>
