@@ -23,12 +23,7 @@ export default function SearchScreen() {
           <Pressable onPress={handleGoBack}>
             <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
           </Pressable>
-          <Input
-            placeholder='Tìm kiếm'
-            className='placeholder:text-sm flex-1 border-primary'
-            editable={true}
-            autoFocus={autoFocus}
-          />
+          <Input placeholder='Search' className='flex-1 border-primary' editable={true} autoFocus={autoFocus} />
         </View>
       </Wrapper>
     </SafeAreaView>

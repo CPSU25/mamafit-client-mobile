@@ -3,6 +3,7 @@ import '~/global.css'
 import * as React from 'react'
 import * as Notifications from 'expo-notifications'
 import AppProvider from '~/components/providers/app.provider'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
@@ -31,6 +32,11 @@ Notifications.setNotificationHandler({
     shouldShowBanner: true,
     shouldShowList: true
   })
+})
+
+GoogleSignin.configure({
+  webClientId: process.env.EXPO_PUBLIC_GCP_WEB_CLIENT_ID,
+  profileImageSize: 150
 })
 
 SplashScreen.preventAutoHideAsync()

@@ -19,7 +19,7 @@ export default function HomeScreen() {
           >
             <View className='flex flex-row items-center gap-2'>
               <Feather name='search' size={18} color={PRIMARY_COLOR.LIGHT} />
-              <Text className='font-inter text-sm text-muted-foreground'>Tìm kiếm</Text>
+              <Text className='font-inter text-sm text-muted-foreground'>Search</Text>
             </View>
           </Pressable>
           <View className='flex flex-row items-center gap-6 mr-1.5'>
