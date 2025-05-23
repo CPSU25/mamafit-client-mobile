@@ -14,7 +14,7 @@ interface Notification {
   icon: React.ReactNode
 }
 
-const ICON_SIZE = 50
+const ICON_SIZE = 40
 
 const notifications: Notification[] = [
   {
@@ -127,10 +127,10 @@ export default function NotificationsScreen() {
 
 function NotificationCard({ notification }: { notification: Notification }) {
   return (
-    <View className='flex flex-row items-center gap-4 px-4 py-4'>
+    <View className='flex flex-row items-center gap-4 px-4 py-2'>
       <View className='border-2 border-muted rounded-full'>{notification.icon}</View>
       <View className='flex flex-col items-start flex-1'>
-        <Text className='text-sm font-inter-semibold'>{notification.name}</Text>
+        <Text className='text-sm font-inter-medium'>{notification.name}</Text>
         <Text className='text-muted-foreground text-xs'>{notification.description}</Text>
       </View>
       <Feather name='chevron-right' size={20} color='lightgray' />
