@@ -70,7 +70,7 @@ export default function TabsLayout() {
           backgroundColor: isDarkColorScheme ? 'black' : 'white',
           position: 'absolute',
           borderTopWidth: 1,
-          minHeight: 70
+          minHeight: 75
         }
       }}
     >

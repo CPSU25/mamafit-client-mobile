@@ -1,7 +1,12 @@
 import { z } from 'zod'
 
+// TODO: Improve phone number validation
 export const registerFormSchema = z.object({
   email: z.string().email(),
+  phoneNumber: z
+    .string()
+    .min(10, { message: 'Phone number must be at least 10 digits' })
+    .max(11, { message: 'Phone number must be at most 11 digits' }),
   password: z
     .string()
     .min(8, { message: 'Password must be at least 8 characters long' })

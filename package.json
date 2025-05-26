@@ -24,6 +24,7 @@
     "@reduxjs/toolkit": "^2.8.0",
     "@rn-primitives/avatar": "^1.1.0",
     "@rn-primitives/label": "^1.1.0",
+    "@rn-primitives/progress": "^1.2.0",
     "@rn-primitives/separator": "^1.2.0",
     "@rn-primitives/slot": "^1.2.0",
     "@rn-primitives/switch": "^1.1.0",

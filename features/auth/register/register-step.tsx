@@ -10,6 +10,7 @@ import { useCountDown } from '~/hooks/use-count-down'
 import { PRIMARY_COLOR } from '~/lib/constants'
 import { useRegister } from './use-register'
 import { RegisterFormSchema } from './validations'
+import { isFormError } from '~/lib/utils'
 
 interface RegisterStepProps {
   currentStep: number
@@ -17,7 +18,7 @@ interface RegisterStepProps {
 }
 
 export const steps = [
-  { id: 1, name: 'Email', field: ['email'] },
+  { id: 1, name: 'Email', field: ['email', 'phoneNumber'] },
   {
     id: 2,
     name: 'Code verification',
@@ -32,7 +33,13 @@ export const steps = [
 
 export default function RegisterStep({ currentStep, setCurrentStep }: RegisterStepProps) {
   const {
-    methods: { control, handleSubmit, trigger, watch }
+    methods: {
+      control,
+      handleSubmit,
+      trigger,
+      watch,
+      formState: { errors }
+    }
   } = useRegister()
   const { timeLeft, isReady, start, reset: resetCountdown } = useCountDown({ seconds: 30, autoStart: false })
   const email = watch('email')
@@ -165,6 +172,7 @@ export default function RegisterStep({ currentStep, setCurrentStep }: RegisterSt
                 autoFocus
                 spellCheck={false}
                 secureTextEntry
+                className={isFormError(errors, 'password') ? 'border-red-500' : ''}
               />
             )}
           />
@@ -176,7 +184,24 @@ export default function RegisterStep({ currentStep, setCurrentStep }: RegisterSt
       )
     default:
       return (
-        <View className='flex-1 flex flex-col mt-6'>
+        <View className='flex-1 flex flex-col gap-4 mt-6'>
+          <Controller
+            control={control}
+            name='phoneNumber'
+            render={({ field: { onChange, value, ...field } }) => (
+              <Input
+                {...field}
+                value={value}
+                onChangeText={onChange}
+                placeholder='Phone number'
+                keyboardType='phone-pad'
+                StartIcon={<Feather name='phone' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                autoFocus
+                spellCheck={false}
+                className={isFormError(errors, 'phoneNumber') ? 'border-red-500' : ''}
+              />
+            )}
+          />
           <Controller
             control={control}
             name='email'
@@ -185,10 +210,10 @@ export default function RegisterStep({ currentStep, setCurrentStep }: RegisterSt
                 {...field}
                 value={value}
                 onChangeText={onChange}
-                placeholder='example@email.com'
+                placeholder='Email'
                 StartIcon={<Feather name='mail' size={20} color={PRIMARY_COLOR.LIGHT} />}
-                autoFocus
                 spellCheck={false}
+                className={isFormError(errors, 'email') ? 'border-red-500' : ''}
               />
             )}
           />
