@@ -119,7 +119,9 @@ export default function NotificationsScreen() {
       })}
       <View className='flex flex-row justify-between items-center p-4'>
         <Text className='text-sm font-inter-medium'>All notifications</Text>
-        <Text className='text-xs text-muted-foreground'>Mark all as read</Text>
+        <TouchableOpacity>
+          <Text className='text-xs text-muted-foreground'>Mark all as read</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   )
