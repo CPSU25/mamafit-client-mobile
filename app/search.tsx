@@ -1,7 +1,6 @@
-import Wrapper from '~/components/wrapper'
 import Feather from '@expo/vector-icons/Feather'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { Pressable, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Input } from '~/components/ui/input'
 import { PRIMARY_COLOR } from '~/lib/constants'
@@ -18,14 +17,12 @@ export default function SearchScreen() {
 
   return (
     <SafeAreaView>
-      <Wrapper className='px-3'>
-        <View className='flex flex-row items-center gap-3'>
-          <Pressable onPress={handleGoBack}>
-            <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
-          </Pressable>
-          <Input placeholder='Search' className='flex-1 border-primary' editable={true} autoFocus={autoFocus} />
-        </View>
-      </Wrapper>
+      <View className='flex flex-row items-center gap-4 p-4'>
+        <TouchableOpacity onPress={handleGoBack}>
+          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+        </TouchableOpacity>
+        <Input placeholder='Search' className='flex-1 border-primary' editable={true} autoFocus={autoFocus} />
+      </View>
     </SafeAreaView>
   )
 }
