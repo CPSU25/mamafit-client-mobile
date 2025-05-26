@@ -1,3 +1,4 @@
+import NotificationsList from '~/features/notifications/notifications-list'
 import Svg, { G, Path } from 'react-native-svg'
 import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
@@ -5,7 +6,7 @@ import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
-import { PRIMARY_COLOR } from '~/lib/constants'
+import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants'
 
 interface Notification {
   id: number
@@ -14,15 +15,13 @@ interface Notification {
   icon: React.ReactNode
 }
 
-export const ICON_SIZE = 40
-
 const notifications: Notification[] = [
   {
     id: 1,
     name: 'Promotions',
     description: 'Latest deals and special offers.',
     icon: (
-      <Svg width={ICON_SIZE} height={ICON_SIZE} viewBox='0 0 1024 1024'>
+      <Svg width={ICON_SIZE.MEDIUM} height={ICON_SIZE.MEDIUM} viewBox='0 0 1024 1024'>
         <G>
           <Path d='M512 512m-480 0a480 480 0 1 0 960 0 480 480 0 1 0-960 0Z' fill='#FEE8EB' />
           <Path
@@ -42,7 +41,7 @@ const notifications: Notification[] = [
     name: 'Order Updates',
     description: 'Track your order from start to finish.',
     icon: (
-      <Svg width={ICON_SIZE} height={ICON_SIZE} viewBox='0 0 1024 1024'>
+      <Svg width={ICON_SIZE.MEDIUM} height={ICON_SIZE.MEDIUM} viewBox='0 0 1024 1024'>
         <G>
           <Path d='M512 512m-480 0a480 480 0 1 0 960 0 480 480 0 1 0-960 0Z' fill='#CFFCF1' />
           <Path
@@ -66,7 +65,7 @@ const notifications: Notification[] = [
     name: 'Payment Status',
     description: "Don't forget to pay your bills on time.",
     icon: (
-      <Svg width={ICON_SIZE} height={ICON_SIZE} viewBox='0 0 1024 1024'>
+      <Svg width={ICON_SIZE.MEDIUM} height={ICON_SIZE.MEDIUM} viewBox='0 0 1024 1024'>
         <G>
           <Path d='M512 512m-480 0a480 480 0 1 0 960 0 480 480 0 1 0-960 0Z' fill='#FFF0C2' />
           <Path
@@ -118,11 +117,12 @@ export default function NotificationsScreen() {
         )
       })}
       <View className='flex flex-row justify-between items-center p-4'>
-        <Text className='text-sm font-inter-medium'>All notifications</Text>
+        <Text className='text-sm font-inter-medium'>Order Updates</Text>
         <TouchableOpacity>
-          <Text className='text-xs text-muted-foreground'>Mark all as read</Text>
+          <Text className='text-xs text-muted-foreground'>Read All</Text>
         </TouchableOpacity>
       </View>
+      <NotificationsList />
     </SafeAreaView>
   )
 }
