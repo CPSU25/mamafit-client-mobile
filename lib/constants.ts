@@ -21,3 +21,10 @@ export const PRIMARY_COLOR = {
   LIGHT: 'hsl(262.1 83.3% 57.8%)',
   DARK: 'hsl(263.4 70% 50.4%)'
 }
+
+export const ICON_SIZE = {
+  SMALL: 32,
+  MEDIUM: 40,
+  LARGE: 60,
+  EXTRA_LARGE: 100
+}

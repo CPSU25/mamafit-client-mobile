@@ -11,7 +11,7 @@ import { Separator } from '~/components/ui/separator'
 import { Switch } from '~/components/ui/switch'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
-import { ICON_SIZE } from './notifications'
+import { ICON_SIZE } from '~/lib/constants'
 
 interface OrderStatus {
   id: number
@@ -24,7 +24,7 @@ const statuses: OrderStatus[] = [
     id: 1,
     name: 'To Pay',
     icon: (
-      <Svg width={ICON_SIZE} height={ICON_SIZE} viewBox='0 0 24 24' fill='none'>
+      <Svg width={ICON_SIZE.MEDIUM} height={ICON_SIZE.MEDIUM} viewBox='0 0 24 24' fill='none'>
         <G id='SVGRepo_bgCarrier' stroke-width='0'></G>
         <G id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></G>
         <G id='SVGRepo_iconCarrier'>
@@ -53,7 +53,7 @@ const statuses: OrderStatus[] = [
     id: 2,
     name: 'To Ship',
     icon: (
-      <Svg width={ICON_SIZE} height={ICON_SIZE} viewBox='0 0 24 24' fill='none'>
+      <Svg width={ICON_SIZE.MEDIUM} height={ICON_SIZE.MEDIUM} viewBox='0 0 24 24' fill='none'>
         <G id='SVGRepo_bgCarrier' stroke-width='0'></G>
         <G id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></G>
         <G id='SVGRepo_iconCarrier'>
@@ -84,7 +84,7 @@ const statuses: OrderStatus[] = [
     id: 3,
     name: 'To Receive',
     icon: (
-      <Svg width={ICON_SIZE} height={ICON_SIZE} viewBox='0 0 24 24' fill='none'>
+      <Svg width={ICON_SIZE.MEDIUM} height={ICON_SIZE.MEDIUM} viewBox='0 0 24 24' fill='none'>
         <G id='SVGRepo_bgCarrier' stroke-width='0'></G>
         <G id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></G>
         <G id='SVGRepo_iconCarrier'>
@@ -124,7 +124,7 @@ const statuses: OrderStatus[] = [
     id: 4,
     name: 'To Rate',
     icon: (
-      <Svg width={ICON_SIZE} height={ICON_SIZE} viewBox='0 0 24 24' fill='none'>
+      <Svg width={ICON_SIZE.MEDIUM} height={ICON_SIZE.MEDIUM} viewBox='0 0 24 24' fill='none'>
         <G id='SVGRepo_bgCarrier' stroke-width='0'></G>
         <G id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></G>
         <G id='SVGRepo_iconCarrier'>
