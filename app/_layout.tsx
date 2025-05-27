@@ -11,7 +11,7 @@ import { StatusBar } from 'expo-status-bar'
 import { Platform } from 'react-native'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { NAV_THEME } from '~/lib/constants'
-import { Feather } from '@expo/vector-icons'
+import { AntDesign, Feather } from '@expo/vector-icons'
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -47,6 +47,7 @@ export default function RootLayout() {
   const { colorScheme, isDarkColorScheme } = useColorScheme()
   const [fontsLoaded] = useFonts({
     ...Feather.font,
+    ...AntDesign.font,
     'Inter-Light': require('~/assets/fonts/Inter-Light.ttf'),
     'Inter-Regular': require('~/assets/fonts/Inter-Regular.ttf'),
     'Inter-Medium': require('~/assets/fonts/Inter-Medium.ttf'),
@@ -83,17 +84,17 @@ export default function RootLayout() {
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
         <Stack>
-          <Stack.Screen name='(tabs)' options={{ headerShown: false, animation: 'slide_from_bottom' }} />
+          <Stack.Screen name='(tabs)' options={{ headerShown: false, animation: 'ios_from_right' }} />
           <Stack.Screen
             name='product/[id]'
-            options={{ title: 'Product Detail', headerShown: false, animation: 'slide_from_bottom' }}
+            options={{ title: 'Product Detail', headerShown: false, animation: 'ios_from_right' }}
           />
           <Stack.Screen name='search' options={{ title: 'Search', headerShown: false, animation: 'none' }} />
-          <Stack.Screen name='chat' options={{ title: 'Chat', headerShown: false, animation: 'slide_from_bottom' }} />
-          <Stack.Screen name='cart' options={{ title: 'Cart', headerShown: false, animation: 'slide_from_bottom' }} />
+          <Stack.Screen name='chat' options={{ title: 'Chat', headerShown: false, animation: 'ios_from_right' }} />
+          <Stack.Screen name='cart' options={{ title: 'Cart', headerShown: false, animation: 'ios_from_right' }} />
           <Stack.Screen
             name='auth'
-            options={{ title: 'Auth Screen', headerShown: false, animation: 'slide_from_bottom' }}
+            options={{ title: 'Auth Screen', headerShown: false, animation: 'ios_from_right' }}
           />
         </Stack>
       </ThemeProvider>

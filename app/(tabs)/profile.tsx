@@ -1,13 +1,12 @@
-import Svg, { G, Path } from 'react-native-svg'
 import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Svg, { G, Path } from 'react-native-svg'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'
 import { Label } from '~/components/ui/label'
-import { Separator } from '~/components/ui/separator'
 import { Switch } from '~/components/ui/switch'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
@@ -163,7 +162,7 @@ export default function ProfileScreen() {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className='flex-1'>
       <View className='flex flex-row items-center justify-between p-4'>
         <Avatar alt="Zach Nugent's Avatar" className='size-10'>
           <AvatarImage source={{ uri: 'https://github.com/shadcn.png' }} />
@@ -180,7 +179,7 @@ export default function ProfileScreen() {
           </Button>
         </View>
       </View>
-      <Separator />
+      <View className='bg-muted h-2' />
       <View className='flex flex-row items-center justify-between p-4'>
         <Text className='font-inter-medium'>Orders</Text>
         <TouchableOpacity className='flex flex-row items-start'>

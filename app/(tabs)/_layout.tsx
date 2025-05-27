@@ -1,6 +1,7 @@
 import Feather from '@expo/vector-icons/Feather'
 import { Tabs } from 'expo-router'
 import { View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { PRIMARY_COLOR } from '~/lib/constants'
@@ -56,6 +57,7 @@ const navigationOptions = [
 ]
 
 export default function TabsLayout() {
+  const { bottom } = useSafeAreaInsets()
   const { isDarkColorScheme } = useColorScheme()
 
   return (
@@ -70,7 +72,7 @@ export default function TabsLayout() {
           backgroundColor: isDarkColorScheme ? 'black' : 'white',
           position: 'absolute',
           borderTopWidth: 1,
-          minHeight: 75
+          height: bottom + 55
         }
       }}
     >

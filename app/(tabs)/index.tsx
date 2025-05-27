@@ -1,6 +1,5 @@
-import Feather from '@expo/vector-icons/Feather'
 import DressCard from '~/components/dress-card'
-import Wrapper from '~/components/wrapper'
+import Feather from '@expo/vector-icons/Feather'
 import { useRouter } from 'expo-router'
 import { FlatList, Pressable, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -18,8 +17,8 @@ export default function HomeScreen() {
   const router = useRouter()
 
   return (
-    <SafeAreaView>
-      <Wrapper>
+    <SafeAreaView className='flex-1 p-4'>
+      <View className='flex flex-col gap-4'>
         {/* Header */}
         <View className='flex flex-row items-center gap-4'>
           <Pressable
@@ -48,14 +47,14 @@ export default function HomeScreen() {
           numColumns={2}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View className='flex-1'>
+            <TouchableOpacity className='flex-1' onPress={() => router.push(`/product/${item.id}`)}>
               <DressCard className='w-full' />
-            </View>
+            </TouchableOpacity>
           )}
           columnWrapperClassName='gap-2'
-          contentContainerClassName='pb-48 gap-2'
+          contentContainerClassName='pb-32 gap-2'
         />
-      </Wrapper>
+      </View>
     </SafeAreaView>
   )
 }

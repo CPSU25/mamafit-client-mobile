@@ -2,7 +2,7 @@ import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import Svg, { G, Path } from 'react-native-svg'
 import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
@@ -11,8 +11,9 @@ import { Text } from '~/components/ui/text'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants'
 
 export default function CartScreen() {
-  const [checkAll, setCheckAll] = useState(false)
   const router = useRouter()
+  const { bottom } = useSafeAreaInsets()
+  const [checkAll, setCheckAll] = useState(false)
 
   const handleGoBack = () => {
     router.back()
@@ -33,7 +34,7 @@ export default function CartScreen() {
           <Feather name='message-circle' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>
-      <Separator />
+      <View className='bg-muted h-2' />
 
       <View className='flex-1 p-4'>
         {cartItems.length > 0 ? (
@@ -67,8 +68,12 @@ export default function CartScreen() {
           </View>
         )}
       </View>
-
-      <View className='absolute bottom-0 left-0 right-0 bg-background border-t border-border'>
+      <View
+        className='absolute bottom-0 left-0 right-0 bg-background border-t border-border'
+        style={{
+          paddingBottom: bottom
+        }}
+      >
         <View className='flex flex-row items-center gap-4 p-4'>
           <Feather name='dollar-sign' size={20} color={PRIMARY_COLOR.LIGHT} />
           <Text className='text-sm font-inter-medium'>Total</Text>
@@ -83,7 +88,7 @@ export default function CartScreen() {
           <Feather name='chevron-right' size={20} color={PRIMARY_COLOR.LIGHT} className='ml-auto' />
         </TouchableOpacity>
         <Separator />
-        <View className='flex flex-row justify-between items-center p-4 mb-4'>
+        <View className='flex flex-row justify-between items-center p-4'>
           <View className='flex flex-row items-center gap-4'>
             <Checkbox checked={checkAll} onCheckedChange={setCheckAll} />
             <Text className='text-sm font-inter-medium'>All</Text>

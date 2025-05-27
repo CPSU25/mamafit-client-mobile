@@ -3,14 +3,15 @@ import { useEffect } from 'react'
 import { Controller, FieldName, SubmitHandler } from 'react-hook-form'
 import { AppState, View } from 'react-native'
 import { OtpInput } from 'react-native-otp-entry'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import { useCountDown } from '~/hooks/use-count-down'
 import { PRIMARY_COLOR } from '~/lib/constants'
+import { isFormError } from '~/lib/utils'
 import { useRegister } from './use-register'
 import { RegisterFormSchema } from './validations'
-import { isFormError } from '~/lib/utils'
 
 interface RegisterStepProps {
   currentStep: number
@@ -32,6 +33,8 @@ export const steps = [
 ]
 
 export default function RegisterStep({ currentStep, setCurrentStep }: RegisterStepProps) {
+  const { bottom } = useSafeAreaInsets()
+
   const {
     methods: {
       control,
@@ -151,7 +154,7 @@ export default function RegisterStep({ currentStep, setCurrentStep }: RegisterSt
             Wrong email? <Text className='text-primary font-inter-semibold'>Send to different email</Text>
           </Text>
           <View className='flex-1' />
-          <Button onPress={start} disabled={!isReady} className='mb-6'>
+          <Button onPress={start} disabled={!isReady} style={{ paddingBottom: bottom }}>
             <Text className='font-inter-medium'>{isReady ? 'Send again' : `Resend in (${timeLeft}s)`} </Text>
           </Button>
         </View>
@@ -177,7 +180,7 @@ export default function RegisterStep({ currentStep, setCurrentStep }: RegisterSt
             )}
           />
           <View className='flex-1' />
-          <Button onPress={handleSubmit(onSubmit)} className='mb-6'>
+          <Button onPress={handleSubmit(onSubmit)} style={{ paddingBottom: bottom }}>
             <Text className='font-inter-medium'>Create account</Text>
           </Button>
         </View>
@@ -218,7 +221,7 @@ export default function RegisterStep({ currentStep, setCurrentStep }: RegisterSt
             )}
           />
           <View className='flex-1' />
-          <Button className='mb-6' onPress={next}>
+          <Button onPress={next} style={{ paddingBottom: bottom }}>
             <Text className='font-inter-medium'>Continue</Text>
           </Button>
         </View>
