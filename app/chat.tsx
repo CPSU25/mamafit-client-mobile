@@ -25,7 +25,7 @@ export default function ChatScreen() {
         </TouchableOpacity>
         <Text className='font-inter-medium text-xl'>Chats</Text>
       </View>
-      <Separator />
+      <View className='bg-muted h-2' />
       <FlatList
         data={chats}
         renderItem={({ item, index }) => (

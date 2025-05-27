@@ -107,12 +107,13 @@ export default function NotificationsScreen() {
           </TouchableOpacity>
         </View>
       </View>
+      <View className='bg-muted h-2' />
       {notifications.map((notification, index) => {
         return (
           <TouchableOpacity key={notification.id}>
-            <Separator />
+            {index !== 0 && <Separator />}
             <NotificationCard notification={notification} />
-            {index === notifications.length - 1 && <Separator />}
+            {index === notifications.length - 1 && <View className='bg-muted h-2' />}
           </TouchableOpacity>
         )
       })}

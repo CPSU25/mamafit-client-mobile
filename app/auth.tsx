@@ -4,7 +4,7 @@ import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useMemo, useState } from 'react'
-import { Image, Pressable, View } from 'react-native'
+import { Image, TouchableOpacity, View } from 'react-native'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
@@ -40,9 +40,9 @@ export default function AuthScreen() {
 
   const renderHeader = () => (
     <View className='top-16 left-4 flex flex-col gap-8'>
-      <Pressable onPress={handleGoBack} className='w-10 h-10 flex items-center justify-center'>
+      <TouchableOpacity onPress={handleGoBack} className='w-10 h-10 flex items-center justify-center'>
         <Feather name='arrow-left' size={24} color='white' />
-      </Pressable>
+      </TouchableOpacity>
 
       <View className='flex flex-col items-start'>
         <Text className='text-white font-inter-bold text-3xl'>
