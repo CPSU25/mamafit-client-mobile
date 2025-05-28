@@ -32,7 +32,7 @@ export default function HomeScreen() {
           </Pressable>
           <View className='flex flex-row items-center gap-6 mr-2'>
             <TouchableOpacity onPress={() => router.push('/cart')}>
-              <Feather name='shopping-cart' size={24} color={PRIMARY_COLOR.LIGHT} />
+              <Feather name='shopping-bag' size={24} color={PRIMARY_COLOR.LIGHT} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => router.push('/chat')}>
               <Feather name='message-circle' size={24} color={PRIMARY_COLOR.LIGHT} />

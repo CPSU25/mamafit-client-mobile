@@ -1,11 +1,11 @@
-import NotificationsList from '~/features/notifications/notifications-list'
-import Svg, { G, Path } from 'react-native-svg'
 import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Svg, { G, Path } from 'react-native-svg'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
+import NotificationsList from '~/features/notifications/notifications-list'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants'
 
 interface Notification {
@@ -80,6 +80,30 @@ const notifications: Notification[] = [
         </G>
       </Svg>
     )
+  },
+  {
+    id: 4,
+    name: 'Appointment Reminders',
+    description: "Don't forget your appointment.",
+    icon: (
+      <Svg width={ICON_SIZE.MEDIUM} height={ICON_SIZE.MEDIUM} viewBox='0 0 1024 1024'>
+        <G id='SVGRepo_bgCarrier'></G>
+        <G id='SVGRepo_tracerCarrier'></G>
+        <G id='SVGRepo_iconCarrier'>
+          <Path d='M512 512m-480 0a480 480 0 1 0 960 0 480 480 0 1 0-960 0Z' fill='#E5F1FF'></Path>
+          <Path
+            d='M249.6 294.4c0-25.6 19.2-44.8 44.8-44.8h166.4c32 0 51.2 19.2 51.2 44.8v166.4c0 32-19.2 51.2-44.8 51.2H294.4c-25.6 0-44.8-19.2-44.8-44.8V294.4zM556.8 345.6c0-25.6 19.2-51.2 44.8-51.2h121.6c25.6 0 51.2 19.2 51.2 51.2v121.6c0 25.6-19.2 51.2-51.2 51.2H601.6c-25.6 0-44.8-25.6-44.8-51.2V345.6zM556.8 608c0-25.6 19.2-51.2 51.2-51.2h121.6c25.6 0 51.2 19.2 51.2 44.8v64l-108.8 108.8h-64c-25.6 0-44.8-19.2-44.8-51.2V608z'
+            fill='#9FC8FE'
+          ></Path>
+          <Path d='M665.6 716.8c0-25.6 19.2-44.8 44.8-44.8h64l-108.8 108.8v-64z' fill='#72AEFD'></Path>
+          <Path
+            d='M294.4 601.6c0-25.6 19.2-51.2 51.2-51.2h121.6c25.6 6.4 44.8 25.6 44.8 51.2v121.6c0 25.6-19.2 51.2-51.2 51.2H339.2c-25.6 0-51.2-19.2-51.2-51.2V601.6z'
+            fill='#9FC8FE'
+          ></Path>
+          <Path d='M294.4 294.4h166.4V320H294.4zM294.4 345.6h96v25.6H294.4z' fill='#72AEFD'></Path>
+        </G>
+      </Svg>
+    )
   }
 ]
 export default function NotificationsScreen() {
@@ -100,7 +124,7 @@ export default function NotificationsScreen() {
         <Text className='text-xl font-inter-semibold'>Notifications</Text>
         <View className='flex flex-row items-center gap-6 mr-1.5'>
           <TouchableOpacity onPress={() => router.push('/cart')}>
-            <Feather name='shopping-cart' size={22} color={PRIMARY_COLOR.LIGHT} />
+            <Feather name='shopping-bag' size={22} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push('/chat')}>
             <Feather name='message-circle' size={22} color={PRIMARY_COLOR.LIGHT} />
