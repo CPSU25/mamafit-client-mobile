@@ -172,10 +172,10 @@ export default function ProfileScreen() {
         </Avatar>
         <View className='flex flex-row items-center gap-2'>
           <Button className='w-32' variant='outline' onPress={() => router.push('/auth?focus=sign-in')} size='sm'>
-            <Text className='font-inter'>Sign In</Text>
+            <Text className='font-inter-medium'>Sign In</Text>
           </Button>
           <Button className='w-32' variant='default' onPress={() => router.push('/auth?focus=register')} size='sm'>
-            <Text className='font-inter'>Register</Text>
+            <Text className='font-inter-medium'>Register</Text>
           </Button>
         </View>
       </View>

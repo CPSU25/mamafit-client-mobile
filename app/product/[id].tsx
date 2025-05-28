@@ -39,8 +39,14 @@ export default function ProductDetailScreen() {
           className='w-full'
           height={320}
         />
-        <TouchableOpacity onPress={handleGoBack} className='absolute top-10 left-4 bg-black/50 rounded-full p-1'>
+        <TouchableOpacity onPress={handleGoBack} className='absolute top-10 left-4 bg-black/50 rounded-full p-1.5'>
           <Feather name='arrow-left' size={24} color='white' />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => router.push('/cart')}
+          className='absolute top-10 right-4 bg-black/50 rounded-full p-1.5'
+        >
+          <Feather name='shopping-bag' size={24} color='white' />
         </TouchableOpacity>
         <View className='flex flex-col gap-2'>
           <Text className='text-xs text-muted-foreground px-4 pt-4'>{variations.length} variations available</Text>
@@ -121,7 +127,7 @@ export default function ProductDetailScreen() {
         </TouchableOpacity>
         <Separator orientation='vertical' className='h-2/3' />
         <TouchableOpacity className='flex flex-col items-center gap-1 w-1/4 py-2'>
-          <Feather name='shopping-cart' size={20} color={isDarkColorScheme ? 'white' : 'black'} />
+          <Feather name='shopping-bag' size={20} color={isDarkColorScheme ? 'white' : 'black'} />
           <Text className={cn('text-xs', isDarkColorScheme && 'text-white')}>Add to Cart</Text>
         </TouchableOpacity>
         <TouchableOpacity className='flex flex-col items-center gap-1 w-2/4 bg-primary py-2'>

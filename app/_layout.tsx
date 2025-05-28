@@ -92,10 +92,7 @@ export default function RootLayout() {
           <Stack.Screen name='search' options={{ title: 'Search', headerShown: false, animation: 'none' }} />
           <Stack.Screen name='chat' options={{ title: 'Chat', headerShown: false, animation: 'ios_from_right' }} />
           <Stack.Screen name='cart' options={{ title: 'Cart', headerShown: false, animation: 'ios_from_right' }} />
-          <Stack.Screen
-            name='auth'
-            options={{ title: 'Auth Screen', headerShown: false, animation: 'ios_from_right' }}
-          />
+          <Stack.Screen name='auth' options={{ title: 'Auth', headerShown: false, animation: 'ios_from_right' }} />
         </Stack>
       </ThemeProvider>
     </AppProvider>
