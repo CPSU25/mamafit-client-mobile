@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons'
 import { format } from 'date-fns'
-import { router } from 'expo-router'
+import { useRouter } from 'expo-router'
 import { FlatList, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Svg, { G, Path } from 'react-native-svg'
@@ -9,8 +9,9 @@ import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants'
 
-export default function CalendarScreen() {
+export default function AppointmentScreen() {
   // const { isAuthenticated } = useAuth()
+  const router = useRouter()
 
   // if (!isAuthenticated) {
   //   return (
@@ -23,11 +24,20 @@ export default function CalendarScreen() {
 
   const appointments = [1, 2, 3, 4, 5, 6]
 
+  const handleGoBack = () => {
+    router.back()
+  }
+
   return (
     <SafeAreaView className='flex-1'>
       <View className='flex flex-row justify-between items-center p-4'>
-        <Text className='text-xl font-inter-semibold'>{formattedDate}</Text>
-        <TouchableOpacity onPress={() => router.push('/calendar/history')}>
+        <View className='flex flex-row items-center gap-4'>
+          <TouchableOpacity onPress={handleGoBack}>
+            <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          </TouchableOpacity>
+          <Text className='font-inter-medium text-xl'>{formattedDate}</Text>
+        </View>
+        <TouchableOpacity onPress={() => router.push('/profile/appointment/history')}>
           <Feather name='clock' size={22} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>
