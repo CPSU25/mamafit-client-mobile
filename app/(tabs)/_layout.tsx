@@ -32,9 +32,9 @@ const navigationOptions = [
   },
   {
     id: 2,
-    name: 'calendar',
-    title: 'Calendar',
-    icon: (focused: boolean) => <Feather name='calendar' size={22} color={focused ? PRIMARY_COLOR.LIGHT : 'gray'} />
+    name: 'diary',
+    title: 'Diary',
+    icon: (focused: boolean) => <Feather name='book-open' size={22} color={focused ? PRIMARY_COLOR.LIGHT : 'gray'} />
   },
   {
     id: 3,

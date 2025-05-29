@@ -6,8 +6,11 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Button } from './ui/button'
 import { Card } from './ui/card'
 import { Text } from './ui/text'
+import { useRouter } from 'expo-router'
 
 export default function AppointmentCard() {
+  const router = useRouter()
+
   return (
     <Card className='p-2.5'>
       <View className='flex flex-row items-start gap-10'>
@@ -39,7 +42,7 @@ export default function AppointmentCard() {
         <Button variant='outline' size='sm' className='flex-1'>
           <Text className='text-rose-500 font-inter-medium'>Cancel</Text>
         </Button>
-        <Button variant='default' className='flex-[2]' size='sm'>
+        <Button variant='default' className='flex-[2]' size='sm' onPress={() => router.push('/profile/appointment/1')}>
           <Text className='font-inter-medium'>More</Text>
         </Button>
       </View>

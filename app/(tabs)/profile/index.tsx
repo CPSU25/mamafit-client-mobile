@@ -1,16 +1,16 @@
 import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { Pressable, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Svg, { G, Path } from 'react-native-svg'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'
-import { Label } from '~/components/ui/label'
+import { Separator } from '~/components/ui/separator'
 import { Switch } from '~/components/ui/switch'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
-import { ICON_SIZE } from '~/lib/constants'
+import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants'
 
 interface OrderStatus {
   id: number
@@ -180,26 +180,40 @@ export default function ProfileScreen() {
         </View>
       </View>
       <View className='bg-muted h-2' />
-      <View className='flex flex-row items-center justify-between p-4'>
-        <Text className='font-inter-medium'>Orders</Text>
+      <View className='flex flex-row items-baseline justify-between p-4 mb-2'>
+        <Text className='font-inter-medium'>My Purchases</Text>
         <TouchableOpacity className='flex flex-row items-start'>
-          <Text className='text-sm text-muted-foreground mr-0.5'>View order history</Text>
-          <Feather name='chevron-right' size={20} color='lightgray' />
+          <Text className='text-xs text-muted-foreground mr-0.5'>View Purchase History</Text>
+          <Feather name='chevron-right' size={18} color='lightgray' />
         </TouchableOpacity>
       </View>
-      <View className='flex flex-row items-center justify-around'>
+      <View className='flex flex-row items-center justify-around mb-8'>
         {statuses.map((status) => (
           <TouchableOpacity key={status.id}>
             <OrderStage status={status} />
           </TouchableOpacity>
         ))}
       </View>
-      <View className='flex-row items-center justify-between p-4'>
-        <Label nativeID='dark-mode' onPress={toggleColorScheme} className='font-inter-medium'>
-          Dark Mode
-        </Label>
-        <Switch checked={checked} onCheckedChange={toggleColorScheme} nativeID='dark-mode' />
-      </View>
+
+      <View className='bg-muted h-2' />
+
+      <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/profile/appointment')}>
+        <Feather name='calendar' size={20} color={PRIMARY_COLOR.LIGHT} />
+        <Text className='font-inter-medium ml-2.5'>My Appointments</Text>
+        <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
+      </TouchableOpacity>
+      <Separator />
+      <TouchableOpacity className='flex-row items-center p-4'>
+        <Feather name='percent' size={20} color={PRIMARY_COLOR.LIGHT} />
+        <Text className='font-inter-medium ml-2.5'>My Vouchers</Text>
+        <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
+      </TouchableOpacity>
+      <Separator />
+      <Pressable className='flex-row items-center p-4' onPress={toggleColorScheme}>
+        <Feather name='moon' size={20} color={PRIMARY_COLOR.LIGHT} />
+        <Text className='font-inter-medium ml-2.5 flex-1'>Dark Mode</Text>
+        <Switch checked={checked} onCheckedChange={toggleColorScheme} />
+      </Pressable>
     </SafeAreaView>
   )
 }
