@@ -36,7 +36,13 @@ export default function AuthScreen() {
 
   const stepDescription = useMemo(() => STEP_DESCRIPTIONS[currentStep as keyof typeof STEP_DESCRIPTIONS], [currentStep])
 
-  const handleGoBack = () => router.back()
+  const handleGoBack = () => {
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/profile')
+    }
+  }
 
   const renderHeader = () => (
     <View className='top-16 left-4 flex flex-col gap-8'>
@@ -84,7 +90,7 @@ export default function AuthScreen() {
             <SignInForm />
           </TabsContent>
           <TabsContent value='register' className='flex-1'>
-            <RegisterStep currentStep={currentStep} setCurrentStep={setCurrentStep} />
+            <RegisterStep currentStep={currentStep} setCurrentStep={setCurrentStep} setTabValue={setTabValue} />
           </TabsContent>
         </Tabs>
       </View>

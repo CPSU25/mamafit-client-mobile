@@ -1,9 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
+import { BaseResponse } from '~/types/common'
 
 declare module '@tanstack/react-query' {
   interface Register {
-    defaultError: AxiosError
+    defaultError: AxiosError<BaseResponse<null>>
   }
 }
 

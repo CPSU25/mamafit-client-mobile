@@ -54,7 +54,7 @@ const clearAuthTokens = async () => {
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const authData = await getAuthTokens()
-    if (authData?.accessToken && config.url !== '/auth/refresh' && config.headers) {
+    if (authData?.accessToken && config.url !== '/auth/refresh-token' && config.headers) {
       config.headers.Authorization = `Bearer ${authData.accessToken}`
     }
     return config
