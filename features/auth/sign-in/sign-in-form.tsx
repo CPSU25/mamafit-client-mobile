@@ -10,11 +10,16 @@ import GoogleAuthButton from '../google-auth-button'
 import { useSignIn } from './use-sign-in'
 import { SignInSchema } from './validations'
 import { useNotifications } from '~/components/providers/notifications.provider'
+import { isFormError } from '~/lib/utils'
 
 export default function SignInForm() {
   const { bottom } = useSafeAreaInsets()
   const {
-    methods: { control, handleSubmit },
+    methods: {
+      control,
+      handleSubmit,
+      formState: { errors }
+    },
     signInMutation: { mutate: signIn, isPending: isSigningIn }
   } = useSignIn()
   const { expoPushToken } = useNotifications()
@@ -38,6 +43,7 @@ export default function SignInForm() {
               StartIcon={<Feather name='mail' size={20} color={PRIMARY_COLOR.LIGHT} />}
               autoFocus
               spellCheck={false}
+              className={isFormError(errors, 'identifier') ? 'border-rose-500' : ''}
             />
           )}
         />
@@ -53,6 +59,7 @@ export default function SignInForm() {
               StartIcon={<Feather name='lock' size={20} color={PRIMARY_COLOR.LIGHT} />}
               secureTextEntry
               spellCheck={false}
+              className={isFormError(errors, 'password') ? 'border-rose-500' : ''}
             />
           )}
         />

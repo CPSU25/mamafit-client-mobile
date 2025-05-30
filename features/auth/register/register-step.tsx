@@ -148,6 +148,7 @@ export default function RegisterStep({ currentStep, setCurrentStep, setTabValue 
         <VerifyCode
           control={control}
           isVerifyingCode={isVerifyingCode}
+          errors={errors}
           next={next}
           prev={prev}
           bottom={bottom}
@@ -222,10 +223,7 @@ function SendCode({ control, errors, isSendCodeError, isSendingCode, next, botto
           />
         )}
       />
-      <View className='flex flex-col gap-1.5'>
-        {isFormError(errors, 'phoneNumber') && <FieldError message={errors.phoneNumber?.message || ''} />}
-        {isFormError(errors, 'email') && <FieldError message={errors.email?.message || ''} />}
-      </View>
+      {isFormError(errors, 'email') && <FieldError message={errors.email?.message || ''} />}
       <View className='flex-1' />
       <Button onPress={next} disabled={isSendingCode} style={{ marginBottom: bottom }}>
         <Text className='font-inter-medium'>{isSendingCode ? 'Sending...' : 'Continue'}</Text>
@@ -238,6 +236,7 @@ function SendCode({ control, errors, isSendCodeError, isSendingCode, next, botto
 interface VerifyCodeProps {
   control: Control<RegisterFormSchema>
   isVerifyingCode: boolean
+  errors: FieldErrors<RegisterFormSchema>
   next: () => void
   prev: () => void
   handleResendCode: () => void
@@ -256,6 +255,7 @@ function VerifyCode({
   prev,
   handleResendCode,
   isReady,
+  errors,
   timeLeft
 }: VerifyCodeProps) {
   return (
@@ -294,11 +294,11 @@ function VerifyCode({
                 borderRightWidth: 0,
                 borderBottomWidth: 2,
                 width: 36,
-                borderBottomColor: PRIMARY_COLOR.LIGHT,
+                borderBottomColor: isFormError(errors, 'code') ? '#f43f5e' : PRIMARY_COLOR.LIGHT,
                 borderRadius: 0
               },
               pinCodeTextStyle: {
-                color: PRIMARY_COLOR.LIGHT,
+                color: isFormError(errors, 'code') ? '#f43f5e' : PRIMARY_COLOR.LIGHT,
                 fontFamily: 'Inter-Bold',
                 fontSize: 30
               }
