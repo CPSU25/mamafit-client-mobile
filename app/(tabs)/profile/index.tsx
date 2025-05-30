@@ -5,11 +5,11 @@ import { Pressable, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Svg, { G, Path } from 'react-native-svg'
 import Loading from '~/components/loading'
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
 import { Switch } from '~/components/ui/switch'
 import { Text } from '~/components/ui/text'
+import CurrentUser from '~/features/auth/current-user/current-user'
 import { useAuth } from '~/hooks/use-auth'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants'
@@ -169,12 +169,7 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView className='flex-1'>
       <View className='flex flex-row items-center justify-between p-4'>
-        <Avatar alt="Zach Nugent's Avatar" className='size-10'>
-          <AvatarImage source={{ uri: 'https://github.com/shadcn.png' }} />
-          <AvatarFallback>
-            <Text>ZN</Text>
-          </AvatarFallback>
-        </Avatar>
+        <CurrentUser />
         {isAuthenticated ? (
           <View className='flex flex-row items-center gap-6 mr-2'>
             <TouchableOpacity onPress={() => router.push('/profile/setting')}>

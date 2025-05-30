@@ -1,15 +1,22 @@
 import * as React from 'react'
 import { Feather } from '@expo/vector-icons'
-import { useRouter } from 'expo-router'
+import { Redirect, useRouter } from 'expo-router'
 import { FlatList, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { PRIMARY_COLOR } from '~/lib/constants'
+import { useAuth } from '~/hooks/use-auth'
+import Loading from '~/components/loading'
 
 export default function ChatScreen() {
   const router = useRouter()
+  const { isAuthenticated, isLoading } = useAuth()
+
+  if (isLoading) return <Loading />
+
+  if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
 
   const handleGoBack = () => {
     router.back()
@@ -23,7 +30,7 @@ export default function ChatScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-medium text-xl'>Chats</Text>
+        <Text className='font-inter-semibold text-xl'>Chats</Text>
       </View>
       <View className='bg-muted h-2' />
       <FlatList

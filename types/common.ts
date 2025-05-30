@@ -11,18 +11,18 @@ export interface SignInResponse {
   refreshToken: string
 }
 
-export interface User {
-  avatar: string | null
-  createdBy: string | null
-  createdDate: string | null
-  dateOfBirth: string | null
-  email: string
-  fullName: string | null
+export interface CurrentUser {
   id: string
-  isActive: boolean
-  modifiedBy: string
-  modifiedDate: string
-  phoneNumber: string
-  roleName: string | null
-  username: string
+  username: string | null
+  email: string
+  phoneNumber: string | null
+  dateOfBirth: null
+  profilePicture: string | null
+  fullName: string | null
+  roleName: string
+  isVerify: boolean
+  createdAt: string
+  createdBy: string | null
+  updatedAt: string
+  updatedBy: string | null
 }

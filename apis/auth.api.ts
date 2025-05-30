@@ -1,7 +1,7 @@
 import { RegisterFormSchema } from '~/features/auth/register/validations'
 import { SignInSchema } from '~/features/auth/sign-in/validations'
 import { api } from '~/lib/axios/axios'
-import { BaseResponse, SignInResponse } from '~/types/common'
+import { BaseResponse, CurrentUser, SignInResponse } from '~/types/common'
 
 const authApi = {
   sendCode: async ({ email, phoneNumber }: Pick<RegisterFormSchema, 'email' | 'phoneNumber'>) => {
@@ -56,6 +56,11 @@ const authApi = {
       refreshToken,
       notificationToken
     })
+
+    return data
+  },
+  currentUser: async () => {
+    const { data } = await api.get<BaseResponse<CurrentUser>>('auth/current-user')
 
     return data
   }
