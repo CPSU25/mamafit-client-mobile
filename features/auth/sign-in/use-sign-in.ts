@@ -1,10 +1,10 @@
-import authApi from '~/apis/auth.api'
-import { useForm } from 'react-hook-form'
-import { signInSchema, SignInSchema } from './validations'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { useSecureStore } from '~/hooks/use-secure-store'
 import { useRouter } from 'expo-router'
+import { useForm } from 'react-hook-form'
+import authApi from '~/apis/auth.api'
+import { useSecureStore } from '~/hooks/use-secure-store'
+import { signInSchema, SignInSchema } from './validations'
 
 export const useSignIn = () => {
   const router = useRouter()
@@ -24,6 +24,13 @@ export const useSignIn = () => {
         const { accessToken, refreshToken } = data
         await save('auth-storage', { accessToken, refreshToken })
         router.replace('/profile')
+      }
+    },
+    onError: (error) => {
+      if (error.status === 401) {
+        methods.setError('password', { message: 'Wrong credentials' })
+      } else {
+        methods.setError('password', { message: error.response?.data.errorMessage || 'Something went wrong!' })
       }
     }
   })

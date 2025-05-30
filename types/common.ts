@@ -6,6 +6,11 @@ export interface BaseResponse<T> {
   code: string | null
 }
 
+export interface ErrorResponse {
+  errorCode: string
+  errorMessage: string
+}
+
 export interface SignInResponse {
   accessToken: string
   refreshToken: string

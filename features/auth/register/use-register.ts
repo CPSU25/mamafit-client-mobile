@@ -16,8 +16,7 @@ export const useRegister = ({ onRegisterSuccess }: UseRegisterProps) => {
       code: '',
       password: '',
       phoneNumber: ''
-    },
-    mode: 'onChange'
+    }
   })
 
   const sendCodeMutation = useMutation({
@@ -26,8 +25,7 @@ export const useRegister = ({ onRegisterSuccess }: UseRegisterProps) => {
       onRegisterSuccess()
     },
     onError: (error) => {
-      methods.setError('email', { message: error.response?.data.message || 'Something went wrong!' })
-      methods.setError('phoneNumber', { message: error.response?.data.message || 'Something went wrong!' })
+      methods.setError('email', { message: error.response?.data.errorMessage || 'Something went wrong!' })
     }
   })
 
@@ -40,9 +38,9 @@ export const useRegister = ({ onRegisterSuccess }: UseRegisterProps) => {
     onSuccess: () => {
       onRegisterSuccess()
     },
-    onError: () => {
+    onError: (error) => {
       methods.resetField('code')
-      methods.setError('code', { message: 'Wrong code!' })
+      methods.setError('code', { message: error.response?.data.errorMessage || 'Something went wrong!' })
     }
   })
 
@@ -53,7 +51,7 @@ export const useRegister = ({ onRegisterSuccess }: UseRegisterProps) => {
       onRegisterSuccess()
     },
     onError: (error) => {
-      methods.setError('password', { message: error.response?.data.message || 'Something went wrong!' })
+      methods.setError('password', { message: error.response?.data.errorMessage || 'Something went wrong!' })
     }
   })
 
