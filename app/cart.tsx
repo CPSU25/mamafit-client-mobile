@@ -1,19 +1,26 @@
 import { Feather } from '@expo/vector-icons'
-import { useRouter } from 'expo-router'
+import { Redirect, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import Svg, { G, Path } from 'react-native-svg'
+import Loading from '~/components/loading'
 import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
+import { useAuth } from '~/hooks/use-auth'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants'
 
 export default function CartScreen() {
   const router = useRouter()
+  const { isAuthenticated, isLoading } = useAuth()
   const { bottom } = useSafeAreaInsets()
   const [checkAll, setCheckAll] = useState(false)
+
+  if (isLoading) return <Loading />
+
+  if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
 
   const handleGoBack = () => {
     router.back()
@@ -28,7 +35,7 @@ export default function CartScreen() {
           <TouchableOpacity onPress={handleGoBack}>
             <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
-          <Text className='font-inter-medium text-xl'>Shopping Cart</Text>
+          <Text className='font-inter-semibold text-xl'>Shopping Cart</Text>
         </View>
         <TouchableOpacity onPress={() => router.push('/chat')}>
           <Feather name='message-circle' size={24} color={PRIMARY_COLOR.LIGHT} />

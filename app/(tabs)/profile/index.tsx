@@ -4,11 +4,13 @@ import { useState } from 'react'
 import { Pressable, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Svg, { G, Path } from 'react-native-svg'
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
+import Loading from '~/components/loading'
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
 import { Switch } from '~/components/ui/switch'
 import { Text } from '~/components/ui/text'
+import CurrentUser from '~/features/auth/current-user/current-user'
+import { useAuth } from '~/hooks/use-auth'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants'
 
@@ -152,6 +154,7 @@ function OrderStage({ status }: { status: OrderStatus }) {
 }
 
 export default function ProfileScreen() {
+  const { isLoading, isAuthenticated } = useAuth()
   const router = useRouter()
   const { isDarkColorScheme, setColorScheme } = useColorScheme()
   const [checked, setChecked] = useState(isDarkColorScheme ? true : false)
@@ -161,23 +164,34 @@ export default function ProfileScreen() {
     setChecked((prev) => !prev)
   }
 
+  if (isLoading) return <Loading />
+
   return (
     <SafeAreaView className='flex-1'>
       <View className='flex flex-row items-center justify-between p-4'>
-        <Avatar alt="Zach Nugent's Avatar" className='size-10'>
-          <AvatarImage source={{ uri: 'https://github.com/shadcn.png' }} />
-          <AvatarFallback>
-            <Text>ZN</Text>
-          </AvatarFallback>
-        </Avatar>
-        <View className='flex flex-row items-center gap-2'>
-          <Button className='w-32' variant='outline' onPress={() => router.push('/auth?focus=sign-in')} size='sm'>
-            <Text className='font-inter-medium'>Sign In</Text>
-          </Button>
-          <Button className='w-32' variant='default' onPress={() => router.push('/auth?focus=register')} size='sm'>
-            <Text className='font-inter-medium'>Register</Text>
-          </Button>
-        </View>
+        <CurrentUser />
+        {isAuthenticated ? (
+          <View className='flex flex-row items-center gap-6 mr-2'>
+            <TouchableOpacity onPress={() => router.push('/profile/setting')}>
+              <Feather name='settings' size={24} color={PRIMARY_COLOR.LIGHT} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/cart')}>
+              <Feather name='shopping-bag' size={24} color={PRIMARY_COLOR.LIGHT} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/chat')}>
+              <Feather name='message-circle' size={24} color={PRIMARY_COLOR.LIGHT} />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View className='flex flex-row items-center gap-2'>
+            <Button className='w-32' variant='outline' onPress={() => router.push('/auth?focus=sign-in')} size='sm'>
+              <Text className='font-inter-medium'>Sign In</Text>
+            </Button>
+            <Button className='w-32' variant='default' onPress={() => router.push('/auth?focus=register')} size='sm'>
+              <Text className='font-inter-medium'>Register</Text>
+            </Button>
+          </View>
+        )}
       </View>
       <View className='bg-muted h-2' />
       <View className='flex flex-row items-baseline justify-between p-4 mb-2'>
@@ -187,7 +201,7 @@ export default function ProfileScreen() {
           <Feather name='chevron-right' size={18} color='lightgray' />
         </TouchableOpacity>
       </View>
-      <View className='flex flex-row items-center justify-around mb-8'>
+      <View className='flex flex-row items-center justify-around mb-6'>
         {statuses.map((status) => (
           <TouchableOpacity key={status.id}>
             <OrderStage status={status} />

@@ -9,15 +9,18 @@ import { PRIMARY_COLOR } from '~/lib/constants'
 import GoogleAuthButton from '../google-auth-button'
 import { useSignIn } from './use-sign-in'
 import { SignInSchema } from './validations'
+import { useNotifications } from '~/components/providers/notifications.provider'
 
 export default function SignInForm() {
   const { bottom } = useSafeAreaInsets()
   const {
-    methods: { control, handleSubmit }
+    methods: { control, handleSubmit },
+    signInMutation: { mutate: signIn, isPending: isSigningIn }
   } = useSignIn()
+  const { expoPushToken } = useNotifications()
 
   const onSubmit: SubmitHandler<SignInSchema> = (data) => {
-    console.log(data)
+    signIn({ ...data, notificationToken: expoPushToken ?? '' })
   }
 
   return (
@@ -57,8 +60,8 @@ export default function SignInForm() {
       <Text className='text-right text-sm text-primary font-inter-semibold mt-2.5'>Forgot password?</Text>
       <View className='flex-1' />
       <View className='flex flex-col gap-2' style={{ paddingBottom: bottom }}>
-        <Button onPress={handleSubmit(onSubmit)}>
-          <Text className='font-inter-medium '>Let&apos;s Go!</Text>
+        <Button onPress={handleSubmit(onSubmit)} disabled={isSigningIn}>
+          <Text className='font-inter-medium text-white'>{isSigningIn ? 'Signing in...' : "Let's Go!"}</Text>
         </Button>
         <GoogleAuthButton />
       </View>
