@@ -50,6 +50,14 @@ const authApi = {
     })
 
     return data
+  },
+  logout: async ({ refreshToken, notificationToken }: { refreshToken: string; notificationToken: string }) => {
+    const { data } = await api.post<BaseResponse<null>>('auth/logout', {
+      refreshToken,
+      notificationToken
+    })
+
+    return data
   }
 }
 

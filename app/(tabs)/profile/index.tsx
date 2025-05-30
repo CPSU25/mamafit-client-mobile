@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Pressable, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Svg, { G, Path } from 'react-native-svg'
+import Loading from '~/components/loading'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
@@ -153,7 +154,7 @@ function OrderStage({ status }: { status: OrderStatus }) {
 }
 
 export default function ProfileScreen() {
-  const { isLoading, isAuthenticated, tokens } = useAuth()
+  const { isLoading, isAuthenticated } = useAuth()
   const router = useRouter()
   const { isDarkColorScheme, setColorScheme } = useColorScheme()
   const [checked, setChecked] = useState(isDarkColorScheme ? true : false)
@@ -163,9 +164,7 @@ export default function ProfileScreen() {
     setChecked((prev) => !prev)
   }
 
-  if (isLoading) return <Text>Loading...</Text>
-
-  console.log(tokens)
+  if (isLoading) return <Loading />
 
   return (
     <SafeAreaView className='flex-1'>
