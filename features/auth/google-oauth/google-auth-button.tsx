@@ -1,24 +1,29 @@
-import Svg, { Path } from 'react-native-svg'
 import {
   GoogleSignin,
   isErrorWithCode,
   isSuccessResponse,
   statusCodes
 } from '@react-native-google-signin/google-signin'
+import Svg, { Path } from 'react-native-svg'
+import { useNotifications } from '~/components/providers/notifications.provider'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
+import { useGoogleAuth } from './use-google-auth'
 
 export default function GoogleAuthButton() {
+  const { mutate: signInWithGoogle, isPending: isSigningInWithGoogle } = useGoogleAuth()
+  const { expoPushToken } = useNotifications()
+
   const signIn = async () => {
     try {
-      // await GoogleSignin.signOut()
-      // await GoogleSignin.revokeAccess()
       await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true })
       const response = await GoogleSignin.signIn()
 
       if (isSuccessResponse(response)) {
         const { idToken } = response.data
-        console.log(idToken)
+        if (idToken && expoPushToken) {
+          signInWithGoogle({ jwtToken: idToken, notificationToken: expoPushToken })
+        }
       } else {
         // sign in was cancelled by user
       }
@@ -41,7 +46,12 @@ export default function GoogleAuthButton() {
   }
 
   return (
-    <Button variant='outline' className='flex flex-row items-start justify-center gap-2' onPress={signIn}>
+    <Button
+      variant='outline'
+      className='flex flex-row items-start justify-center gap-2'
+      onPress={signIn}
+      disabled={isSigningInWithGoogle}
+    >
       <Svg width={22} height={22} viewBox='0 0 48 48'>
         <Path
           fill='#FFC107'

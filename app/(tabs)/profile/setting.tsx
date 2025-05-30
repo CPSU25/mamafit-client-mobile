@@ -1,4 +1,5 @@
 import { Feather } from '@expo/vector-icons'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { Redirect, useRouter } from 'expo-router'
 import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -19,15 +20,22 @@ export default function SettingScreen() {
   const router = useRouter()
 
   const { expoPushToken } = useNotifications()
-  const { logoutMutation: logout } = useLogout()
+  const {
+    logoutMutation: { mutate, isPending }
+  } = useLogout()
 
   if (isLoading) return <Loading />
 
   if (!isAuthenticated) return <Redirect href='/profile' />
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (!tokens?.refreshToken || !expoPushToken) return
-    logout.mutate({ refreshToken: tokens.refreshToken, notificationToken: expoPushToken })
+
+    if (user?.data?.createdBy === 'GoogleOAuth') {
+      await GoogleSignin.revokeAccess()
+    }
+
+    mutate({ refreshToken: tokens.refreshToken, notificationToken: expoPushToken })
   }
 
   const handleGoBack = () => {
@@ -76,7 +84,7 @@ export default function SettingScreen() {
       <View className='flex-1' />
       <View className='p-4' style={{ paddingBottom: bottom + 55 }}>
         <Text className='text-xs text-muted-foreground text-center mb-2'>MamaFit &copy; 2025</Text>
-        <Button size='lg' variant='outline' onPress={handleLogout}>
+        <Button size='lg' variant='outline' onPress={handleLogout} disabled={isPending}>
           <Text className='text-rose-500 font-inter-medium'>Logout</Text>
         </Button>
       </View>

@@ -2,15 +2,15 @@ import { Feather } from '@expo/vector-icons'
 import { Controller, SubmitHandler } from 'react-hook-form'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useNotifications } from '~/components/providers/notifications.provider'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import { PRIMARY_COLOR } from '~/lib/constants'
-import GoogleAuthButton from '../google-auth-button'
+import { isFormError } from '~/lib/utils'
+import GoogleAuthButton from '../google-oauth/google-auth-button'
 import { useSignIn } from './use-sign-in'
 import { SignInSchema } from './validations'
-import { useNotifications } from '~/components/providers/notifications.provider'
-import { isFormError } from '~/lib/utils'
 
 export default function SignInForm() {
   const { bottom } = useSafeAreaInsets()
