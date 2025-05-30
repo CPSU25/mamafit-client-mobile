@@ -63,6 +63,14 @@ const authApi = {
     const { data } = await api.get<BaseResponse<CurrentUser>>('auth/current-user')
 
     return data
+  },
+  signInWithGoogle: async ({ jwtToken, notificationToken }: { jwtToken: string; notificationToken: string }) => {
+    const { data } = await api.post<BaseResponse<SignInResponse>>('auth/login-google', {
+      jwtToken,
+      notificationToken
+    })
+
+    return data
   }
 }
 
