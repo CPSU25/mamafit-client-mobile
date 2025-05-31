@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import Svg, { G, Path } from 'react-native-svg'
-import Loading from '~/components/loading'
 import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
 import { Separator } from '~/components/ui/separator'
@@ -18,9 +17,7 @@ export default function CartScreen() {
   const { bottom } = useSafeAreaInsets()
   const [checkAll, setCheckAll] = useState(false)
 
-  if (isLoading) return <Loading />
-
-  if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
+  if (!isAuthenticated && !isLoading) return <Redirect href='/auth?focus=sign-in' />
 
   const handleGoBack = () => {
     router.back()

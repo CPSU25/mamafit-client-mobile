@@ -164,15 +164,13 @@ export default function ProfileScreen() {
     setChecked((prev) => !prev)
   }
 
-  if (isLoading) return <Loading />
-
   return (
     <SafeAreaView className='flex-1'>
       <View className='flex flex-row items-center justify-between p-4'>
         <CurrentUser />
-        {isAuthenticated ? (
+        {isAuthenticated && !isLoading ? (
           <View className='flex flex-row items-center gap-6 mr-2'>
-            <TouchableOpacity onPress={() => router.push('/profile/setting')}>
+            <TouchableOpacity onPress={() => router.push('/setting')}>
               <Feather name='settings' size={24} color={PRIMARY_COLOR.LIGHT} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => router.push('/cart')}>

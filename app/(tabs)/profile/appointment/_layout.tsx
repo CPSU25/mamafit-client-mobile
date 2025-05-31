@@ -7,7 +7,9 @@ export default function AppointmentLayout() {
 
   if (isLoading) return <Loading />
 
-  if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
+  if (!isAuthenticated) {
+    return <Redirect href='/auth?focus=sign-in' />
+  }
 
   return (
     <Stack screenOptions={{ headerShown: false, animation: 'ios_from_right' }}>

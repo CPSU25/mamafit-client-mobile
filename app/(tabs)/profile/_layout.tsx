@@ -10,7 +10,6 @@ export default function ProfileLayout() {
     >
       <Stack.Screen name='index' options={{ title: 'Profile' }} />
       <Stack.Screen name='appointment' options={{ title: 'Appointment' }} />
-      <Stack.Screen name='setting' options={{ title: 'Setting' }} />
     </Stack>
   )
 }

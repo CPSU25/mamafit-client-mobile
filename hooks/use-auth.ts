@@ -11,21 +11,33 @@ export const useAuth = () => {
   const { get, remove } = useSecureStore<StorageState>()
 
   useEffect(() => {
+    let mounted = true
+
     const checkTokens = async () => {
       try {
-        setIsLoading(true)
         const storedTokens = await get('auth-storage')
-        if (storedTokens && storedTokens.accessToken && storedTokens.refreshToken) {
-          dispatch(setTokens(storedTokens))
+        if (mounted) {
+          if (storedTokens && storedTokens.accessToken && storedTokens.refreshToken) {
+            dispatch(setTokens(storedTokens))
+          } else {
+            dispatch(clearTokens())
+          }
+          setIsLoading(false)
         }
-        setIsLoading(false)
       } catch (error) {
-        console.error(error)
-        dispatch(clearTokens())
-        setIsLoading(false)
+        console.error('Error checking tokens:', error)
+        if (mounted) {
+          dispatch(clearTokens())
+          setIsLoading(false)
+        }
       }
     }
+
     checkTokens()
+
+    return () => {
+      mounted = false
+    }
   }, [dispatch, get])
 
   const handleLogout = async () => {
