@@ -1,4 +1,5 @@
 import { Feather } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
 import { FlatList, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Svg, { G, Path } from 'react-native-svg'
@@ -10,9 +11,10 @@ import { useGetCurrentUser } from '~/features/auth/current-user/use-get-current-
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants'
 
 export default function MeasurementDiaryScreen() {
+  const router = useRouter()
   const { data: currentUser } = useGetCurrentUser()
 
-  const diaries = [1, 2, 3, 4, 5, 6]
+  const diaries = [1, 2, 3, 4, 5]
 
   return (
     <SafeAreaView className='flex-1'>
@@ -29,7 +31,7 @@ export default function MeasurementDiaryScreen() {
           <FlatList
             data={diaries}
             renderItem={({ item, index }) => (
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => router.push('/diary/1')}>
                 <DiaryCard />
               </TouchableOpacity>
             )}
