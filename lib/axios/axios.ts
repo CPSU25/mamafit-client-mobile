@@ -1,13 +1,21 @@
 import * as SecureStore from 'expo-secure-store'
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
+import axios, { AxiosError, InternalAxiosRequestConfig, isAxiosError } from 'axios'
 import { clearTokens, setTokens } from '../redux-toolkit/slices/auth.slice'
 import { store } from '../redux-toolkit/store'
 
-// Base URL from environment variable
+export interface AuthTokens {
+  accessToken: string
+  refreshToken: string
+}
+
+interface RefreshResponse {
+  accessToken: string
+  refreshToken: string
+}
+
 const baseURL = process.env.EXPO_PUBLIC_API_BASE_URL
 if (!baseURL) throw new Error('EXPO_PUBLIC_API_BASE_URL is not defined')
 
-// Create Axios instance
 export const api = axios.create({
   baseURL,
   headers: {
@@ -16,43 +24,67 @@ export const api = axios.create({
   }
 })
 
-// Get auth tokens from SecureStore
-const getAuthTokens = async () => {
-  const authData = await SecureStore.getItemAsync('auth-storage')
-  return authData ? JSON.parse(authData) : null
+const getAuthTokens = async (): Promise<AuthTokens | null> => {
+  try {
+    const authData = await SecureStore.getItemAsync('auth-storage')
+    return authData ? JSON.parse(authData) : null
+  } catch (error) {
+    console.error('Error getting auth tokens:', error)
+    return null
+  }
 }
 
-// Save auth tokens to SecureStore and Redux
-const saveAuthTokens = async (tokens: { accessToken: string; refreshToken: string }) => {
-  if (!tokens.accessToken || !tokens.refreshToken) throw new Error('Invalid tokens provided')
-  await SecureStore.setItemAsync('auth-storage', JSON.stringify(tokens))
-  store.dispatch(setTokens(tokens))
+const saveAuthTokens = async (tokens: AuthTokens): Promise<void> => {
+  if (!tokens.accessToken || !tokens.refreshToken) {
+    throw new Error('Invalid tokens provided')
+  }
+  try {
+    await SecureStore.setItemAsync('auth-storage', JSON.stringify(tokens))
+    store.dispatch(setTokens(tokens))
+  } catch (error) {
+    console.error('Error saving auth tokens:', error)
+    throw error
+  }
 }
 
-// Clear auth tokens from SecureStore and Redux
-const clearAuthTokens = async () => {
-  await SecureStore.deleteItemAsync('auth-storage')
-  store.dispatch(clearTokens())
+const clearAuthTokens = async (): Promise<void> => {
+  try {
+    await SecureStore.deleteItemAsync('auth-storage')
+    store.dispatch(clearTokens())
+  } catch (error) {
+    console.error('Error clearing auth tokens:', error)
+    throw error
+  }
 }
 
-// Refresh token function
-const refresh = async () => {
-  const authData = await getAuthTokens()
-  const currentRefreshToken = authData?.refreshToken
-  if (!currentRefreshToken) throw new Error('No refresh token available')
+const refresh = async (): Promise<AuthTokens> => {
+  try {
+    const authData = await getAuthTokens()
+    const currentRefreshToken = authData?.refreshToken
+    if (!currentRefreshToken) {
+      throw new Error('No refresh token available')
+    }
 
-  const { data } = await axios.post<{ accessToken: string; refreshToken: string }>(
-    `${baseURL}/auth/refresh-token`,
-    { refreshToken: currentRefreshToken },
-    { headers: { 'Content-Type': 'application/json' } }
-  )
+    const { data } = await axios.post<RefreshResponse>(
+      `${baseURL}/auth/refresh-token`,
+      { refreshToken: currentRefreshToken },
+      { headers: { 'Content-Type': 'application/json' } }
+    )
 
-  if (!data.accessToken || !data.refreshToken) throw new Error('Invalid refresh response')
-  await saveAuthTokens({ accessToken: data.accessToken, refreshToken: data.refreshToken })
-  return data
+    if (!data.accessToken || !data.refreshToken) {
+      throw new Error('Invalid refresh response')
+    }
+
+    await saveAuthTokens({ accessToken: data.accessToken, refreshToken: data.refreshToken })
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response?.status === 401) {
+      await clearAuthTokens()
+    }
+    throw error
+  }
 }
 
-// Request Interceptor
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const authData = await getAuthTokens()
@@ -64,18 +96,21 @@ api.interceptors.request.use(
   (error: AxiosError) => Promise.reject(error)
 )
 
-// Modular Token Refresh Interceptor
-const shouldIntercept = (error: AxiosError) =>
+const shouldIntercept = (error: AxiosError): boolean =>
   error.response?.status === 403 && (error.response?.data as any)?.message === 'jwt expired'
 
-const setTokenData = async (tokenData: { accessToken: string; refreshToken: string }, axiosClient: typeof api) => {
+const setTokenData = async (tokenData: AuthTokens, axiosClient: typeof api): Promise<void> => {
   await saveAuthTokens(tokenData)
   axiosClient.defaults.headers.common['Authorization'] = `Bearer ${tokenData.accessToken}`
 }
 
-const handleTokenRefresh = async () => {
-  const tokens = await refresh()
-  return { accessToken: tokens.accessToken, refreshToken: tokens.refreshToken }
+const handleTokenRefresh = async (): Promise<AuthTokens> => {
+  try {
+    return await refresh()
+  } catch (error) {
+    console.error('Token refresh failed:', error)
+    throw error
+  }
 }
 
 const attachTokenToRequest = (request: InternalAxiosRequestConfig, token: string) => {
@@ -130,7 +165,7 @@ export const applyAppTokenRefreshInterceptor = (axiosClient: typeof api, customO
     return new Promise((resolve, reject) => {
       options
         .handleTokenRefresh()
-        .then((tokenData: { accessToken: string; refreshToken: string }) => {
+        .then((tokenData: AuthTokens) => {
           options.setTokenData(tokenData, axiosClient)
           options.attachTokenToRequest(originalRequest, tokenData.accessToken)
           processQueue(null, tokenData.accessToken)
