@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router'
 import { FlatList, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Svg, { G, Path } from 'react-native-svg'
-import AppointmentCard from '~/components/appointment-card'
+import AppointmentCard from '~/components/card/appointment-card'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants'
@@ -38,7 +38,7 @@ export default function AppointmentScreen() {
           <Text className='font-inter-medium text-xl'>{formattedDate}</Text>
         </View>
         <TouchableOpacity onPress={() => router.push('/profile/appointment/history')}>
-          <Feather name='clock' size={22} color={PRIMARY_COLOR.LIGHT} />
+          <Feather name='clock' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>
       <View className='bg-muted h-2' />

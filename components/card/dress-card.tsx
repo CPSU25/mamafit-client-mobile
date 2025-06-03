@@ -1,7 +1,7 @@
 import { Image, View } from 'react-native'
 import { cn } from '~/lib/utils'
-import { Card } from './ui/card'
-import { Text } from './ui/text'
+import { Card } from '../ui/card'
+import { Text } from '../ui/text'
 
 interface DressCardProps {
   className?: string
@@ -16,7 +16,7 @@ export default function DressCard({ className }: DressCardProps) {
             uri: 'https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/928220s.jpg?im=Resize,width=750'
           }}
           resizeMode='cover'
-          className='w-full h-full rounded-t-[10px]'
+          className='w-full h-full rounded-t-[13px]'
         />
       </View>
       <View className='px-2 pb-2'>

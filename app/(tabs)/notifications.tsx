@@ -1,5 +1,6 @@
 import { Feather } from '@expo/vector-icons'
 import { Redirect, useRouter } from 'expo-router'
+import React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Svg, { G, Path } from 'react-native-svg'
@@ -119,21 +120,23 @@ export default function NotificationsScreen() {
         <Text className='text-xl font-inter-semibold'>Notifications</Text>
         <View className='flex flex-row items-center gap-6 mr-1.5'>
           <TouchableOpacity onPress={() => router.push('/cart')}>
-            <Feather name='shopping-bag' size={22} color={PRIMARY_COLOR.LIGHT} />
+            <Feather name='shopping-bag' size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push('/chat')}>
-            <Feather name='message-circle' size={22} color={PRIMARY_COLOR.LIGHT} />
+            <Feather name='message-circle' size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
         </View>
       </View>
       <View className='bg-muted h-2' />
       {notifications.map((notification, index) => {
         return (
-          <TouchableOpacity key={notification.id}>
+          <React.Fragment key={notification.id}>
             {index !== 0 && <Separator />}
-            <NotificationCard notification={notification} />
+            <TouchableOpacity>
+              <NotificationCard notification={notification} />
+            </TouchableOpacity>
             {index === notifications.length - 1 && <View className='bg-muted h-2' />}
-          </TouchableOpacity>
+          </React.Fragment>
         )
       })}
       <View className='flex flex-row justify-between items-center p-4'>
