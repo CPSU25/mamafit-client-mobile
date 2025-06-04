@@ -1,14 +1,14 @@
-import * as React from 'react'
 import { Feather } from '@expo/vector-icons'
 import { Redirect, useRouter } from 'expo-router'
+import * as React from 'react'
 import { FlatList, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Loading from '~/components/loading'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
-import { PRIMARY_COLOR } from '~/lib/constants'
 import { useAuth } from '~/hooks/use-auth'
-import Loading from '~/components/loading'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function ChatScreen() {
   const router = useRouter()

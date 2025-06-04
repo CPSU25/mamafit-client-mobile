@@ -1,4 +1,3 @@
-import FieldError from '~/components/field-error'
 import { Feather } from '@expo/vector-icons'
 import { useEffect } from 'react'
 import {
@@ -13,11 +12,12 @@ import {
 import { AppState, View } from 'react-native'
 import { OtpInput } from 'react-native-otp-entry'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import FieldError from '~/components/field-error'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import { useCountDown } from '~/hooks/use-count-down'
-import { PRIMARY_COLOR } from '~/lib/constants'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { isFormError } from '~/lib/utils'
 import { useRegister } from './use-register'
 import { RegisterFormSchema } from './validations'

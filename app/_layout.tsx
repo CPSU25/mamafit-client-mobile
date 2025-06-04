@@ -1,17 +1,17 @@
 import '~/global.css'
 
-import * as React from 'react'
-import * as Notifications from 'expo-notifications'
-import AppProvider from '~/components/providers/app.provider'
 import { AntDesign, Feather } from '@expo/vector-icons'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
+import * as Notifications from 'expo-notifications'
 import { SplashScreen, Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
+import * as React from 'react'
 import { Platform } from 'react-native'
+import AppProvider from '~/components/providers/app.provider'
 import { useColorScheme } from '~/hooks/use-color-scheme'
-import { NAV_THEME } from '~/lib/constants'
+import { NAV_THEME } from '~/lib/constants/constants'
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
