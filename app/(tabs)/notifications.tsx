@@ -3,6 +3,7 @@ import { Redirect, useRouter } from 'expo-router'
 import React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Loading from '~/components/loading'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import NotificationsList from '~/features/notifications/notifications-list'
@@ -48,7 +49,9 @@ export default function NotificationsScreen() {
   const router = useRouter()
   const { isAuthenticated, isLoading } = useAuth()
 
-  if (!isAuthenticated && !isLoading) return <Redirect href='/auth?focus=sign-in' />
+  if (isLoading) return <Loading />
+
+  if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
 
   return (
     <SafeAreaView className='flex-1'>

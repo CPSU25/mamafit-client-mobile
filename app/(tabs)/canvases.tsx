@@ -1,12 +1,15 @@
 import { Redirect } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Loading from '~/components/loading'
 import { Text } from '~/components/ui/text'
 import { useAuth } from '~/hooks/use-auth'
 
 export default function CanvasesScreen() {
   const { isAuthenticated, isLoading } = useAuth()
 
-  if (!isAuthenticated && !isLoading) return <Redirect href='/auth?focus=sign-in' />
+  if (isLoading) return <Loading />
+
+  if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
 
   return (
     <SafeAreaView>

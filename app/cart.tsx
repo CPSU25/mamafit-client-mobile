@@ -3,6 +3,7 @@ import { Redirect, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
+import Loading from '~/components/loading'
 import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
 import { Separator } from '~/components/ui/separator'
@@ -17,7 +18,9 @@ export default function CartScreen() {
   const { bottom } = useSafeAreaInsets()
   const [checkAll, setCheckAll] = useState(false)
 
-  if (!isAuthenticated && !isLoading) return <Redirect href='/auth?focus=sign-in' />
+  if (isLoading) return <Loading />
+
+  if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
 
   const handleGoBack = () => {
     router.back()
