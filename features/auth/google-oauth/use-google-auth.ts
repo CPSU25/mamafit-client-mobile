@@ -2,10 +2,11 @@ import authApi from '~/apis/auth.api'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { useSecureStore } from '~/hooks/use-secure-store'
+import { AuthTokens } from '~/lib/axios/axios'
 
 export const useGoogleAuth = () => {
   const router = useRouter()
-  const { save } = useSecureStore()
+  const { save } = useSecureStore<AuthTokens>()
 
   return useMutation({
     mutationFn: authApi.signInWithGoogle,

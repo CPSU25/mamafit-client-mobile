@@ -1,10 +1,11 @@
+import authApi from '~/apis/auth.api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { useForm } from 'react-hook-form'
-import authApi from '~/apis/auth.api'
 import { useSecureStore } from '~/hooks/use-secure-store'
 import { signInSchema, SignInSchema } from './validations'
+import { AuthTokens } from '~/lib/axios/axios'
 
 export const useSignIn = () => {
   const router = useRouter()
@@ -15,7 +16,7 @@ export const useSignIn = () => {
     },
     resolver: zodResolver(signInSchema)
   })
-  const { save } = useSecureStore()
+  const { save } = useSecureStore<AuthTokens>()
 
   const signInMutation = useMutation({
     mutationFn: authApi.signIn,

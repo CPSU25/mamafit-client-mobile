@@ -1,13 +1,10 @@
-import Loading from '~/components/loading'
 import { Redirect, Stack } from 'expo-router'
 import { useAuth } from '~/hooks/use-auth'
 
 export default function DiaryLayout() {
   const { isAuthenticated, isLoading } = useAuth()
 
-  if (isLoading) return <Loading />
-
-  if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
+  if (!isAuthenticated && !isLoading) return <Redirect href='/auth?focus=sign-in' />
 
   return (
     <Stack screenOptions={{ headerShown: false }}>

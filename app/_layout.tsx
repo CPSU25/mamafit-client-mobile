@@ -3,6 +3,7 @@ import '~/global.css'
 import * as React from 'react'
 import * as Notifications from 'expo-notifications'
 import AppProvider from '~/components/providers/app.provider'
+import { AntDesign, Feather } from '@expo/vector-icons'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
@@ -11,7 +12,6 @@ import { StatusBar } from 'expo-status-bar'
 import { Platform } from 'react-native'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { NAV_THEME } from '~/lib/constants'
-import { AntDesign, Feather } from '@expo/vector-icons'
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -93,6 +93,10 @@ export default function RootLayout() {
           <Stack.Screen name='chat' options={{ title: 'Chat', headerShown: false, animation: 'ios_from_right' }} />
           <Stack.Screen name='cart' options={{ title: 'Cart', headerShown: false, animation: 'ios_from_right' }} />
           <Stack.Screen name='auth' options={{ title: 'Auth', headerShown: false, animation: 'ios_from_right' }} />
+          <Stack.Screen
+            name='setting'
+            options={{ title: 'Setting', headerShown: false, animation: 'ios_from_right' }}
+          />
         </Stack>
       </ThemeProvider>
     </AppProvider>

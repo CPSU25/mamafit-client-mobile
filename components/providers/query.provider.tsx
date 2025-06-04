@@ -12,12 +12,12 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: (failureCount, error) => {
-        // Don’t retry 404s; retry other errors up to 2 times
+        // Don’t retry 404s; retry other errors up to 1 times
         if (error.response?.status === 404) return false
-        return failureCount < 2
+        return failureCount < 1
       },
       retryDelay: 3000,
-      staleTime: 1000 * 60 * 1 // 1 minute
+      staleTime: 1000 * 60 * 5 // 5 minute
     }
   }
 })

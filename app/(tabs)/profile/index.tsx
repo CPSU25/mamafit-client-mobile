@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Pressable, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Svg, { G, Path } from 'react-native-svg'
-import Loading from '~/components/loading'
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
 import { Switch } from '~/components/ui/switch'
@@ -164,15 +163,13 @@ export default function ProfileScreen() {
     setChecked((prev) => !prev)
   }
 
-  if (isLoading) return <Loading />
-
   return (
     <SafeAreaView className='flex-1'>
       <View className='flex flex-row items-center justify-between p-4'>
         <CurrentUser />
-        {isAuthenticated ? (
+        {isAuthenticated && !isLoading ? (
           <View className='flex flex-row items-center gap-6 mr-2'>
-            <TouchableOpacity onPress={() => router.push('/profile/setting')}>
+            <TouchableOpacity onPress={() => router.push('/setting')}>
               <Feather name='settings' size={24} color={PRIMARY_COLOR.LIGHT} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => router.push('/cart')}>
