@@ -1,10 +1,10 @@
-import DressCard from '~/components/dress-card'
 import Feather from '@expo/vector-icons/Feather'
 import { useRouter } from 'expo-router'
 import { FlatList, Pressable, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import DressCard from '~/components/card/dress-card'
 import { Text } from '~/components/ui/text'
-import { PRIMARY_COLOR } from '~/lib/constants'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 // Sample data for dresses
 const dresses = Array(8)

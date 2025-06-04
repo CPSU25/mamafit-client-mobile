@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
-import { PRIMARY_COLOR } from '~/lib/constants'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { cn } from '~/lib/utils'
 
 const TabIcon = ({ focused, icon, title }: { focused: boolean; icon: React.ReactNode; title: string }) => {

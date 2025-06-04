@@ -1,5 +1,5 @@
-import Loading from '~/components/loading'
 import { Redirect, Stack } from 'expo-router'
+import Loading from '~/components/loading'
 import { useAuth } from '~/hooks/use-auth'
 
 export default function AppointmentLayout() {

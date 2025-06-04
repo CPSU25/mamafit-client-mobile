@@ -1,20 +1,22 @@
-import * as React from 'react'
 import { Feather } from '@expo/vector-icons'
 import { Redirect, useRouter } from 'expo-router'
+import * as React from 'react'
 import { FlatList, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Loading from '~/components/loading'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
-import { PRIMARY_COLOR } from '~/lib/constants'
 import { useAuth } from '~/hooks/use-auth'
-import Loading from '~/components/loading'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function ChatScreen() {
   const router = useRouter()
   const { isAuthenticated, isLoading } = useAuth()
 
-  if (!isLoading && !isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
+  if (isLoading) return <Loading />
+
+  if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
 
   const handleGoBack = () => {
     router.back()
@@ -31,34 +33,30 @@ export default function ChatScreen() {
         <Text className='font-inter-semibold text-xl'>Chats</Text>
       </View>
       <View className='bg-muted h-2' />
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <FlatList
-          data={chats}
-          renderItem={({ item, index }) => (
-            <>
-              <TouchableOpacity className='flex flex-row gap-4 items-center flex-1'>
-                <Avatar alt="Zach Nugent's Avatar" className='size-14'>
-                  <AvatarImage source={{ uri: 'https://github.com/shadcn.png' }} />
-                  <AvatarFallback>
-                    <Text>ZN</Text>
-                  </AvatarFallback>
-                </Avatar>
-                <View className='flex flex-col flex-1'>
-                  <Text className='font-inter-medium'>John Doe</Text>
-                  <Text className='text-sm text-muted-foreground' numberOfLines={1}>
-                    Hello, how are you?
-                  </Text>
-                </View>
-                <Text className='self-start text-xs text-muted-foreground'>12:07</Text>
-              </TouchableOpacity>
-              {index !== chats.length - 1 && <Separator className='mt-4' />}
-            </>
-          )}
-          contentContainerClassName='gap-4 p-4'
-        />
-      )}
+      <FlatList
+        data={chats}
+        renderItem={({ item, index }) => (
+          <>
+            <TouchableOpacity className='flex flex-row gap-4 items-center flex-1'>
+              <Avatar alt="Zach Nugent's Avatar" className='size-14'>
+                <AvatarImage source={{ uri: 'https://github.com/shadcn.png' }} />
+                <AvatarFallback>
+                  <Text>ZN</Text>
+                </AvatarFallback>
+              </Avatar>
+              <View className='flex flex-col flex-1'>
+                <Text className='font-inter-medium'>John Doe</Text>
+                <Text className='text-sm text-muted-foreground' numberOfLines={1}>
+                  Hello, how are you?
+                </Text>
+              </View>
+              <Text className='self-start text-xs text-muted-foreground'>12:07</Text>
+            </TouchableOpacity>
+            {index !== chats.length - 1 && <Separator className='mt-4' />}
+          </>
+        )}
+        contentContainerClassName='gap-4 p-4'
+      />
     </SafeAreaView>
   )
 }

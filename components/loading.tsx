@@ -1,6 +1,6 @@
 import { ActivityIndicator, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { PRIMARY_COLOR } from '~/lib/constants'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function Loading() {
   return (

@@ -1,24 +1,24 @@
 import { Feather } from '@expo/vector-icons'
 import { format } from 'date-fns'
-import { View } from 'react-native'
-import { PRIMARY_COLOR } from '~/lib/constants'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import { Button } from './ui/button'
-import { Card } from './ui/card'
-import { Text } from './ui/text'
 import { useRouter } from 'expo-router'
+import { View } from 'react-native'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Button } from '../ui/button'
+import { Card } from '../ui/card'
+import { Text } from '../ui/text'
 
 export default function AppointmentCard() {
   const router = useRouter()
 
   return (
-    <Card className='p-2.5'>
+    <Card className='p-4'>
       <View className='flex flex-row items-start gap-10'>
         <View className='flex-1'>
           <Text className='text-lg font-inter-medium' numberOfLines={1}>
             Appointment with John Doe
           </Text>
-          <View className='flex flex-col gap-1 mt-1'>
+          <View className='flex flex-col gap-1.5 mt-2.5'>
             <View className='flex flex-row items-center gap-1.5'>
               <Feather name='clock' size={16} color={PRIMARY_COLOR.LIGHT} />
               <Text className='text-xs text-muted-foreground'>{format(new Date(), 'MMM d, yyyy')} at 10:00 AM</Text>

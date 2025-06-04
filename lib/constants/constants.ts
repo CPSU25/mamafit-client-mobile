@@ -23,6 +23,7 @@ export const PRIMARY_COLOR = {
 }
 
 export const ICON_SIZE = {
+  EXTRA_SMALL: 24,
   SMALL: 32,
   MEDIUM: 40,
   LARGE: 60,

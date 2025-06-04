@@ -1,7 +1,7 @@
-import * as React from 'react'
 import { Feather } from '@expo/vector-icons'
-import { TouchableOpacity, TextInput, type TextInputProps, View } from 'react-native'
-import { PRIMARY_COLOR } from '~/lib/constants'
+import * as React from 'react'
+import { TextInput, type TextInputProps, TouchableOpacity, View } from 'react-native'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { cn } from '~/lib/utils'
 
 export interface InputProps extends TextInputProps {

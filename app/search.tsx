@@ -3,7 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Input } from '~/components/ui/input'
-import { PRIMARY_COLOR } from '~/lib/constants'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function SearchScreen() {
   const router = useRouter()
