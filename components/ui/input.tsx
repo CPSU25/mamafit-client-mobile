@@ -8,10 +8,24 @@ export interface InputProps extends TextInputProps {
   StartIcon?: React.ReactNode
   EndIcon?: React.ReactNode
   placeholderClassName?: string
+  onStartIconPress?: () => void
+  onEndIconPress?: () => void
 }
 
 const Input = React.forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
-  ({ className, placeholderClassName, StartIcon, EndIcon, secureTextEntry, ...props }, ref) => {
+  (
+    {
+      className,
+      placeholderClassName,
+      StartIcon,
+      EndIcon,
+      secureTextEntry,
+      onStartIconPress,
+      onEndIconPress,
+      ...props
+    },
+    ref
+  ) => {
     const [passwordVisible, setPasswordVisible] = React.useState(false)
     const isPassword = secureTextEntry
 
@@ -27,7 +41,11 @@ const Input = React.forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
           className
         )}
       >
-        {StartIcon && <View className='pl-3'>{StartIcon}</View>}
+        {StartIcon && (
+          <TouchableOpacity onPress={onStartIconPress} className='pl-3'>
+            {StartIcon}
+          </TouchableOpacity>
+        )}
         <TextInput
           ref={ref}
           className={cn(
@@ -46,7 +64,9 @@ const Input = React.forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
             )}
           </TouchableOpacity>
         ) : EndIcon ? (
-          <View className='pr-3'>{EndIcon}</View>
+          <TouchableOpacity onPress={onEndIconPress} className='pr-3'>
+            {EndIcon}
+          </TouchableOpacity>
         ) : null}
       </View>
     )

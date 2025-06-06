@@ -5,21 +5,19 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import DiaryCard from '~/components/card/diary-card'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
-import { useGetCurrentUser } from '~/features/auth/current-user/use-get-current-user'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 
 export default function MeasurementDiaryScreen() {
   const router = useRouter()
-  const { data: currentUser } = useGetCurrentUser()
 
   const diaries = [1, 2, 3, 4, 5]
 
   return (
     <SafeAreaView className='flex-1'>
       <View className='flex flex-row justify-between items-center p-4'>
-        <Text className='text-xl font-inter-semibold'>Hello {currentUser?.data?.fullName} 👋</Text>
-        <TouchableOpacity>
+        <Text className='text-xl font-inter-semibold'>Your Diary</Text>
+        <TouchableOpacity onPress={() => router.push('/diary/create')}>
           <Feather name='plus' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>
