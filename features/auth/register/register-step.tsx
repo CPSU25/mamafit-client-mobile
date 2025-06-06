@@ -28,7 +28,7 @@ interface RegisterStepProps {
   setTabValue: React.Dispatch<React.SetStateAction<string>>
 }
 
-export const steps = [
+const steps = [
   { id: 1, name: 'Email', field: ['email', 'phoneNumber'] },
   {
     id: 2,
@@ -53,7 +53,7 @@ export default function RegisterStep({ currentStep, setCurrentStep, setTabValue 
       getValues,
       formState: { errors }
     },
-    sendCodeMutation: { mutate: sendCode, isPending: isSendingCode, isError: isSendCodeError },
+    sendCodeMutation: { mutate: sendCode, isPending: isSendingCode },
     resendCodeMutation: { mutateAsync: resendCode },
     verifyCodeMutation: { mutate: verifyCode, isPending: isVerifyingCode },
     completeRegisterMutation: { mutate: completeRegister, isPending: isCompletingRegister }
@@ -133,16 +133,7 @@ export default function RegisterStep({ currentStep, setCurrentStep, setTabValue 
 
   switch (currentStep) {
     case 1:
-      return (
-        <SendCode
-          control={control}
-          errors={errors}
-          isSendCodeError={isSendCodeError}
-          isSendingCode={isSendingCode}
-          next={next}
-          bottom={bottom}
-        />
-      )
+      return <SendCode control={control} errors={errors} isSendingCode={isSendingCode} next={next} bottom={bottom} />
     case 2:
       return (
         <VerifyCode
@@ -182,13 +173,12 @@ export default function RegisterStep({ currentStep, setCurrentStep, setTabValue 
 interface SendCodeProps {
   control: Control<RegisterFormSchema>
   errors: FieldErrors<RegisterFormSchema>
-  isSendCodeError: boolean
   isSendingCode: boolean
   next: () => void
   bottom: number
 }
 
-function SendCode({ control, errors, isSendCodeError, isSendingCode, next, bottom }: SendCodeProps) {
+function SendCode({ control, errors, isSendingCode, next, bottom }: SendCodeProps) {
   return (
     <View className='flex-1 flex flex-col gap-4 mt-6'>
       <Controller

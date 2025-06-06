@@ -60,7 +60,7 @@ const authApi = {
     return data
   },
   currentUser: async () => {
-    const { data } = await api.get<BaseResponse<CurrentUser>>('auth/current-user')
+    const { data } = await api.get<BaseResponse<CurrentUser>>('auth/permission')
 
     return data
   },

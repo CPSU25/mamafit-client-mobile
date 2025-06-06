@@ -1,11 +1,11 @@
-import authApi from '~/apis/auth.api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { useForm } from 'react-hook-form'
+import authApi from '~/apis/auth.api'
 import { useSecureStore } from '~/hooks/use-secure-store'
-import { signInSchema, SignInSchema } from './validations'
 import { AuthTokens } from '~/lib/axios/axios'
+import { signInSchema, SignInSchema } from './validations'
 
 export const useSignIn = () => {
   const router = useRouter()
@@ -23,6 +23,7 @@ export const useSignIn = () => {
     onSuccess: async ({ data }) => {
       if (data) {
         const { accessToken, refreshToken } = data
+        // FIXME: prevent other users (admin, manager, etc) from accessing the app
         await save('auth-storage', { accessToken, refreshToken })
         router.replace('/profile')
       }

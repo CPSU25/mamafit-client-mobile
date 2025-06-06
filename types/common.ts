@@ -18,8 +18,8 @@ export interface SignInResponse {
 
 export interface CurrentUser {
   id: string
-  username: string | null
-  email: string
+  userName: string | null
+  userEmail: string
   phoneNumber: string | null
   dateOfBirth: null
   profilePicture: string | null

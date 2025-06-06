@@ -68,13 +68,13 @@ export default function SettingScreen() {
             <View className='flex-row items-end'>
               <Feather name='user' size={20} color={PRIMARY_COLOR.LIGHT} />
               <Text className='font-inter-medium ml-2.5 flex-1'>Username</Text>
-              <Text className='text-muted-foreground text-sm'>{user?.data?.username}</Text>
+              <Text className='text-muted-foreground text-sm'>{user?.data?.userName}</Text>
             </View>
             <Separator />
             <View className='flex-row items-end'>
               <Feather name='mail' size={20} color={PRIMARY_COLOR.LIGHT} />
               <Text className='font-inter-medium ml-2.5 flex-1'>Email</Text>
-              <Text className='text-muted-foreground text-sm'>{user?.data?.email}</Text>
+              <Text className='text-muted-foreground text-sm'>{user?.data?.userEmail}</Text>
             </View>
             <Separator />
             <View className='flex-row items-end'>

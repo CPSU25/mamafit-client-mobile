@@ -1,5 +1,5 @@
 import Feather from '@expo/vector-icons/Feather'
-import { Tabs } from 'expo-router'
+import { Tabs, useSegments } from 'expo-router'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Text } from '~/components/ui/text'
@@ -56,9 +56,20 @@ const navigationOptions = [
   }
 ]
 
+const isDisplayTabBar = (segments: string[], route: string) => {
+  const routes = route.split('/').filter((r) => r)
+  return routes.every((r) => segments.includes(r))
+}
+
 export default function TabsLayout() {
+  const segments = useSegments()
   const { bottom } = useSafeAreaInsets()
   const { isDarkColorScheme } = useColorScheme()
+
+  const isCreateDiary = isDisplayTabBar(segments, '/diary/create')
+  const isAppointment = isDisplayTabBar(segments, '/profile/appointment')
+
+  const isDisplay = isCreateDiary || isAppointment
 
   return (
     <Tabs
@@ -72,7 +83,8 @@ export default function TabsLayout() {
           backgroundColor: isDarkColorScheme ? 'black' : 'white',
           position: 'absolute',
           borderTopWidth: 1,
-          height: bottom + 55
+          height: bottom + 55,
+          display: isDisplay ? 'none' : 'flex'
         }
       }}
     >

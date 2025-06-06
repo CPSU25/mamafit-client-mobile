@@ -1,5 +1,6 @@
-import * as SecureStore from 'expo-secure-store'
 import axios, { AxiosError, InternalAxiosRequestConfig, isAxiosError } from 'axios'
+import * as SecureStore from 'expo-secure-store'
+import { BaseResponse } from '~/types/common'
 import { clearTokens, setTokens } from '../redux-toolkit/slices/auth.slice'
 import { store } from '../redux-toolkit/store'
 
@@ -65,18 +66,18 @@ const refresh = async (): Promise<AuthTokens> => {
       throw new Error('No refresh token available')
     }
 
-    const { data } = await axios.post<RefreshResponse>(
-      `${baseURL}/auth/refresh-token`,
+    const { data } = await axios.post<BaseResponse<RefreshResponse>>(
+      `${baseURL}auth/refresh-token`,
       { refreshToken: currentRefreshToken },
       { headers: { 'Content-Type': 'application/json' } }
     )
 
-    if (!data.accessToken || !data.refreshToken) {
+    if (!data.data?.accessToken || !data.data?.refreshToken) {
       throw new Error('Invalid refresh response')
     }
 
-    await saveAuthTokens({ accessToken: data.accessToken, refreshToken: data.refreshToken })
-    return data
+    await saveAuthTokens({ accessToken: data.data?.accessToken, refreshToken: data.data?.refreshToken })
+    return data.data
   } catch (error) {
     if (isAxiosError(error) && error.response?.status === 401) {
       await clearAuthTokens()
@@ -96,8 +97,9 @@ api.interceptors.request.use(
   (error: AxiosError) => Promise.reject(error)
 )
 
-const shouldIntercept = (error: AxiosError): boolean =>
-  error.response?.status === 403 && (error.response?.data as any)?.message === 'jwt expired'
+const shouldIntercept = (error: AxiosError): boolean => {
+  return error.response?.status === 403 && (error.response?.data as any)?.message === 'Token is expired'
+}
 
 const setTokenData = async (tokenData: AuthTokens, axiosClient: typeof api): Promise<void> => {
   await saveAuthTokens(tokenData)
