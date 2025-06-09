@@ -82,6 +82,7 @@ const refresh = async (): Promise<AuthTokens> => {
     if (isAxiosError(error) && error.response?.status === 401) {
       await clearAuthTokens()
     }
+    console.log('error', JSON.stringify(error, null, 2))
     throw error
   }
 }

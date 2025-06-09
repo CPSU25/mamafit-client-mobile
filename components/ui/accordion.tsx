@@ -68,7 +68,7 @@ function AccordionTrigger({
   }))
 
   return (
-    <TextClassContext.Provider value='native:text-lg font-medium web:group-hover:underline'>
+    <TextClassContext.Provider value='native:text-base font-medium web:group-hover:underline'>
       <AccordionPrimitive.Header className='flex'>
         <AccordionPrimitive.Trigger {...props} asChild>
           <Trigger
@@ -97,7 +97,7 @@ function AccordionContent({
 }) {
   const { isExpanded } = AccordionPrimitive.useItemContext()
   return (
-    <TextClassContext.Provider value='native:text-lg'>
+    <TextClassContext.Provider value='native:text-base'>
       <AccordionPrimitive.Content
         className={cn(
           'overflow-hidden text-sm web:transition-all',

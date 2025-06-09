@@ -10,7 +10,7 @@ import { Text } from '~/components/ui/text'
 import PersonalInfoForm from '~/features/diary/create-diary/personal-info-form'
 import PregnancyInfoForm from '~/features/diary/create-diary/pregnancy-info-form'
 import { useCreateDiary } from '~/features/diary/create-diary/use-create-diary'
-import { PersonalInfoFormSchema } from '~/features/diary/create-diary/validations'
+import { PersonalInfoFormSchema, PregnancyInfoFormSchema } from '~/features/diary/create-diary/validations'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 const steps = [
@@ -39,17 +39,25 @@ const steps = [
 
 export default function MeasurementDiaryCreateScreen() {
   const router = useRouter()
-  const [currentStep, setCurrentStep] = useState(0)
+  const [currentStep, setCurrentStep] = useState(1)
   const { bottom } = useSafeAreaInsets()
-  const { stepOneMethods } = useCreateDiary()
+  const { stepOneMethods, stepTwoMethods } = useCreateDiary()
 
   const {
-    handleSubmit,
+    handleSubmit: handleSubmitStepOne,
     formState: { errors: stepOneErrors }
   } = stepOneMethods
 
+  const {
+    handleSubmit: handleSubmitStepTwo,
+    formState: { errors: stepTwoErrors }
+  } = stepTwoMethods
+
   const stepOneRootMsg =
     stepOneErrors.root?.message || (stepOneErrors as any)['']?.message || (stepOneErrors as any)._errors?.[0]
+
+  const stepTwoRootMsg =
+    stepTwoErrors.root?.message || (stepTwoErrors as any)['']?.message || (stepTwoErrors as any)._errors?.[0]
 
   const next = () => {
     setCurrentStep((prev) => {
@@ -73,13 +81,17 @@ export default function MeasurementDiaryCreateScreen() {
     router.back()
   }
 
-  const onSubmitPersonalInfo: SubmitHandler<PersonalInfoFormSchema> = (data) => {
+  const onSubmitStepOne: SubmitHandler<PersonalInfoFormSchema> = (data) => {
     console.log('Personal Information:', data)
     next()
   }
 
-  const title =
-    currentStep === 0 ? 'Personal Information' : currentStep === 1 ? 'Pregnancy Information' : 'Your Measurements'
+  const onSubmitStepTwo: SubmitHandler<PregnancyInfoFormSchema> = (data) => {
+    console.log('Pregnancy Information:', data)
+    next()
+  }
+
+  const title = currentStep === 0 ? 'Step 1' : currentStep === 1 ? 'Step 2' : 'Step 3'
 
   return (
     <SafeAreaView className='flex-1'>
@@ -92,33 +104,40 @@ export default function MeasurementDiaryCreateScreen() {
 
       {currentStep === 0 && (
         <View className='flex-1 px-4'>
-          <View className='flex flex-col gap-4'>
-            <FormProvider {...stepOneMethods}>
-              <PersonalInfoForm />
-            </FormProvider>
-          </View>
+          <FormProvider {...stepOneMethods}>
+            <PersonalInfoForm />
+          </FormProvider>
+
           <View className='flex-1' />
           <View className='flex flex-col gap-4'>
             {stepOneRootMsg && <FieldError message={stepOneRootMsg} />}
-            <Button style={{ marginBottom: bottom }} onPress={handleSubmit(onSubmitPersonalInfo)}>
+            <Button style={{ marginBottom: bottom }} onPress={handleSubmitStepOne(onSubmitStepOne)}>
               <Text className='font-inter-medium'>Next</Text>
             </Button>
           </View>
         </View>
       )}
       {currentStep === 1 && (
-        <View className='px-4 flex-1'>
-          <View className='flex flex-col gap-4'>
+        <View className='flex-1'>
+          <FormProvider {...stepTwoMethods}>
             <PregnancyInfoForm />
-          </View>
+          </FormProvider>
+
           <View className='flex-1' />
-          <View className='flex flex-row gap-2'>
-            <Button className='flex-1' variant='outline' style={{ marginBottom: bottom }} onPress={prev}>
-              <Text className='font-inter-medium'>Previous</Text>
-            </Button>
-            <Button className='flex-1' style={{ marginBottom: bottom }}>
-              <Text className='font-inter-medium'>Next</Text>
-            </Button>
+          <View className='flex flex-col gap-4 px-4'>
+            {stepTwoRootMsg && <FieldError message={stepTwoRootMsg} />}
+            <View className='flex flex-row gap-2'>
+              <Button className='flex-1' variant='outline' style={{ marginBottom: bottom }} onPress={prev}>
+                <Text className='font-inter-medium'>Previous</Text>
+              </Button>
+              <Button
+                className='flex-1'
+                style={{ marginBottom: bottom }}
+                onPress={handleSubmitStepTwo(onSubmitStepTwo)}
+              >
+                <Text className='font-inter-medium'>Next</Text>
+              </Button>
+            </View>
           </View>
         </View>
       )}
