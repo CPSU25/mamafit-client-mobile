@@ -1,3 +1,5 @@
+import { StyleSheet } from 'react-native'
+
 export const NAV_THEME = {
   light: {
     background: 'hsl(0 0% 100%)', // background
@@ -29,3 +31,15 @@ export const ICON_SIZE = {
   LARGE: 60,
   EXTRA_LARGE: 100
 }
+
+export const getShadowStyles = (shadowColor: string = '#000') => ({
+  shadowColor,
+  shadowOffset: { width: 0, height: 5 },
+  shadowOpacity: 1,
+  shadowRadius: 10,
+  elevation: 10
+})
+
+export const styles = StyleSheet.create({
+  container: getShadowStyles()
+})

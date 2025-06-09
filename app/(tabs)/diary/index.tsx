@@ -1,6 +1,7 @@
 import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
-import { FlatList, TouchableOpacity, View } from 'react-native'
+import { FlatList, Pressable, TouchableOpacity, View } from 'react-native'
+import Animated, { FadeInDown } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import DiaryCard from '~/components/card/diary-card'
 import { Button } from '~/components/ui/button'
@@ -23,18 +24,20 @@ export default function MeasurementDiaryScreen() {
       </View>
 
       <View className='bg-muted h-2' />
-      <View className='flex flex-col gap-4 p-4'>
+      <View className='flex flex-col gap-4'>
         {diaries.length > 0 ? (
-          <FlatList
-            data={diaries}
-            renderItem={({ item, index }) => (
-              <TouchableOpacity onPress={() => router.push('/diary/1')}>
-                <DiaryCard />
-              </TouchableOpacity>
-            )}
-            contentContainerClassName='gap-4 pb-32'
-            showsVerticalScrollIndicator={false}
-          />
+          <Animated.View entering={FadeInDown.duration(300).springify()}>
+            <FlatList
+              data={diaries}
+              renderItem={({ item, index }) => (
+                <Pressable onPress={() => router.push('/diary/1')}>
+                  <DiaryCard />
+                </Pressable>
+              )}
+              contentContainerClassName='gap-4 p-4 pb-36'
+              showsVerticalScrollIndicator={false}
+            />
+          </Animated.View>
         ) : (
           <View className='flex items-center px-4 mt-48'>
             {SvgIcon.diary({ size: ICON_SIZE.EXTRA_LARGE, color: 'GRAY' })}
