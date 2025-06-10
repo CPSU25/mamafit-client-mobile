@@ -41,3 +41,5 @@ export const getShadowStyles = (shadowColor: string = '#000') => ({
 export const styles = StyleSheet.create({
   container: getShadowStyles()
 })
+
+export const KEYBOARD_OFFSET = 15

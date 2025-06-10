@@ -1,6 +1,7 @@
 import { Feather, FontAwesome5, MaterialIcons } from '@expo/vector-icons'
 import { Controller, useFormContext } from 'react-hook-form'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import DatePicker from '~/components/date-picker'
 import FieldError from '~/components/field-error'
@@ -9,7 +10,7 @@ import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { useFieldError } from '~/hooks/use-field-error'
-import { PRIMARY_COLOR } from '~/lib/constants/constants'
+import { KEYBOARD_OFFSET, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { cn, isFormError } from '~/lib/utils'
 import { PregnancyInfoFormSchema } from './validations'
 
@@ -22,7 +23,7 @@ export default function PregnancyInfoForm() {
   const className = useFieldError()
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <KeyboardAwareScrollView bottomOffset={KEYBOARD_OFFSET} showsVerticalScrollIndicator={false}>
       <View className='flex flex-col gap-4'>
         <Animated.View
           entering={FadeInDown.delay(100)}
@@ -255,6 +256,6 @@ export default function PregnancyInfoForm() {
           </Accordion>
         </Animated.View>
       </View>
-    </ScrollView>
+    </KeyboardAwareScrollView>
   )
 }
