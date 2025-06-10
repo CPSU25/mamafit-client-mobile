@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { useSecureStore } from '~/hooks/use-secure-store'
 import { AuthTokens } from '~/lib/axios/axios'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 
 export const useGoogleAuth = () => {
   const router = useRouter()
@@ -14,10 +15,12 @@ export const useGoogleAuth = () => {
       if (data) {
         const { accessToken, refreshToken } = data
         await save('auth-storage', { accessToken, refreshToken })
+        await GoogleSignin.revokeAccess()
         router.replace('/profile')
       }
     },
-    onError: (error) => {
+    onError: async (error) => {
+      await GoogleSignin.revokeAccess()
       console.log(error)
     }
   })

@@ -1,5 +1,4 @@
 import { Feather } from '@expo/vector-icons'
-import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { Redirect, useRouter } from 'expo-router'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
@@ -7,16 +6,18 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
 import { useNotifications } from '~/components/providers/notifications.provider'
 import { Button } from '~/components/ui/button'
-import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
-import { useGetCurrentUser } from '~/features/auth/current-user/use-get-current-user'
 import { useLogout } from '~/features/auth/logout/use-logout'
+import { useGetProfile } from '~/features/user/view-profile/use-get-profile'
+import ViewProfile from '~/features/user/view-profile/view-profile'
 import { useAuth } from '~/hooks/use-auth'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
+// TODO: Refactor this screen
+
 export default function SettingScreen() {
-  const { isAuthenticated, isLoading, tokens } = useAuth()
-  const { data: user } = useGetCurrentUser()
+  const { isAuthenticated, isLoading: isAuthLoading, tokens, user } = useAuth()
+  const { data: userProfile, isLoading: isProfileLoading } = useGetProfile(user?.userId)
   const router = useRouter()
 
   const { expoPushToken } = useNotifications()
@@ -24,14 +25,12 @@ export default function SettingScreen() {
     logoutMutation: { mutate, isPending }
   } = useLogout()
 
+  const isLoading = isAuthLoading || isProfileLoading
+
   if (!isAuthenticated && !isLoading) return <Redirect href='/profile' />
 
   const handleLogout = async () => {
     if (!tokens?.refreshToken || !expoPushToken) return
-
-    if (user?.data?.createdBy === 'GoogleOAuth') {
-      await GoogleSignin.revokeAccess()
-    }
 
     mutate({ refreshToken: tokens.refreshToken, notificationToken: expoPushToken })
   }
@@ -58,31 +57,7 @@ export default function SettingScreen() {
         <Loading />
       ) : (
         <>
-          <View className='flex flex-col gap-4 p-4'>
-            <View className='flex-row items-end'>
-              <Feather name='user' size={20} color={PRIMARY_COLOR.LIGHT} />
-              <Text className='font-inter-medium ml-2.5 flex-1'>Fullname</Text>
-              <Text className='text-muted-foreground text-sm'>{user?.data?.fullName}</Text>
-            </View>
-            <Separator />
-            <View className='flex-row items-end'>
-              <Feather name='user' size={20} color={PRIMARY_COLOR.LIGHT} />
-              <Text className='font-inter-medium ml-2.5 flex-1'>Username</Text>
-              <Text className='text-muted-foreground text-sm'>{user?.data?.userName}</Text>
-            </View>
-            <Separator />
-            <View className='flex-row items-end'>
-              <Feather name='mail' size={20} color={PRIMARY_COLOR.LIGHT} />
-              <Text className='font-inter-medium ml-2.5 flex-1'>Email</Text>
-              <Text className='text-muted-foreground text-sm'>{user?.data?.userEmail}</Text>
-            </View>
-            <Separator />
-            <View className='flex-row items-end'>
-              <Feather name='phone' size={20} color={PRIMARY_COLOR.LIGHT} />
-              <Text className='font-inter-medium ml-2.5 flex-1'>Phone number</Text>
-              <Text className='text-muted-foreground text-sm'>{user?.data?.phoneNumber}</Text>
-            </View>
-          </View>
+          {userProfile?.data && <ViewProfile user={userProfile.data} />}
           <View className='flex-1' />
           <View className='p-4'>
             <Text className='text-xs text-muted-foreground text-center mb-2'>MamaFit &copy; 2025</Text>

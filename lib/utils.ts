@@ -9,3 +9,13 @@ export function cn(...inputs: ClassValue[]) {
 export const isFormError = <T extends FieldErrors>(errors: T, fieldName: keyof T): boolean => {
   return Boolean(errors[fieldName])
 }
+
+export const isValidUrl = (url: unknown) => {
+  if (typeof url !== 'string') return false
+  try {
+    new URL(url)
+    return true
+  } catch {
+    return false
+  }
+}
