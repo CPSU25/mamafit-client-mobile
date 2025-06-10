@@ -11,7 +11,7 @@ const defaultValuesStepOne: PersonalInfoFormSchema = {
   name: '',
   weight: '',
   height: '',
-  dateOfBirth: ''
+  age: ''
 }
 
 const defaultValuesStepTwo: PregnancyInfoFormSchema = {

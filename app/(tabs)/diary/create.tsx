@@ -28,7 +28,7 @@ const steps = [
   {
     id: 1,
     name: 'Personal',
-    field: ['name', 'weight', 'height', 'dateOfBirth'],
+    field: ['name', 'weight', 'height', 'age'],
     icon: (color: keyof typeof COLORS) => SvgIcon.personalCard({ size: ICON_SIZE.SMALL, color })
   },
   {

@@ -14,7 +14,7 @@ export const personalInfoFormSchema = z
       .max(50, { message: 'Name must be less than 50 characters' }),
     weight: z.string().min(1, { message: 'Weight is required' }),
     height: z.string().min(1, { message: 'Height is required' }),
-    dateOfBirth: z.string({ message: 'Date of birth is required' }).min(1, { message: 'Date of birth is required' })
+    age: z.string({ message: 'Date of birth is required' }).min(1, { message: 'Date of birth is required' })
   })
   .superRefine((data, ctx) => {
     // Weight validation
@@ -64,23 +64,14 @@ export const personalInfoFormSchema = z
       }
     }
 
-    // Date of birth validation
-    try {
-      const dateOfBirth = parseISO(data.dateOfBirth)
-
-      if (getAge(dateOfBirth) < 18 || getAge(dateOfBirth) > 55) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'You must be between 18 and 55 years old',
-          path: ['dateOfBirth']
-        })
-      }
-    } catch {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Date of birth is invalid',
-        path: ['dateOfBirth']
-      })
+    // Age validation
+    const age = data.age === '' ? NaN : Number(data.age)
+    if (isNaN(age)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Age must be a number', path: ['age'] })
+    } else if (age < 18 || age > 55) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Age must be 18-55 years old', path: ['age'] })
+    } else if (!Number.isInteger(age)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Age must be an integer', path: ['age'] })
     }
   })
 
