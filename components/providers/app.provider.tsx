@@ -6,6 +6,7 @@ import { focusManager } from '@tanstack/react-query'
 import { Provider } from 'react-redux'
 import { store } from '~/lib/redux-toolkit/store'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { KeyboardProvider } from 'react-native-keyboard-controller'
 
 const onAppStateChange = (status: AppStateStatus) => {
   if (Platform.OS !== 'web') {
@@ -21,12 +22,14 @@ export default function AppProvider({ children }: { children: React.ReactNode })
   }, [])
 
   return (
-    <GestureHandlerRootView>
-      <Provider store={store}>
-        <NotificationProvider>
-          <QueryProvider>{children}</QueryProvider>
-        </NotificationProvider>
-      </Provider>
-    </GestureHandlerRootView>
+    <KeyboardProvider>
+      <GestureHandlerRootView>
+        <Provider store={store}>
+          <NotificationProvider>
+            <QueryProvider>{children}</QueryProvider>
+          </NotificationProvider>
+        </Provider>
+      </GestureHandlerRootView>
+    </KeyboardProvider>
   )
 }
