@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { JwtUser } from '~/types/common'
 
 export interface StorageState {
   accessToken: string | null
@@ -8,27 +9,33 @@ export interface StorageState {
 interface AuthState {
   isAuthenticated: boolean
   tokens: StorageState | null
+  user: JwtUser | null
 }
 
 const initialState: AuthState = {
   isAuthenticated: false,
-  tokens: null
+  tokens: null,
+  user: null
 }
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setTokens: (state, action) => {
+    setUser: (state, action: PayloadAction<JwtUser>) => {
+      state.user = action.payload
+    },
+    setTokens: (state, action: PayloadAction<StorageState>) => {
       state.tokens = action.payload
       state.isAuthenticated = true
     },
-    clearTokens: (state) => {
+    clear: (state) => {
       state.tokens = null
       state.isAuthenticated = false
+      state.user = null
     }
   }
 })
 
-export const { setTokens, clearTokens } = authSlice.actions
+export const { setTokens, clear, setUser } = authSlice.actions
 export default authSlice.reducer
