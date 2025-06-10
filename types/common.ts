@@ -26,7 +26,14 @@ export interface JwtUser extends JWTPayload {
   username: string
 }
 
-export interface CurrentUser {
+export interface Permission {
+  userName: string
+  userEmail: string
+  roleName: string
+  profilePicture: string
+}
+
+export interface User {
   id: string
   userName: string | null
   userEmail: string

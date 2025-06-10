@@ -344,7 +344,7 @@ function CreatePassword({
           />
         )}
       />
-      <FieldError message={errors.password?.message || ''} />
+      {isFormError(errors, 'password') && <FieldError message={errors.password?.message || ''} />}
       <View className='flex-1' />
       <Button onPress={handleSubmit(onSubmit)} disabled={isCompletingRegister} style={{ marginBottom: bottom }}>
         <Text className='font-inter-medium'>{isCompletingRegister ? 'Creating...' : 'Create account'}</Text>
