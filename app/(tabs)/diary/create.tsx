@@ -42,8 +42,8 @@ const steps = [
       'numberOfPregnancy',
       'averageMenstrualCycle',
       'ultrasoundDate',
-      'weeksFromUltrasound',
-      'dueDateFromUltrasound'
+      'weeksFromUltrasound'
+      // 'dueDateFromUltrasound'
     ],
     icon: (color: keyof typeof COLORS) => SvgIcon.documentLike({ size: ICON_SIZE.SMALL, color })
   },

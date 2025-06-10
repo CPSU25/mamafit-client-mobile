@@ -240,7 +240,7 @@ export default function PregnancyInfoForm() {
                   )}
 
                   {/* Due date from ultrasound */}
-                  <DatePicker
+                  {/* <DatePicker
                     control={control}
                     name='dueDateFromUltrasound'
                     placeholder='Due date from ultrasound'
@@ -249,7 +249,7 @@ export default function PregnancyInfoForm() {
                   />
                   {isFormError(errors, 'dueDateFromUltrasound') && (
                     <FieldError message={errors.dueDateFromUltrasound?.message || ''} />
-                  )}
+                  )} */}
                 </View>
               </AccordionContent>
             </AccordionItem>
