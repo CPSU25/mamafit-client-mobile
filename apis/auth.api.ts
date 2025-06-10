@@ -5,7 +5,7 @@ import { BaseResponse, CurrentUser, SignInResponse } from '~/types/common'
 
 const authApi = {
   sendCode: async ({ email, phoneNumber }: Pick<RegisterFormSchema, 'email' | 'phoneNumber'>) => {
-    const { data } = await api.post<BaseResponse<null>>('user/send-otp', {
+    const { data } = await api.post<BaseResponse<null>>('auth/send-otp', {
       email,
       phoneNumber
     })
@@ -13,7 +13,7 @@ const authApi = {
     return data
   },
   resendCode: async ({ email, phoneNumber }: Pick<RegisterFormSchema, 'email' | 'phoneNumber'>) => {
-    const { data } = await api.post<BaseResponse<null>>('user/resend-otp', {
+    const { data } = await api.post<BaseResponse<null>>('auth/resend-otp', {
       email,
       phoneNumber
     })
@@ -34,7 +34,7 @@ const authApi = {
     password,
     phoneNumber
   }: Pick<RegisterFormSchema, 'email' | 'password' | 'phoneNumber'>) => {
-    const { data } = await api.post<BaseResponse<null>>('user/complete-register', {
+    const { data } = await api.post<BaseResponse<null>>('auth/complete-register', {
       email,
       password,
       phoneNumber

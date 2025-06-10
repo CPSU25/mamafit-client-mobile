@@ -9,9 +9,15 @@ import { SplashScreen, Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import * as React from 'react'
 import { Platform } from 'react-native'
+import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated'
 import AppProvider from '~/components/providers/app.provider'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { NAV_THEME } from '~/lib/constants/constants'
+
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false
+})
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,

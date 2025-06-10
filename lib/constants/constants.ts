@@ -34,9 +34,7 @@ export const ICON_SIZE = {
 
 export const getShadowStyles = (shadowColor: string = '#000') => ({
   shadowColor,
-  shadowOffset: { width: 0, height: 5 },
-  shadowOpacity: 1,
-  shadowRadius: 10,
+  boxShadow: `0 12px 22px -20px ${shadowColor}`,
   elevation: 10
 })
 

@@ -26,18 +26,18 @@ export default function MeasurementDiaryScreen() {
       <View className='bg-muted h-2' />
       <View className='flex flex-col gap-4'>
         {diaries.length > 0 ? (
-          <Animated.View entering={FadeInDown.duration(300).springify()}>
-            <FlatList
-              data={diaries}
-              renderItem={({ item, index }) => (
+          <FlatList
+            data={diaries}
+            renderItem={({ item, index }) => (
+              <Animated.View entering={FadeInDown.duration(200).delay(index * 100)}>
                 <Pressable onPress={() => router.push('/diary/1')}>
                   <DiaryCard />
                 </Pressable>
-              )}
-              contentContainerClassName='gap-4 p-4 pb-36'
-              showsVerticalScrollIndicator={false}
-            />
-          </Animated.View>
+              </Animated.View>
+            )}
+            contentContainerClassName='gap-4 p-4 pb-36'
+            showsVerticalScrollIndicator={false}
+          />
         ) : (
           <View className='flex items-center px-4 mt-48'>
             {SvgIcon.diary({ size: ICON_SIZE.EXTRA_LARGE, color: 'GRAY' })}

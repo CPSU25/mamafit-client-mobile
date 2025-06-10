@@ -1,12 +1,12 @@
 import { Feather, FontAwesome5, MaterialIcons } from '@expo/vector-icons'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ScrollView, View } from 'react-native'
+import Animated, { FadeInDown } from 'react-native-reanimated'
 import DatePicker from '~/components/date-picker'
 import FieldError from '~/components/field-error'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '~/components/ui/accordion'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
-import Wrapper from '~/components/wrapper'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { useFieldError } from '~/hooks/use-field-error'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
@@ -24,10 +24,11 @@ export default function PregnancyInfoForm() {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View className='flex flex-col gap-4'>
-        <View
+        <Animated.View
+          entering={FadeInDown.delay(100)}
           className={cn(
             'border rounded-2xl p-4 mx-4',
-            isDarkColorScheme ? 'bg-amber-500/10 border-amber-500/20' : 'bg-amber-500/20 border-amber-100/60 '
+            isDarkColorScheme ? 'bg-amber-500/10 border-amber-500/20' : 'bg-amber-500/20 border-amber-300/60'
           )}
         >
           <View className='flex flex-row items-baseline gap-3'>
@@ -41,10 +42,18 @@ export default function PregnancyInfoForm() {
               </Text>
             </View>
           </View>
-        </View>
+        </Animated.View>
 
-        <View className='flex flex-col gap-4 px-4'>
-          <Wrapper>
+        <Animated.View entering={FadeInDown.delay(200)} className='flex flex-col gap-1 px-4'>
+          <View className='flex flex-col gap-1'>
+            <Text className='font-inter-semibold'>Pregnancy Details</Text>
+            <Text className='text-muted-foreground text-xs'>
+              Please provide accurate information about your pregnancy to help us calculate important dates and
+              measurements.
+            </Text>
+          </View>
+
+          <View className='flex flex-col gap-2 mt-4'>
             {/* First date of last period */}
             <DatePicker
               control={control}
@@ -69,17 +78,27 @@ export default function PregnancyInfoForm() {
                   {...field}
                   value={value}
                   onChangeText={onChange}
-                  className={isFormError(errors, 'numberOfPregnancy') ? className : ''}
+                  className={cn(
+                    'bg-background border-input',
+                    isFormError(errors, 'numberOfPregnancy') ? className : ''
+                  )}
                 />
               )}
             />
             {isFormError(errors, 'numberOfPregnancy') && (
               <FieldError message={errors.numberOfPregnancy?.message || ''} />
             )}
-          </Wrapper>
+          </View>
+        </Animated.View>
+        <Animated.View entering={FadeInDown.delay(300)} className='flex flex-col gap-1 px-4'>
+          <View className='flex flex-col gap-1'>
+            <Text className='font-inter-semibold'>Body Measurements</Text>
+            <Text className='text-muted-foreground text-xs'>
+              Your current measurements help us track changes throughout your pregnancy.
+            </Text>
+          </View>
 
-          <Wrapper>
-            <Text className='font-inter-medium text-muted-foreground text-sm'>Body Measurements</Text>
+          <View className='flex flex-col gap-2 mt-4'>
             {/* Bust */}
             <Controller
               control={control}
@@ -92,7 +111,7 @@ export default function PregnancyInfoForm() {
                   {...field}
                   value={value}
                   onChangeText={onChange}
-                  className={isFormError(errors, 'bust') ? className : ''}
+                  className={cn('bg-background border-input', isFormError(errors, 'bust') ? className : '')}
                 />
               )}
             />
@@ -110,7 +129,7 @@ export default function PregnancyInfoForm() {
                   {...field}
                   value={value}
                   onChangeText={onChange}
-                  className={isFormError(errors, 'waist') ? className : ''}
+                  className={cn('bg-background border-input', isFormError(errors, 'waist') ? className : '')}
                 />
               )}
             />
@@ -128,103 +147,113 @@ export default function PregnancyInfoForm() {
                   {...field}
                   value={value}
                   onChangeText={onChange}
-                  className={isFormError(errors, 'hip') ? className : ''}
+                  className={cn('bg-background border-input', isFormError(errors, 'hip') ? className : '')}
                 />
               )}
             />
             {isFormError(errors, 'hip') && <FieldError message={errors.hip?.message || ''} />}
-          </Wrapper>
-        </View>
+          </View>
+        </Animated.View>
 
         <View className='h-2 bg-muted' />
 
-        <Wrapper className='px-4'>
-          <Text className='font-inter-medium'>Additional Details for Accuracy</Text>
-          <Text className='text-muted-foreground text-sm'>
-            Provide extra information to help us has better understanding of your pregnancy.
-          </Text>
-        </Wrapper>
+        <Animated.View entering={FadeInDown.delay(400)} className='px-4'>
+          <View className='flex flex-col gap-1'>
+            <Text className='font-inter-semibold'>Additional Details</Text>
+            <Text className='text-muted-foreground text-xs'>
+              Provide extra information to help us better understand your pregnancy journey.
+            </Text>
+          </View>
 
-        <Accordion type='multiple' collapsible className='w-full max-w-sm native:max-w-md px-4 pb-16'>
-          <AccordionItem value='menstrual-cycle'>
-            <AccordionTrigger>
-              <Text className='font-inter-medium'>Menstrual Cycle</Text>
-            </AccordionTrigger>
-            <AccordionContent>
-              <View className='flex flex-col gap-4'>
-                {/* Average cycle length */}
-                <Controller
-                  control={control}
-                  name='averageMenstrualCycle'
-                  render={({ field: { onChange, value, ...field } }) => (
-                    <Input
-                      placeholder='Average cycle length (days)'
-                      keyboardType='numeric'
-                      StartIcon={<Feather name='repeat' size={20} color={PRIMARY_COLOR.LIGHT} />}
-                      {...field}
-                      value={value ?? undefined}
-                      onChangeText={onChange}
-                      className={isFormError(errors, 'averageMenstrualCycle') ? className : ''}
-                    />
+          <Accordion type='multiple' collapsible className='w-full max-w-sm native:max-w-md pb-16 mt-4'>
+            <AccordionItem value='menstrual-cycle'>
+              <AccordionTrigger>
+                <Text className='font-inter-medium'>Menstrual Cycle</Text>
+              </AccordionTrigger>
+              <AccordionContent>
+                <View className='flex flex-col gap-4'>
+                  {/* Average cycle length */}
+                  <Controller
+                    control={control}
+                    name='averageMenstrualCycle'
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <Input
+                        placeholder='Average cycle length (days)'
+                        keyboardType='numeric'
+                        StartIcon={<Feather name='repeat' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                        {...field}
+                        value={value ?? undefined}
+                        onChangeText={onChange}
+                        className={cn(
+                          'bg-background border-input',
+                          isFormError(errors, 'averageMenstrualCycle') ? className : ''
+                        )}
+                      />
+                    )}
+                  />
+                  {isFormError(errors, 'averageMenstrualCycle') && (
+                    <FieldError message={errors.averageMenstrualCycle?.message || ''} />
                   )}
-                />
-                {isFormError(errors, 'averageMenstrualCycle') && (
-                  <FieldError message={errors.averageMenstrualCycle?.message || ''} />
-                )}
-              </View>
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value='ultrasound'>
-            <AccordionTrigger>
-              <Text className='font-inter-medium'>Ultrasound</Text>
-            </AccordionTrigger>
-            <AccordionContent>
-              <View className='flex flex-col gap-4'>
-                {/* Weeks from ultrasound */}
-                <Controller
-                  control={control}
-                  name='weeksFromUltrasound'
-                  render={({ field: { onChange, value, ...field } }) => (
-                    <Input
-                      placeholder='Weeks from ultrasound'
-                      keyboardType='numeric'
-                      StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
-                      {...field}
-                      value={value ?? undefined}
-                      onChangeText={onChange}
-                      className={isFormError(errors, 'weeksFromUltrasound') ? className : ''}
-                    />
+                </View>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value='ultrasound'>
+              <AccordionTrigger>
+                <Text className='font-inter-medium'>Ultrasound</Text>
+              </AccordionTrigger>
+              <AccordionContent>
+                <View className='flex flex-col gap-4'>
+                  {/* Weeks from ultrasound */}
+                  <Controller
+                    control={control}
+                    name='weeksFromUltrasound'
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <Input
+                        placeholder='Weeks from ultrasound'
+                        keyboardType='numeric'
+                        StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                        {...field}
+                        value={value ?? undefined}
+                        onChangeText={onChange}
+                        className={cn(
+                          'bg-background border-input',
+                          isFormError(errors, 'weeksFromUltrasound') ? className : ''
+                        )}
+                      />
+                    )}
+                  />
+                  {isFormError(errors, 'weeksFromUltrasound') && (
+                    <FieldError message={errors.weeksFromUltrasound?.message || ''} />
                   )}
-                />
-                {isFormError(errors, 'weeksFromUltrasound') && (
-                  <FieldError message={errors.weeksFromUltrasound?.message || ''} />
-                )}
 
-                {/* Ultrasound date */}
-                <DatePicker
-                  control={control}
-                  name='ultrasoundDate'
-                  placeholder='Ultrasound date'
-                  required
-                  errors={errors}
-                />
-                {isFormError(errors, 'ultrasoundDate') && <FieldError message={errors.ultrasoundDate?.message || ''} />}
+                  {/* Ultrasound date */}
+                  <DatePicker
+                    control={control}
+                    name='ultrasoundDate'
+                    placeholder='Ultrasound date'
+                    required
+                    errors={errors}
+                  />
+                  {isFormError(errors, 'ultrasoundDate') && (
+                    <FieldError message={errors.ultrasoundDate?.message || ''} />
+                  )}
 
-                {/* Due date from ultrasound */}
-                <DatePicker
-                  control={control}
-                  name='dueDateFromUltrasound'
-                  placeholder='Due date from ultrasound'
-                  required
-                  errors={errors}
-                />
-                {isFormError(errors, 'dueDateFromUltrasound') && (
-                  <FieldError message={errors.dueDateFromUltrasound?.message || ''} />
-                )}
-              </View>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+                  {/* Due date from ultrasound */}
+                  <DatePicker
+                    control={control}
+                    name='dueDateFromUltrasound'
+                    placeholder='Due date from ultrasound'
+                    required
+                    errors={errors}
+                  />
+                  {isFormError(errors, 'dueDateFromUltrasound') && (
+                    <FieldError message={errors.dueDateFromUltrasound?.message || ''} />
+                  )}
+                </View>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </Animated.View>
       </View>
     </ScrollView>
   )
