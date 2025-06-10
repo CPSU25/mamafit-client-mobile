@@ -1,7 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig, isAxiosError } from 'axios'
 import * as SecureStore from 'expo-secure-store'
 import { BaseResponse } from '~/types/common'
-import { clearTokens, setTokens } from '../redux-toolkit/slices/auth.slice'
+import { clear, setTokens } from '../redux-toolkit/slices/auth.slice'
 import { store } from '../redux-toolkit/store'
 
 export interface AuthTokens {
@@ -51,7 +51,7 @@ const saveAuthTokens = async (tokens: AuthTokens): Promise<void> => {
 const clearAuthTokens = async (): Promise<void> => {
   try {
     await SecureStore.deleteItemAsync('auth-storage')
-    store.dispatch(clearTokens())
+    store.dispatch(clear())
   } catch (error) {
     console.error('Error clearing auth tokens:', error)
     throw error

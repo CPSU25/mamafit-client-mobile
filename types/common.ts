@@ -1,3 +1,5 @@
+import { JWTPayload } from 'jose'
+
 export interface BaseResponse<T> {
   data: T | null
   additionalData: Record<string, any> | null
@@ -14,6 +16,14 @@ export interface ErrorResponse {
 export interface SignInResponse {
   accessToken: string
   refreshToken: string
+}
+
+export interface JwtUser extends JWTPayload {
+  email: string
+  name: string
+  role: string
+  userId: string
+  username: string
 }
 
 export interface CurrentUser {

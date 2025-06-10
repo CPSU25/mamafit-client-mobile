@@ -1,3 +1,4 @@
+import FieldError from '~/components/field-error'
 import { Feather } from '@expo/vector-icons'
 import { Controller, SubmitHandler } from 'react-hook-form'
 import { View } from 'react-native'
@@ -23,6 +24,8 @@ export default function SignInForm() {
     signInMutation: { mutate: signIn, isPending: isSigningIn }
   } = useSignIn()
   const { expoPushToken } = useNotifications()
+
+  const rootMsg = errors.root?.message || (errors as any)['']?.message || (errors as any)._errors?.[0]
 
   const onSubmit: SubmitHandler<SignInSchema> = (data) => {
     signIn({ ...data, notificationToken: expoPushToken ?? '' })
@@ -67,6 +70,7 @@ export default function SignInForm() {
       <Text className='text-right text-sm text-primary font-inter-semibold mt-2.5'>Forgot password?</Text>
       <View className='flex-1' />
       <View className='flex flex-col gap-2' style={{ paddingBottom: bottom }}>
+        {rootMsg && <FieldError message={rootMsg} />}
         <Button onPress={handleSubmit(onSubmit)} disabled={isSigningIn}>
           <Text className='font-inter-medium text-white'>{isSigningIn ? 'Signing in...' : "Let's Go!"}</Text>
         </Button>
