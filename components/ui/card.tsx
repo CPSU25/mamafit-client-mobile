@@ -9,12 +9,7 @@ function Card({
 }: ViewProps & {
   ref?: React.RefObject<View>
 }) {
-  return (
-    <View
-      className={cn('rounded-2xl border border-border bg-card shadow-sm shadow-foreground/10', className)}
-      {...props}
-    />
-  )
+  return <View className={cn('rounded-2xl border border-border bg-card', className)} {...props} />
 }
 
 function CardHeader({
