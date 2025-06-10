@@ -27,11 +27,11 @@ export const useSignIn = () => {
     onSuccess: async ({ data }) => {
       if (data) {
         const { accessToken, refreshToken } = data
-        await save('auth-storage', { accessToken, refreshToken })
 
         try {
           const user = decodeJwt<JwtUser>(accessToken)
           if (user && user.role === 'User') {
+            await save('auth-storage', { accessToken, refreshToken })
             router.replace('/profile')
           } else {
             await handleLogout()
