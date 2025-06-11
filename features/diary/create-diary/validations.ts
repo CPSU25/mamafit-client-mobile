@@ -14,7 +14,7 @@ export const personalInfoFormSchema = z
       .max(50, { message: 'Name must be less than 50 characters' }),
     weight: z.string().min(1, { message: 'Weight is required' }),
     height: z.string().min(1, { message: 'Height is required' }),
-    dateOfBirth: z.string({ message: 'Date of birth is required' }).min(1, { message: 'Date of birth is required' })
+    age: z.string({ message: 'Date of birth is required' }).min(1, { message: 'Date of birth is required' })
   })
   .superRefine((data, ctx) => {
     // Weight validation
@@ -64,23 +64,14 @@ export const personalInfoFormSchema = z
       }
     }
 
-    // Date of birth validation
-    try {
-      const dateOfBirth = parseISO(data.dateOfBirth)
-
-      if (getAge(dateOfBirth) < 18 || getAge(dateOfBirth) > 55) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'You must be between 18 and 55 years old',
-          path: ['dateOfBirth']
-        })
-      }
-    } catch {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Date of birth is invalid',
-        path: ['dateOfBirth']
-      })
+    // Age validation
+    const age = data.age === '' ? NaN : Number(data.age)
+    if (isNaN(age)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Age must be a number', path: ['age'] })
+    } else if (age < 18 || age > 55) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Age must be 18-55 years old', path: ['age'] })
+    } else if (!Number.isInteger(age)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Age must be an integer', path: ['age'] })
     }
   })
 
@@ -97,8 +88,8 @@ export const pregnancyInfoFormSchema = z
     numberOfPregnancy: z.string().min(1, { message: 'Pregnancy count required' }),
     averageMenstrualCycle: z.string().nullable().optional(),
     ultrasoundDate: z.string().nullable().optional(),
-    weeksFromUltrasound: z.string().nullable().optional(),
-    dueDateFromUltrasound: z.string().nullable().optional()
+    weeksFromUltrasound: z.string().nullable().optional()
+    // dueDateFromUltrasound: z.string().nullable().optional()
   })
   .superRefine((data, ctx) => {
     // First date of last period validation
@@ -271,52 +262,52 @@ export const pregnancyInfoFormSchema = z
     }
 
     // Due date from ultrasound validation
-    if (data.dueDateFromUltrasound) {
-      const dueDateFromUltrasound = parseISO(data.dueDateFromUltrasound)
-      if (isNaN(dueDateFromUltrasound.getTime())) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Invalid due date', path: ['dueDateFromUltrasound'] })
-      } else if (dueDateFromUltrasound < today) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Due date can't be in the past",
-          path: ['dueDateFromUltrasound']
-        })
-      }
-    }
+    // if (data.dueDateFromUltrasound) {
+    //   const dueDateFromUltrasound = parseISO(data.dueDateFromUltrasound)
+    //   if (isNaN(dueDateFromUltrasound.getTime())) {
+    //     ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Invalid due date', path: ['dueDateFromUltrasound'] })
+    //   } else if (dueDateFromUltrasound < today) {
+    //     ctx.addIssue({
+    //       code: z.ZodIssueCode.custom,
+    //       message: "Due date can't be in the past",
+    //       path: ['dueDateFromUltrasound']
+    //     })
+    //   }
+    // }
 
     // Due date consistency with first date of last period
-    if (data.firstDateOfLastPeriod && data.dueDateFromUltrasound) {
-      const firstDate = parseISO(data.firstDateOfLastPeriod)
-      const dueDate = parseISO(data.dueDateFromUltrasound)
-      if (!isNaN(firstDate.getTime()) && !isNaN(dueDate.getTime())) {
-        const weeksDiff = differenceInWeeks(dueDate, firstDate)
-        if (weeksDiff < 38 || weeksDiff > 42) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: 'Due date must be 38-42 weeks from last period',
-            path: ['dueDateFromUltrasound']
-          })
-        }
-      }
-    }
+    // if (data.firstDateOfLastPeriod && data.dueDateFromUltrasound) {
+    //   const firstDate = parseISO(data.firstDateOfLastPeriod)
+    //   const dueDate = parseISO(data.dueDateFromUltrasound)
+    //   if (!isNaN(firstDate.getTime()) && !isNaN(dueDate.getTime())) {
+    //     const weeksDiff = differenceInWeeks(dueDate, firstDate)
+    //     if (weeksDiff < 38 || weeksDiff > 42) {
+    //       ctx.addIssue({
+    //         code: z.ZodIssueCode.custom,
+    //         message: 'Due date must be 38-42 weeks from last period',
+    //         path: ['dueDateFromUltrasound']
+    //       })
+    //     }
+    //   }
+    // }
 
     // Weeks from ultrasound consistency with dates
-    if (data.ultrasoundDate && data.weeksFromUltrasound && data.dueDateFromUltrasound) {
-      const ultrasoundDate = parseISO(data.ultrasoundDate)
-      const dueDate = parseISO(data.dueDateFromUltrasound)
-      const weeksFromUltrasoundNum = Number(data.weeksFromUltrasound)
-      if (!isNaN(ultrasoundDate.getTime()) && !isNaN(dueDate.getTime()) && !isNaN(weeksFromUltrasoundNum)) {
-        const weeksToDueDate = differenceInWeeks(dueDate, ultrasoundDate)
-        const expectedWeeksToDueDate = 40 - weeksFromUltrasoundNum
-        if (Math.abs(weeksToDueDate - expectedWeeksToDueDate) > 2) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Weeks don't match dates",
-            path: ['weeksFromUltrasound']
-          })
-        }
-      }
-    }
+    // if (data.ultrasoundDate && data.weeksFromUltrasound && data.dueDateFromUltrasound) {
+    //   const ultrasoundDate = parseISO(data.ultrasoundDate)
+    //   const dueDate = parseISO(data.dueDateFromUltrasound)
+    //   const weeksFromUltrasoundNum = Number(data.weeksFromUltrasound)
+    //   if (!isNaN(ultrasoundDate.getTime()) && !isNaN(dueDate.getTime()) && !isNaN(weeksFromUltrasoundNum)) {
+    //     const weeksToDueDate = differenceInWeeks(dueDate, ultrasoundDate)
+    //     const expectedWeeksToDueDate = 40 - weeksFromUltrasoundNum
+    //     if (Math.abs(weeksToDueDate - expectedWeeksToDueDate) > 2) {
+    //       ctx.addIssue({
+    //         code: z.ZodIssueCode.custom,
+    //         message: "Weeks don't match dates",
+    //         path: ['weeksFromUltrasound']
+    //       })
+    //     }
+    //   }
+    // }
 
     // Consistency between firstDateOfLastPeriod, ultrasoundDate, and weeksFromUltrasound
     if (data.firstDateOfLastPeriod && data.ultrasoundDate && data.weeksFromUltrasound) {
@@ -336,17 +327,17 @@ export const pregnancyInfoFormSchema = z
     }
 
     // Ensure ultrasoundDate is before dueDateFromUltrasound
-    if (data.ultrasoundDate && data.dueDateFromUltrasound) {
-      const ultrasoundDate = parseISO(data.ultrasoundDate)
-      const dueDate = parseISO(data.dueDateFromUltrasound)
-      if (!isNaN(ultrasoundDate.getTime()) && !isNaN(dueDate.getTime()) && ultrasoundDate >= dueDate) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Ultrasound can't be on or after due date",
-          path: ['ultrasoundDate']
-        })
-      }
-    }
+    // if (data.ultrasoundDate && data.dueDateFromUltrasound) {
+    //   const ultrasoundDate = parseISO(data.ultrasoundDate)
+    //   const dueDate = parseISO(data.dueDateFromUltrasound)
+    //   if (!isNaN(ultrasoundDate.getTime()) && !isNaN(dueDate.getTime()) && ultrasoundDate >= dueDate) {
+    //     ctx.addIssue({
+    //       code: z.ZodIssueCode.custom,
+    //       message: "Ultrasound can't be on or after due date",
+    //       path: ['ultrasoundDate']
+    //     })
+    //   }
+    // }
   })
 
 export type PersonalInfoFormSchema = z.infer<typeof personalInfoFormSchema>

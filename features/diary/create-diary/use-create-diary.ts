@@ -11,7 +11,7 @@ const defaultValuesStepOne: PersonalInfoFormSchema = {
   name: '',
   weight: '',
   height: '',
-  dateOfBirth: ''
+  age: ''
 }
 
 const defaultValuesStepTwo: PregnancyInfoFormSchema = {
@@ -22,8 +22,8 @@ const defaultValuesStepTwo: PregnancyInfoFormSchema = {
   numberOfPregnancy: '',
   averageMenstrualCycle: null,
   ultrasoundDate: null,
-  weeksFromUltrasound: null,
-  dueDateFromUltrasound: null
+  weeksFromUltrasound: null
+  // dueDateFromUltrasound: null
 }
 
 export const useCreateDiary = () => {

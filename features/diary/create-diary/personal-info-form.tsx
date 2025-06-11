@@ -1,8 +1,7 @@
-import { Feather } from '@expo/vector-icons'
+import { Feather, MaterialIcons } from '@expo/vector-icons'
 import { Controller, useFormContext } from 'react-hook-form'
 import { View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-import DatePicker from '~/components/date-picker'
 import FieldError from '~/components/field-error'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
@@ -17,10 +16,6 @@ export default function PersonalInfoForm() {
     formState: { errors }
   } = useFormContext<PersonalInfoFormSchema>()
   const className = useFieldError()
-
-  const today = new Date()
-  const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
-  const minDate = new Date(today.getFullYear() - 55, today.getMonth(), today.getDate())
 
   return (
     <View className='flex flex-col gap-4'>
@@ -69,6 +64,7 @@ export default function PersonalInfoForm() {
                 value={value}
                 onChangeText={onChange}
                 className={cn('bg-background border-input', isFormError(errors, 'weight') ? className : '')}
+                EndIcon={<Text className='text-muted-foreground text-sm'>kg</Text>}
               />
             )}
           />
@@ -86,6 +82,7 @@ export default function PersonalInfoForm() {
                 value={value}
                 onChangeText={onChange}
                 className={cn('bg-background border-input', isFormError(errors, 'height') ? className : '')}
+                EndIcon={<Text className='text-muted-foreground text-sm'>cm</Text>}
               />
             )}
           />
@@ -95,21 +92,26 @@ export default function PersonalInfoForm() {
 
       <Animated.View entering={FadeInDown.delay(400)} className='flex flex-col gap-1'>
         <Text className='font-inter-semibold'>Personal Details</Text>
-        <Text className='text-muted-foreground text-xs'>
-          Your date of birth helps us calculate important health metrics.
-        </Text>
+        <Text className='text-muted-foreground text-xs'>Your age helps us calculate important health metrics.</Text>
 
         <View className='flex flex-col gap-2 mt-4'>
-          <DatePicker
+          <Controller
             control={control}
-            name='dateOfBirth'
-            placeholder='Date of birth'
-            required
-            errors={errors}
-            minDate={minDate}
-            maxDate={maxDate}
+            name='age'
+            render={({ field: { onChange, value, ...field } }) => (
+              <Input
+                placeholder='Age'
+                keyboardType='numeric'
+                StartIcon={<MaterialIcons name='numbers' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                {...field}
+                value={value}
+                onChangeText={onChange}
+                className={cn('bg-background border-input', isFormError(errors, 'age') ? className : '')}
+                EndIcon={<Text className='text-muted-foreground text-sm'>years</Text>}
+              />
+            )}
           />
-          {isFormError(errors, 'dateOfBirth') && <FieldError message={errors.dateOfBirth?.message || ''} />}
+          {isFormError(errors, 'age') && <FieldError message={errors.age?.message || ''} />}
         </View>
       </Animated.View>
     </View>

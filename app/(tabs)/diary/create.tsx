@@ -3,15 +3,8 @@ import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
-import Animated, {
-  SlideInLeft,
-  SlideInRight,
-  SlideOutLeft,
-  SlideOutRight,
-  useAnimatedStyle,
-  withSpring
-} from 'react-native-reanimated'
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
+import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import FieldError from '~/components/field-error'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
@@ -28,7 +21,7 @@ const steps = [
   {
     id: 1,
     name: 'Personal',
-    field: ['name', 'weight', 'height', 'dateOfBirth'],
+    field: ['name', 'weight', 'height', 'age'],
     icon: (color: keyof typeof COLORS) => SvgIcon.personalCard({ size: ICON_SIZE.SMALL, color })
   },
   {
@@ -42,8 +35,8 @@ const steps = [
       'numberOfPregnancy',
       'averageMenstrualCycle',
       'ultrasoundDate',
-      'weeksFromUltrasound',
-      'dueDateFromUltrasound'
+      'weeksFromUltrasound'
+      // 'dueDateFromUltrasound'
     ],
     icon: (color: keyof typeof COLORS) => SvgIcon.documentLike({ size: ICON_SIZE.SMALL, color })
   },
@@ -55,10 +48,14 @@ const steps = [
   }
 ]
 
+const getIconColor = (currentStep: number, index: number): keyof typeof COLORS => {
+  if (currentStep >= index) return 'PRIMARY'
+  return 'GRAY'
+}
+
 export default function MeasurementDiaryCreateScreen() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(0)
-  const { bottom } = useSafeAreaInsets()
   const { stepOneMethods, stepTwoMethods } = useCreateDiary()
   const { isDarkColorScheme } = useColorScheme()
 
@@ -110,14 +107,98 @@ export default function MeasurementDiaryCreateScreen() {
     next()
   }
 
-  const progressStyle = useAnimatedStyle(() => {
+  const progressBar1Style = useAnimatedStyle(() => {
+    let progress = 0
+    if (currentStep === 0) progress = 0.5
+    else if (currentStep >= 1) progress = 1
+
     return {
-      width: withSpring(`${((currentStep + 1) / steps.length) * 100}%`, {
-        damping: 15,
-        stiffness: 100
-      })
+      transform: [
+        {
+          scaleX: withSpring(progress, {
+            damping: 20,
+            stiffness: 120,
+            restDisplacementThreshold: 0.01,
+            restSpeedThreshold: 0.01
+          })
+        }
+      ],
+      transformOrigin: 'left'
     }
   })
+
+  const progressBar2Style = useAnimatedStyle(() => {
+    let progress = 0
+    if (currentStep === 1) progress = 0.5
+    else if (currentStep >= 2) progress = 1
+
+    return {
+      transform: [
+        {
+          scaleX: withSpring(progress, {
+            damping: 20,
+            stiffness: 120,
+            restDisplacementThreshold: 0.01,
+            restSpeedThreshold: 0.01
+          })
+        }
+      ],
+      transformOrigin: 'left'
+    }
+  })
+
+  const stepIconStyle0 = useAnimatedStyle(() => {
+    const scale = currentStep === 0 ? 1.2 : 0.8
+
+    return {
+      transform: [
+        {
+          scale: withSpring(scale, {
+            damping: 20,
+            stiffness: 120,
+            restDisplacementThreshold: 0.01,
+            restSpeedThreshold: 0.01
+          })
+        }
+      ]
+    }
+  })
+
+  const stepIconStyle1 = useAnimatedStyle(() => {
+    const scale = currentStep === 1 ? 1.2 : 0.8
+
+    return {
+      transform: [
+        {
+          scale: withSpring(scale, {
+            damping: 20,
+            stiffness: 120,
+            restDisplacementThreshold: 0.01,
+            restSpeedThreshold: 0.01
+          })
+        }
+      ]
+    }
+  })
+
+  const stepIconStyle2 = useAnimatedStyle(() => {
+    const scale = currentStep === 2 ? 1.2 : 0.8
+
+    return {
+      transform: [
+        {
+          scale: withSpring(scale, {
+            damping: 20,
+            stiffness: 120,
+            restDisplacementThreshold: 0.01,
+            restSpeedThreshold: 0.01
+          })
+        }
+      ]
+    }
+  })
+
+  const stepIconStyles = [stepIconStyle0, stepIconStyle1, stepIconStyle2]
 
   return (
     <SafeAreaView className='flex-1'>
@@ -128,20 +209,27 @@ export default function MeasurementDiaryCreateScreen() {
         <Text className='font-inter-semibold text-xl text-center flex-1'>Create New Diary</Text>
       </View>
 
-      {/* Progress Bar */}
       <View className='px-4'>
-        <View className='h-2 bg-muted/50 rounded-full overflow-hidden'>
-          <Animated.View
-            className={cn('h-full rounded-full', isDarkColorScheme ? 'bg-primary' : 'bg-primary')}
-            style={progressStyle}
-          />
-        </View>
-        <View className='flex flex-row justify-between items-center mt-4'>
-          {steps.map((step, index) => (
-            <View key={step.id} className='items-center'>
-              {step.icon(index <= currentStep ? 'PRIMARY' : 'GRAY')}
-            </View>
-          ))}
+        <View className='flex flex-row items-center justify-between'>
+          <Animated.View style={stepIconStyles[0]}>{steps[0].icon(getIconColor(currentStep, 0))}</Animated.View>
+
+          <View className='flex-1 mx-3 h-1.5 bg-muted/50 rounded-full overflow-hidden'>
+            <Animated.View
+              className={cn('h-full w-full rounded-full', isDarkColorScheme ? 'bg-primary' : 'bg-primary')}
+              style={progressBar1Style}
+            />
+          </View>
+
+          <Animated.View style={stepIconStyles[1]}>{steps[1].icon(getIconColor(currentStep, 1))}</Animated.View>
+
+          <View className='flex-1 mx-3 h-1.5 bg-muted/50 rounded-full overflow-hidden'>
+            <Animated.View
+              className={cn('h-full w-full rounded-full', isDarkColorScheme ? 'bg-primary' : 'bg-primary')}
+              style={progressBar2Style}
+            />
+          </View>
+
+          <Animated.View style={stepIconStyles[2]}>{steps[2].icon(getIconColor(currentStep, 2))}</Animated.View>
         </View>
       </View>
 
@@ -153,19 +241,17 @@ export default function MeasurementDiaryCreateScreen() {
             </FormProvider>
 
             <View className='flex-1' />
-            <Animated.View
-              entering={SlideInLeft.duration(250)}
-              exiting={SlideOutLeft.duration(250)}
-              className='flex flex-col gap-2'
-            >
+
+            <View className='flex flex-col gap-2'>
               {stepOneRootMsg && <FieldError message={stepOneRootMsg} />}
-              <Button style={{ marginBottom: bottom }} onPress={handleSubmitStepOne(onSubmitStepOne)}>
+              <Button onPress={next}>
                 <Text className='font-inter-medium'>Next</Text>
               </Button>
-            </Animated.View>
+            </View>
           </View>
         </View>
       )}
+
       {currentStep === 1 && (
         <View className='flex-1 mt-4'>
           <FormProvider {...stepTwoMethods}>
@@ -173,30 +259,32 @@ export default function MeasurementDiaryCreateScreen() {
           </FormProvider>
 
           <View className='flex-1' />
-          <Animated.View
-            entering={SlideInRight.duration(250)}
-            exiting={SlideOutRight.duration(250)}
-            className='flex flex-col gap-4 px-4'
-          >
+
+          <View className='flex flex-col gap-4 px-4'>
             {stepTwoRootMsg && <FieldError message={stepTwoRootMsg} />}
             <View className='flex flex-row gap-2'>
-              <Button className='flex-1' variant='outline' style={{ marginBottom: bottom }} onPress={prev}>
+              <Button className='flex-1' variant='outline' onPress={prev}>
                 <Text className='font-inter-medium'>Previous</Text>
               </Button>
-              <Button
-                className='flex-1'
-                style={{ marginBottom: bottom }}
-                onPress={handleSubmitStepTwo(onSubmitStepTwo)}
-              >
+              <Button className='flex-1' onPress={next}>
                 <Text className='font-inter-medium'>Next</Text>
               </Button>
             </View>
-          </Animated.View>
+          </View>
         </View>
       )}
       {currentStep === 2 && (
         <View className='flex-1 px-4'>
-          <View className='flex-1'></View>
+          <View className='flex-1' />
+
+          <View className='flex flex-row gap-2'>
+            <Button className='flex-1' variant='outline' onPress={prev}>
+              <Text className='font-inter-medium'>Previous</Text>
+            </Button>
+            <Button className='flex-1' onPress={next}>
+              <Text className='font-inter-medium'>Next</Text>
+            </Button>
+          </View>
         </View>
       )}
     </SafeAreaView>
