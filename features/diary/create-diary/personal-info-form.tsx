@@ -17,10 +17,6 @@ export default function PersonalInfoForm() {
   } = useFormContext<PersonalInfoFormSchema>()
   const className = useFieldError()
 
-  const today = new Date()
-  const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
-  const minDate = new Date(today.getFullYear() - 55, today.getMonth(), today.getDate())
-
   return (
     <View className='flex flex-col gap-4'>
       <Animated.View entering={FadeInDown.delay(100)} className='flex flex-col gap-1'>
@@ -68,6 +64,7 @@ export default function PersonalInfoForm() {
                 value={value}
                 onChangeText={onChange}
                 className={cn('bg-background border-input', isFormError(errors, 'weight') ? className : '')}
+                EndIcon={<Text className='text-muted-foreground text-sm'>kg</Text>}
               />
             )}
           />
@@ -85,6 +82,7 @@ export default function PersonalInfoForm() {
                 value={value}
                 onChangeText={onChange}
                 className={cn('bg-background border-input', isFormError(errors, 'height') ? className : '')}
+                EndIcon={<Text className='text-muted-foreground text-sm'>cm</Text>}
               />
             )}
           />
@@ -109,6 +107,7 @@ export default function PersonalInfoForm() {
                 value={value}
                 onChangeText={onChange}
                 className={cn('bg-background border-input', isFormError(errors, 'age') ? className : '')}
+                EndIcon={<Text className='text-muted-foreground text-sm'>years</Text>}
               />
             )}
           />

@@ -3,6 +3,7 @@ import * as SecureStore from 'expo-secure-store'
 import { BaseResponse } from '~/types/common'
 import { clear, setTokens } from '../redux-toolkit/slices/auth.slice'
 import { store } from '../redux-toolkit/store'
+import { router } from 'expo-router'
 
 export interface AuthTokens {
   accessToken: string
@@ -81,6 +82,7 @@ const refresh = async (): Promise<AuthTokens> => {
   } catch (error) {
     if (isAxiosError(error) && error.response?.status === 401) {
       await clearAuthTokens()
+      router.replace('/profile')
     }
     console.log('error', JSON.stringify(error, null, 2))
     throw error

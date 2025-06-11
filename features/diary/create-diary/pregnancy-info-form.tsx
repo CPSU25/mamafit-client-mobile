@@ -28,8 +28,8 @@ export default function PregnancyInfoForm() {
         <Animated.View
           entering={FadeInDown.delay(100)}
           className={cn(
-            'border rounded-2xl p-4 mx-4',
-            isDarkColorScheme ? 'bg-amber-500/10 border-amber-500/20' : 'bg-amber-500/20 border-amber-300/60'
+            'border rounded-2xl p-4 mx-4 border-dashed',
+            isDarkColorScheme ? 'bg-amber-500/10 border-amber-900' : 'bg-amber-500/20 border-amber-500'
           )}
         >
           <View className='flex flex-row items-baseline gap-3'>
@@ -106,13 +106,14 @@ export default function PregnancyInfoForm() {
               name='bust'
               render={({ field: { onChange, value, ...field } }) => (
                 <Input
-                  placeholder='Bust circumference (cm)'
+                  placeholder='Bust circumference'
                   keyboardType='numeric'
                   StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
                   value={value}
                   onChangeText={onChange}
                   className={cn('bg-background border-input', isFormError(errors, 'bust') ? className : '')}
+                  EndIcon={<Text className='text-muted-foreground text-sm'>cm</Text>}
                 />
               )}
             />
@@ -124,13 +125,14 @@ export default function PregnancyInfoForm() {
               name='waist'
               render={({ field: { onChange, value, ...field } }) => (
                 <Input
-                  placeholder='Waist circumference (cm)'
+                  placeholder='Waist circumference'
                   keyboardType='numeric'
                   StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
                   value={value}
                   onChangeText={onChange}
                   className={cn('bg-background border-input', isFormError(errors, 'waist') ? className : '')}
+                  EndIcon={<Text className='text-muted-foreground text-sm'>cm</Text>}
                 />
               )}
             />
@@ -142,13 +144,14 @@ export default function PregnancyInfoForm() {
               name='hip'
               render={({ field: { onChange, value, ...field } }) => (
                 <Input
-                  placeholder='Hip circumference (cm)'
+                  placeholder='Hip circumference'
                   keyboardType='numeric'
                   StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
                   value={value}
                   onChangeText={onChange}
                   className={cn('bg-background border-input', isFormError(errors, 'hip') ? className : '')}
+                  EndIcon={<Text className='text-muted-foreground text-sm'>cm</Text>}
                 />
               )}
             />
@@ -179,7 +182,7 @@ export default function PregnancyInfoForm() {
                     name='averageMenstrualCycle'
                     render={({ field: { onChange, value, ...field } }) => (
                       <Input
-                        placeholder='Average cycle length (days)'
+                        placeholder='Average cycle length'
                         keyboardType='numeric'
                         StartIcon={<Feather name='repeat' size={20} color={PRIMARY_COLOR.LIGHT} />}
                         {...field}
@@ -189,6 +192,7 @@ export default function PregnancyInfoForm() {
                           'bg-background border-input',
                           isFormError(errors, 'averageMenstrualCycle') ? className : ''
                         )}
+                        EndIcon={<Text className='text-muted-foreground native:text-sm'>days</Text>}
                       />
                     )}
                   />
@@ -220,6 +224,7 @@ export default function PregnancyInfoForm() {
                           'bg-background border-input',
                           isFormError(errors, 'weeksFromUltrasound') ? className : ''
                         )}
+                        EndIcon={<Text className='text-muted-foreground native:text-sm'>weeks</Text>}
                       />
                     )}
                   />
