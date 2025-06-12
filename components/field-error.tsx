@@ -15,7 +15,7 @@ export default function FieldError({ message }: FieldErrorProps) {
     <View
       className={cn(
         'px-4 py-2 rounded-xl border',
-        isDarkColorScheme ? 'bg-rose-950/60 border-rose-500/20' : 'bg-rose-100/60 border-rose-200'
+        isDarkColorScheme ? 'bg-rose-900/20 border-rose-800' : 'bg-rose-50 border-rose-200'
       )}
     >
       <View className='flex flex-row items-center gap-3'>

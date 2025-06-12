@@ -7,6 +7,7 @@ import { Provider } from 'react-redux'
 import { store } from '~/lib/redux-toolkit/store'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
+import { PortalHost } from '@rn-primitives/portal'
 
 const onAppStateChange = (status: AppStateStatus) => {
   if (Platform.OS !== 'web') {
@@ -27,6 +28,7 @@ export default function AppProvider({ children }: { children: React.ReactNode })
         <Provider store={store}>
           <NotificationProvider>
             <QueryProvider>{children}</QueryProvider>
+            <PortalHost />
           </NotificationProvider>
         </Provider>
       </GestureHandlerRootView>

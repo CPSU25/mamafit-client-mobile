@@ -11,18 +11,31 @@ export default function DiaryCard() {
 
   return (
     <LinearGradient
-      colors={isDarkColorScheme ? ['#8a5cd7 ', '#5a32a3 '] : ['#b983ef', '#8747e1']}
-      className='rounded-2xl overflow-hidden p-1'
+      colors={isDarkColorScheme ? ['#5b21b6 ', '#7c3aed'] : ['#6d28d9', '#8b5cf6']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+      className='rounded-2xl overflow-hidden'
       style={[styles.container, getShadowStyles('#6d28d9')]}
     >
-      <View className='flex flex-col gap-3 p-3 bg-card rounded-xl'>
+      <Text className='text-xs text-white text-right lowercase font-inter-semibold pr-4 my-1.5'>
+        Updated 12 hours ago
+      </Text>
+      <View
+        className='flex flex-col gap-4 p-2.5 bg-card rounded-2xl'
+        style={{
+          boxShadow: '0 12px 22px 8px rgba(0, 0, 0, 0.6)'
+        }}
+      >
         <View className='flex flex-row items-center gap-3 mb-2'>
           <View className={`${isDarkColorScheme ? 'bg-primary/15' : 'bg-primary/10'} p-1.5 rounded-lg`}>
-            {SvgIcon.diary({ size: ICON_SIZE.EXTRA_SMALL, color: 'PRIMARY' })}
+            {SvgIcon.diary({ size: ICON_SIZE.SMALL, color: 'PRIMARY' })}
           </View>
-          <Text className={`text-xl font-inter-semibold`} numberOfLines={1}>
-            Nguyen Thi Van Anh
-          </Text>
+          <View>
+            <Text className={`text-lg font-inter-semibold`} numberOfLines={1}>
+              Nguyen Thi Van Anh
+            </Text>
+            <Text className='text-xs text-muted-foreground'>Created At: 12/06/2025</Text>
+          </View>
         </View>
 
         <View
@@ -34,7 +47,7 @@ export default function DiaryCard() {
             >
               Weight
             </Text>
-            <Text className={`text-sm font-inter-semibold ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
+            <Text className={`text-sm font-inter-medium ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
               40.00 kg
             </Text>
           </View>
@@ -45,7 +58,7 @@ export default function DiaryCard() {
             >
               Height
             </Text>
-            <Text className={`text-sm font-inter-semibold ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
+            <Text className={`text-sm font-inter-medium ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
               190.00 cm
             </Text>
           </View>
@@ -56,15 +69,12 @@ export default function DiaryCard() {
             >
               Pregnancy
             </Text>
-            <Text className={`text-sm font-inter-semibold ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
+            <Text className={`text-sm font-inter-medium ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
               2nd
             </Text>
           </View>
         </View>
       </View>
-      <Text className='text-xs text-white/90 text-right font-inter-semibold lowercase my-2 px-4'>
-        Updated 12 hours ago
-      </Text>
     </LinearGradient>
   )
 }

@@ -63,9 +63,12 @@ const refresh = async (): Promise<AuthTokens> => {
   try {
     const authData = await getAuthTokens()
     const currentRefreshToken = authData?.refreshToken
+
     if (!currentRefreshToken) {
       throw new Error('No refresh token available')
     }
+
+    console.log('Refreshing token...', currentRefreshToken)
 
     const { data } = await axios.post<BaseResponse<RefreshResponse>>(
       `${baseURL}auth/refresh-token`,

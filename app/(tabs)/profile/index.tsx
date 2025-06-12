@@ -24,22 +24,22 @@ const statuses: OrderStatus[] = [
   {
     id: 1,
     name: 'To Pay',
-    icon: SvgIcon.toPay({ size: ICON_SIZE.MEDIUM, color: 'PRIMARY' })
+    icon: SvgIcon.toPay({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 2,
     name: 'To Ship',
-    icon: SvgIcon.toShip({ size: ICON_SIZE.MEDIUM, color: 'PRIMARY' })
+    icon: SvgIcon.toShip({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 3,
     name: 'To Receive',
-    icon: SvgIcon.toReceive({ size: ICON_SIZE.MEDIUM, color: 'PRIMARY' })
+    icon: SvgIcon.toReceive({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 4,
     name: 'To Rate',
-    icon: SvgIcon.toRate({ size: ICON_SIZE.MEDIUM, color: 'PRIMARY' })
+    icon: SvgIcon.toRate({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   }
 ]
 
@@ -53,7 +53,7 @@ function OrderStage({ status }: { status: OrderStatus }) {
 }
 
 export default function ProfileScreen() {
-  const { isLoading, isAuthenticated } = useAuth()
+  const { isLoading, isAuthenticated, tokens } = useAuth()
   const router = useRouter()
   const { isDarkColorScheme, setColorScheme } = useColorScheme()
   const [checked, setChecked] = useState(isDarkColorScheme ? true : false)
@@ -64,6 +64,8 @@ export default function ProfileScreen() {
   }
 
   if (isLoading) return <Loading />
+
+  console.log(tokens)
 
   return (
     <SafeAreaView className='flex-1'>

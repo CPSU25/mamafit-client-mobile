@@ -1,4 +1,4 @@
-import { Feather, FontAwesome5, MaterialIcons } from '@expo/vector-icons'
+import { Feather, FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { Controller, useFormContext } from 'react-hook-form'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
@@ -29,11 +29,11 @@ export default function PregnancyInfoForm() {
           entering={FadeInDown.delay(100)}
           className={cn(
             'border rounded-2xl p-4 mx-4 border-dashed',
-            isDarkColorScheme ? 'bg-amber-500/10 border-amber-900' : 'bg-amber-500/20 border-amber-500'
+            isDarkColorScheme ? 'bg-amber-500/10 border-amber-900' : 'bg-amber-500/20 border-amber-500/30'
           )}
         >
           <View className='flex flex-row items-baseline gap-3'>
-            <FontAwesome5 name='exclamation-triangle' size={16} color={isDarkColorScheme ? '#f59e0b' : '#d97706'} />
+            <FontAwesome name='exclamation-triangle' size={16} color={isDarkColorScheme ? '#f59e0b' : '#d97706'} />
             <View className='flex flex-col gap-0.5 flex-shrink'>
               <Text className={cn('font-inter-semibold', isDarkColorScheme ? 'text-amber-500' : 'text-amber-600')}>
                 Important Information
@@ -169,7 +169,7 @@ export default function PregnancyInfoForm() {
             </Text>
           </View>
 
-          <Accordion type='multiple' collapsible className='w-full max-w-sm native:max-w-md pb-16 mt-4'>
+          <Accordion type='multiple' collapsible className='w-full max-w-sm native:max-w-md pb-10'>
             <AccordionItem value='menstrual-cycle'>
               <AccordionTrigger>
                 <Text className='font-inter-medium'>Menstrual Cycle</Text>
