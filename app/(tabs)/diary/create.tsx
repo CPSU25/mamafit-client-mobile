@@ -3,13 +3,14 @@ import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
-import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated'
+import Animated, { FadeInDown, FadeOutDown, useAnimatedStyle, withSpring } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FieldError from '~/components/field-error'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
 import PersonalInfoForm from '~/features/diary/create-diary/personal-info-form'
 import PregnancyInfoForm from '~/features/diary/create-diary/pregnancy-info-form'
+import ReviewMeasurements from '~/features/diary/create-diary/review-measurements'
 import { useCreateDiary } from '~/features/diary/create-diary/use-create-diary'
 import { PersonalInfoFormSchema, PregnancyInfoFormSchema } from '~/features/diary/create-diary/validations'
 import { useColorScheme } from '~/hooks/use-color-scheme'
@@ -38,13 +39,13 @@ const steps = [
       'weeksFromUltrasound'
       // 'dueDateFromUltrasound'
     ],
-    icon: (color: keyof typeof COLORS) => SvgIcon.documentLike({ size: ICON_SIZE.SMALL, color })
+    icon: (color: keyof typeof COLORS) => SvgIcon.folderFavorite({ size: ICON_SIZE.SMALL, color })
   },
   {
     id: 3,
     name: 'Review',
     field: [],
-    icon: (color: keyof typeof COLORS) => SvgIcon.personalCard({ size: ICON_SIZE.SMALL, color })
+    icon: (color: keyof typeof COLORS) => SvgIcon.chartSuccess({ size: ICON_SIZE.SMALL, color })
   }
 ]
 
@@ -148,7 +149,7 @@ export default function MeasurementDiaryCreateScreen() {
   })
 
   const stepIconStyle0 = useAnimatedStyle(() => {
-    const scale = currentStep === 0 ? 1.2 : 0.8
+    const scale = currentStep === 0 ? 1.3 : 0.9
 
     return {
       transform: [
@@ -165,7 +166,7 @@ export default function MeasurementDiaryCreateScreen() {
   })
 
   const stepIconStyle1 = useAnimatedStyle(() => {
-    const scale = currentStep === 1 ? 1.2 : 0.8
+    const scale = currentStep === 1 ? 1.3 : 0.9
 
     return {
       transform: [
@@ -182,7 +183,7 @@ export default function MeasurementDiaryCreateScreen() {
   })
 
   const stepIconStyle2 = useAnimatedStyle(() => {
-    const scale = currentStep === 2 ? 1.2 : 0.8
+    const scale = currentStep === 2 ? 1.3 : 0.9
 
     return {
       transform: [
@@ -211,7 +212,9 @@ export default function MeasurementDiaryCreateScreen() {
 
       <View className='px-4'>
         <View className='flex flex-row items-center justify-between'>
-          <Animated.View style={stepIconStyles[0]}>{steps[0].icon(getIconColor(currentStep, 0))}</Animated.View>
+          <Animated.View className='mx-1' style={stepIconStyles[0]}>
+            {steps[0].icon(getIconColor(currentStep, 0))}
+          </Animated.View>
 
           <View className='flex-1 mx-3 h-1.5 bg-muted/50 rounded-full overflow-hidden'>
             <Animated.View
@@ -220,7 +223,9 @@ export default function MeasurementDiaryCreateScreen() {
             />
           </View>
 
-          <Animated.View style={stepIconStyles[1]}>{steps[1].icon(getIconColor(currentStep, 1))}</Animated.View>
+          <Animated.View className='mx-1' style={stepIconStyles[1]}>
+            {steps[1].icon(getIconColor(currentStep, 1))}
+          </Animated.View>
 
           <View className='flex-1 mx-3 h-1.5 bg-muted/50 rounded-full overflow-hidden'>
             <Animated.View
@@ -229,7 +234,9 @@ export default function MeasurementDiaryCreateScreen() {
             />
           </View>
 
-          <Animated.View style={stepIconStyles[2]}>{steps[2].icon(getIconColor(currentStep, 2))}</Animated.View>
+          <Animated.View className='mx-1' style={stepIconStyles[2]}>
+            {steps[2].icon(getIconColor(currentStep, 2))}
+          </Animated.View>
         </View>
       </View>
 
@@ -242,12 +249,16 @@ export default function MeasurementDiaryCreateScreen() {
 
             <View className='flex-1' />
 
-            <View className='flex flex-col gap-2'>
+            <Animated.View
+              entering={FadeInDown.duration(250)}
+              exiting={FadeOutDown.duration(250)}
+              className='flex flex-col gap-2'
+            >
               {stepOneRootMsg && <FieldError message={stepOneRootMsg} />}
               <Button onPress={next}>
                 <Text className='font-inter-medium'>Next</Text>
               </Button>
-            </View>
+            </Animated.View>
           </View>
         </View>
       )}
@@ -260,7 +271,11 @@ export default function MeasurementDiaryCreateScreen() {
 
           <View className='flex-1' />
 
-          <View className='flex flex-col gap-4 px-4'>
+          <Animated.View
+            entering={FadeInDown.duration(250)}
+            exiting={FadeOutDown.duration(250)}
+            className='flex flex-col gap-4 px-4'
+          >
             {stepTwoRootMsg && <FieldError message={stepTwoRootMsg} />}
             <View className='flex flex-row gap-2'>
               <Button className='flex-1' variant='outline' onPress={prev}>
@@ -270,21 +285,25 @@ export default function MeasurementDiaryCreateScreen() {
                 <Text className='font-inter-medium'>Next</Text>
               </Button>
             </View>
-          </View>
+          </Animated.View>
         </View>
       )}
       {currentStep === 2 && (
-        <View className='flex-1 px-4'>
+        <View className='flex-1 px-4 mt-4'>
+          <ReviewMeasurements />
           <View className='flex-1' />
-
-          <View className='flex flex-row gap-2'>
+          <Animated.View
+            entering={FadeInDown.duration(250)}
+            exiting={FadeOutDown.duration(250)}
+            className='flex flex-row gap-2'
+          >
             <Button className='flex-1' variant='outline' onPress={prev}>
               <Text className='font-inter-medium'>Previous</Text>
             </Button>
             <Button className='flex-1' onPress={next}>
-              <Text className='font-inter-medium'>Next</Text>
+              <Text className='font-inter-medium'>Submit</Text>
             </Button>
-          </View>
+          </Animated.View>
         </View>
       )}
     </SafeAreaView>

@@ -1,6 +1,6 @@
 import '~/global.css'
 
-import { AntDesign, Feather, FontAwesome5, MaterialIcons } from '@expo/vector-icons'
+import { AntDesign, Feather, FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
@@ -55,7 +55,7 @@ export default function RootLayout() {
     ...Feather.font,
     ...AntDesign.font,
     ...MaterialIcons.font,
-    ...FontAwesome5.font,
+    ...FontAwesome.font,
     'Inter-Light': require('~/assets/fonts/Inter-Light.ttf'),
     'Inter-Regular': require('~/assets/fonts/Inter-Regular.ttf'),
     'Inter-Medium': require('~/assets/fonts/Inter-Medium.ttf'),
