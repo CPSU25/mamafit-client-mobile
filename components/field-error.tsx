@@ -1,0 +1,34 @@
+import { AntDesign } from '@expo/vector-icons'
+import { View } from 'react-native'
+import { useColorScheme } from '~/hooks/use-color-scheme'
+import { cn } from '~/lib/utils'
+import { Text } from './ui/text'
+
+interface FieldErrorProps {
+  message: string
+}
+
+export default function FieldError({ message }: FieldErrorProps) {
+  const { isDarkColorScheme } = useColorScheme()
+
+  return (
+    <View
+      className={cn(
+        'px-4 py-2 rounded-xl border',
+        isDarkColorScheme ? 'bg-rose-900/20 border-rose-800' : 'bg-rose-50 border-rose-200'
+      )}
+    >
+      <View className='flex flex-row items-center gap-3'>
+        {message && <AntDesign name='exclamationcircle' size={14} color='#B22222' />}
+        <Text
+          className={cn(
+            'native:text-xs flex-1 font-inter-medium',
+            isDarkColorScheme ? 'text-white/80' : 'text-black/80'
+          )}
+        >
+          {message}
+        </Text>
+      </View>
+    </View>
+  )
+}

@@ -1,10 +1,10 @@
 {
   "expo": {
     "name": "Mama Fit",
-    "slug": "mamafit",
+    "slug": "mamafit-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/mamafit-app-icon.png",
     "scheme": "mamafit",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,11 +13,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/mamafit-app-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.mamafit.app"
+      "package": "com.mamafit.app",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
@@ -29,7 +30,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/mamafit-splash-screen.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -39,16 +40,19 @@
         "expo-font",
         {
           "fonts": [
-            "./assets/fonts/Roboto-Light.ttf",
-            "./assets/fonts/Roboto-Regular.ttf",
-            "./assets/fonts/Roboto-Medium.ttf",
-            "./assets/fonts/Roboto-SemiBold.ttf",
-            "./assets/fonts/Roboto-Bold.ttf",
-            "./assets/fonts/Roboto-ExtraBold.ttf"
+            "./assets/fonts/Inter-Light.ttf",
+            "./assets/fonts/Inter-Regular.ttf",
+            "./assets/fonts/Inter-Medium.ttf",
+            "./assets/fonts/Inter-SemiBold.ttf",
+            "./assets/fonts/Inter-Bold.ttf",
+            "./assets/fonts/Inter-ExtraBold.ttf"
           ]
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "@react-native-google-signin/google-signin",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth"
     ],
     "experiments": {
       "typedRoutes": true
@@ -56,8 +60,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "643673d8-d154-4513-9e28-c1404b809df9"
+        "projectId": "4316a3bf-866d-43bb-b53f-b07bc0c013fc"
       }
-    }
+    },
+    "owner": "mamafit"
   }
 }

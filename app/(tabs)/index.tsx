@@ -1,10 +1,60 @@
+import Feather from '@expo/vector-icons/Feather'
+import { useRouter } from 'expo-router'
+import { FlatList, Pressable, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import DressCard from '~/components/card/dress-card'
 import { Text } from '~/components/ui/text'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
+
+// Sample data for dresses
+const dresses = Array(8)
+  .fill(null)
+  .map((_, index) => ({
+    id: index.toString()
+  }))
 
 export default function HomeScreen() {
+  const router = useRouter()
+
   return (
-    <SafeAreaView>
-      <Text>HomeScreen</Text>
+    <SafeAreaView className='flex-1 p-4'>
+      <View className='flex flex-col gap-4'>
+        {/* Header */}
+        <View className='flex flex-row items-center gap-4'>
+          <Pressable
+            onPress={() => router.push('/search?autoFocus=true')}
+            className='flex flex-row flex-1 items-center h-12 border border-input rounded-xl px-3 bg-background'
+          >
+            <View className='flex flex-row items-center gap-2'>
+              <Feather name='search' size={18} color={PRIMARY_COLOR.LIGHT} />
+              <Text className='font-inter text-sm text-muted-foreground'>Search</Text>
+            </View>
+          </Pressable>
+          <View className='flex flex-row items-center gap-6 mr-2'>
+            <TouchableOpacity onPress={() => router.push('/cart')}>
+              <Feather name='shopping-bag' size={24} color={PRIMARY_COLOR.LIGHT} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/chat')}>
+              <Feather name='message-circle' size={24} color={PRIMARY_COLOR.LIGHT} />
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/* Carousel */}
+        {/* <HomeCarousel /> */}
+        {/* List of dresses */}
+        <FlatList
+          data={dresses}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity className='flex-1' onPress={() => router.push(`/product/${item.id}`)}>
+              <DressCard className='w-full' />
+            </TouchableOpacity>
+          )}
+          columnWrapperClassName='gap-2'
+          contentContainerClassName='pb-32 gap-2'
+        />
+      </View>
     </SafeAreaView>
   )
 }
