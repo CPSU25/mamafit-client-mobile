@@ -68,8 +68,9 @@ export default function TabsLayout() {
 
   const isCreateDiary = isDisplayTabBar(segments, '/diary/create')
   const isAppointment = isDisplayTabBar(segments, '/profile/appointment')
+  const isDiaryDetail = isDisplayTabBar(segments, '/diary/detail')
 
-  const isDisplay = isCreateDiary || isAppointment
+  const isDisplay = isCreateDiary || isAppointment || isDiaryDetail
 
   return (
     <Tabs

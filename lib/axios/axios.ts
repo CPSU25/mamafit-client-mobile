@@ -59,7 +59,7 @@ const clearAuthTokens = async (): Promise<void> => {
   }
 }
 
-const refresh = async (): Promise<AuthTokens> => {
+const refresh = async (): Promise<AuthTokens | undefined> => {
   try {
     const authData = await getAuthTokens()
     const currentRefreshToken = authData?.refreshToken
@@ -88,7 +88,6 @@ const refresh = async (): Promise<AuthTokens> => {
       router.replace('/profile')
     }
     console.log('error', JSON.stringify(error, null, 2))
-    throw error
   }
 }
 
@@ -112,7 +111,7 @@ const setTokenData = async (tokenData: AuthTokens, axiosClient: typeof api): Pro
   axiosClient.defaults.headers.common['Authorization'] = `Bearer ${tokenData.accessToken}`
 }
 
-const handleTokenRefresh = async (): Promise<AuthTokens> => {
+const handleTokenRefresh = async (): Promise<AuthTokens | undefined> => {
   try {
     return await refresh()
   } catch (error) {
@@ -173,7 +172,8 @@ export const applyAppTokenRefreshInterceptor = (axiosClient: typeof api, customO
     return new Promise((resolve, reject) => {
       options
         .handleTokenRefresh()
-        .then((tokenData: AuthTokens) => {
+        .then((tokenData: AuthTokens | undefined) => {
+          if (!tokenData) return reject(error)
           options.setTokenData(tokenData, axiosClient)
           options.attachTokenToRequest(originalRequest, tokenData.accessToken)
           processQueue(null, tokenData.accessToken)

@@ -32,12 +32,12 @@ export default function MeasurementDiaryScreen() {
         StartIcon={<Feather name='search' size={24} color={PRIMARY_COLOR.LIGHT} />}
       />
 
-      <View className='flex flex-col gap-4'>
+      <View className='flex flex-col gap-4 mt-4'>
         <FlatList
           data={diaries}
           renderItem={({ item, index }) => (
             <Animated.View entering={FadeInDown.duration(200).delay(index * 100)}>
-              <Pressable onPress={() => router.push('/diary/1')}>
+              <Pressable onPress={() => router.push('/diary/detail/1')}>
                 <DiaryCard />
               </Pressable>
             </Animated.View>
