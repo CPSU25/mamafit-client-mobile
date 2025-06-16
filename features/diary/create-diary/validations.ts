@@ -1,12 +1,7 @@
-import { differenceInWeeks, differenceInYears, parseISO } from 'date-fns'
+import { differenceInWeeks, parseISO } from 'date-fns'
 import { z } from 'zod'
 
-const getAge = (date: Date) => {
-  const today = new Date()
-  return differenceInYears(today, date)
-}
-
-export const personalInfoFormSchema = z
+export const personalInfoFormOutput = z
   .object({
     name: z
       .string()
@@ -14,7 +9,7 @@ export const personalInfoFormSchema = z
       .max(50, { message: 'Name must be less than 50 characters' }),
     weight: z.string().min(1, { message: 'Weight is required' }),
     height: z.string().min(1, { message: 'Height is required' }),
-    age: z.string({ message: 'Date of birth is required' }).min(1, { message: 'Date of birth is required' })
+    age: z.string({ message: 'Age is required' }).min(1, { message: 'Age is required' })
   })
   .superRefine((data, ctx) => {
     // Weight validation
@@ -74,8 +69,14 @@ export const personalInfoFormSchema = z
       ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Age must be an integer', path: ['age'] })
     }
   })
+  .transform((data) => ({
+    ...data,
+    age: Number(data.age),
+    weight: Number(data.weight),
+    height: Number(data.height)
+  }))
 
-export const pregnancyInfoFormSchema = z
+export const pregnancyInfoFormOutput = z
   .object({
     firstDateOfLastPeriod: z
       .string({
@@ -86,9 +87,9 @@ export const pregnancyInfoFormSchema = z
     waist: z.string({ message: 'Waist required' }).min(1, { message: 'Waist required' }),
     hip: z.string({ message: 'Hip required' }).min(1, { message: 'Hip required' }),
     numberOfPregnancy: z.string().min(1, { message: 'Pregnancy count required' }),
-    averageMenstrualCycle: z.string().nullable().optional(),
+    averageMenstrualCycle: z.string(),
     ultrasoundDate: z.string().nullable().optional(),
-    weeksFromUltrasound: z.string().nullable().optional()
+    weeksFromUltrasound: z.string()
     // dueDateFromUltrasound: z.string().nullable().optional()
   })
   .superRefine((data, ctx) => {
@@ -339,6 +340,24 @@ export const pregnancyInfoFormSchema = z
     //   }
     // }
   })
+  .transform((data) => ({
+    ...data,
+    firstDateOfLastPeriod: parseISO(data.firstDateOfLastPeriod).toISOString(),
+    ultrasoundDate: data.ultrasoundDate ? parseISO(data.ultrasoundDate).toISOString() : null,
+    averageMenstrualCycle: data.averageMenstrualCycle ? Number(data.averageMenstrualCycle) : 0,
+    weeksFromUltrasound: data.weeksFromUltrasound ? Number(data.weeksFromUltrasound) : 0,
+    bust: Number(data.bust),
+    waist: Number(data.waist),
+    hip: Number(data.hip),
+    numberOfPregnancy: Number(data.numberOfPregnancy)
+  }))
 
-export type PersonalInfoFormSchema = z.infer<typeof personalInfoFormSchema>
-export type PregnancyInfoFormSchema = z.infer<typeof pregnancyInfoFormSchema>
+// Input types (before transform) - for forms
+export type PersonalInfoFormInput = z.input<typeof personalInfoFormOutput>
+export type PregnancyInfoFormInput = z.input<typeof pregnancyInfoFormOutput>
+
+// Output types (after transform) - for API/processing
+export type PersonalInfoFormOutput = z.output<typeof personalInfoFormOutput>
+export type PregnancyInfoFormOutput = z.output<typeof pregnancyInfoFormOutput>
+
+export type CreateDiaryInput = PersonalInfoFormOutput & PregnancyInfoFormOutput

@@ -1,44 +1,53 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import diaryApi from '~/apis/diary.api'
 import {
-  personalInfoFormSchema,
-  PersonalInfoFormSchema,
-  pregnancyInfoFormSchema,
-  PregnancyInfoFormSchema
+  PersonalInfoFormInput,
+  PersonalInfoFormOutput,
+  personalInfoFormOutput,
+  PregnancyInfoFormInput,
+  PregnancyInfoFormOutput,
+  pregnancyInfoFormOutput
 } from './validations'
 
-const defaultValuesStepOne: PersonalInfoFormSchema = {
-  name: '',
-  weight: '',
-  height: '',
-  age: ''
+const defaultValuesStepOne: PersonalInfoFormInput = {
+  name: 'Danh Nguyen',
+  weight: '80',
+  height: '170',
+  age: '22'
 }
 
-const defaultValuesStepTwo: PregnancyInfoFormSchema = {
-  firstDateOfLastPeriod: '',
-  bust: '',
-  waist: '',
-  hip: '',
-  numberOfPregnancy: '',
-  averageMenstrualCycle: null,
+const defaultValuesStepTwo: PregnancyInfoFormInput = {
+  firstDateOfLastPeriod: '2025-01-01',
+  bust: '80',
+  waist: '60',
+  hip: '90',
+  numberOfPregnancy: '1',
+  averageMenstrualCycle: '',
   ultrasoundDate: null,
-  weeksFromUltrasound: null
+  weeksFromUltrasound: ''
   // dueDateFromUltrasound: null
 }
 
 export const useCreateDiary = () => {
-  const stepOneMethods = useForm<PersonalInfoFormSchema>({
+  const stepOneMethods = useForm<PersonalInfoFormInput, unknown, PersonalInfoFormOutput>({
     defaultValues: defaultValuesStepOne,
-    resolver: zodResolver(personalInfoFormSchema)
+    resolver: zodResolver(personalInfoFormOutput)
   })
 
-  const stepTwoMethods = useForm<PregnancyInfoFormSchema>({
+  const stepTwoMethods = useForm<PregnancyInfoFormInput, unknown, PregnancyInfoFormOutput>({
     defaultValues: defaultValuesStepTwo,
-    resolver: zodResolver(pregnancyInfoFormSchema)
+    resolver: zodResolver(pregnancyInfoFormOutput)
+  })
+
+  const previewDiaryMutation = useMutation({
+    mutationFn: diaryApi.previewDiary
   })
 
   return {
     stepOneMethods,
-    stepTwoMethods
+    stepTwoMethods,
+    previewDiaryMutation
   }
 }

@@ -12,11 +12,16 @@ import PersonalInfoForm from '~/features/diary/create-diary/personal-info-form'
 import PregnancyInfoForm from '~/features/diary/create-diary/pregnancy-info-form'
 import ReviewMeasurements from '~/features/diary/create-diary/review-measurements'
 import { useCreateDiary } from '~/features/diary/create-diary/use-create-diary'
-import { PersonalInfoFormSchema, PregnancyInfoFormSchema } from '~/features/diary/create-diary/validations'
+import {
+  personalInfoFormOutput,
+  PersonalInfoFormOutput,
+  PregnancyInfoFormOutput
+} from '~/features/diary/create-diary/validations'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { COLORS, SvgIcon } from '~/lib/constants/svg-icon'
 import { cn } from '~/lib/utils'
+import { PreviewDiaryResponse } from '~/types/diary.type'
 
 const steps = [
   {
@@ -57,12 +62,14 @@ const getIconColor = (currentStep: number, index: number): keyof typeof COLORS =
 export default function MeasurementDiaryCreateScreen() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(0)
-  const { stepOneMethods, stepTwoMethods } = useCreateDiary()
+  const [measurements, setMeasurements] = useState<PreviewDiaryResponse | null>(null)
+  const { stepOneMethods, stepTwoMethods, previewDiaryMutation } = useCreateDiary()
   const { isDarkColorScheme } = useColorScheme()
 
   const {
     handleSubmit: handleSubmitStepOne,
-    formState: { errors: stepOneErrors }
+    formState: { errors: stepOneErrors },
+    getValues: getStepOneValues
   } = stepOneMethods
 
   const {
@@ -98,14 +105,26 @@ export default function MeasurementDiaryCreateScreen() {
     router.back()
   }
 
-  const onSubmitStepOne: SubmitHandler<PersonalInfoFormSchema> = (data) => {
+  const onSubmitStepOne: SubmitHandler<PersonalInfoFormOutput> = (data) => {
     console.log('Personal Information:', data)
     next()
   }
 
-  const onSubmitStepTwo: SubmitHandler<PregnancyInfoFormSchema> = (data) => {
-    console.log('Pregnancy Information:', data)
-    next()
+  const onSubmitStepTwo: SubmitHandler<PregnancyInfoFormOutput> = (data) => {
+    const parsedStepOneValues = personalInfoFormOutput.parse(getStepOneValues())
+
+    previewDiaryMutation
+      .mutateAsync({
+        ...data,
+        ...parsedStepOneValues
+      })
+      .then((measurements) => {
+        setMeasurements(measurements)
+        next()
+      })
+      .catch((error) => {
+        console.error('Failed to preview diary:', error)
+      })
   }
 
   const progressBar1Style = useAnimatedStyle(() => {
@@ -255,7 +274,7 @@ export default function MeasurementDiaryCreateScreen() {
               className='flex flex-col gap-2'
             >
               {stepOneRootMsg && <FieldError message={stepOneRootMsg} />}
-              <Button onPress={next}>
+              <Button onPress={handleSubmitStepOne(onSubmitStepOne)}>
                 <Text className='font-inter-medium'>Next</Text>
               </Button>
             </Animated.View>
@@ -281,8 +300,12 @@ export default function MeasurementDiaryCreateScreen() {
               <Button className='flex-1' variant='outline' onPress={prev}>
                 <Text className='font-inter-medium'>Previous</Text>
               </Button>
-              <Button className='flex-1' onPress={next}>
-                <Text className='font-inter-medium'>Next</Text>
+              <Button
+                className='flex-1'
+                onPress={handleSubmitStepTwo(onSubmitStepTwo)}
+                disabled={previewDiaryMutation.isPending}
+              >
+                <Text className='font-inter-medium'>{previewDiaryMutation.isPending ? 'Calculating...' : 'Next'}</Text>
               </Button>
             </View>
           </Animated.View>
@@ -290,7 +313,7 @@ export default function MeasurementDiaryCreateScreen() {
       )}
       {currentStep === 2 && (
         <View className='flex-1 px-4 mt-4'>
-          <ReviewMeasurements />
+          <ReviewMeasurements measurements={measurements} />
           <View className='flex-1' />
           <Animated.View
             entering={FadeInDown.duration(250)}
