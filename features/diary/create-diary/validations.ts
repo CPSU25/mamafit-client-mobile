@@ -359,5 +359,3 @@ export type PregnancyInfoFormInput = z.input<typeof pregnancyInfoFormOutput>
 // Output types (after transform) - for API/processing
 export type PersonalInfoFormOutput = z.output<typeof personalInfoFormOutput>
 export type PregnancyInfoFormOutput = z.output<typeof pregnancyInfoFormOutput>
-
-export type CreateDiaryInput = PersonalInfoFormOutput & PregnancyInfoFormOutput

@@ -1,4 +1,4 @@
-import { FontAwesome } from '@expo/vector-icons'
+import { Feather, FontAwesome } from '@expo/vector-icons'
 import { ScrollView, TouchableOpacity, useWindowDimensions, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { Button } from '~/components/ui/button'
@@ -33,7 +33,6 @@ const defaultMeasurements = [
     measurements: [
       { name: 'Neck', value: '0', unit: 'cm' },
       { name: 'Coat', value: '0', unit: 'cm' },
-      { name: 'Bust', value: '0', unit: 'cm' },
       { name: 'Chest around', value: '0', unit: 'cm' },
       { name: 'Shoulder width', value: '0', unit: 'cm' }
     ]
@@ -44,9 +43,7 @@ const defaultMeasurements = [
     icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
     measurements: [
       { name: 'Stomach', value: '0', unit: 'cm' },
-      { name: 'Pants waist', value: '0', unit: 'cm' },
-      { name: 'Waist', value: '0', unit: 'cm' },
-      { name: 'Hip', value: '0', unit: 'cm' }
+      { name: 'Pants waist', value: '0', unit: 'cm' }
     ]
   },
   {
@@ -69,6 +66,20 @@ const defaultMeasurements = [
   }
 ]
 
+const defaultPregnancyStatus = [
+  {
+    title: 'Pregnancy Status',
+    description: 'Measurements for the gestational age, bust, and weight',
+    icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
+    measurements: [
+      { name: 'Gestational age', value: '0', unit: 'weeks' },
+      { name: 'Bust', value: '0', unit: 'cm' },
+      { name: 'Waist', value: '0', unit: 'cm' },
+      { name: 'Hip', value: '0', unit: 'cm' }
+    ]
+  }
+]
+
 const transformMeasurements = (measurements: PreviewDiaryResponse) => {
   return [
     {
@@ -78,7 +89,6 @@ const transformMeasurements = (measurements: PreviewDiaryResponse) => {
       measurements: [
         { name: 'Neck', value: measurements.neck.toFixed(1), unit: 'cm' },
         { name: 'Coat', value: measurements.coat.toFixed(1), unit: 'cm' },
-        { name: 'Bust', value: measurements.bust.toFixed(1), unit: 'cm' },
         { name: 'Chest around', value: measurements.chestAround.toFixed(1), unit: 'cm' },
         { name: 'Shoulder width', value: measurements.shoulderWidth.toFixed(1), unit: 'cm' }
       ]
@@ -89,9 +99,7 @@ const transformMeasurements = (measurements: PreviewDiaryResponse) => {
       icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       measurements: [
         { name: 'Stomach', value: measurements.stomach.toFixed(1), unit: 'cm' },
-        { name: 'Pants waist', value: measurements.pantsWaist.toFixed(1), unit: 'cm' },
-        { name: 'Waist', value: measurements.waist.toFixed(1), unit: 'cm' },
-        { name: 'Hip', value: measurements.hip.toFixed(1), unit: 'cm' }
+        { name: 'Pants waist', value: measurements.pantsWaist.toFixed(1), unit: 'cm' }
       ]
     },
     {
@@ -115,6 +123,22 @@ const transformMeasurements = (measurements: PreviewDiaryResponse) => {
   ]
 }
 
+const transformPregnancyStatus = (measurements: PreviewDiaryResponse) => {
+  return [
+    {
+      title: 'Pregnancy Status',
+      description: 'Measurements for the gestational age, bust, and weight',
+      icon: SvgIcon.calendarOne({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
+      measurements: [
+        { name: 'Gestational age', value: measurements.weekOfPregnancy, unit: 'weeks' },
+        { name: 'Bust', value: measurements.bust.toFixed(2), unit: 'cm' },
+        { name: 'Waist', value: measurements.waist.toFixed(2), unit: 'cm' },
+        { name: 'Hip', value: measurements.hip.toFixed(2), unit: 'cm' }
+      ]
+    }
+  ]
+}
+
 export default function ReviewMeasurements({ measurements }: ReviewMeasurementsProps) {
   const { isDarkColorScheme } = useColorScheme()
   const { width } = useWindowDimensions()
@@ -122,9 +146,10 @@ export default function ReviewMeasurements({ measurements }: ReviewMeasurementsP
   const keyboardHeight = useKeyboardOffset()
 
   const transformedMeasurements = measurements ? transformMeasurements(measurements) : defaultMeasurements
+  const transformedPregnancyStatus = measurements ? transformPregnancyStatus(measurements) : defaultPregnancyStatus
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView showsVerticalScrollIndicator={false} className='p-4 mb-4'>
       <Animated.View
         entering={FadeInDown.delay(100)}
         className={cn(
@@ -146,28 +171,43 @@ export default function ReviewMeasurements({ measurements }: ReviewMeasurementsP
       </Animated.View>
 
       <View className='flex flex-col gap-4 my-4'>
-        <Animated.View entering={FadeInDown.delay(200)}>
-          <Card className='p-2 flex flex-row items-center'>
-            <View className='flex-1 flex flex-row items-center gap-2'>
-              <View
-                className={cn(
-                  'w-10 h-10 rounded-xl flex items-center justify-center',
-                  isDarkColorScheme ? 'bg-primary/15' : 'bg-primary/10'
-                )}
-              >
-                {SvgIcon.calendarOne({ size: ICON_SIZE.SMALL, color: 'PRIMARY' })}
+        {transformedPregnancyStatus.map((status, statusIndex) => (
+          <Animated.View key={status.title} entering={FadeInDown.delay(200)}>
+            <Card className='p-2'>
+              <View className='flex flex-row items-center gap-2 mb-4'>
+                <View
+                  className={cn(
+                    'w-10 h-10 rounded-xl flex items-center justify-center',
+                    isDarkColorScheme ? 'bg-primary/15' : 'bg-primary/10'
+                  )}
+                >
+                  {status.icon}
+                </View>
+                <View>
+                  <Text className='font-inter-semibold text-sm uppercase'>{status.title}</Text>
+                  <Text className='text-xs text-muted-foreground'>Something wrong? Go back to edit</Text>
+                </View>
               </View>
+              <View className='flex flex-col gap-2'>
+                {status.measurements.map((measurement, index) => (
+                  <Animated.View
+                    key={measurement.name}
+                    entering={FadeInDown.delay(300 + statusIndex * 100 + index * 50)}
+                    className='flex flex-row items-center justify-between px-2 py-1'
+                  >
+                    <Text className='text-sm'>{measurement.name}</Text>
 
-              <View>
-                <Text className='font-inter-medium text-xs uppercase text-muted-foreground'>Gestational age</Text>
-                <Text className='text-xs font-inter-medium'>Weight: {measurements?.weight}kg</Text>
+                    <View className='flex flex-row items-baseline gap-1'>
+                      <Text className='text-primary font-inter-semibold'>{measurement.value}</Text>
+                      <Text className='text-xs text-muted-foreground'>{measurement.unit}</Text>
+                    </View>
+                  </Animated.View>
+                ))}
               </View>
-            </View>
-            <Text className='text-primary font-inter-semibold'>
-              {measurements?.weekOfPregnancy} <Text className='text-xs text-muted-foreground'>weeks</Text>
-            </Text>
-          </Card>
-        </Animated.View>
+            </Card>
+          </Animated.View>
+        ))}
+
         {transformedMeasurements.map((category, categoryIndex) => (
           <Animated.View key={category.title} entering={FadeInDown.delay(300 + categoryIndex * 100)}>
             <Card className='p-2'>
@@ -182,7 +222,7 @@ export default function ReviewMeasurements({ measurements }: ReviewMeasurementsP
                 </View>
                 <View>
                   <Text className='font-inter-semibold text-sm uppercase'>{category.title}</Text>
-                  <Text className='text-xs text-muted-foreground'>Tap to edit</Text>
+                  <Text className='text-xs text-muted-foreground'>Tap any measurement to edit</Text>
                 </View>
               </View>
               <View className='flex flex-col gap-2'>
@@ -199,7 +239,8 @@ export default function ReviewMeasurements({ measurements }: ReviewMeasurementsP
 
                           <View className='flex flex-row items-baseline gap-1'>
                             <Text className='text-primary font-inter-semibold'>{measurement.value}</Text>
-                            <Text className='text-xs text-muted-foreground'>{measurement.unit}</Text>
+                            <Text className='text-xs text-muted-foreground mr-1.5'>{measurement.unit}</Text>
+                            <Feather name='edit' size={12} color='gray' />
                           </View>
                         </Animated.View>
                       </TouchableOpacity>

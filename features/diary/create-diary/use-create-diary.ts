@@ -10,6 +10,7 @@ import {
   PregnancyInfoFormOutput,
   pregnancyInfoFormOutput
 } from './validations'
+import { useRouter } from 'expo-router'
 
 const defaultValuesStepOne: PersonalInfoFormInput = {
   name: 'Danh Nguyen',
@@ -31,6 +32,7 @@ const defaultValuesStepTwo: PregnancyInfoFormInput = {
 }
 
 export const useCreateDiary = () => {
+  const router = useRouter()
   const stepOneMethods = useForm<PersonalInfoFormInput, unknown, PersonalInfoFormOutput>({
     defaultValues: defaultValuesStepOne,
     resolver: zodResolver(personalInfoFormOutput)
@@ -45,9 +47,19 @@ export const useCreateDiary = () => {
     mutationFn: diaryApi.previewDiary
   })
 
+  const createDiaryMutation = useMutation({
+    mutationFn: diaryApi.createDiary,
+    onSuccess: (data) => {
+      if (data) {
+        router.push(`/diary/detail/${data.diaryId}`)
+      }
+    }
+  })
+
   return {
     stepOneMethods,
     stepTwoMethods,
-    previewDiaryMutation
+    previewDiaryMutation,
+    createDiaryMutation
   }
 }

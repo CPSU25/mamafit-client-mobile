@@ -1,3 +1,5 @@
+import { PersonalInfoFormOutput, PregnancyInfoFormOutput } from '~/features/diary/create-diary/validations'
+
 export interface PreviewDiaryResponse {
   bust: number
   chestAround: number
@@ -14,4 +16,11 @@ export interface PreviewDiaryResponse {
   waist: number
   weekOfPregnancy: number
   weight: number
+}
+
+export type PreviewDiaryInput = PersonalInfoFormOutput & PregnancyInfoFormOutput
+
+export type CreateDiaryInput = {
+  diary: PreviewDiaryInput
+  measurement: PreviewDiaryResponse
 }

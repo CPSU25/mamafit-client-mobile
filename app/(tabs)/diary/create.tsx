@@ -15,6 +15,7 @@ import { useCreateDiary } from '~/features/diary/create-diary/use-create-diary'
 import {
   personalInfoFormOutput,
   PersonalInfoFormOutput,
+  pregnancyInfoFormOutput,
   PregnancyInfoFormOutput
 } from '~/features/diary/create-diary/validations'
 import { useColorScheme } from '~/hooks/use-color-scheme'
@@ -63,7 +64,7 @@ export default function MeasurementDiaryCreateScreen() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(0)
   const [measurements, setMeasurements] = useState<PreviewDiaryResponse | null>(null)
-  const { stepOneMethods, stepTwoMethods, previewDiaryMutation } = useCreateDiary()
+  const { stepOneMethods, stepTwoMethods, previewDiaryMutation, createDiaryMutation } = useCreateDiary()
   const { isDarkColorScheme } = useColorScheme()
 
   const {
@@ -74,7 +75,8 @@ export default function MeasurementDiaryCreateScreen() {
 
   const {
     handleSubmit: handleSubmitStepTwo,
-    formState: { errors: stepTwoErrors }
+    formState: { errors: stepTwoErrors },
+    getValues: getStepTwoValues
   } = stepTwoMethods
 
   const stepOneRootMsg =
@@ -111,6 +113,7 @@ export default function MeasurementDiaryCreateScreen() {
   }
 
   const onSubmitStepTwo: SubmitHandler<PregnancyInfoFormOutput> = (data) => {
+    console.log('Pregnancy Information:', data)
     const parsedStepOneValues = personalInfoFormOutput.parse(getStepOneValues())
 
     previewDiaryMutation
@@ -125,6 +128,21 @@ export default function MeasurementDiaryCreateScreen() {
       .catch((error) => {
         console.error('Failed to preview diary:', error)
       })
+  }
+
+  const onSubmitStepThree = () => {
+    const parsedStepOneValues = personalInfoFormOutput.parse(getStepOneValues())
+    const parsedStepTwoValues = pregnancyInfoFormOutput.parse(getStepTwoValues())
+
+    if (!measurements) return
+
+    createDiaryMutation.mutate({
+      diary: {
+        ...parsedStepOneValues,
+        ...parsedStepTwoValues
+      },
+      measurement: measurements
+    })
   }
 
   const progressBar1Style = useAnimatedStyle(() => {
@@ -312,19 +330,19 @@ export default function MeasurementDiaryCreateScreen() {
         </View>
       )}
       {currentStep === 2 && (
-        <View className='flex-1 px-4 mt-4'>
+        <View className='flex-1'>
           <ReviewMeasurements measurements={measurements} />
           <View className='flex-1' />
           <Animated.View
             entering={FadeInDown.duration(250)}
             exiting={FadeOutDown.duration(250)}
-            className='flex flex-row gap-2'
+            className='flex flex-row gap-2 px-4'
           >
             <Button className='flex-1' variant='outline' onPress={prev}>
               <Text className='font-inter-medium'>Previous</Text>
             </Button>
-            <Button className='flex-1' onPress={next}>
-              <Text className='font-inter-medium'>Submit</Text>
+            <Button className='flex-1' onPress={onSubmitStepThree} disabled={createDiaryMutation.isPending}>
+              <Text className='font-inter-medium'>{createDiaryMutation.isPending ? 'Submitting...' : 'Submit'}</Text>
             </Button>
           </Animated.View>
         </View>
