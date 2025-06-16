@@ -62,7 +62,7 @@ const authApi = {
   currentUser: async () => {
     const { data } = await api.get<BaseResponse<Permission>>('auth/permission')
 
-    return data
+    return data.data
   },
   signInWithGoogle: async ({ jwtToken, notificationToken }: { jwtToken: string; notificationToken: string }) => {
     const { data } = await api.post<BaseResponse<SignInResponse>>('auth/login-google', {

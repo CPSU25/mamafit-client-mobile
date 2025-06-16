@@ -15,7 +15,7 @@ export default function DiaryCard() {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
       className='rounded-2xl overflow-hidden'
-      style={[styles.container, getShadowStyles('#6d28d9')]}
+      style={[styles.container, getShadowStyles()]}
     >
       <Text className='text-xs text-white text-right lowercase font-inter-semibold pr-4 my-1.5'>
         Updated 12 hours ago
