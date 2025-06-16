@@ -1,3 +1,4 @@
+import { useLocalSearchParams } from 'expo-router'
 import { useState } from 'react'
 import { FlatList, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -14,6 +15,7 @@ const measurements = [1, 2, 3, 4, 5]
 
 export default function MeasurementDiaryDetailScreen() {
   const [tabValue, setTabValue] = useState('chart1')
+  const params = useLocalSearchParams()
 
   return (
     <SafeAreaView className='flex-1'>
@@ -22,6 +24,7 @@ export default function MeasurementDiaryDetailScreen() {
         ListHeaderComponent={
           <View className='flex flex-col gap-4'>
             <View className='flex flex-col gap-1'>
+              <Text>{params.id}</Text>
               <View className='flex flex-row items-center gap-2'>
                 {SvgIcon.calendar({ size: ICON_SIZE.EXTRA_SMALL, color: 'PRIMARY' })}
                 <Text className='text-xl font-inter-semibold'>Current Week - 28</Text>

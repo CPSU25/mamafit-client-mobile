@@ -7,7 +7,7 @@ export default function CurrentMeasurementsCard() {
   return (
     <Animated.View
       entering={FadeInDown.delay(100)}
-      className='relative w-full h-[128px] rounded-2xl overflow-hidden'
+      className='relative w-full h-[120px] rounded-2xl overflow-hidden'
       style={[styles.container, getShadowStyles()]}
     >
       <Image source={require('~/assets/images/mesh.jpg')} className='w-full h-full rounded-2xl absolute' />
@@ -24,24 +24,24 @@ export default function CurrentMeasurementsCard() {
         <Animated.View entering={FadeInDown.delay(300)} className='flex flex-row justify-between'>
           <View className='gap-0.5'>
             <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Weight</Text>
-            <Text className='text-white text-2xl font-inter-bold'>60kg</Text>
+            <Text className='text-white text-xl font-inter-bold'>60kg</Text>
           </View>
           <View className='gap-0.5'>
             <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Bust</Text>
-            <Text className='text-white text-2xl font-inter-bold'>85cm</Text>
+            <Text className='text-white text-xl font-inter-bold'>85cm</Text>
           </View>
           <View className='gap-0.5'>
             <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Waist</Text>
-            <Text className='text-white text-2xl font-inter-bold'>65cm</Text>
+            <Text className='text-white text-xl font-inter-bold'>65cm</Text>
           </View>
           <View className='gap-0.5'>
             <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Hip</Text>
-            <Text className='text-white text-2xl font-inter-bold'>90cm</Text>
+            <Text className='text-white text-xl font-inter-bold'>90cm</Text>
           </View>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(400)} className='flex flex-row justify-between items-center'>
-          <TouchableOpacity className='bg-white/10 rounded-xl px-4 py-2'>
+          <TouchableOpacity className='bg-white/10 rounded-xl px-3 py-2'>
             <Text className='text-white text-xs font-inter-semibold'>Press to edit now!</Text>
           </TouchableOpacity>
           <Text className='text-white text-xs font-inter-medium'>updated 12 hours ago</Text>

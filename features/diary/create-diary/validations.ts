@@ -1,12 +1,7 @@
-import { differenceInWeeks, differenceInYears, parseISO } from 'date-fns'
+import { differenceInWeeks, parseISO } from 'date-fns'
 import { z } from 'zod'
 
-const getAge = (date: Date) => {
-  const today = new Date()
-  return differenceInYears(today, date)
-}
-
-export const personalInfoFormSchema = z
+export const personalInfoFormOutput = z
   .object({
     name: z
       .string()
@@ -14,7 +9,7 @@ export const personalInfoFormSchema = z
       .max(50, { message: 'Name must be less than 50 characters' }),
     weight: z.string().min(1, { message: 'Weight is required' }),
     height: z.string().min(1, { message: 'Height is required' }),
-    age: z.string({ message: 'Date of birth is required' }).min(1, { message: 'Date of birth is required' })
+    age: z.string({ message: 'Age is required' }).min(1, { message: 'Age is required' })
   })
   .superRefine((data, ctx) => {
     // Weight validation
@@ -74,8 +69,14 @@ export const personalInfoFormSchema = z
       ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Age must be an integer', path: ['age'] })
     }
   })
+  .transform((data) => ({
+    ...data,
+    age: Number(data.age),
+    weight: Number(data.weight),
+    height: Number(data.height)
+  }))
 
-export const pregnancyInfoFormSchema = z
+export const pregnancyInfoFormOutput = z
   .object({
     firstDateOfLastPeriod: z
       .string({
@@ -86,9 +87,9 @@ export const pregnancyInfoFormSchema = z
     waist: z.string({ message: 'Waist required' }).min(1, { message: 'Waist required' }),
     hip: z.string({ message: 'Hip required' }).min(1, { message: 'Hip required' }),
     numberOfPregnancy: z.string().min(1, { message: 'Pregnancy count required' }),
-    averageMenstrualCycle: z.string().nullable().optional(),
+    averageMenstrualCycle: z.string(),
     ultrasoundDate: z.string().nullable().optional(),
-    weeksFromUltrasound: z.string().nullable().optional()
+    weeksFromUltrasound: z.string()
     // dueDateFromUltrasound: z.string().nullable().optional()
   })
   .superRefine((data, ctx) => {
@@ -339,6 +340,140 @@ export const pregnancyInfoFormSchema = z
     //   }
     // }
   })
+  .transform((data) => ({
+    ...data,
+    firstDateOfLastPeriod: parseISO(data.firstDateOfLastPeriod).toISOString(),
+    ultrasoundDate: data.ultrasoundDate ? parseISO(data.ultrasoundDate).toISOString() : null,
+    averageMenstrualCycle: data.averageMenstrualCycle ? Number(data.averageMenstrualCycle) : 0,
+    weeksFromUltrasound: data.weeksFromUltrasound ? Number(data.weeksFromUltrasound) : 0,
+    bust: Number(data.bust),
+    waist: Number(data.waist),
+    hip: Number(data.hip),
+    numberOfPregnancy: Number(data.numberOfPregnancy)
+  }))
 
-export type PersonalInfoFormSchema = z.infer<typeof personalInfoFormSchema>
-export type PregnancyInfoFormSchema = z.infer<typeof pregnancyInfoFormSchema>
+export const measurementsFormOutput = z
+  .object({
+    // Pregnancy status
+    weekOfPregnancy: z.string().min(1, { message: 'Gestational age is required' }),
+    weight: z.string().min(1, { message: 'Weight is required' }),
+    bust: z.string().min(1, { message: 'Bust measurement is required' }),
+    waist: z.string().min(1, { message: 'Waist measurement is required' }),
+    hip: z.string().min(1, { message: 'Hip measurement is required' }),
+
+    // Upper body measurements
+    neck: z.string().min(1, { message: 'Neck measurement is required' }),
+    coat: z.string().min(1, { message: 'Coat measurement is required' }),
+    chestAround: z.string().min(1, { message: 'Chest around measurement is required' }),
+    shoulderWidth: z.string().min(1, { message: 'Shoulder width measurement is required' }),
+
+    // Core & waist measurements
+    stomach: z.string().min(1, { message: 'Stomach measurement is required' }),
+    pantsWaist: z.string().min(1, { message: 'Pants waist measurement is required' }),
+
+    // Lower body measurements
+    thigh: z.string().min(1, { message: 'Thigh measurement is required' }),
+    legLength: z.string().min(1, { message: 'Leg length measurement is required' }),
+
+    // Garment specific measurements
+    dressLength: z.string().min(1, { message: 'Dress length measurement is required' }),
+    sleeveLength: z.string().min(1, { message: 'Sleeve length measurement is required' })
+  })
+  .superRefine((data, ctx) => {
+    // Week of pregnancy validation
+    const weekOfPregnancyNum = data.weekOfPregnancy === '' ? NaN : Number(data.weekOfPregnancy)
+    if (isNaN(weekOfPregnancyNum)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Gestational age must be a number',
+        path: ['weekOfPregnancy']
+      })
+    } else if (!Number.isInteger(weekOfPregnancyNum)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Gestational age must be an integer',
+        path: ['weekOfPregnancy']
+      })
+    } else if (weekOfPregnancyNum < 1 || weekOfPregnancyNum > 42) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Gestational age must be between 1 and 42 weeks',
+        path: ['weekOfPregnancy']
+      })
+    }
+
+    const validateMeasurement = (value: string, fieldName: string, min: number, max: number, path: string) => {
+      const num = value === '' ? NaN : Number(value)
+      if (isNaN(num)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `${fieldName} must be a number`,
+          path: [path]
+        })
+      } else if (num < min || num > max) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `${fieldName} must be between ${min} and ${max} cm`,
+          path: [path]
+        })
+      } else if (value.includes('.') && value.split('.')[1].length > 1) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `${fieldName} can have maximum 1 decimal place`,
+          path: [path]
+        })
+      }
+    }
+
+    // Body measurements validation
+    validateMeasurement(data.bust, 'Bust', 60, 120, 'bust')
+    validateMeasurement(data.waist, 'Waist', 60, 150, 'waist')
+    validateMeasurement(data.hip, 'Hip', 60, 120, 'hip')
+    validateMeasurement(data.weight, 'Weight', 20, 200, 'weight')
+
+    // FIXME: Finalize these validations
+    // Upper body measurements validation
+    // validateMeasurement(data.neck, 'Neck', 25, 50, 'neck')
+    // validateMeasurement(data.coat, 'Coat', 40, 80, 'coat')
+    // validateMeasurement(data.chestAround, 'Chest around', 60, 150, 'chestAround')
+    // validateMeasurement(data.shoulderWidth, 'Shoulder width', 30, 60, 'shoulderWidth')
+
+    // Core & waist measurements validation
+    // validateMeasurement(data.stomach, 'Stomach', 50, 150, 'stomach')
+    // validateMeasurement(data.pantsWaist, 'Pants waist', 50, 150, 'pantsWaist')
+
+    // Lower body measurements validation
+    // validateMeasurement(data.thigh, 'Thigh', 40, 80, 'thigh')
+    // validateMeasurement(data.legLength, 'Leg length', 60, 120, 'legLength')
+
+    // Garment specific measurements validation
+    // validateMeasurement(data.dressLength, 'Dress length', 60, 150, 'dressLength')
+    // validateMeasurement(data.sleeveLength, 'Sleeve length', 40, 80, 'sleeveLength')
+  })
+  .transform((data) => ({
+    weekOfPregnancy: Number(data.weekOfPregnancy),
+    weight: Number(data.weight),
+    bust: Number(data.bust),
+    waist: Number(data.waist),
+    hip: Number(data.hip),
+    neck: Number(data.neck),
+    coat: Number(data.coat),
+    chestAround: Number(data.chestAround),
+    shoulderWidth: Number(data.shoulderWidth),
+    stomach: Number(data.stomach),
+    pantsWaist: Number(data.pantsWaist),
+    thigh: Number(data.thigh),
+    legLength: Number(data.legLength),
+    dressLength: Number(data.dressLength),
+    sleeveLength: Number(data.sleeveLength)
+  }))
+
+// Input types (before transform) - for forms
+export type PersonalInfoFormInput = z.input<typeof personalInfoFormOutput>
+export type PregnancyInfoFormInput = z.input<typeof pregnancyInfoFormOutput>
+export type MeasurementsFormInput = z.input<typeof measurementsFormOutput>
+
+// Output types (after transform) - for API/processing
+export type PersonalInfoFormOutput = z.output<typeof personalInfoFormOutput>
+export type PregnancyInfoFormOutput = z.output<typeof pregnancyInfoFormOutput>
+export type MeasurementsFormOutput = z.output<typeof measurementsFormOutput>

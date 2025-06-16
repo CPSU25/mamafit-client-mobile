@@ -17,21 +17,21 @@ export default function DiaryCard() {
       className='rounded-2xl overflow-hidden'
       style={[styles.container, getShadowStyles()]}
     >
-      <Text className='text-xs text-white text-right lowercase font-inter-semibold pr-4 my-1.5'>
+      <Text className='text-xs text-white text-right lowercase font-inter-semibold pr-4 my-1'>
         Updated 12 hours ago
       </Text>
       <View
-        className='flex flex-col gap-4 p-2.5 bg-card rounded-2xl'
+        className='flex flex-col gap-2 p-2 bg-card rounded-2xl'
         style={{
           boxShadow: '0 12px 22px 8px rgba(0, 0, 0, 0.6)'
         }}
       >
-        <View className='flex flex-row items-center gap-3 mb-2'>
+        <View className='flex flex-row items-center gap-3'>
           <View className={`${isDarkColorScheme ? 'bg-primary/15' : 'bg-primary/10'} p-1.5 rounded-lg`}>
-            {SvgIcon.diary({ size: ICON_SIZE.SMALL, color: 'PRIMARY' })}
+            {SvgIcon.diary({ size: ICON_SIZE.EXTRA_SMALL, color: 'PRIMARY' })}
           </View>
           <View>
-            <Text className={`text-lg font-inter-semibold`} numberOfLines={1}>
+            <Text className='font-inter-medium' numberOfLines={1}>
               Nguyen Thi Van Anh
             </Text>
             <Text className='text-xs text-muted-foreground'>Created At: 12/06/2025</Text>
@@ -39,7 +39,7 @@ export default function DiaryCard() {
         </View>
 
         <View
-          className={`flex flex-row items-center gap-3 ${isDarkColorScheme ? 'bg-background/30' : 'bg-background/90'} p-2 rounded-lg border border-input/30`}
+          className={`flex flex-row items-center gap-3 ${isDarkColorScheme ? 'bg-background/30' : 'bg-background/90'} p-1 rounded-xl border border-input/30`}
         >
           <View className='flex-1 items-center'>
             <Text
@@ -51,7 +51,7 @@ export default function DiaryCard() {
               40.00 kg
             </Text>
           </View>
-          <Separator orientation='vertical' className='h-8' />
+          <Separator orientation='vertical' className='h-6' />
           <View className='flex-1 items-center'>
             <Text
               className={`text-xs ${isDarkColorScheme ? 'text-muted-foreground/80' : 'text-muted-foreground'} font-inter-medium mb-1`}
@@ -62,7 +62,7 @@ export default function DiaryCard() {
               190.00 cm
             </Text>
           </View>
-          <Separator orientation='vertical' className='h-8' />
+          <Separator orientation='vertical' className='h-6' />
           <View className='flex-1 items-center'>
             <Text
               className={`text-xs ${isDarkColorScheme ? 'text-muted-foreground/80' : 'text-muted-foreground'} font-inter-medium mb-1`}

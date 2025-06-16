@@ -8,13 +8,13 @@ import { Text } from '~/components/ui/text'
 import { useFieldError } from '~/hooks/use-field-error'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { cn, isFormError } from '~/lib/utils'
-import { PersonalInfoFormSchema } from './validations'
+import { PersonalInfoFormInput } from './validations'
 
 export default function PersonalInfoForm() {
   const {
     control,
     formState: { errors }
-  } = useFormContext<PersonalInfoFormSchema>()
+  } = useFormContext<PersonalInfoFormInput>()
   const className = useFieldError()
 
   return (

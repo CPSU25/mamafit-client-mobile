@@ -1,9 +1,10 @@
 import axios, { AxiosError, InternalAxiosRequestConfig, isAxiosError } from 'axios'
+import { router } from 'expo-router'
 import * as SecureStore from 'expo-secure-store'
+import * as Updates from 'expo-updates'
 import { BaseResponse } from '~/types/common'
 import { clear, setTokens } from '../redux-toolkit/slices/auth.slice'
 import { store } from '../redux-toolkit/store'
-import { router } from 'expo-router'
 
 export interface AuthTokens {
   accessToken: string
@@ -53,6 +54,7 @@ const clearAuthTokens = async (): Promise<void> => {
   try {
     await SecureStore.deleteItemAsync('auth-storage')
     store.dispatch(clear())
+    router.replace('/profile')
   } catch (error) {
     console.error('Error clearing auth tokens:', error)
     throw error
@@ -85,7 +87,7 @@ const refresh = async (): Promise<AuthTokens | undefined> => {
   } catch (error) {
     if (isAxiosError(error) && error.response?.status === 401) {
       await clearAuthTokens()
-      router.replace('/profile')
+      await Updates.reloadAsync()
     }
     console.log('error', JSON.stringify(error, null, 2))
   }
