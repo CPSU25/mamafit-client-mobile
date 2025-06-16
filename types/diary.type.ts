@@ -1,5 +1,27 @@
 import { PersonalInfoFormOutput, PregnancyInfoFormOutput } from '~/features/diary/create-diary/validations'
 
+export interface Diary {
+  id: string
+  age: number
+  averageMenstrualCycle: number
+  bust: number
+  createdAt: string
+  createdBy: string
+  firstDateOfLastPeriod: string
+  height: number
+  hip: number
+  name: string
+  numberOfPregnancy: number
+  pregnancyStartDate: string
+  ultrasoundDate: string
+  updatedAt: string
+  updatedBy: string
+  userId: string
+  waist: number
+  weeksFromUltrasound: number
+  weight: number
+}
+
 export interface PreviewDiaryResponse {
   bust: number
   chestAround: number

@@ -7,13 +7,22 @@ import DiaryCard from '~/components/card/diary-card'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
+import { useGetDiaries } from '~/features/diary/get-diaries/use-get-diaries'
+import { useRefreshs } from '~/hooks/use-refresh'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 
 export default function MeasurementDiaryScreen() {
   const router = useRouter()
 
-  const diaries = [1, 2, 3, 4, 5, 6]
+  const { data: diaries, refetch } = useGetDiaries()
+  const { refreshControl, refreshing } = useRefreshs([refetch], {
+    title: 'Pull to refresh diaries',
+    enableHaptics: true,
+    showErrorAlert: true,
+    minRefreshDuration: 800,
+    tintColor: PRIMARY_COLOR.LIGHT
+  })
 
   return (
     <SafeAreaView className='flex-1' edges={['top']}>
@@ -37,8 +46,8 @@ export default function MeasurementDiaryScreen() {
           data={diaries}
           renderItem={({ item, index }) => (
             <Animated.View entering={FadeInDown.duration(200).delay(index * 100)}>
-              <Pressable onPress={() => router.push('/diary/detail/1')}>
-                <DiaryCard />
+              <Pressable onPress={() => router.push(`/diary/detail/${item.id}`)}>
+                <DiaryCard diary={item} />
               </Pressable>
             </Animated.View>
           )}
@@ -55,6 +64,8 @@ export default function MeasurementDiaryScreen() {
             </View>
           }
           contentInsetAdjustmentBehavior='automatic'
+          refreshControl={refreshControl}
+          refreshing={refreshing}
         />
       </View>
     </SafeAreaView>
