@@ -13,6 +13,7 @@ import PregnancyInfoForm from '~/features/diary/create-diary/pregnancy-info-form
 import ReviewMeasurements from '~/features/diary/create-diary/review-measurements'
 import { useCreateDiary } from '~/features/diary/create-diary/use-create-diary'
 import {
+  MeasurementsFormOutput,
   personalInfoFormOutput,
   PersonalInfoFormOutput,
   pregnancyInfoFormOutput,
@@ -64,7 +65,14 @@ export default function MeasurementDiaryCreateScreen() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(0)
   const [measurements, setMeasurements] = useState<PreviewDiaryResponse | null>(null)
-  const { stepOneMethods, stepTwoMethods, previewDiaryMutation, createDiaryMutation } = useCreateDiary()
+  const {
+    stepOneMethods,
+    stepTwoMethods,
+    measurementsMethods,
+    initializeMeasurementsForm,
+    previewDiaryMutation,
+    createDiaryMutation
+  } = useCreateDiary()
   const { isDarkColorScheme } = useColorScheme()
 
   const {
@@ -79,11 +87,21 @@ export default function MeasurementDiaryCreateScreen() {
     getValues: getStepTwoValues
   } = stepTwoMethods
 
+  const {
+    handleSubmit: handleSubmitMeasurements,
+    formState: { errors: measurementsErrors }
+  } = measurementsMethods
+
   const stepOneRootMsg =
     stepOneErrors.root?.message || (stepOneErrors as any)['']?.message || (stepOneErrors as any)._errors?.[0]
 
   const stepTwoRootMsg =
     stepTwoErrors.root?.message || (stepTwoErrors as any)['']?.message || (stepTwoErrors as any)._errors?.[0]
+
+  const measurementsRootMsg =
+    measurementsErrors.root?.message ||
+    (measurementsErrors as any)['']?.message ||
+    (measurementsErrors as any)._errors?.[0]
 
   const next = () => {
     setCurrentStep((prev) => {
@@ -123,6 +141,9 @@ export default function MeasurementDiaryCreateScreen() {
       })
       .then((measurements) => {
         setMeasurements(measurements)
+        if (measurements) {
+          initializeMeasurementsForm(measurements)
+        }
         next()
       })
       .catch((error) => {
@@ -130,19 +151,41 @@ export default function MeasurementDiaryCreateScreen() {
       })
   }
 
-  const onSubmitStepThree = () => {
+  const onSubmitStepThree: SubmitHandler<MeasurementsFormOutput> = (measurementsData) => {
     const parsedStepOneValues = personalInfoFormOutput.parse(getStepOneValues())
     const parsedStepTwoValues = pregnancyInfoFormOutput.parse(getStepTwoValues())
 
     if (!measurements) return
 
-    createDiaryMutation.mutate({
-      diary: {
-        ...parsedStepOneValues,
-        ...parsedStepTwoValues
-      },
-      measurement: measurements
-    })
+    const updatedMeasurements: PreviewDiaryResponse = {
+      ...measurements,
+      ...measurementsData
+    }
+
+    createDiaryMutation
+      .mutateAsync({
+        diary: {
+          ...parsedStepOneValues,
+          ...parsedStepTwoValues
+        },
+        measurement: updatedMeasurements
+      })
+      .then((data) => {
+        if (data) {
+          router.replace(`/diary/detail/${data.diaryId}`)
+          setTimeout(() => {
+            handleReset()
+          }, 500)
+        }
+      })
+  }
+
+  const handleReset = () => {
+    stepOneMethods.reset()
+    stepTwoMethods.reset()
+    measurementsMethods.reset()
+    setMeasurements(null)
+    setCurrentStep(0)
   }
 
   const progressBar1Style = useAnimatedStyle(() => {
@@ -331,19 +374,28 @@ export default function MeasurementDiaryCreateScreen() {
       )}
       {currentStep === 2 && (
         <View className='flex-1'>
-          <ReviewMeasurements measurements={measurements} />
+          <FormProvider {...measurementsMethods}>
+            <ReviewMeasurements />
+          </FormProvider>
           <View className='flex-1' />
           <Animated.View
             entering={FadeInDown.duration(250)}
             exiting={FadeOutDown.duration(250)}
-            className='flex flex-row gap-2 px-4'
+            className='flex flex-col gap-2 px-4'
           >
-            <Button className='flex-1' variant='outline' onPress={prev}>
-              <Text className='font-inter-medium'>Previous</Text>
-            </Button>
-            <Button className='flex-1' onPress={onSubmitStepThree} disabled={createDiaryMutation.isPending}>
-              <Text className='font-inter-medium'>{createDiaryMutation.isPending ? 'Submitting...' : 'Submit'}</Text>
-            </Button>
+            {measurementsRootMsg && <FieldError message={measurementsRootMsg} />}
+            <View className='flex flex-row gap-2'>
+              <Button className='flex-1' variant='outline' onPress={prev}>
+                <Text className='font-inter-medium'>Previous</Text>
+              </Button>
+              <Button
+                className='flex-1'
+                onPress={handleSubmitMeasurements(onSubmitStepThree)}
+                disabled={createDiaryMutation.isPending}
+              >
+                <Text className='font-inter-medium'>{createDiaryMutation.isPending ? 'Submitting...' : 'Submit'}</Text>
+              </Button>
+            </View>
           </Animated.View>
         </View>
       )}
