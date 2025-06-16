@@ -72,11 +72,11 @@ export default function WeightOverTimeChart() {
   const { width } = useWindowDimensions()
 
   return (
-    <Card className='flex flex-col gap-4 p-4'>
+    <Card className='flex flex-col gap-4 p-4 mt-1'>
       <View className='flex flex-row justify-between items-start'>
         <View className='text-left'>
-          <Text className='font-inter-semibold text-sm'>Your Weight Records</Text>
-          <Text className='font-inter-bold text-4xl text-primary mt-2.5'>75.00 kg</Text>
+          <Text className='font-inter-medium text-sm text-foreground'>Your Weight Over Time</Text>
+          <Text className='font-inter-extrabold text-2xl text-primary mt-1'>75.00 kg</Text>
           <Text className='text-xs text-muted-foreground'>This week&apos;s weight</Text>
         </View>
         <View className='flex flex-row items-center gap-2'>
@@ -89,7 +89,7 @@ export default function WeightOverTimeChart() {
         </View>
       </View>
 
-      <View className='gap-6'>
+      <View className='gap-6 mt-2'>
         <LineChart
           isAnimated
           animationDuration={1500}
@@ -99,14 +99,11 @@ export default function WeightOverTimeChart() {
           color='#a964ff'
           maxValue={200}
           noOfSections={4}
-          width={width - 120}
-          areaChart
+          width={width - 130}
           curved
           data={data}
-          spacing={(width - 145) / (data.length - 1)}
+          spacing={(width - 180) / (data.length - 1)}
           initialSpacing={18}
-          startFillColor='#a964ff'
-          endFillColor='#c782ff'
           startOpacity={0.6}
           endOpacity={0.1}
           backgroundColor='transparent'
@@ -127,13 +124,13 @@ export default function WeightOverTimeChart() {
             strokeDashArray: [4, 6],
             radius: 6,
             pointerLabelWidth: 80,
-            pointerLabelHeight: 80,
+            pointerLabelHeight: 45,
             activatePointersInstantlyOnTouch: true,
             autoAdjustPointerLabelPosition: true,
             pointerLabelComponent: (items: any) => {
               return (
-                <Card className='w-20 items-center' style={[styles.container, getShadowStyles()]}>
-                  <Text className='font-inter-semibold text-primary py-0.5'>
+                <Card className='w-20 items-center py-1' style={[styles.container, getShadowStyles()]}>
+                  <Text className='font-inter-semibold text-primary text-sm py-0.5'>
                     {items[0]?.value === 10 ? 'N/A' : items[0]?.value || 0}
                     <Text className='text-xs text-muted-foreground font-inter-medium'> kg</Text>
                   </Text>
