@@ -1,4 +1,5 @@
 import { Feather } from '@expo/vector-icons'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
@@ -19,11 +20,11 @@ import {
   pregnancyInfoFormOutput,
   PregnancyInfoFormOutput
 } from '~/features/diary/create-diary/validations'
+import { useAuth } from '~/hooks/use-auth'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { COLORS, SvgIcon } from '~/lib/constants/svg-icon'
 import { cn } from '~/lib/utils'
-import { PreviewDiaryResponse } from '~/types/diary.type'
 
 const steps = [
   {
@@ -63,8 +64,10 @@ const getIconColor = (currentStep: number, index: number): keyof typeof COLORS =
 
 export default function MeasurementDiaryCreateScreen() {
   const router = useRouter()
+  const { user } = useAuth()
   const [currentStep, setCurrentStep] = useState(0)
-  const [measurements, setMeasurements] = useState<PreviewDiaryResponse | null>(null)
+  const queryClient = useQueryClient()
+
   const {
     stepOneMethods,
     stepTwoMethods,
@@ -140,7 +143,6 @@ export default function MeasurementDiaryCreateScreen() {
         ...parsedStepOneValues
       })
       .then((measurements) => {
-        setMeasurements(measurements)
         if (measurements) {
           initializeMeasurementsForm(measurements)
         }
@@ -155,20 +157,13 @@ export default function MeasurementDiaryCreateScreen() {
     const parsedStepOneValues = personalInfoFormOutput.parse(getStepOneValues())
     const parsedStepTwoValues = pregnancyInfoFormOutput.parse(getStepTwoValues())
 
-    if (!measurements) return
-
-    const updatedMeasurements: PreviewDiaryResponse = {
-      ...measurements,
-      ...measurementsData
-    }
-
     createDiaryMutation
       .mutateAsync({
         diary: {
           ...parsedStepOneValues,
           ...parsedStepTwoValues
         },
-        measurement: updatedMeasurements
+        measurement: measurementsData
       })
       .then((data) => {
         if (data) {
@@ -176,6 +171,7 @@ export default function MeasurementDiaryCreateScreen() {
           setTimeout(() => {
             handleReset()
           }, 500)
+          queryClient.invalidateQueries({ queryKey: ['diaries', user?.userId] })
         }
       })
   }
@@ -184,7 +180,6 @@ export default function MeasurementDiaryCreateScreen() {
     stepOneMethods.reset()
     stepTwoMethods.reset()
     measurementsMethods.reset()
-    setMeasurements(null)
     setCurrentStep(0)
   }
 

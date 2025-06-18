@@ -1,9 +1,15 @@
+import { formatDistanceToNow } from 'date-fns'
 import { BlurView } from 'expo-blur'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { getShadowStyles, styles } from '~/lib/constants/constants'
+import { Measurement } from '~/types/diary.type'
 
-export default function CurrentMeasurementsCard() {
+interface CurrentMeasurementsCardProps {
+  measurement: Measurement | undefined
+}
+
+export default function CurrentMeasurementsCard({ measurement }: CurrentMeasurementsCardProps) {
   return (
     <Animated.View
       entering={FadeInDown.delay(100)}
@@ -24,19 +30,19 @@ export default function CurrentMeasurementsCard() {
         <Animated.View entering={FadeInDown.delay(300)} className='flex flex-row justify-between'>
           <View className='gap-0.5'>
             <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Weight</Text>
-            <Text className='text-white text-xl font-inter-bold'>60kg</Text>
+            <Text className='text-white text-xl font-inter-bold'>{measurement?.weight || 'N/A'}kg</Text>
           </View>
           <View className='gap-0.5'>
             <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Bust</Text>
-            <Text className='text-white text-xl font-inter-bold'>85cm</Text>
+            <Text className='text-white text-xl font-inter-bold'>{measurement?.bust || 'N/A'}cm</Text>
           </View>
           <View className='gap-0.5'>
             <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Waist</Text>
-            <Text className='text-white text-xl font-inter-bold'>65cm</Text>
+            <Text className='text-white text-xl font-inter-bold'>{measurement?.waist || 'N/A'}cm</Text>
           </View>
           <View className='gap-0.5'>
             <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Hip</Text>
-            <Text className='text-white text-xl font-inter-bold'>90cm</Text>
+            <Text className='text-white text-xl font-inter-bold'>{measurement?.hip || 'N/A'}cm</Text>
           </View>
         </Animated.View>
 
@@ -44,7 +50,9 @@ export default function CurrentMeasurementsCard() {
           <TouchableOpacity className='bg-white/10 rounded-xl px-3 py-2'>
             <Text className='text-white text-xs font-inter-semibold'>Press to edit now!</Text>
           </TouchableOpacity>
-          <Text className='text-white text-xs font-inter-medium'>updated 12 hours ago</Text>
+          <Text className='text-white text-xs font-inter-medium lowercase'>
+            Updated {formatDistanceToNow(new Date(measurement?.updatedAt || ''))} ago
+          </Text>
         </Animated.View>
       </View>
     </Animated.View>

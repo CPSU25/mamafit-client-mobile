@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import diaryApi from '~/apis/diary.api'
-import { PreviewDiaryResponse } from '~/types/diary.type'
+import { Measurement } from '~/types/diary.type'
 import {
   MeasurementsFormInput,
   MeasurementsFormOutput,
@@ -76,7 +76,7 @@ export const useCreateDiary = () => {
   })
 
   // Handlers
-  const initializeMeasurementsForm = (measurements: PreviewDiaryResponse) => {
+  const initializeMeasurementsForm = (measurements: Measurement) => {
     const formData: MeasurementsFormInput = {
       weekOfPregnancy: measurements.weekOfPregnancy.toString(),
       weight: measurements.weight.toFixed(1),

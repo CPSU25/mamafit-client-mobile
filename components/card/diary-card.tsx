@@ -1,12 +1,18 @@
+import { format, formatDistanceToNow } from 'date-fns'
 import { LinearGradient } from 'expo-linear-gradient'
 import { View } from 'react-native'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { getShadowStyles, ICON_SIZE, styles } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
+import { Diary } from '~/types/diary.type'
 import { Separator } from '../ui/separator'
 import { Text } from '../ui/text'
 
-export default function DiaryCard() {
+interface DiaryCardProps {
+  diary: Diary
+}
+
+export default function DiaryCard({ diary }: DiaryCardProps) {
   const { isDarkColorScheme } = useColorScheme()
 
   return (
@@ -18,7 +24,7 @@ export default function DiaryCard() {
       style={[styles.container, getShadowStyles()]}
     >
       <Text className='text-xs text-white text-right lowercase font-inter-semibold pr-4 my-1'>
-        Updated 12 hours ago
+        Updated {formatDistanceToNow(diary.updatedAt, { addSuffix: true })}
       </Text>
       <View
         className='flex flex-col gap-2 p-2 bg-card rounded-2xl'
@@ -32,9 +38,9 @@ export default function DiaryCard() {
           </View>
           <View>
             <Text className='font-inter-medium' numberOfLines={1}>
-              Nguyen Thi Van Anh
+              {diary.name}
             </Text>
-            <Text className='text-xs text-muted-foreground'>Created At: 12/06/2025</Text>
+            <Text className='text-xs text-muted-foreground'>Created At: {format(diary.createdAt, 'dd/MM/yyyy')}</Text>
           </View>
         </View>
 
@@ -48,7 +54,7 @@ export default function DiaryCard() {
               Weight
             </Text>
             <Text className={`text-sm font-inter-medium ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
-              40.00 kg
+              {diary.weight} kg
             </Text>
           </View>
           <Separator orientation='vertical' className='h-6' />
@@ -59,7 +65,7 @@ export default function DiaryCard() {
               Height
             </Text>
             <Text className={`text-sm font-inter-medium ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
-              190.00 cm
+              {diary.height} cm
             </Text>
           </View>
           <Separator orientation='vertical' className='h-6' />
@@ -70,7 +76,14 @@ export default function DiaryCard() {
               Pregnancy
             </Text>
             <Text className={`text-sm font-inter-medium ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
-              2nd
+              {diary.numberOfPregnancy}
+              {diary.numberOfPregnancy === 1
+                ? 'st'
+                : diary.numberOfPregnancy === 2
+                  ? 'nd'
+                  : diary.numberOfPregnancy === 3
+                    ? 'rd'
+                    : 'th'}
             </Text>
           </View>
         </View>
