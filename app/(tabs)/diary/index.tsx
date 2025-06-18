@@ -13,7 +13,7 @@ import { useRefreshs } from '~/hooks/use-refresh'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 
-export default function MeasurementDiaryScreen() {
+export default function DiaryScreen() {
   const router = useRouter()
 
   const { data: diaries, refetch, isLoading } = useGetDiaries()
@@ -47,7 +47,7 @@ export default function MeasurementDiaryScreen() {
           data={diaries?.items}
           renderItem={({ item, index }) => (
             <Animated.View entering={FadeInDown.duration(200).delay(index * 100)}>
-              <Pressable onPress={() => router.push(`/diary/detail/${item.id}`)}>
+              <Pressable onPress={() => router.push(`/diary/${item.id}/detail`)}>
                 <DiaryCard diary={item} />
               </Pressable>
             </Animated.View>

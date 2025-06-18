@@ -52,7 +52,7 @@ export type PreviewDiaryInput = PersonalInfoFormOutput & PregnancyInfoFormOutput
 
 export type CreateDiaryInput = {
   diary: PreviewDiaryInput
-  measurement: Measurement
+  measurement: Partial<Measurement>
 }
 
 export interface GetDiaryDetailFilters {

@@ -31,7 +31,7 @@ export default function ProductDetailScreen() {
 
   return (
     <View className='relative flex-1'>
-      <ScrollView className='flex-1'>
+      <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
         <Image
           source={{
             uri: 'https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/928220s.jpg?im=Resize,width=750'

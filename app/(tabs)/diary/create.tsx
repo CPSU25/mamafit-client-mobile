@@ -62,7 +62,7 @@ const getIconColor = (currentStep: number, index: number): keyof typeof COLORS =
   return 'GRAY'
 }
 
-export default function MeasurementDiaryCreateScreen() {
+export default function DiaryCreateScreen() {
   const router = useRouter()
   const { user } = useAuth()
   const [currentStep, setCurrentStep] = useState(0)
@@ -167,7 +167,7 @@ export default function MeasurementDiaryCreateScreen() {
       })
       .then((data) => {
         if (data) {
-          router.replace(`/diary/detail/${data.diaryId}`)
+          router.replace(`/diary/${data.diaryId}`)
           setTimeout(() => {
             handleReset()
           }, 500)

@@ -1,10 +1,9 @@
 import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
-import { FlatList, TouchableOpacity, View } from 'react-native'
+import { ScrollView, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CurrentMeasurementsCard from '~/components/card/current-measurements-card'
-import MeasurementCard from '~/components/card/measurement-card'
 import Loading from '~/components/loading'
 import { Card } from '~/components/ui/card'
 import { Separator } from '~/components/ui/separator'
@@ -44,10 +43,6 @@ interface InsightsSectionProps {
 const DiaryHeader = ({ diaryName, diaryId, onGoBack }: DiaryHeaderProps) => {
   const router = useRouter()
 
-  const handleSettingsPress = () => {
-    router.push(`/diary/detail/${diaryId}/setting`)
-  }
-
   return (
     <>
       <View className='flex flex-row items-center gap-4 p-4'>
@@ -55,7 +50,10 @@ const DiaryHeader = ({ diaryName, diaryId, onGoBack }: DiaryHeaderProps) => {
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='text-xl font-inter-semibold flex-1'>{diaryName}&apos;s Diary</Text>
-        <TouchableOpacity onPress={handleSettingsPress}>
+        <TouchableOpacity onPress={() => router.push(`/diary/${diaryId}/history`)}>
+          <Feather name='clock' size={24} color={PRIMARY_COLOR.LIGHT} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push(`/diary/${diaryId}/setting`)}>
           <Feather name='settings' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>
@@ -131,7 +129,7 @@ const InsightsSection = ({ currentWeekData, diaryId }: InsightsSectionProps) => 
 }
 
 // Screen
-export default function MeasurementDiaryDetailScreen() {
+export default function DiaryDetailScreen() {
   const router = useRouter()
   const { id } = useLocalSearchParams() as { id: string }
 
@@ -146,22 +144,6 @@ export default function MeasurementDiaryDetailScreen() {
     router.back()
   }
 
-  const renderMeasurementItem = () => <MeasurementCard />
-
-  const renderListHeader = () => (
-    <View className='flex flex-col gap-4'>
-      <CurrentWeekSection
-        measurement={
-          currentWeekData?.measurements.length && currentWeekData?.measurements.length >= 1
-            ? currentWeekData?.measurements[0]
-            : undefined
-        }
-      />
-
-      <InsightsSection currentWeekData={currentWeekData} diaryId={id} />
-    </View>
-  )
-
   if (isCurrentWeekLoading) {
     return <Loading />
   }
@@ -169,14 +151,18 @@ export default function MeasurementDiaryDetailScreen() {
   return (
     <SafeAreaView className='flex-1'>
       <DiaryHeader diaryName={currentWeekData?.name} diaryId={id} onGoBack={handleGoBack} />
-
-      <FlatList
-        data={[]}
-        ListHeaderComponent={renderListHeader}
-        renderItem={renderMeasurementItem}
-        contentContainerClassName='gap-4 p-4'
-        showsVerticalScrollIndicator={false}
-      />
+      <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>
+        <View className='flex flex-col gap-4 p-4'>
+          <CurrentWeekSection
+            measurement={
+              currentWeekData?.measurements.length && currentWeekData?.measurements.length >= 1
+                ? currentWeekData?.measurements[0]
+                : undefined
+            }
+          />
+          <InsightsSection currentWeekData={currentWeekData} diaryId={id} />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }
