@@ -59,6 +59,15 @@ const diaryApi = {
     })
 
     return data.data
+  },
+  getMeasurementDetail: async (measurementId: string) => {
+    const { data } = await api.get<BaseResponse<Measurement>>(`/measurement/${measurementId}`)
+    return data.data
+  },
+  getWeekOfPregnancy: async (diaryId: string) => {
+    const { data } = await api.get<BaseResponse<string>>(`/measurement-diary/weeks-pregnant/${diaryId}`)
+
+    return Number(data.data?.split(' ')[1])
   }
 }
 

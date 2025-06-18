@@ -15,7 +15,7 @@ export default function MeasurementCard({ measurement }: MeasurementCardProps) {
   return (
     <Card className='p-2 flex flex-row items-center gap-4' style={[styles.container, getShadowStyles()]}>
       <View className='w-16 h-16 rounded-xl bg-primary/10 items-center justify-center border border-primary/30'>
-        <Text className='text-primary font-inter-semibold text-2xl'>W{measurement?.weekOfPregnancy || 'N/A'}</Text>
+        <Text className='text-primary font-inter-semibold text-xl'>W{measurement?.weekOfPregnancy || 'N/A'}</Text>
       </View>
       <View className='flex-1 gap-0.5'>
         <Text className='text-sm'>

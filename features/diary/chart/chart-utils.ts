@@ -8,7 +8,7 @@ const WEEK_CONFIG = {
   WEEK_STARTS_ON: 1
 } as const
 
-const OFFSET_WEEKS = 1
+const OFFSET_WEEKS = 5
 
 export const SHARED_CHART_CONSTANTS = {
   MIN_DATA_POINTS: 5,
@@ -41,7 +41,8 @@ export const formatDateRange = (startDate: string, endDate: string): string => {
   return `${start} - ${end}`
 }
 
-export const sortMeasurementsByWeek = (measurements: Measurement[]): Measurement[] => {
+export const sortMeasurementsByWeek = (measurements: Measurement[] | undefined): Measurement[] => {
+  if (!measurements) return []
   return measurements.sort((a, b) => a.weekOfPregnancy - b.weekOfPregnancy)
 }
 
@@ -163,7 +164,8 @@ export const processGenericChartData = ({
   getValue,
   createCustomDataPoint,
   createWeekLabel,
-  status
+  status,
+  isLoading
 }: {
   measurements: Measurement[] | undefined
   currentWeek: number
@@ -172,16 +174,16 @@ export const processGenericChartData = ({
   createCustomDataPoint: () => any
   createWeekLabel: (week: string) => any
   status: 'prev' | 'next'
+  isLoading: boolean
 }): lineDataItem[] => {
   const data: lineDataItem[] = []
 
-  if (!measurements?.length) {
-    // return generateEmptyDataPoints(SHARED_CHART_CONSTANTS.MIN_DATA_POINTS, (weekNumber) => ({
-    //   value: SHARED_CHART_CONSTANTS.PLACEHOLDER_VALUE,
-    //   hideDataPoint: true,
-    //   labelComponent: () => createWeekLabel('N/A')
-    // }))
-    return []
+  if (!isLoading && !measurements?.length) {
+    return generateEmptyDataPoints(SHARED_CHART_CONSTANTS.MIN_DATA_POINTS, (weekNumber) => ({
+      value: SHARED_CHART_CONSTANTS.PLACEHOLDER_VALUE,
+      hideDataPoint: true,
+      labelComponent: () => createWeekLabel('N/A')
+    }))
   }
 
   const sortedMeasurements = sortMeasurementsByWeek(measurements)

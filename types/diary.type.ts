@@ -27,6 +27,7 @@ export interface DiaryDetail extends Diary {
 }
 
 export interface Measurement {
+  id: string
   bust: number
   chestAround: number
   coat: number

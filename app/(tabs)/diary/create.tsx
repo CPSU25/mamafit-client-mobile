@@ -167,7 +167,7 @@ export default function DiaryCreateScreen() {
       })
       .then((data) => {
         if (data) {
-          router.replace(`/diary/${data.diaryId}`)
+          router.replace(`/diary/${data.diaryId}/detail`)
           setTimeout(() => {
             handleReset()
           }, 500)

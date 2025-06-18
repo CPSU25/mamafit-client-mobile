@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { FlatList, TouchableOpacity, View } from 'react-native'
+import { FlatList, Pressable, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MeasurementCard from '~/components/card/measurement-card'
 import { Text } from '~/components/ui/text'
@@ -22,14 +22,21 @@ export default function DiaryHistoryScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>History</Text>
+        <Text className='text-xl font-inter-semibold flex-1'>History</Text>
+        <TouchableOpacity>
+          <Feather name='plus' size={24} color={PRIMARY_COLOR.LIGHT} />
+        </TouchableOpacity>
       </View>
 
       <View className='bg-muted h-2' />
 
       <FlatList
         data={measurementsHistory?.measurements.sort((a, b) => b.weekOfPregnancy - a.weekOfPregnancy)}
-        renderItem={({ item }) => <MeasurementCard measurement={item} />}
+        renderItem={({ item }) => (
+          <Pressable onPress={() => router.push(`/diary/${id}/history/${item.id}`)}>
+            <MeasurementCard measurement={item} />
+          </Pressable>
+        )}
         contentContainerClassName='p-4 gap-4'
       />
     </SafeAreaView>
