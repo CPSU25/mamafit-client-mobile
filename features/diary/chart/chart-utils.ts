@@ -3,8 +3,8 @@ import { lineDataItem } from 'react-native-gifted-charts'
 import { Measurement } from '~/types/diary.type'
 
 const WEEK_CONFIG = {
-  WEEKS_BEFORE: 2,
-  WEEKS_AFTER: 2,
+  WEEKS_BEFORE: 3,
+  WEEKS_AFTER: 1,
   WEEK_STARTS_ON: 1
 } as const
 

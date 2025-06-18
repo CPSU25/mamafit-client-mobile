@@ -61,3 +61,20 @@ export interface GetDiaryDetailFilters {
   startDate?: string
   endDate?: string
 }
+
+export interface EditMeasurementDetailInput {
+  weight: number
+  neck: number
+  coat: number
+  bust: number
+  chestAround: number
+  stomach: number
+  pantsWaist: number
+  thigh: number
+  dressLength: number
+  sleeveLength: number
+  shoulderWidth: number
+  waist: number
+  legLength: number
+  hip: number
+}

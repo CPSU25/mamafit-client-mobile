@@ -1,5 +1,6 @@
 import { formatDistanceToNow } from 'date-fns'
 import { BlurView } from 'expo-blur'
+import { useRouter } from 'expo-router'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { getShadowStyles, styles } from '~/lib/constants/constants'
@@ -7,9 +8,12 @@ import { Measurement } from '~/types/diary.type'
 
 interface CurrentMeasurementsCardProps {
   measurement: Measurement | undefined
+  diaryId: string
 }
 
-export default function CurrentMeasurementsCard({ measurement }: CurrentMeasurementsCardProps) {
+export default function CurrentMeasurementsCard({ measurement, diaryId }: CurrentMeasurementsCardProps) {
+  const router = useRouter()
+
   return (
     <Animated.View
       entering={FadeInDown.delay(100)}
@@ -47,7 +51,10 @@ export default function CurrentMeasurementsCard({ measurement }: CurrentMeasurem
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(400)} className='flex flex-row justify-between items-center'>
-          <TouchableOpacity className='bg-white/10 rounded-xl px-3 py-2'>
+          <TouchableOpacity
+            onPress={() => router.push(`/diary/${diaryId}/history/${measurement?.id}`)}
+            className='bg-white/10 rounded-xl px-3 py-2'
+          >
             <Text className='text-white text-xs font-inter-semibold'>Press to edit now!</Text>
           </TouchableOpacity>
           <Text className='text-white text-xs font-inter-medium lowercase'>

@@ -5,12 +5,17 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import MeasurementCard from '~/components/card/measurement-card'
 import { Text } from '~/components/ui/text'
 import { useGetDiaryDetail } from '~/features/diary/get-diary-detail/use-get-diary-detail'
+import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function DiaryHistoryScreen() {
   const router = useRouter()
   const { id } = useLocalSearchParams() as { id: string }
-  const { data: measurementsHistory } = useGetDiaryDetail({ diaryId: id })
+  const { data: measurementsHistory, refetch } = useGetDiaryDetail({ diaryId: id })
+
+  const { refreshControl } = useRefreshs([refetch], {
+    title: 'Pull to refresh measurements history'
+  })
 
   const handleGoBack = () => {
     router.back()
@@ -34,10 +39,11 @@ export default function DiaryHistoryScreen() {
         data={measurementsHistory?.measurements.sort((a, b) => b.weekOfPregnancy - a.weekOfPregnancy)}
         renderItem={({ item }) => (
           <Pressable onPress={() => router.push(`/diary/${id}/history/${item.id}`)}>
-            <MeasurementCard measurement={item} />
+            <MeasurementCard measurement={item} diaryId={id} />
           </Pressable>
         )}
         contentContainerClassName='p-4 gap-4'
+        refreshControl={refreshControl}
       />
     </SafeAreaView>
   )
