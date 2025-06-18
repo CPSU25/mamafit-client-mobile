@@ -3,13 +3,21 @@ import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { TouchableOpacity, useWindowDimensions, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-import { MeasurementsFormInput } from '~/features/diary/validations'
+import { Button } from '~/components/ui/button'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '~/components/ui/dialog'
+import { Input } from '~/components/ui/input'
+import { Text } from '~/components/ui/text'
 import { useKeyboardOffset } from '~/hooks/use-keyboard-offset'
 import { cn } from '~/lib/utils'
-import { Button } from './ui/button'
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
-import { Input } from './ui/input'
-import { Text } from './ui/text'
+import { MeasurementsFormInput } from '../validations'
 
 interface MeasurementFieldProps {
   name: keyof MeasurementsFormInput

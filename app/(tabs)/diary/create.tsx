@@ -9,10 +9,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import FieldError from '~/components/field-error'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
-import PersonalInfoForm from '~/features/diary/components/personal-info-form'
-import PregnancyInfoForm from '~/features/diary/components/pregnancy-info-form'
-import ReviewMeasurements from '~/features/diary/components/review-measurements'
-import { useCreateDiary } from '~/features/diary/hooks/use-create-diary'
+import { PersonalInfoForm, PregnancyInfoForm, ReviewMeasurementsForm } from '~/features/diary/components/forms'
+import { useCreateDiary } from '~/features/diary/hooks'
 import {
   MeasurementsFormOutput,
   personalInfoFormOutput,
@@ -26,37 +24,26 @@ import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { COLORS, SvgIcon } from '~/lib/constants/svg-icon'
 import { cn } from '~/lib/utils'
 
+// Steps for the diary creation process
 const steps = [
   {
     id: 1,
-    name: 'Personal',
-    field: ['name', 'weight', 'height', 'age'],
+    name: 'Personal Information',
     icon: (color: keyof typeof COLORS) => SvgIcon.personalCard({ size: ICON_SIZE.SMALL, color })
   },
   {
     id: 2,
-    name: 'Pregnancy',
-    field: [
-      'firstDateOfLastPeriod',
-      'bust',
-      'waist',
-      'hip',
-      'numberOfPregnancy',
-      'averageMenstrualCycle',
-      'ultrasoundDate',
-      'weeksFromUltrasound'
-      // 'dueDateFromUltrasound'
-    ],
+    name: 'Pregnancy Information',
     icon: (color: keyof typeof COLORS) => SvgIcon.folderFavorite({ size: ICON_SIZE.SMALL, color })
   },
   {
     id: 3,
-    name: 'Review',
-    field: [],
+    name: 'Review Measurements',
     icon: (color: keyof typeof COLORS) => SvgIcon.chartSuccess({ size: ICON_SIZE.SMALL, color })
   }
 ]
 
+// Utils
 const getIconColor = (currentStep: number, index: number): keyof typeof COLORS => {
   if (currentStep >= index) return 'PRIMARY'
   return 'GRAY'
@@ -183,6 +170,7 @@ export default function DiaryCreateScreen() {
     setCurrentStep(0)
   }
 
+  // Progress Bar Animations
   const progressBar1Style = useAnimatedStyle(() => {
     let progress = 0
     if (currentStep === 0) progress = 0.5
@@ -223,6 +211,7 @@ export default function DiaryCreateScreen() {
     }
   })
 
+  // Step Icons Animations
   const stepIconStyle0 = useAnimatedStyle(() => {
     const scale = currentStep === 0 ? 1.3 : 0.9
 
@@ -274,6 +263,7 @@ export default function DiaryCreateScreen() {
     }
   })
 
+  // Step Icons Styles
   const stepIconStyles = [stepIconStyle0, stepIconStyle1, stepIconStyle2]
 
   return (
@@ -367,10 +357,11 @@ export default function DiaryCreateScreen() {
           </Animated.View>
         </View>
       )}
+
       {currentStep === 2 && (
         <View className='flex-1'>
           <FormProvider {...measurementsMethods}>
-            <ReviewMeasurements />
+            <ReviewMeasurementsForm />
           </FormProvider>
           <View className='flex-1' />
           <Animated.View

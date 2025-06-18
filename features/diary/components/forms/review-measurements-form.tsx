@@ -1,9 +1,9 @@
 import { FontAwesome } from '@expo/vector-icons'
 import { ScrollView, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-import { MeasurementField } from '~/components/measurement-field'
 import { Card } from '~/components/ui/card'
 import { Text } from '~/components/ui/text'
+import { MeasurementField } from '~/features/diary/components/measurement-field'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { ICON_SIZE } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
@@ -61,7 +61,7 @@ const measurementCategories = [
   }
 ]
 
-export default function ReviewMeasurements() {
+export default function ReviewMeasurementsForm() {
   const { isDarkColorScheme } = useColorScheme()
 
   return (

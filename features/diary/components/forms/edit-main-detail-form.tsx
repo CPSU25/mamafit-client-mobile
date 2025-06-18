@@ -1,13 +1,14 @@
 import { Feather } from '@expo/vector-icons'
 import React from 'react'
 import { Controller, UseFormReturn } from 'react-hook-form'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import FieldError from '~/components/field-error'
 import { Input } from '~/components/ui/input'
+import { Text } from '~/components/ui/text'
 import { useFieldError } from '~/hooks/use-field-error'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { cn, isFormError } from '~/lib/utils'
-import { MeasurementsFormInput, MeasurementsFormOutput } from '../validations'
+import { MeasurementsFormInput, MeasurementsFormOutput } from '../../validations'
 
 interface EditMainDetailFormProps {
   methods: UseFormReturn<MeasurementsFormInput, unknown, MeasurementsFormOutput>

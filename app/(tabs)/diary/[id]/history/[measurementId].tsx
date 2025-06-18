@@ -6,13 +6,11 @@ import { ScrollView, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
-import { MeasurementField } from '~/components/measurement-field'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
 import { Text } from '~/components/ui/text'
-import { useEditMeasurementDetail } from '~/features/diary/hooks/use-edit-measurement-detail'
-import { useGetMeasurementDetail } from '~/features/diary/hooks/use-get-measurement-detail'
-import { useGetWeekOfPregnancy } from '~/features/diary/hooks/use-get-week-of-pregnancy'
+import { MeasurementField } from '~/features/diary/components/measurement-field'
+import { useEditMeasurementDetail, useGetMeasurementDetail, useGetWeekOfPregnancy } from '~/features/diary/hooks'
 import { MeasurementsFormOutput } from '~/features/diary/validations'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
@@ -230,6 +228,7 @@ export default function DiaryHistoryDetailScreen() {
                 </Card>
               </Animated.View>
             ))}
+
             {isEditable && (
               <Button onPress={methods.handleSubmit(onSubmit)} disabled={editMeasurementDetailMutation.isPending}>
                 <Text className='font-inter-medium'>
