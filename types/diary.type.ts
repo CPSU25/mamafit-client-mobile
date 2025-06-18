@@ -22,7 +22,11 @@ export interface Diary {
   weight: number
 }
 
-export interface PreviewDiaryResponse {
+export interface DiaryDetail extends Diary {
+  measurements: Measurement[]
+}
+
+export interface Measurement {
   bust: number
   chestAround: number
   coat: number
@@ -38,11 +42,21 @@ export interface PreviewDiaryResponse {
   waist: number
   weekOfPregnancy: number
   weight: number
+  createdAt: string
+  createdBy: string
+  updatedAt: string
+  updatedBy: string
 }
 
 export type PreviewDiaryInput = PersonalInfoFormOutput & PregnancyInfoFormOutput
 
 export type CreateDiaryInput = {
   diary: PreviewDiaryInput
-  measurement: PreviewDiaryResponse
+  measurement: Measurement
+}
+
+export interface GetDiaryDetailFilters {
+  diaryId: string
+  startDate?: string
+  endDate?: string
 }

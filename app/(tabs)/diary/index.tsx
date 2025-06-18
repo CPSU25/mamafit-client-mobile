@@ -4,6 +4,7 @@ import { FlatList, Pressable, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import DiaryCard from '~/components/card/diary-card'
+import Loading from '~/components/loading'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
@@ -15,7 +16,7 @@ import { SvgIcon } from '~/lib/constants/svg-icon'
 export default function MeasurementDiaryScreen() {
   const router = useRouter()
 
-  const { data: diaries, refetch } = useGetDiaries()
+  const { data: diaries, refetch, isLoading } = useGetDiaries()
   const { refreshControl, refreshing } = useRefreshs([refetch], {
     title: 'Pull to refresh diaries',
     enableHaptics: true,
@@ -41,9 +42,9 @@ export default function MeasurementDiaryScreen() {
         StartIcon={<Feather name='search' size={24} color={PRIMARY_COLOR.LIGHT} />}
       />
 
-      <View className='flex flex-col gap-4 mt-4'>
+      <View className='flex flex-col gap-4'>
         <FlatList
-          data={diaries}
+          data={diaries?.items}
           renderItem={({ item, index }) => (
             <Animated.View entering={FadeInDown.duration(200).delay(index * 100)}>
               <Pressable onPress={() => router.push(`/diary/detail/${item.id}`)}>
@@ -54,14 +55,18 @@ export default function MeasurementDiaryScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerClassName='gap-4 p-4 pb-60'
           ListEmptyComponent={
-            <View className='flex items-center px-4 mt-48'>
-              {SvgIcon.diary({ size: ICON_SIZE.EXTRA_LARGE, color: 'GRAY' })}
-              <Text className='text-muted-foreground text-sm mt-2'>Create your first diary to get started!</Text>
-              <Button size='sm' className='mt-8 flex flex-row items-center gap-2'>
-                <Feather name='plus' size={16} color='white' />
-                <Text className='font-inter-medium'>Create Diary</Text>
-              </Button>
-            </View>
+            isLoading ? (
+              <Loading />
+            ) : (
+              <View className='flex items-center px-4 mt-48'>
+                {SvgIcon.diary({ size: ICON_SIZE.EXTRA_LARGE, color: 'GRAY' })}
+                <Text className='text-muted-foreground text-sm mt-2'>Create your first diary to get started!</Text>
+                <Button size='sm' className='mt-8 flex flex-row items-center gap-2'>
+                  <Feather name='plus' size={16} color='white' />
+                  <Text className='font-inter-medium'>Create Diary</Text>
+                </Button>
+              </View>
+            )
           }
           contentInsetAdjustmentBehavior='automatic'
           refreshControl={refreshControl}

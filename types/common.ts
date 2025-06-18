@@ -8,6 +8,18 @@ export interface BaseResponse<T> {
   code: string | null
 }
 
+export interface BasePaginationResponse<T> {
+  data: {
+    hasNextPage: boolean
+    hasPreviousPage: boolean
+    items: T[]
+    pageNumber: number
+    pageSize: number
+    totalCount: number
+    totalPages: number
+  }
+}
+
 export interface ErrorResponse {
   errorCode: string
   errorMessage: string

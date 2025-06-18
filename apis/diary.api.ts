@@ -1,11 +1,37 @@
 import { api } from '~/lib/axios/axios'
 import { store } from '~/lib/redux-toolkit/store'
-import { BaseResponse } from '~/types/common'
-import { CreateDiaryInput, Diary, PreviewDiaryInput, PreviewDiaryResponse } from '~/types/diary.type'
+import { BasePaginationResponse, BaseResponse } from '~/types/common'
+import {
+  CreateDiaryInput,
+  Diary,
+  DiaryDetail,
+  GetDiaryDetailFilters,
+  Measurement,
+  PreviewDiaryInput
+} from '~/types/diary.type'
 
 const diaryApi = {
   getDiaries: async (userId: string) => {
-    const { data } = await api.get<BaseResponse<Diary[]>>(`/measurement-diary/user/${userId}`)
+    // TODO: add pagination
+    const { data } = await api.get<BasePaginationResponse<Diary>>(
+      `/measurement-diary/userId?userId=${userId}&index=1&pageSize=10`
+    )
+    const sortedDiaries = {
+      ...data.data,
+      items: data.data.items.sort((a, b) => {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      })
+    }
+
+    return sortedDiaries
+  },
+  getDiaryDetail: async ({ diaryId, startDate, endDate }: GetDiaryDetailFilters) => {
+    let url = `/measurement-diary/${diaryId}`
+    if (startDate && endDate) {
+      url += `?startDate=${startDate}&endDate=${endDate}`
+    }
+
+    const { data } = await api.get<BaseResponse<DiaryDetail>>(url)
 
     return data.data
   },
@@ -13,7 +39,7 @@ const diaryApi = {
     const { user } = store.getState().auth
     if (!user?.userId) return
 
-    const { data } = await api.post<BaseResponse<PreviewDiaryResponse>>('measurement/preview-diary', {
+    const { data } = await api.post<BaseResponse<Measurement>>('measurement/preview-diary', {
       userId: user?.userId,
       ...inputs
     })
