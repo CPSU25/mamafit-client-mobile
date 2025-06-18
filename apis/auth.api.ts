@@ -1,5 +1,5 @@
-import { RegisterFormSchema } from '~/features/auth/register/validations'
 import { SignInSchema } from '~/features/auth/sign-in/validations'
+import { RegisterFormSchema } from '~/features/auth/validations'
 import { api } from '~/lib/axios/axios'
 import { BaseResponse, Permission, SignInResponse } from '~/types/common'
 

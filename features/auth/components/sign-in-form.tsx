@@ -1,17 +1,17 @@
-import FieldError from '~/components/field-error'
 import { Feather } from '@expo/vector-icons'
 import { Controller, SubmitHandler } from 'react-hook-form'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import FieldError from '~/components/field-error'
 import { useNotifications } from '~/components/providers/notifications.provider'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { isFormError } from '~/lib/utils'
-import GoogleAuthButton from '../google-oauth/google-auth-button'
-import { useSignIn } from './use-sign-in'
-import { SignInSchema } from './validations'
+import { useSignIn } from '../hooks/use-sign-in'
+import GoogleAuthButton from './google-auth-button'
+import { SignInSchema } from '../validations'
 
 export default function SignInForm() {
   const { bottom } = useSafeAreaInsets()

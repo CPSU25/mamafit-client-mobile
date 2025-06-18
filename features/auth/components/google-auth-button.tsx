@@ -8,7 +8,7 @@ import { useNotifications } from '~/components/providers/notifications.provider'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
 import { SvgIcon } from '~/lib/constants/svg-icon'
-import { useGoogleAuth } from './use-google-auth'
+import { useGoogleAuth } from '../hooks/use-google-auth'
 
 export default function GoogleAuthButton() {
   const { mutate: signInWithGoogle, isPending: isSigningInWithGoogle } = useGoogleAuth()

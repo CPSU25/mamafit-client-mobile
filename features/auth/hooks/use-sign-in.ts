@@ -5,10 +5,10 @@ import { useForm } from 'react-hook-form'
 import authApi from '~/apis/auth.api'
 import { useSecureStore } from '~/hooks/use-secure-store'
 import { AuthTokens } from '~/lib/axios/axios'
-import { signInSchema, SignInSchema } from './validations'
 import { useAuth } from '~/hooks/use-auth'
 import { JwtUser } from '~/types/common'
 import { decodeJwt } from 'jose'
+import { SignInSchema, signInSchema } from '../validations'
 
 export const useSignIn = () => {
   const router = useRouter()
