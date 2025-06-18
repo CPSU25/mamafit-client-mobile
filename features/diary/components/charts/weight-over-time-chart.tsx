@@ -5,7 +5,7 @@ import { LineChart } from 'react-native-gifted-charts'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
-import { useGetDiaryDetail } from '~/features/diary/hooks'
+import { useGetDiaryDetail } from '~/features/diary/hooks/use-get-diary-detail'
 import {
   calculateChartWidth,
   calculateDynamicSpacing,

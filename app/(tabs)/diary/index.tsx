@@ -4,7 +4,7 @@ import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
-import { DiariesList } from '~/features/diary/components/lists'
+import DiariesList from '~/features/diary/components/lists/diaries-list'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function DiaryScreen() {

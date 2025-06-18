@@ -1,8 +1,8 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { FlatList, Pressable } from 'react-native'
 import { useRefreshs } from '~/hooks/use-refresh'
-import { useGetDiaryDetail } from '~/features/diary/hooks'
-import { MeasurementCard } from '../cards'
+import { useGetDiaryDetail } from '../../hooks/use-get-diary-detail'
+import MeasurementCard from '../cards/measurement-card'
 
 export default function HistoriesList() {
   const router = useRouter()

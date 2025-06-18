@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router'
 import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Text } from '~/components/ui/text'
-import { HistoriesList } from '~/features/diary/components/lists'
+import HistoriesList from '~/features/diary/components/lists/histories-list'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function DiaryHistoryScreen() {

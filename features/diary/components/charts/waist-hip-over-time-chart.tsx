@@ -4,7 +4,7 @@ import { ActivityIndicator, Text, useWindowDimensions, View } from 'react-native
 import { LineChart } from 'react-native-gifted-charts'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
-import { useGetDiaryDetail } from '~/features/diary/hooks'
+import { useGetDiaryDetail } from '~/features/diary/hooks/use-get-diary-detail'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import {
   calculateChartWidth,
