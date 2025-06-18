@@ -1,19 +1,18 @@
 import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import React, { useState } from 'react'
-import { FlatList, TouchableOpacity, View } from 'react-native'
+import React, { useCallback, useRef, useState } from 'react'
+import { ScrollView, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CurrentMeasurementsCard from '~/components/card/current-measurements-card'
-import MeasurementCard from '~/components/card/measurement-card'
 import Loading from '~/components/loading'
 import { Card } from '~/components/ui/card'
-import { Separator } from '~/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Text } from '~/components/ui/text'
 import { getCurrentWeekRange } from '~/features/diary/chart/chart-utils'
 import WaistHipOverTimeChart from '~/features/diary/chart/waist-hip-over-time-chart'
 import WeightOverTimeChart from '~/features/diary/chart/weight-over-time-chart'
 import { useGetDiaryDetail } from '~/features/diary/get-diary-detail/use-get-diary-detail'
+import { useRefreshs } from '~/hooks/use-refresh'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { DiaryDetail, Measurement } from '~/types/diary.type'
@@ -38,15 +37,13 @@ interface CurrentWeekSectionProps {
 interface InsightsSectionProps {
   currentWeekData: DiaryDetail | null | undefined
   diaryId: string
+  weightRefetchRef: React.MutableRefObject<(() => Promise<any>) | null>
+  waistHipRefetchRef: React.MutableRefObject<(() => Promise<any>) | null>
 }
 
 // Components
 const DiaryHeader = ({ diaryName, diaryId, onGoBack }: DiaryHeaderProps) => {
   const router = useRouter()
-
-  const handleSettingsPress = () => {
-    router.push(`/diary/detail/${diaryId}/setting`)
-  }
 
   return (
     <>
@@ -55,11 +52,14 @@ const DiaryHeader = ({ diaryName, diaryId, onGoBack }: DiaryHeaderProps) => {
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='text-xl font-inter-semibold flex-1'>{diaryName}&apos;s Diary</Text>
-        <TouchableOpacity onPress={handleSettingsPress}>
+        <TouchableOpacity onPress={() => router.push(`/diary/${diaryId}/history`)}>
+          <Feather name='clock' size={24} color={PRIMARY_COLOR.LIGHT} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push(`/diary/${diaryId}/setting`)}>
           <Feather name='settings' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>
-      <Separator />
+      <View className='bg-muted h-2' />
     </>
   )
 }
@@ -80,8 +80,22 @@ const CurrentWeekSection = ({ measurement }: CurrentWeekSectionProps) => (
   </View>
 )
 
-const InsightsSection = ({ currentWeekData, diaryId }: InsightsSectionProps) => {
+const InsightsSection = ({ currentWeekData, diaryId, weightRefetchRef, waistHipRefetchRef }: InsightsSectionProps) => {
   const [tabValue, setTabValue] = useState<string>(CHART_TABS.WEIGHT)
+
+  const handleWeightRefetchReady = useCallback(
+    (refetch: () => Promise<any>) => {
+      weightRefetchRef.current = refetch
+    },
+    [weightRefetchRef]
+  )
+
+  const handleWaistHipRefetchReady = useCallback(
+    (refetch: () => Promise<any>) => {
+      waistHipRefetchRef.current = refetch
+    },
+    [waistHipRefetchRef]
+  )
 
   return (
     <View className='flex flex-col gap-4'>
@@ -113,6 +127,7 @@ const InsightsSection = ({ currentWeekData, diaryId }: InsightsSectionProps) => 
               currentWeek={currentWeekData?.measurements[0]?.weekOfPregnancy || 0}
               currentWeight={currentWeekData?.measurements[0]?.weight || 0}
               diaryId={diaryId}
+              onRefetchReady={handleWeightRefetchReady}
             />
           </TabsContent>
 
@@ -122,6 +137,7 @@ const InsightsSection = ({ currentWeekData, diaryId }: InsightsSectionProps) => 
               currentWaist={currentWeekData?.measurements[0]?.waist || 0}
               currentHip={currentWeekData?.measurements[0]?.hip || 0}
               diaryId={diaryId}
+              onRefetchReady={handleWaistHipRefetchReady}
             />
           </TabsContent>
         </Tabs>
@@ -131,36 +147,38 @@ const InsightsSection = ({ currentWeekData, diaryId }: InsightsSectionProps) => 
 }
 
 // Screen
-export default function MeasurementDiaryDetailScreen() {
+export default function DiaryDetailScreen() {
   const router = useRouter()
   const { id } = useLocalSearchParams() as { id: string }
 
   const currentWeekRange = getCurrentWeekRange()
 
-  const { data: currentWeekData, isLoading: isCurrentWeekLoading } = useGetDiaryDetail({
+  const {
+    data: currentWeekData,
+    isLoading: isCurrentWeekLoading,
+    refetch: refetchCurrentWeek
+  } = useGetDiaryDetail({
     diaryId: id,
     ...currentWeekRange
+  })
+
+  const weightRefetchRef = useRef<(() => Promise<any>) | null>(null)
+  const waistHipRefetchRef = useRef<(() => Promise<any>) | null>(null)
+
+  const getAllRefetches = useCallback(() => {
+    const refetches = [refetchCurrentWeek]
+    if (weightRefetchRef.current) refetches.push(weightRefetchRef.current)
+    if (waistHipRefetchRef.current) refetches.push(waistHipRefetchRef.current)
+    return refetches
+  }, [refetchCurrentWeek])
+
+  const { refreshControl } = useRefreshs(getAllRefetches(), {
+    title: 'Pull to refresh diary data'
   })
 
   const handleGoBack = () => {
     router.back()
   }
-
-  const renderMeasurementItem = () => <MeasurementCard />
-
-  const renderListHeader = () => (
-    <View className='flex flex-col gap-4'>
-      <CurrentWeekSection
-        measurement={
-          currentWeekData?.measurements.length && currentWeekData?.measurements.length >= 1
-            ? currentWeekData?.measurements[0]
-            : undefined
-        }
-      />
-
-      <InsightsSection currentWeekData={currentWeekData} diaryId={id} />
-    </View>
-  )
 
   if (isCurrentWeekLoading) {
     return <Loading />
@@ -169,14 +187,23 @@ export default function MeasurementDiaryDetailScreen() {
   return (
     <SafeAreaView className='flex-1'>
       <DiaryHeader diaryName={currentWeekData?.name} diaryId={id} onGoBack={handleGoBack} />
-
-      <FlatList
-        data={[]}
-        ListHeaderComponent={renderListHeader}
-        renderItem={renderMeasurementItem}
-        contentContainerClassName='gap-4 p-4'
-        showsVerticalScrollIndicator={false}
-      />
+      <ScrollView showsVerticalScrollIndicator={false} className='flex-1' refreshControl={refreshControl}>
+        <View className='flex flex-col gap-4 p-4'>
+          <CurrentWeekSection
+            measurement={
+              currentWeekData?.measurements.length && currentWeekData?.measurements.length >= 1
+                ? currentWeekData?.measurements[0]
+                : undefined
+            }
+          />
+          <InsightsSection
+            currentWeekData={currentWeekData}
+            diaryId={id}
+            weightRefetchRef={weightRefetchRef}
+            waistHipRefetchRef={waistHipRefetchRef}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }

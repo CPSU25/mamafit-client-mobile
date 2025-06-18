@@ -1,5 +1,5 @@
 import { Feather } from '@expo/vector-icons'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ActivityIndicator, Text, useWindowDimensions, View } from 'react-native'
 import { LineChart } from 'react-native-gifted-charts'
 import { Button } from '~/components/ui/button'
@@ -21,6 +21,7 @@ interface WeightOverTimeChartProps {
   currentWeek: number
   currentWeight: number
   diaryId: string
+  onRefetchReady?: (refetch: () => Promise<any>) => void
 }
 
 const WEIGHT_CHART_COLORS = {
@@ -63,15 +64,30 @@ const createPointerLabelComponent = (items: any) => (
   </Card>
 )
 
-export default function WeightOverTimeChart({ currentWeek, currentWeight, diaryId }: WeightOverTimeChartProps) {
+export default function WeightOverTimeChart({
+  currentWeek,
+  currentWeight,
+  diaryId,
+  onRefetchReady
+}: WeightOverTimeChartProps) {
   const [offsetWeight, setOffsetWeight] = useState(0)
   const { startDate, endDate } = getFiveWeeksRange(offsetWeight)
 
-  const { data: fiveWeeksWeightData, isLoading } = useGetDiaryDetail({
+  const {
+    data: fiveWeeksWeightData,
+    isLoading,
+    refetch
+  } = useGetDiaryDetail({
     diaryId,
     startDate,
     endDate
   })
+
+  useEffect(() => {
+    if (onRefetchReady) {
+      onRefetchReady(refetch)
+    }
+  }, [refetch, onRefetchReady])
 
   const { width } = useWindowDimensions()
 
@@ -84,7 +100,8 @@ export default function WeightOverTimeChart({ currentWeek, currentWeight, diaryI
     getValue: (measurement) => measurement.weight,
     createCustomDataPoint,
     createWeekLabel,
-    status: offsetWeight >= 0 ? 'next' : 'prev'
+    status: offsetWeight >= 0 ? 'next' : 'prev',
+    isLoading
   })
 
   const dynamicSpacing = calculateDynamicSpacing(chartWidth, chartData.length)
@@ -140,7 +157,7 @@ export default function WeightOverTimeChart({ currentWeek, currentWeight, diaryI
 
         {/* Footer Information */}
         <View className='flex flex-col items-center gap-1'>
-          <Text className='font-inter-medium text-center text-sm'>{dateRange}</Text>
+          <Text className='font-inter-medium text-center text-sm text-foreground'>{dateRange}</Text>
           <Text className='text-xs text-muted-foreground text-center'>Press and hold on the chart to see the data</Text>
         </View>
       </View>

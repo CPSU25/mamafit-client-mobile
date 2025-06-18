@@ -1,9 +1,10 @@
 import { Feather } from '@expo/vector-icons'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ActivityIndicator, Text, useWindowDimensions, View } from 'react-native'
 import { LineChart } from 'react-native-gifted-charts'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { useGetDiaryDetail } from '../get-diary-detail/use-get-diary-detail'
 import {
   calculateChartWidth,
@@ -15,13 +16,13 @@ import {
   processGenericChartData,
   SHARED_CHART_CONSTANTS
 } from './chart-utils'
-import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 interface WaistHipOverTimeChartProps {
   currentWeek: number
   currentWaist: number
   currentHip: number
   diaryId: string
+  onRefetchReady?: (refetch: () => Promise<any>) => void
 }
 
 // Waist-Hip chart specific constants
@@ -89,17 +90,28 @@ export default function WaistHipOverTimeChart({
   currentWeek,
   currentWaist,
   currentHip,
-  diaryId
+  diaryId,
+  onRefetchReady
 }: WaistHipOverTimeChartProps) {
   const [offsetHaW, setOffsetHaW] = useState(0)
   const { width } = useWindowDimensions()
   const { startDate, endDate } = getFiveWeeksRange(offsetHaW)
 
-  const { data: fiveWeeksHaWData, isLoading } = useGetDiaryDetail({
+  const {
+    data: fiveWeeksHaWData,
+    isLoading,
+    refetch
+  } = useGetDiaryDetail({
     diaryId,
     startDate,
     endDate
   })
+
+  useEffect(() => {
+    if (onRefetchReady) {
+      onRefetchReady(refetch)
+    }
+  }, [refetch, onRefetchReady])
 
   const chartWidth = calculateChartWidth(width)
   const dateRange = formatDateRange(startDate, endDate)
@@ -111,7 +123,8 @@ export default function WaistHipOverTimeChart({
     getValue: (measurement) => measurement.waist,
     createCustomDataPoint: () => createCustomDataPoint('waist'),
     createWeekLabel,
-    status: offsetHaW >= 0 ? 'next' : 'prev'
+    status: offsetHaW >= 0 ? 'next' : 'prev',
+    isLoading
   })
 
   const hipData = processGenericChartData({
@@ -121,7 +134,8 @@ export default function WaistHipOverTimeChart({
     getValue: (measurement) => measurement.hip,
     createCustomDataPoint: () => createCustomDataPoint('hip'),
     createWeekLabel,
-    status: offsetHaW >= 0 ? 'next' : 'prev'
+    status: offsetHaW >= 0 ? 'next' : 'prev',
+    isLoading
   })
   const dynamicSpacing = calculateDynamicSpacing(chartWidth, waistData.length)
   const baseChartConfig = getBaseChartConfig(chartWidth)
@@ -205,7 +219,7 @@ export default function WaistHipOverTimeChart({
 
         {/* Footer Information */}
         <View className='flex flex-col items-center gap-1'>
-          <Text className='font-inter-medium text-center text-sm'>{dateRange}</Text>
+          <Text className='font-inter-medium text-center text-sm text-foreground'>{dateRange}</Text>
           <Text className='text-xs text-muted-foreground text-center'>Press and hold on the chart to see the data</Text>
         </View>
       </View>
