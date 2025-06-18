@@ -13,7 +13,7 @@ import {
   PregnancyInfoFormInput,
   PregnancyInfoFormOutput,
   pregnancyInfoFormOutput
-} from './validations'
+} from '../validations'
 
 const defaultValuesStepOne: PersonalInfoFormInput = {
   name: '',

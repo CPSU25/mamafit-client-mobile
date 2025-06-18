@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { router } from 'expo-router'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import diaryApi from '~/apis/diary.api'
 import { Measurement } from '~/types/diary.type'
-import { MeasurementsFormInput, measurementsFormOutput, MeasurementsFormOutput } from '../create-diary/validations'
-import { router } from 'expo-router'
+import { MeasurementsFormInput, measurementsFormOutput, MeasurementsFormOutput } from '../validations'
 
 const defaultMeasurementsValues: MeasurementsFormInput = {
   weekOfPregnancy: '0',

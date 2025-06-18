@@ -5,7 +5,6 @@ import { LineChart } from 'react-native-gifted-charts'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
-import { useGetDiaryDetail } from '../get-diary-detail/use-get-diary-detail'
 import {
   calculateChartWidth,
   calculateDynamicSpacing,
@@ -16,6 +15,7 @@ import {
   processGenericChartData,
   SHARED_CHART_CONSTANTS
 } from './chart-utils'
+import { useGetDiaryDetail } from '../../hooks/use-get-diary-detail'
 
 interface WaistHipOverTimeChartProps {
   currentWeek: number

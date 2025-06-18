@@ -7,7 +7,7 @@ import { Input } from '~/components/ui/input'
 import { useFieldError } from '~/hooks/use-field-error'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { cn, isFormError } from '~/lib/utils'
-import { MeasurementsFormInput, MeasurementsFormOutput } from '../create-diary/validations'
+import { MeasurementsFormInput, MeasurementsFormOutput } from '../validations'
 
 interface EditMainDetailFormProps {
   methods: UseFormReturn<MeasurementsFormInput, unknown, MeasurementsFormOutput>

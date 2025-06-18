@@ -1,13 +1,13 @@
 import { Feather } from '@expo/vector-icons'
 import { formatDistanceToNow } from 'date-fns'
 import { View } from 'react-native'
-import { useGetWeekOfPregnancy } from '~/features/diary/get-week-of-pregnancy/use-get-week-of-pregnancy'
+import { useGetWeekOfPregnancy } from '~/features/diary/hooks/use-get-week-of-pregnancy'
 import { getShadowStyles, styles } from '~/lib/constants/constants'
+import { cn } from '~/lib/utils'
 import { Measurement } from '~/types/diary.type'
 import { Card } from '../ui/card'
 import { Separator } from '../ui/separator'
 import { Text } from '../ui/text'
-import { cn } from '~/lib/utils'
 
 interface MeasurementCardProps {
   measurement: Measurement | undefined

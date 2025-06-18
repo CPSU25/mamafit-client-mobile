@@ -5,14 +5,15 @@ import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Loading from '~/components/loading'
 import { MeasurementField } from '~/components/measurement-field'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
 import { Text } from '~/components/ui/text'
-import { MeasurementsFormOutput } from '~/features/diary/create-diary/validations'
-import { useEditMeasurementDetail } from '~/features/diary/edit-measurement-detail/use-edit-measurement-detail'
-import { useGetMeasurementDetail } from '~/features/diary/get-measurement-detail/get-measurement-detail'
-import { useGetWeekOfPregnancy } from '~/features/diary/get-week-of-pregnancy/use-get-week-of-pregnancy'
+import { useEditMeasurementDetail } from '~/features/diary/hooks/use-edit-measurement-detail'
+import { useGetMeasurementDetail } from '~/features/diary/hooks/use-get-measurement-detail'
+import { useGetWeekOfPregnancy } from '~/features/diary/hooks/use-get-week-of-pregnancy'
+import { MeasurementsFormOutput } from '~/features/diary/validations'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
@@ -23,8 +24,8 @@ export default function DiaryHistoryDetailScreen() {
   const { measurementId, id } = useLocalSearchParams() as { measurementId: string; id: string }
   const { methods, initializeMeasurementsForm, editMeasurementDetailMutation } = useEditMeasurementDetail()
   const { isDarkColorScheme } = useColorScheme()
-  const { data: measurementDetail } = useGetMeasurementDetail(measurementId)
-  const { data: weekOfPregnancy } = useGetWeekOfPregnancy(id)
+  const { data: measurementDetail, isLoading: isMeasurementDetailLoading } = useGetMeasurementDetail(measurementId)
+  const { data: weekOfPregnancy, isLoading: isWeekOfPregnancyLoading } = useGetWeekOfPregnancy(id)
 
   useEffect(() => {
     if (measurementDetail) {
@@ -101,6 +102,10 @@ export default function DiaryHistoryDetailScreen() {
       measurementId,
       inputs: rest
     })
+  }
+
+  if (isMeasurementDetailLoading || isWeekOfPregnancyLoading) {
+    return <Loading />
   }
 
   return (
