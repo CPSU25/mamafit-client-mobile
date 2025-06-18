@@ -5,7 +5,7 @@ import { useAuth } from '~/hooks/use-auth'
 import { useRefreshOnFocus } from '~/hooks/use-refresh-on-focus'
 import { placeholderImage } from '~/lib/constants/constants'
 import { cn, isValidUrl } from '~/lib/utils'
-import { useGetCurrentUser } from './use-get-current-user'
+import { useGetCurrentUser } from '../hooks/use-get-current-user'
 
 export default function CurrentUser() {
   const { data, isLoading, refetch } = useGetCurrentUser()

@@ -19,8 +19,8 @@ import { Text } from '~/components/ui/text'
 import { useCountDown } from '~/hooks/use-count-down'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { isFormError } from '~/lib/utils'
-import { useRegister } from './use-register'
-import { RegisterFormSchema } from './validations'
+import { useRegister } from '../hooks/use-register'
+import { RegisterFormSchema } from '../validations'
 
 interface RegisterStepProps {
   currentStep: number
