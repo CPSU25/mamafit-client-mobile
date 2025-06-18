@@ -12,7 +12,7 @@ import { useColorScheme } from '~/hooks/use-color-scheme'
 import { useFieldError } from '~/hooks/use-field-error'
 import { KEYBOARD_OFFSET, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { cn, isFormError } from '~/lib/utils'
-import { PregnancyInfoFormInput } from '../validations'
+import { PregnancyInfoFormInput } from '../../validations'
 
 export default function PregnancyInfoForm() {
   const {

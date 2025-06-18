@@ -1,12 +1,12 @@
 import { format, formatDistanceToNow } from 'date-fns'
 import { LinearGradient } from 'expo-linear-gradient'
 import { View } from 'react-native'
+import { Separator } from '~/components/ui/separator'
+import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { getShadowStyles, ICON_SIZE, styles } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { Diary } from '~/types/diary.type'
-import { Separator } from '../ui/separator'
-import { Text } from '../ui/text'
 
 interface DiaryCardProps {
   diary: Diary
