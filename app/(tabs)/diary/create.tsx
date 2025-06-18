@@ -9,17 +9,17 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import FieldError from '~/components/field-error'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
-import PersonalInfoForm from '~/features/diary/create-diary/personal-info-form'
-import PregnancyInfoForm from '~/features/diary/create-diary/pregnancy-info-form'
-import ReviewMeasurements from '~/features/diary/create-diary/review-measurements'
-import { useCreateDiary } from '~/features/diary/create-diary/use-create-diary'
+import PersonalInfoForm from '~/features/diary/components/personal-info-form'
+import PregnancyInfoForm from '~/features/diary/components/pregnancy-info-form'
+import ReviewMeasurements from '~/features/diary/components/review-measurements'
+import { useCreateDiary } from '~/features/diary/hooks/use-create-diary'
 import {
   MeasurementsFormOutput,
   personalInfoFormOutput,
   PersonalInfoFormOutput,
   pregnancyInfoFormOutput,
   PregnancyInfoFormOutput
-} from '~/features/diary/create-diary/validations'
+} from '~/features/diary/validations'
 import { useAuth } from '~/hooks/use-auth'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'

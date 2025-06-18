@@ -1,4 +1,4 @@
-import { PersonalInfoFormOutput, PregnancyInfoFormOutput } from '~/features/diary/create-diary/validations'
+import { PersonalInfoFormOutput, PregnancyInfoFormOutput } from '~/features/diary/validations'
 
 export interface Diary {
   id: string

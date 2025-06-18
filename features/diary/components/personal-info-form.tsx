@@ -1,6 +1,7 @@
 import { Feather, MaterialIcons } from '@expo/vector-icons'
 import { Controller, useFormContext } from 'react-hook-form'
 import { View } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import FieldError from '~/components/field-error'
 import { Input } from '~/components/ui/input'
@@ -8,8 +9,7 @@ import { Text } from '~/components/ui/text'
 import { useFieldError } from '~/hooks/use-field-error'
 import { KEYBOARD_OFFSET, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { cn, isFormError } from '~/lib/utils'
-import { PersonalInfoFormInput } from './validations'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
+import { PersonalInfoFormInput } from '../validations'
 
 export default function PersonalInfoForm() {
   const {

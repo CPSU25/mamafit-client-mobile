@@ -4,7 +4,7 @@ import { FlatList, Pressable, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MeasurementCard from '~/components/card/measurement-card'
 import { Text } from '~/components/ui/text'
-import { useGetDiaryDetail } from '~/features/diary/get-diary-detail/use-get-diary-detail'
+import { useGetDiaryDetail } from '~/features/diary/hooks/use-get-diary-detail'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
