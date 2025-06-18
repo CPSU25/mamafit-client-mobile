@@ -5,11 +5,11 @@ import Animated, { FadeInDown } from 'react-native-reanimated'
 import Loading from '~/components/loading'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
+import { useGetDiaries } from '~/features/diary/hooks/use-get-diaries'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { ICON_SIZE } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
-import { useGetDiaries } from '~/features/diary/hooks'
-import { DiaryCard } from '../cards'
+import DiaryCard from '../cards/diary-card'
 
 export default function DiariesList() {
   const router = useRouter()

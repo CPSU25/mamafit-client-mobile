@@ -9,8 +9,11 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import FieldError from '~/components/field-error'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
-import { PersonalInfoForm, PregnancyInfoForm, ReviewMeasurementsForm } from '~/features/diary/components/forms'
-import { useCreateDiary } from '~/features/diary/hooks'
+import PersonalInfoForm from '~/features/diary/components/forms/personal-info-form'
+import PregnancyInfoForm from '~/features/diary/components/forms/pregnancy-info-form'
+import ReviewMeasurementsForm from '~/features/diary/components/forms/review-measurements-form'
+import { useCreateDiary } from '~/features/diary/hooks/use-create-diary'
+
 import {
   MeasurementsFormOutput,
   personalInfoFormOutput,
