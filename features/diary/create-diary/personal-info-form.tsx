@@ -59,7 +59,7 @@ export default function PersonalInfoForm() {
               name='weight'
               render={({ field: { onChange, value, ...field } }) => (
                 <Input
-                  placeholder='Weight (kg)'
+                  placeholder='Weight'
                   keyboardType='numeric'
                   StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
@@ -77,7 +77,7 @@ export default function PersonalInfoForm() {
               name='height'
               render={({ field: { onChange, value, ...field } }) => (
                 <Input
-                  placeholder='Height (cm)'
+                  placeholder='Height'
                   keyboardType='numeric'
                   StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}

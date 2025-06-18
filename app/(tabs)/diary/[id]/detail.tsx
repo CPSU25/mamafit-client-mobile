@@ -32,6 +32,7 @@ interface DiaryHeaderProps {
 
 interface CurrentWeekSectionProps {
   measurement: Measurement | undefined
+  diaryId: string
 }
 
 interface InsightsSectionProps {
@@ -64,7 +65,7 @@ const DiaryHeader = ({ diaryName, diaryId, onGoBack }: DiaryHeaderProps) => {
   )
 }
 
-const CurrentWeekSection = ({ measurement }: CurrentWeekSectionProps) => (
+const CurrentWeekSection = ({ measurement, diaryId }: CurrentWeekSectionProps) => (
   <View className='flex flex-col gap-4'>
     <View className='flex flex-col gap-1'>
       <View className='flex flex-row items-center gap-2'>
@@ -76,7 +77,7 @@ const CurrentWeekSection = ({ measurement }: CurrentWeekSectionProps) => (
       </Text>
     </View>
 
-    <CurrentMeasurementsCard measurement={measurement} />
+    <CurrentMeasurementsCard measurement={measurement} diaryId={diaryId} />
   </View>
 )
 
@@ -195,6 +196,7 @@ export default function DiaryDetailScreen() {
                 ? currentWeekData?.measurements[0]
                 : undefined
             }
+            diaryId={id}
           />
           <InsightsSection
             currentWeekData={currentWeekData}

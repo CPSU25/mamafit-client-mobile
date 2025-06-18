@@ -1,8 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
+import diaryApi from '~/apis/diary.api'
 import { Measurement } from '~/types/diary.type'
 import { MeasurementsFormInput, measurementsFormOutput, MeasurementsFormOutput } from '../create-diary/validations'
+import { router } from 'expo-router'
 
 const defaultMeasurementsValues: MeasurementsFormInput = {
   weekOfPregnancy: '0',
@@ -23,6 +26,8 @@ const defaultMeasurementsValues: MeasurementsFormInput = {
 }
 
 export const useEditMeasurementDetail = () => {
+  const queryClient = useQueryClient()
+
   const methods = useForm<MeasurementsFormInput, unknown, MeasurementsFormOutput>({
     defaultValues: defaultMeasurementsValues,
     resolver: zodResolver(measurementsFormOutput)
@@ -53,8 +58,19 @@ export const useEditMeasurementDetail = () => {
     [methods]
   )
 
+  const editMeasurementDetailMutation = useMutation({
+    mutationFn: diaryApi.editMeasurementDetail,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['measurement-detail'] })
+      queryClient.invalidateQueries({ queryKey: ['diary-detail'] })
+      queryClient.invalidateQueries({ queryKey: ['diaries'] })
+      router.back()
+    }
+  })
+
   return {
     methods,
+    editMeasurementDetailMutation,
     initializeMeasurementsForm
   }
 }

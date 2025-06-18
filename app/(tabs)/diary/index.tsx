@@ -18,11 +18,7 @@ export default function DiaryScreen() {
 
   const { data: diaries, refetch, isLoading } = useGetDiaries()
   const { refreshControl, refreshing } = useRefreshs([refetch], {
-    title: 'Pull to refresh diaries',
-    enableHaptics: true,
-    showErrorAlert: true,
-    minRefreshDuration: 800,
-    tintColor: PRIMARY_COLOR.LIGHT
+    title: 'Pull to refresh diaries'
   })
 
   return (

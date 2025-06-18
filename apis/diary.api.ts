@@ -5,6 +5,7 @@ import {
   CreateDiaryInput,
   Diary,
   DiaryDetail,
+  EditMeasurementDetailInput,
   GetDiaryDetailFilters,
   Measurement,
   PreviewDiaryInput
@@ -68,6 +69,17 @@ const diaryApi = {
     const { data } = await api.get<BaseResponse<string>>(`/measurement-diary/weeks-pregnant/${diaryId}`)
 
     return Number(data.data?.split(' ')[1])
+  },
+  editMeasurementDetail: async ({
+    measurementId,
+    inputs
+  }: {
+    measurementId: string
+    inputs: EditMeasurementDetailInput
+  }) => {
+    const { data } = await api.put<BaseResponse<Measurement>>(`/measurement/${measurementId}`, inputs)
+
+    return data.data
   }
 }
 
