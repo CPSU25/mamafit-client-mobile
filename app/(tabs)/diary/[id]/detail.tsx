@@ -8,14 +8,13 @@ import { Card } from '~/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Text } from '~/components/ui/text'
 import CurrentMeasurementsCard from '~/features/diary/components/cards/current-measurements-card'
-import { getCurrentWeekRange } from '~/features/diary/components/charts/chart-utils'
 import WaistHipOverTimeChart from '~/features/diary/components/charts/waist-hip-over-time-chart'
 import WeightOverTimeChart from '~/features/diary/components/charts/weight-over-time-chart'
-import { useGetDiaryDetail } from '~/features/diary/hooks/use-get-diary-detail'
+import { useGetWeekOfPregnancy } from '~/features/diary/hooks/use-get-week-of-pregnancy'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
-import { DiaryDetail, Measurement } from '~/types/diary.type'
+import { Measurement } from '~/types/diary.type'
 
 // Constants
 const CHART_TABS = {
@@ -25,25 +24,24 @@ const CHART_TABS = {
 
 // Props
 interface DiaryHeaderProps {
-  diaryName: string | undefined
   diaryId: string
   onGoBack: () => void
 }
 
 interface CurrentWeekSectionProps {
-  measurement: Measurement | undefined
+  measurement: Measurement | null | undefined
   diaryId: string
 }
 
 interface InsightsSectionProps {
-  currentWeekData: DiaryDetail | null | undefined
+  currentWeekData: Measurement | null | undefined
   diaryId: string
   weightRefetchRef: React.MutableRefObject<(() => Promise<any>) | null>
   waistHipRefetchRef: React.MutableRefObject<(() => Promise<any>) | null>
 }
 
 // Components
-const DiaryHeader = ({ diaryName, diaryId, onGoBack }: DiaryHeaderProps) => {
+const DiaryHeader = ({ diaryId, onGoBack }: DiaryHeaderProps) => {
   const router = useRouter()
 
   return (
@@ -52,7 +50,7 @@ const DiaryHeader = ({ diaryName, diaryId, onGoBack }: DiaryHeaderProps) => {
         <TouchableOpacity onPress={onGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='text-xl font-inter-semibold flex-1'>{diaryName}&apos;s Diary</Text>
+        <Text className='text-xl font-inter-semibold flex-1'>Diary Details</Text>
         <TouchableOpacity onPress={() => router.push(`/diary/${diaryId}/history`)}>
           <Feather name='clock' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
@@ -125,8 +123,7 @@ const InsightsSection = ({ currentWeekData, diaryId, weightRefetchRef, waistHipR
 
           <TabsContent value={CHART_TABS.WEIGHT} className='flex-1'>
             <WeightOverTimeChart
-              currentWeek={currentWeekData?.measurements[0]?.weekOfPregnancy || 0}
-              currentWeight={currentWeekData?.measurements[0]?.weight || 0}
+              currentWeekData={currentWeekData}
               diaryId={diaryId}
               onRefetchReady={handleWeightRefetchReady}
             />
@@ -134,9 +131,7 @@ const InsightsSection = ({ currentWeekData, diaryId, weightRefetchRef, waistHipR
 
           <TabsContent value={CHART_TABS.WAIST_HIP} className='flex-1'>
             <WaistHipOverTimeChart
-              currentWeek={currentWeekData?.measurements[0]?.weekOfPregnancy || 0}
-              currentWaist={currentWeekData?.measurements[0]?.waist || 0}
-              currentHip={currentWeekData?.measurements[0]?.hip || 0}
+              currentWeekData={currentWeekData}
               diaryId={diaryId}
               onRefetchReady={handleWaistHipRefetchReady}
             />
@@ -152,16 +147,11 @@ export default function DiaryDetailScreen() {
   const router = useRouter()
   const { id } = useLocalSearchParams() as { id: string }
 
-  const currentWeekRange = getCurrentWeekRange()
-
   const {
     data: currentWeekData,
     isLoading: isCurrentWeekLoading,
     refetch: refetchCurrentWeek
-  } = useGetDiaryDetail({
-    diaryId: id,
-    ...currentWeekRange
-  })
+  } = useGetWeekOfPregnancy(id)
 
   const weightRefetchRef = useRef<(() => Promise<any>) | null>(null)
   const waistHipRefetchRef = useRef<(() => Promise<any>) | null>(null)
@@ -173,9 +163,7 @@ export default function DiaryDetailScreen() {
     return refetches
   }, [refetchCurrentWeek])
 
-  const { refreshControl } = useRefreshs(getAllRefetches(), {
-    title: 'Pull to refresh diary data'
-  })
+  const { refreshControl } = useRefreshs(getAllRefetches())
 
   const handleGoBack = () => {
     router.back()
@@ -187,17 +175,10 @@ export default function DiaryDetailScreen() {
 
   return (
     <SafeAreaView className='flex-1'>
-      <DiaryHeader diaryName={currentWeekData?.name} diaryId={id} onGoBack={handleGoBack} />
+      <DiaryHeader diaryId={id} onGoBack={handleGoBack} />
       <ScrollView showsVerticalScrollIndicator={false} className='flex-1' refreshControl={refreshControl}>
         <View className='flex flex-col gap-4 p-4'>
-          <CurrentWeekSection
-            measurement={
-              currentWeekData?.measurements.length && currentWeekData?.measurements.length >= 1
-                ? currentWeekData?.measurements[0]
-                : undefined
-            }
-            diaryId={id}
-          />
+          <CurrentWeekSection measurement={currentWeekData} diaryId={id} />
           <InsightsSection
             currentWeekData={currentWeekData}
             diaryId={id}

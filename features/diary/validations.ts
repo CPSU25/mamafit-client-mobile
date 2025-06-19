@@ -1,6 +1,50 @@
 import { differenceInWeeks, parseISO } from 'date-fns'
 import { z } from 'zod'
 
+const validateMeasurement = (
+  value: string,
+  fieldName: string,
+  min: number,
+  max: number,
+  path: string,
+  ctx: z.RefinementCtx
+) => {
+  const num = value === '' ? NaN : Number(value)
+  if (isNaN(num)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `${fieldName} must be a number`,
+      path: [path]
+    })
+  } else if (num < min || num > max) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `${fieldName} must be between ${min} and ${max} cm`,
+      path: [path]
+    })
+  } else if (value.includes('.') && value.split('.')[1].length > 1) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `${fieldName} can have maximum 1 decimal place`,
+      path: [path]
+    })
+  }
+}
+
+const bmiValidation = (weight: string, height: string, ctx: z.RefinementCtx) => {
+  const weightForBmi = Number(weight)
+  const heightForBmi = Number(height) / 100
+  if (!isNaN(weightForBmi) && !isNaN(heightForBmi) && heightForBmi > 0) {
+    const bmi = weightForBmi / (heightForBmi * heightForBmi)
+    if (bmi < 16 || bmi > 45) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Weight and height combination is not realistic (BMI must be between 16 and 45)'
+      })
+    }
+  }
+}
+
 export const personalInfoFormOutput = z
   .object({
     name: z
@@ -47,17 +91,7 @@ export const personalInfoFormOutput = z
     }
 
     // BMI validation
-    const weightForBmi = Number(data.weight)
-    const heightForBmi = Number(data.height) / 100
-    if (!isNaN(weightForBmi) && !isNaN(heightForBmi) && heightForBmi > 0) {
-      const bmi = weightForBmi / (heightForBmi * heightForBmi)
-      if (bmi < 16 || bmi > 45) {
-        ctx.addIssue({
-          code: 'custom',
-          message: 'Weight and height combination is not realistic (BMI must be between 16 and 45)'
-        })
-      }
-    }
+    bmiValidation(data.weight, data.height, ctx)
 
     // Age validation
     const age = data.age === '' ? NaN : Number(data.age)
@@ -402,34 +436,11 @@ export const measurementsFormOutput = z
       })
     }
 
-    const validateMeasurement = (value: string, fieldName: string, min: number, max: number, path: string) => {
-      const num = value === '' ? NaN : Number(value)
-      if (isNaN(num)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `${fieldName} must be a number`,
-          path: [path]
-        })
-      } else if (num < min || num > max) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `${fieldName} must be between ${min} and ${max} cm`,
-          path: [path]
-        })
-      } else if (value.includes('.') && value.split('.')[1].length > 1) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `${fieldName} can have maximum 1 decimal place`,
-          path: [path]
-        })
-      }
-    }
-
     // Body measurements validation
-    validateMeasurement(data.bust, 'Bust', 60, 120, 'bust')
-    validateMeasurement(data.waist, 'Waist', 60, 150, 'waist')
-    validateMeasurement(data.hip, 'Hip', 60, 120, 'hip')
-    validateMeasurement(data.weight, 'Weight', 20, 200, 'weight')
+    validateMeasurement(data.bust, 'Bust', 60, 120, 'bust', ctx)
+    validateMeasurement(data.waist, 'Waist', 60, 150, 'waist', ctx)
+    validateMeasurement(data.hip, 'Hip', 60, 120, 'hip', ctx)
+    validateMeasurement(data.weight, 'Weight', 20, 200, 'weight', ctx)
 
     // FIXME: Finalize these validations
     // Upper body measurements validation
@@ -468,12 +479,37 @@ export const measurementsFormOutput = z
     sleeveLength: Number(data.sleeveLength)
   }))
 
+export const previewMeasurementFormOutput = z
+  .object({
+    measurementDiaryId: z.string().min(1, { message: 'Measurement diary id is required' }),
+    weight: z.string().min(1, { message: 'Weight is required' }),
+    bust: z.string().min(1, { message: 'Bust measurement is required' }),
+    waist: z.string().min(1, { message: 'Waist measurement is required' }),
+    hip: z.string().min(1, { message: 'Hip measurement is required' })
+  })
+  .superRefine((data, ctx) => {
+    // Body measurements validation
+    validateMeasurement(data.bust, 'Bust', 60, 120, 'bust', ctx)
+    validateMeasurement(data.waist, 'Waist', 60, 150, 'waist', ctx)
+    validateMeasurement(data.hip, 'Hip', 60, 120, 'hip', ctx)
+    validateMeasurement(data.weight, 'Weight', 20, 200, 'weight', ctx)
+  })
+  .transform((data) => ({
+    measurementDiaryId: data.measurementDiaryId,
+    weight: Number(data.weight),
+    bust: Number(data.bust),
+    waist: Number(data.waist),
+    hip: Number(data.hip)
+  }))
+
 // Input types (before transform) - for forms
 export type PersonalInfoFormInput = z.input<typeof personalInfoFormOutput>
 export type PregnancyInfoFormInput = z.input<typeof pregnancyInfoFormOutput>
 export type MeasurementsFormInput = z.input<typeof measurementsFormOutput>
+export type PreviewMeasurementFormInput = z.input<typeof previewMeasurementFormOutput>
 
 // Output types (after transform) - for API/processing
 export type PersonalInfoFormOutput = z.output<typeof personalInfoFormOutput>
 export type PregnancyInfoFormOutput = z.output<typeof pregnancyInfoFormOutput>
 export type MeasurementsFormOutput = z.output<typeof measurementsFormOutput>
+export type PreviewMeasurementFormOutput = z.output<typeof previewMeasurementFormOutput>

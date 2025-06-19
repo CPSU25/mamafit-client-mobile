@@ -45,3 +45,10 @@ export const KEYBOARD_OFFSET = 15
 
 export const placeholderImage =
   'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg'
+
+export const ERROR_MESSAGES = {
+  ALREADY_HAVE_MEASUREMENT: 'You already have a measurement for this week.',
+  SOMETHING_WENT_WRONG: 'Something went wrong! Please try again later.',
+  WRONG_CREDENTIALS: 'Wrong credentials! Please try again.',
+  INSUFFICIENT_PERMISSION: 'You are not authorized to access this app.'
+}

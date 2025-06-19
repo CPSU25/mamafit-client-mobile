@@ -1,4 +1,4 @@
-import { PersonalInfoFormOutput, PregnancyInfoFormOutput } from '~/features/diary/validations'
+import { MeasurementsFormOutput, PersonalInfoFormOutput, PregnancyInfoFormOutput } from '~/features/diary/validations'
 
 export interface Diary {
   id: string
@@ -51,9 +51,13 @@ export interface Measurement {
 
 export type PreviewDiaryInput = PersonalInfoFormOutput & PregnancyInfoFormOutput
 
-export type CreateDiaryInput = {
+export interface CreateDiaryInput {
   diary: PreviewDiaryInput
   measurement: Partial<Measurement>
+}
+
+export interface CreateMeasurementInput extends MeasurementsFormOutput {
+  measurementDiaryId: string
 }
 
 export interface GetDiaryDetailFilters {

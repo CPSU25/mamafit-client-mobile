@@ -4,8 +4,9 @@ import { ActivityIndicator, Text, useWindowDimensions, View } from 'react-native
 import { LineChart } from 'react-native-gifted-charts'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
-import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { useGetDiaryDetail } from '~/features/diary/hooks/use-get-diary-detail'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
+import { Measurement } from '~/types/diary.type'
 import {
   calculateChartWidth,
   calculateDynamicSpacing,
@@ -18,8 +19,7 @@ import {
 } from './chart-utils'
 
 interface WeightOverTimeChartProps {
-  currentWeek: number
-  currentWeight: number
+  currentWeekData: Measurement | null | undefined
   diaryId: string
   onRefetchReady?: (refetch: () => Promise<any>) => void
 }
@@ -52,7 +52,7 @@ const createCustomDataPoint = () => (
 )
 
 const createWeekLabel = (week: string) => (
-  <Text className='text-xs text-muted-foreground ml-[16px]'>{parseInt(week) >= 1 ? `W${week}` : 'N/A'}</Text>
+  <Text className='text-xs text-muted-foreground ml-[14px]'>{parseInt(week) >= 1 ? `W${week}` : 'N/A'}</Text>
 )
 
 const createPointerLabelComponent = (items: any) => (
@@ -64,12 +64,7 @@ const createPointerLabelComponent = (items: any) => (
   </Card>
 )
 
-export default function WeightOverTimeChart({
-  currentWeek,
-  currentWeight,
-  diaryId,
-  onRefetchReady
-}: WeightOverTimeChartProps) {
+export default function WeightOverTimeChart({ currentWeekData, diaryId, onRefetchReady }: WeightOverTimeChartProps) {
   const [offsetWeight, setOffsetWeight] = useState(0)
   const { startDate, endDate } = getFiveWeeksRange(offsetWeight)
 
@@ -95,7 +90,7 @@ export default function WeightOverTimeChart({
   const dateRange = formatDateRange(startDate, endDate)
   const chartData = processGenericChartData({
     measurements: fiveWeeksWeightData?.measurements,
-    currentWeek,
+    currentWeek: currentWeekData?.weekOfPregnancy || 0,
     stripColor: WEIGHT_CHART_COLORS.STRIP,
     getValue: (measurement) => measurement.weight,
     createCustomDataPoint,
@@ -118,7 +113,9 @@ export default function WeightOverTimeChart({
       <View className='flex flex-row justify-between items-start'>
         <View className='text-left'>
           <Text className='font-inter-medium text-sm text-foreground'>Your Weight Over Time</Text>
-          <Text className='font-inter-extrabold text-2xl text-primary mt-1'>{currentWeight.toFixed(2)} kg</Text>
+          <Text className='font-inter-extrabold text-2xl text-primary mt-1'>
+            {currentWeekData?.weight ? currentWeekData?.weight.toFixed(2) : 'N/A'} kg
+          </Text>
           <Text className='text-xs text-muted-foreground'>This week&apos;s weight</Text>
         </View>
 

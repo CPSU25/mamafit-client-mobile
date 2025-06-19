@@ -1,8 +1,10 @@
+import { PreviewMeasurementFormOutput } from '~/features/diary/validations'
 import { api } from '~/lib/axios/axios'
 import { store } from '~/lib/redux-toolkit/store'
 import { BasePaginationResponse, BaseResponse } from '~/types/common'
 import {
   CreateDiaryInput,
+  CreateMeasurementInput,
   Diary,
   DiaryDetail,
   EditMeasurementDetailInput,
@@ -66,9 +68,9 @@ const diaryApi = {
     return data.data
   },
   getWeekOfPregnancy: async (diaryId: string) => {
-    const { data } = await api.get<BaseResponse<string>>(`/measurement-diary/weeks-pregnant/${diaryId}`)
+    const { data } = await api.get<BaseResponse<Measurement>>(`/measurement-diary/weeks-pregnant/${diaryId}`)
 
-    return Number(data.data?.split(' ')[1])
+    return data.data
   },
   editMeasurementDetail: async ({
     measurementId,
@@ -78,6 +80,16 @@ const diaryApi = {
     inputs: EditMeasurementDetailInput
   }) => {
     const { data } = await api.put<BaseResponse<Measurement>>(`/measurement/${measurementId}`, inputs)
+
+    return data.data
+  },
+  previewMeasurement: async (inputs: PreviewMeasurementFormOutput) => {
+    const { data } = await api.post<BaseResponse<Measurement>>('measurement/preview-measurement', inputs)
+
+    return data.data
+  },
+  createMeasurement: async (inputs: CreateMeasurementInput) => {
+    const { data } = await api.post<BaseResponse<Measurement>>('measurement/create-measurement', inputs)
 
     return data.data
   }

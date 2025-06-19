@@ -5,6 +5,7 @@ import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import diaryApi from '~/apis/diary.api'
 import { Measurement } from '~/types/diary.type'
+import { initializeMeasurementsForm } from '../utils'
 import { MeasurementsFormInput, measurementsFormOutput, MeasurementsFormOutput } from '../validations'
 
 const defaultMeasurementsValues: MeasurementsFormInput = {
@@ -33,27 +34,9 @@ export const useEditMeasurementDetail = () => {
     resolver: zodResolver(measurementsFormOutput)
   })
 
-  const initializeMeasurementsForm = useCallback(
+  const initForm = useCallback(
     (measurements: Measurement) => {
-      const formData: MeasurementsFormInput = {
-        weekOfPregnancy: measurements.weekOfPregnancy.toString(),
-        weight: measurements.weight.toFixed(1),
-        bust: measurements.bust.toFixed(1),
-        waist: measurements.waist.toFixed(1),
-        hip: measurements.hip.toFixed(1),
-        neck: measurements.neck.toFixed(1),
-        coat: measurements.coat.toFixed(1),
-        chestAround: measurements.chestAround.toFixed(1),
-        shoulderWidth: measurements.shoulderWidth.toFixed(1),
-        stomach: measurements.stomach.toFixed(1),
-        pantsWaist: measurements.pantsWaist.toFixed(1),
-        thigh: measurements.thigh.toFixed(1),
-        legLength: measurements.legLength.toFixed(1),
-        dressLength: measurements.dressLength.toFixed(1),
-        sleeveLength: measurements.sleeveLength.toFixed(1)
-      }
-
-      methods.reset(formData)
+      initializeMeasurementsForm(measurements, methods)
     },
     [methods]
   )
@@ -61,9 +44,10 @@ export const useEditMeasurementDetail = () => {
   const editMeasurementDetailMutation = useMutation({
     mutationFn: diaryApi.editMeasurementDetail,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['measurement-detail'] })
       queryClient.invalidateQueries({ queryKey: ['diary-detail'] })
+      queryClient.invalidateQueries({ queryKey: ['measurement-detail'] })
       queryClient.invalidateQueries({ queryKey: ['diaries'] })
+      queryClient.invalidateQueries({ queryKey: ['week-of-pregnancy'] })
       router.back()
     }
   })
@@ -71,6 +55,6 @@ export const useEditMeasurementDetail = () => {
   return {
     methods,
     editMeasurementDetailMutation,
-    initializeMeasurementsForm
+    initForm
   }
 }

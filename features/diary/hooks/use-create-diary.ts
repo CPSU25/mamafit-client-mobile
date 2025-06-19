@@ -1,8 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'expo-router'
 import { useForm } from 'react-hook-form'
 import diaryApi from '~/apis/diary.api'
-import { Measurement } from '~/types/diary.type'
+import { ERROR_MESSAGES } from '~/lib/constants/constants'
+import { initializeMeasurementsForm } from '../utils'
 import {
   MeasurementsFormInput,
   MeasurementsFormOutput,
@@ -52,7 +54,10 @@ const defaultMeasurementsValues: MeasurementsFormInput = {
   sleeveLength: '0'
 }
 
-export const useCreateDiary = () => {
+export const useCreateDiary = (onSuccess: () => void, onFinish: () => void) => {
+  const router = useRouter()
+  const queryClient = useQueryClient()
+
   // Form methods
   const stepOneMethods = useForm<PersonalInfoFormInput, unknown, PersonalInfoFormOutput>({
     defaultValues: defaultValuesStepOne,
@@ -69,40 +74,46 @@ export const useCreateDiary = () => {
 
   // Mutations
   const previewDiaryMutation = useMutation({
-    mutationFn: diaryApi.previewDiary
-  })
-  const createDiaryMutation = useMutation({
-    mutationFn: diaryApi.createDiary
-  })
-
-  // Handlers
-  const initializeMeasurementsForm = (measurements: Measurement) => {
-    const formData: MeasurementsFormInput = {
-      weekOfPregnancy: measurements.weekOfPregnancy.toString(),
-      weight: measurements.weight.toFixed(1),
-      bust: measurements.bust.toFixed(1),
-      waist: measurements.waist.toFixed(1),
-      hip: measurements.hip.toFixed(1),
-      neck: measurements.neck.toFixed(1),
-      coat: measurements.coat.toFixed(1),
-      chestAround: measurements.chestAround.toFixed(1),
-      shoulderWidth: measurements.shoulderWidth.toFixed(1),
-      stomach: measurements.stomach.toFixed(1),
-      pantsWaist: measurements.pantsWaist.toFixed(1),
-      thigh: measurements.thigh.toFixed(1),
-      legLength: measurements.legLength.toFixed(1),
-      dressLength: measurements.dressLength.toFixed(1),
-      sleeveLength: measurements.sleeveLength.toFixed(1)
+    mutationFn: diaryApi.previewDiary,
+    onSuccess: (measurement) => {
+      if (measurement) {
+        initializeMeasurementsForm(measurement, measurementsMethods)
+        onSuccess()
+      }
+    },
+    onError: (error) => {
+      stepTwoMethods.setError('root', {
+        message: error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG
+      })
     }
+  })
 
-    measurementsMethods.reset(formData)
-  }
+  const createDiaryMutation = useMutation({
+    mutationFn: diaryApi.createDiary,
+    onSuccess: (data) => {
+      if (data) {
+        queryClient.invalidateQueries({ queryKey: ['diaries'] })
+        router.replace(`/diary/${data.diaryId}/detail`)
+
+        setTimeout(() => {
+          stepOneMethods.reset()
+          stepTwoMethods.reset()
+          measurementsMethods.reset()
+          onFinish()
+        }, 500)
+      }
+    },
+    onError: (error) => {
+      measurementsMethods.setError('root', {
+        message: error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG
+      })
+    }
+  })
 
   return {
     stepOneMethods,
     stepTwoMethods,
     measurementsMethods,
-    initializeMeasurementsForm,
     previewDiaryMutation,
     createDiaryMutation
   }
