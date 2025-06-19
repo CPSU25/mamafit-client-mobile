@@ -1,6 +1,6 @@
-import authApi from '~/apis/auth.api'
 import { useMutation } from '@tanstack/react-query'
-import { router } from 'expo-router'
+import * as Updates from 'expo-updates'
+import authApi from '~/apis/auth.api'
 import { useAuth } from '~/hooks/use-auth'
 
 export const useLogout = () => {
@@ -8,9 +8,9 @@ export const useLogout = () => {
 
   const logoutMutation = useMutation({
     mutationFn: authApi.logout,
-    onSuccess: () => {
-      router.replace('/profile')
+    onSuccess: async () => {
       handleLogout()
+      await Updates.reloadAsync()
     }
   })
 
