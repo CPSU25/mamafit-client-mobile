@@ -14,10 +14,9 @@ import {
 } from '~/types/diary.type'
 
 const diaryApi = {
-  getDiaries: async (userId: string) => {
-    // TODO: add pagination
+  getDiaries: async (userId: string, page: number = 1, pageSize: number = 5, nameSearch?: string) => {
     const { data } = await api.get<BasePaginationResponse<Diary>>(
-      `/measurement-diary/userId?userId=${userId}&index=1&pageSize=10`
+      `/measurement-diary/userId?userId=${userId}&index=${page}&pageSize=${pageSize}${nameSearch ? `&nameSearch=${nameSearch}` : ''}`
     )
     const sortedDiaries = {
       ...data.data,

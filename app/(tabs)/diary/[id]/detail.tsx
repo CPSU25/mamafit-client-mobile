@@ -98,13 +98,13 @@ const InsightsSection = ({ currentWeekData, diaryId, weightRefetchRef, waistHipR
 
   return (
     <View className='flex flex-col gap-4'>
-      <View className='flex flex-col gap-1'>
+      {/* <View className='flex flex-col gap-1'>
         <View className='flex flex-row items-center gap-2'>
           {SvgIcon.graph({ size: ICON_SIZE.EXTRA_SMALL, color: 'PRIMARY' })}
           <Text className='font-inter-semibold'>Insights</Text>
         </View>
         <Text className='text-muted-foreground text-xs'>Get detailed insights into your measurements over time.</Text>
-      </View>
+      </View> */}
 
       <Card className='p-2 min-h-96'>
         <Tabs
