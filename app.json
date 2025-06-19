@@ -52,7 +52,8 @@
       "expo-secure-store",
       "@react-native-google-signin/google-signin",
       "@react-native-firebase/app",
-      "@react-native-firebase/auth"
+      "@react-native-firebase/auth",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
@@ -63,6 +64,12 @@
         "projectId": "4316a3bf-866d-43bb-b53f-b07bc0c013fc"
       }
     },
-    "owner": "mamafit"
+    "owner": "mamafit",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/4316a3bf-866d-43bb-b53f-b07bc0c013fc"
+    }
   }
 }
