@@ -1,35 +1,41 @@
 import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
-import { FlatList, Pressable, View } from 'react-native'
+import { ActivityIndicator, FlatList, Pressable, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import Loading from '~/components/loading'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
 import { useGetDiaries } from '~/features/diary/hooks/use-get-diaries'
 import { useRefreshs } from '~/hooks/use-refresh'
-import { ICON_SIZE } from '~/lib/constants/constants'
+import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import DiaryCard from '../cards/diary-card'
 
-export default function DiariesList() {
+export default function DiariesList({ nameSearch }: { nameSearch: string }) {
   const router = useRouter()
 
-  const { data: diaries, refetch, isLoading } = useGetDiaries()
-
-  const { refreshControl, refreshing } = useRefreshs([refetch])
+  const {
+    data: diaries,
+    refetch,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useGetDiaries(nameSearch)
+  const { refreshControl } = useRefreshs([refetch])
 
   return (
     <FlatList
-      data={diaries?.items}
+      data={diaries?.pages.flatMap((page) => page.items)}
       renderItem={({ item, index }) => (
-        <Animated.View entering={FadeInDown.duration(200).delay(index * 100)}>
-          <Pressable onPress={() => router.push(`/diary/${item.id}/detail`)}>
+        <Animated.View entering={FadeInDown.duration(200).delay(index * 50)}>
+          <Pressable className='' onPress={() => router.push(`/diary/${item.id}/detail`)}>
             <DiaryCard diary={item} />
           </Pressable>
         </Animated.View>
       )}
       showsVerticalScrollIndicator={false}
-      contentContainerClassName='gap-4 p-4 pb-60'
+      contentContainerClassName='gap-4 p-4 pb-40'
       ListEmptyComponent={
         isLoading ? (
           <Loading />
@@ -48,9 +54,17 @@ export default function DiariesList() {
           </View>
         )
       }
+      ListFooterComponent={
+        isFetchingNextPage ? <ActivityIndicator size='large' color={PRIMARY_COLOR.LIGHT} className='mt-2' /> : null
+      }
+      onEndReached={() => {
+        if (hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
+      }}
+      onEndReachedThreshold={0.2}
       contentInsetAdjustmentBehavior='automatic'
       refreshControl={refreshControl}
-      refreshing={refreshing}
     />
   )
 }
