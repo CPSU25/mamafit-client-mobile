@@ -3,8 +3,8 @@ import { lineDataItem } from 'react-native-gifted-charts'
 import { Measurement } from '~/types/diary.type'
 
 const WEEK_CONFIG = {
-  WEEKS_BEFORE: 3,
-  WEEKS_AFTER: 1,
+  WEEKS_BEFORE: 2,
+  WEEKS_AFTER: 2,
   WEEK_STARTS_ON: 1
 } as const
 
@@ -12,7 +12,7 @@ const OFFSET_WEEKS = 5
 
 export const SHARED_CHART_CONSTANTS = {
   MIN_DATA_POINTS: 5,
-  PLACEHOLDER_VALUE: 3,
+  PLACEHOLDER_VALUE: 0,
   DATA_POINT_SIZE: 16,
   CHART_THICKNESS: 3,
   MAX_VALUE: 200,
@@ -20,7 +20,7 @@ export const SHARED_CHART_CONSTANTS = {
   INITIAL_SPACING: 20,
   CHART_PADDING: 135,
   STRIP_HEIGHT: 200,
-  STRIP_WIDTH: 2,
+  STRIP_WIDTH: 3,
   POINTER_STRIP_WIDTH: 1,
   POINTER_RADIUS: 6,
   POINTER_LABEL_WIDTH: 80,
@@ -199,11 +199,31 @@ export const processGenericChartData = ({
     data.push(dataPoint)
   })
 
-  return addPlaceholderDataPoints(data, status, measurements, SHARED_CHART_CONSTANTS.MIN_DATA_POINTS, (weekNumber) => ({
-    value: SHARED_CHART_CONSTANTS.PLACEHOLDER_VALUE,
-    hideDataPoint: true,
-    labelComponent: () => createWeekLabel(weekNumber.toString())
-  }))
+  const placeholderData = addPlaceholderDataPoints(
+    data,
+    status,
+    measurements,
+    SHARED_CHART_CONSTANTS.MIN_DATA_POINTS,
+    (weekNumber) => ({
+      value: SHARED_CHART_CONSTANTS.PLACEHOLDER_VALUE,
+      hideDataPoint: true,
+      label: weekNumber.toString(),
+      labelComponent: () => createWeekLabel(weekNumber.toString())
+    })
+  )
+
+  placeholderData.forEach((item) => {
+    // Add strip if current week is a placeholder value (customer did not add a measurement for this week)
+    if (item.value === SHARED_CHART_CONSTANTS.PLACEHOLDER_VALUE && item.label && Number(item.label) === currentWeek) {
+      item.showStrip = true
+      item.stripHeight = SHARED_CHART_CONSTANTS.STRIP_HEIGHT
+      item.stripWidth = SHARED_CHART_CONSTANTS.STRIP_WIDTH
+      item.stripColor = stripColor
+      item.stripOpacity = 0.8
+    }
+  })
+
+  return placeholderData
 }
 
 export const getFiveWeeksRange = (offset: number = 0) => {
@@ -222,8 +242,3 @@ export const getFiveWeeksRange = (offset: number = 0) => {
     endDate: offsetEndDate.toISOString()
   }
 }
-
-export const getCurrentWeekRange = () => ({
-  startDate: startOfWeek(new Date(), { weekStartsOn: WEEK_CONFIG.WEEK_STARTS_ON }).toISOString(),
-  endDate: endOfWeek(new Date(), { weekStartsOn: WEEK_CONFIG.WEEK_STARTS_ON }).toISOString()
-})

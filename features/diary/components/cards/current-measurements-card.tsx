@@ -7,12 +7,19 @@ import { getShadowStyles, styles } from '~/lib/constants/constants'
 import { Measurement } from '~/types/diary.type'
 
 interface CurrentMeasurementsCardProps {
-  measurement: Measurement | undefined
+  measurement: Measurement | null | undefined
   diaryId: string
+}
+
+// Check if the current measurement is empty
+const isCurrentMeasurementEmpty = (measurement: Measurement | null | undefined) => {
+  return measurement?.weight === 0 && measurement?.bust === 0 && measurement?.waist === 0 && measurement?.hip === 0
 }
 
 export default function CurrentMeasurementsCard({ measurement, diaryId }: CurrentMeasurementsCardProps) {
   const router = useRouter()
+
+  const isEmpty = isCurrentMeasurementEmpty(measurement)
 
   return (
     <Animated.View
@@ -51,14 +58,25 @@ export default function CurrentMeasurementsCard({ measurement, diaryId }: Curren
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(400)} className='flex flex-row justify-between items-center'>
-          <TouchableOpacity
-            onPress={() => router.push(`/diary/${diaryId}/history/${measurement?.id}`)}
-            className='bg-white/10 rounded-xl px-3 py-2'
-          >
-            <Text className='text-white text-xs font-inter-semibold'>Press to edit now!</Text>
-          </TouchableOpacity>
+          {isEmpty ? (
+            <TouchableOpacity
+              onPress={() => router.push(`/diary/${diaryId}/create`)}
+              className='bg-white/10 rounded-xl px-3 py-2'
+            >
+              <Text className='text-white text-xs font-inter-semibold'>Add measurement</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => router.push(`/diary/${diaryId}/history/${measurement?.id}`)}
+              className='bg-white/10 rounded-xl px-3 py-2'
+            >
+              <Text className='text-white text-xs font-inter-semibold'>Press to edit now!</Text>
+            </TouchableOpacity>
+          )}
           <Text className='text-white text-xs font-inter-medium lowercase'>
-            Updated {formatDistanceToNow(new Date(measurement?.updatedAt || ''))} ago
+            {measurement?.updatedAt !== '0001-01-01T00:00:00'
+              ? `Updated ${formatDistanceToNow(new Date(measurement?.updatedAt || ''))} ago`
+              : 'no time yet'}
           </Text>
         </Animated.View>
       </View>

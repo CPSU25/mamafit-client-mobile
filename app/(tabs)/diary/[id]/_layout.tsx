@@ -11,6 +11,7 @@ export default function DiaryDetailLayout() {
       <Stack.Screen name='detail' options={{ title: 'Diary detail' }} />
       <Stack.Screen name='history' options={{ title: 'Diary history' }} />
       <Stack.Screen name='setting' options={{ title: 'Diary setting' }} />
+      <Stack.Screen name='create' options={{ title: 'Create measurement' }} />
     </Stack>
   )
 }

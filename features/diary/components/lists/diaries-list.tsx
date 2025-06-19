@@ -16,9 +16,7 @@ export default function DiariesList() {
 
   const { data: diaries, refetch, isLoading } = useGetDiaries()
 
-  const { refreshControl, refreshing } = useRefreshs([refetch], {
-    title: 'Pull to refresh diaries'
-  })
+  const { refreshControl, refreshing } = useRefreshs([refetch])
 
   return (
     <FlatList

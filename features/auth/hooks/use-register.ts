@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import authApi from '~/apis/auth.api'
+import { ERROR_MESSAGES } from '~/lib/constants/constants'
 import { registerFormSchema, RegisterFormSchema } from '../validations'
 
 interface UseRegisterProps {
@@ -25,7 +26,7 @@ export const useRegister = ({ onRegisterSuccess }: UseRegisterProps) => {
       onRegisterSuccess()
     },
     onError: (error) => {
-      methods.setError('email', { message: error.response?.data.errorMessage || 'Something went wrong!' })
+      methods.setError('email', { message: error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG })
     }
   })
 
@@ -40,7 +41,7 @@ export const useRegister = ({ onRegisterSuccess }: UseRegisterProps) => {
     },
     onError: (error) => {
       methods.resetField('code')
-      methods.setError('code', { message: error.response?.data.errorMessage || 'Something went wrong!' })
+      methods.setError('code', { message: error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG })
     }
   })
 
@@ -51,7 +52,9 @@ export const useRegister = ({ onRegisterSuccess }: UseRegisterProps) => {
       onRegisterSuccess()
     },
     onError: (error) => {
-      methods.setError('password', { message: error.response?.data.errorMessage || 'Something went wrong!' })
+      methods.setError('password', {
+        message: error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG
+      })
     }
   })
 

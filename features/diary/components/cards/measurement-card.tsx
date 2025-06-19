@@ -5,7 +5,6 @@ import { Card } from '~/components/ui/card'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { useGetWeekOfPregnancy } from '~/features/diary/hooks/use-get-week-of-pregnancy'
-import { getShadowStyles, styles } from '~/lib/constants/constants'
 import { cn } from '~/lib/utils'
 import { Measurement } from '~/types/diary.type'
 
@@ -15,12 +14,12 @@ interface MeasurementCardProps {
 }
 
 export default function MeasurementCard({ measurement, diaryId }: MeasurementCardProps) {
-  const { data: weekOfPregnancy } = useGetWeekOfPregnancy(diaryId)
+  const { data: currentWeekData } = useGetWeekOfPregnancy(diaryId)
 
-  const isActive = weekOfPregnancy === measurement?.weekOfPregnancy
+  const isActive = currentWeekData?.weekOfPregnancy === measurement?.weekOfPregnancy
 
   return (
-    <Card className='p-2 flex flex-row items-center gap-4' style={[styles.container, getShadowStyles()]}>
+    <Card className='p-2 flex flex-row items-center gap-4'>
       <View
         className={cn(
           'w-16 h-16 rounded-xl items-center justify-center border ',

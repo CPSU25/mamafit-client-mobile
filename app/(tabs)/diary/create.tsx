@@ -1,5 +1,4 @@
 import { Feather } from '@expo/vector-icons'
-import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
@@ -13,7 +12,7 @@ import PersonalInfoForm from '~/features/diary/components/forms/personal-info-fo
 import PregnancyInfoForm from '~/features/diary/components/forms/pregnancy-info-form'
 import ReviewMeasurementsForm from '~/features/diary/components/forms/review-measurements-form'
 import { useCreateDiary } from '~/features/diary/hooks/use-create-diary'
-
+import { getIconColor } from '~/features/diary/utils'
 import {
   MeasurementsFormOutput,
   personalInfoFormOutput,
@@ -21,7 +20,6 @@ import {
   pregnancyInfoFormOutput,
   PregnancyInfoFormOutput
 } from '~/features/diary/validations'
-import { useAuth } from '~/hooks/use-auth'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { COLORS, SvgIcon } from '~/lib/constants/svg-icon'
@@ -46,27 +44,35 @@ const steps = [
   }
 ]
 
-// Utils
-const getIconColor = (currentStep: number, index: number): keyof typeof COLORS => {
-  if (currentStep >= index) return 'PRIMARY'
-  return 'GRAY'
-}
-
-export default function DiaryCreateScreen() {
+export default function CreateDiaryScreen() {
   const router = useRouter()
-  const { user } = useAuth()
   const [currentStep, setCurrentStep] = useState(0)
-  const queryClient = useQueryClient()
-
-  const {
-    stepOneMethods,
-    stepTwoMethods,
-    measurementsMethods,
-    initializeMeasurementsForm,
-    previewDiaryMutation,
-    createDiaryMutation
-  } = useCreateDiary()
   const { isDarkColorScheme } = useColorScheme()
+
+  const next = () => {
+    setCurrentStep((prev) => {
+      if (prev < steps.length - 1) {
+        return prev + 1
+      }
+      return prev
+    })
+  }
+
+  const prev = () => {
+    setCurrentStep((prev) => {
+      if (prev > 0) {
+        return prev - 1
+      }
+      return prev
+    })
+  }
+
+  const handleReset = () => {
+    setCurrentStep(0)
+  }
+
+  const { stepOneMethods, stepTwoMethods, measurementsMethods, previewDiaryMutation, createDiaryMutation } =
+    useCreateDiary(next, handleReset)
 
   const {
     handleSubmit: handleSubmitStepOne,
@@ -96,81 +102,34 @@ export default function DiaryCreateScreen() {
     (measurementsErrors as any)['']?.message ||
     (measurementsErrors as any)._errors?.[0]
 
-  const next = () => {
-    setCurrentStep((prev) => {
-      if (prev < steps.length - 1) {
-        return prev + 1
-      }
-      return prev
-    })
-  }
-
-  const prev = () => {
-    setCurrentStep((prev) => {
-      if (prev > 0) {
-        return prev - 1
-      }
-      return prev
-    })
-  }
-
   const handleGoBack = () => {
     router.back()
   }
 
-  const onSubmitStepOne: SubmitHandler<PersonalInfoFormOutput> = (data) => {
-    console.log('Personal Information:', data)
+  const onSubmitStepOne: SubmitHandler<PersonalInfoFormOutput> = () => {
     next()
   }
 
   const onSubmitStepTwo: SubmitHandler<PregnancyInfoFormOutput> = (data) => {
-    console.log('Pregnancy Information:', data)
     const parsedStepOneValues = personalInfoFormOutput.parse(getStepOneValues())
 
-    previewDiaryMutation
-      .mutateAsync({
-        ...data,
-        ...parsedStepOneValues
-      })
-      .then((measurements) => {
-        if (measurements) {
-          initializeMeasurementsForm(measurements)
-        }
-        next()
-      })
-      .catch((error) => {
-        console.error('Failed to preview diary:', error)
-      })
+    previewDiaryMutation.mutate({
+      ...data,
+      ...parsedStepOneValues
+    })
   }
 
   const onSubmitStepThree: SubmitHandler<MeasurementsFormOutput> = (measurementsData) => {
     const parsedStepOneValues = personalInfoFormOutput.parse(getStepOneValues())
     const parsedStepTwoValues = pregnancyInfoFormOutput.parse(getStepTwoValues())
 
-    createDiaryMutation
-      .mutateAsync({
-        diary: {
-          ...parsedStepOneValues,
-          ...parsedStepTwoValues
-        },
-        measurement: measurementsData
-      })
-      .then((data) => {
-        if (data) {
-          router.replace(`/diary/${data.diaryId}/detail`)
-          setTimeout(() => {
-            handleReset()
-          }, 500)
-          queryClient.invalidateQueries({ queryKey: ['diaries', user?.userId] })
-        }
-      })
-  }
-
-  const handleReset = () => {
-    stepOneMethods.reset()
-    stepTwoMethods.reset()
-    measurementsMethods.reset()
-    setCurrentStep(0)
+    createDiaryMutation.mutate({
+      diary: {
+        ...parsedStepOneValues,
+        ...parsedStepTwoValues
+      },
+      measurement: measurementsData
+    })
   }
 
   // Progress Bar Animations
@@ -309,25 +268,23 @@ export default function DiaryCreateScreen() {
       </View>
 
       {currentStep === 0 && (
-        <View className='flex-1 mt-6'>
-          <View className='flex-1 px-4'>
-            <FormProvider {...stepOneMethods}>
-              <PersonalInfoForm />
-            </FormProvider>
+        <View className='flex-1 mt-6 px-4'>
+          <FormProvider {...stepOneMethods}>
+            <PersonalInfoForm />
+          </FormProvider>
 
-            <View className='flex-1' />
+          <View className='flex-1' />
 
-            <Animated.View
-              entering={FadeInDown.duration(250)}
-              exiting={FadeOutDown.duration(250)}
-              className='flex flex-col gap-2'
-            >
-              {stepOneRootMsg && <FieldError message={stepOneRootMsg} />}
-              <Button onPress={handleSubmitStepOne(onSubmitStepOne)}>
-                <Text className='font-inter-medium'>Next</Text>
-              </Button>
-            </Animated.View>
-          </View>
+          <Animated.View
+            entering={FadeInDown.duration(250)}
+            exiting={FadeOutDown.duration(250)}
+            className='flex flex-col gap-2'
+          >
+            {stepOneRootMsg && <FieldError message={stepOneRootMsg} />}
+            <Button onPress={handleSubmitStepOne(onSubmitStepOne)}>
+              <Text className='font-inter-medium'>Next</Text>
+            </Button>
+          </Animated.View>
         </View>
       )}
 

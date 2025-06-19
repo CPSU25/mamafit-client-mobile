@@ -1,5 +1,5 @@
 import { Feather } from '@expo/vector-icons'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Text } from '~/components/ui/text'
@@ -8,6 +8,7 @@ import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function DiaryHistoryScreen() {
   const router = useRouter()
+  const { id } = useLocalSearchParams() as { id: string }
 
   const handleGoBack = () => {
     router.back()
@@ -20,7 +21,7 @@ export default function DiaryHistoryScreen() {
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='text-xl font-inter-semibold flex-1'>History</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push(`/diary/${id}/create`)}>
           <Feather name='plus' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>

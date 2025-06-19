@@ -55,7 +55,7 @@ export function MeasurementField({
   }
 
   const handleSave = () => {
-    setValue(name, tempValue, { shouldValidate: true })
+    setValue(name, tempValue, { shouldValidate: true, shouldDirty: true })
     setDialogOpen(false)
   }
 

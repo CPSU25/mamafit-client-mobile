@@ -86,6 +86,7 @@ export default function ReviewMeasurementsForm() {
             </View>
           </View>
         </Animated.View>
+
         {measurementCategories.map((category, categoryIndex) => (
           <Animated.View
             key={category.title}

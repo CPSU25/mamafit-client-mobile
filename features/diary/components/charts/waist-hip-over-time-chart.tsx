@@ -6,6 +6,7 @@ import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
 import { useGetDiaryDetail } from '~/features/diary/hooks/use-get-diary-detail'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
+import { Measurement } from '~/types/diary.type'
 import {
   calculateChartWidth,
   calculateDynamicSpacing,
@@ -18,9 +19,7 @@ import {
 } from './chart-utils'
 
 interface WaistHipOverTimeChartProps {
-  currentWeek: number
-  currentWaist: number
-  currentHip: number
+  currentWeekData: Measurement | null | undefined
   diaryId: string
   onRefetchReady?: (refetch: () => Promise<any>) => void
 }
@@ -64,7 +63,7 @@ const createCustomDataPoint = (type: 'waist' | 'hip') => (
 )
 
 const createWeekLabel = (week: string) => (
-  <Text className='text-xs text-muted-foreground ml-[16px]'>{parseInt(week) >= 1 ? `W${week}` : 'N/A'}</Text>
+  <Text className='text-xs text-muted-foreground ml-[14px]'>{parseInt(week) >= 1 ? `W${week}` : 'N/A'}</Text>
 )
 
 const createPointerLabelComponent = (items: any) => (
@@ -87,9 +86,7 @@ const createPointerLabelComponent = (items: any) => (
 )
 
 export default function WaistHipOverTimeChart({
-  currentWeek,
-  currentWaist,
-  currentHip,
+  currentWeekData,
   diaryId,
   onRefetchReady
 }: WaistHipOverTimeChartProps) {
@@ -118,7 +115,7 @@ export default function WaistHipOverTimeChart({
 
   const waistData = processGenericChartData({
     measurements: fiveWeeksHaWData?.measurements,
-    currentWeek,
+    currentWeek: currentWeekData?.weekOfPregnancy || 0,
     stripColor: WAIST_HIP_CHART_COLORS.STRIP,
     getValue: (measurement) => measurement.waist,
     createCustomDataPoint: () => createCustomDataPoint('waist'),
@@ -129,7 +126,7 @@ export default function WaistHipOverTimeChart({
 
   const hipData = processGenericChartData({
     measurements: fiveWeeksHaWData?.measurements,
-    currentWeek,
+    currentWeek: currentWeekData?.weekOfPregnancy || 0,
     stripColor: WAIST_HIP_CHART_COLORS.STRIP,
     getValue: (measurement) => measurement.hip,
     createCustomDataPoint: () => createCustomDataPoint('hip'),
@@ -153,10 +150,10 @@ export default function WaistHipOverTimeChart({
           <Text className='font-inter-medium text-sm text-foreground'>Your Waist & Hip Over Time</Text>
           <View className='flex flex-row items-baseline gap-2 mt-1'>
             <Text className='font-inter-extrabold text-2xl' style={{ color: WAIST_HIP_CHART_COLORS.WAIST.primary }}>
-              {currentWaist.toFixed(1)} cm
+              {currentWeekData?.waist ? currentWeekData?.waist.toFixed(1) : 'N/A'} cm
             </Text>
             <Text className='font-inter-extrabold text-2xl' style={{ color: WAIST_HIP_CHART_COLORS.HIP.primary }}>
-              {currentHip.toFixed(1)} cm
+              {currentWeekData?.hip ? currentWeekData?.hip.toFixed(1) : 'N/A'} cm
             </Text>
           </View>
           <Text className='text-xs text-muted-foreground'>This week&apos;s measurements</Text>

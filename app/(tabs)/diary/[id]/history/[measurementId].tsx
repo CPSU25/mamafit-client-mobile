@@ -15,25 +15,37 @@ import { useGetMeasurementDetail } from '~/features/diary/hooks/use-get-measurem
 import { useGetWeekOfPregnancy } from '~/features/diary/hooks/use-get-week-of-pregnancy'
 import { MeasurementsFormOutput } from '~/features/diary/validations'
 import { useColorScheme } from '~/hooks/use-color-scheme'
+import { useRefreshs } from '~/hooks/use-refresh'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { cn } from '~/lib/utils'
 
 export default function DiaryHistoryDetailScreen() {
   const router = useRouter()
-  const { measurementId, id } = useLocalSearchParams() as { measurementId: string; id: string }
-  const { methods, initializeMeasurementsForm, editMeasurementDetailMutation } = useEditMeasurementDetail()
   const { isDarkColorScheme } = useColorScheme()
-  const { data: measurementDetail, isLoading: isMeasurementDetailLoading } = useGetMeasurementDetail(measurementId)
-  const { data: weekOfPregnancy, isLoading: isWeekOfPregnancyLoading } = useGetWeekOfPregnancy(id)
+  const { measurementId, id } = useLocalSearchParams() as { measurementId: string; id: string }
+  const { methods, initForm, editMeasurementDetailMutation } = useEditMeasurementDetail()
+
+  const {
+    data: measurementDetail,
+    isLoading: isMeasurementDetailLoading,
+    refetch: refetchMeasurementDetail
+  } = useGetMeasurementDetail(measurementId)
+  const {
+    data: currentWeekData,
+    isLoading: isWeekOfPregnancyLoading,
+    refetch: refetchWeekOfPregnancy
+  } = useGetWeekOfPregnancy(id)
+
+  const { refreshControl } = useRefreshs([refetchMeasurementDetail, refetchWeekOfPregnancy])
 
   useEffect(() => {
     if (measurementDetail) {
-      initializeMeasurementsForm(measurementDetail)
+      initForm(measurementDetail)
     }
-  }, [measurementDetail, initializeMeasurementsForm])
+  }, [measurementDetail, initForm])
 
-  const isEditable = weekOfPregnancy === measurementDetail?.weekOfPregnancy
+  const isEditable = currentWeekData?.weekOfPregnancy === measurementDetail?.weekOfPregnancy
 
   const mainData = [
     {
@@ -110,7 +122,7 @@ export default function DiaryHistoryDetailScreen() {
 
   return (
     <SafeAreaView className='flex-1'>
-      <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>
+      <ScrollView showsVerticalScrollIndicator={false} className='flex-1' refreshControl={refreshControl}>
         <FormProvider {...methods}>
           <View className='flex flex-row items-center justify-between p-4'>
             <View className='flex flex-row items-center gap-4'>
@@ -232,7 +244,10 @@ export default function DiaryHistoryDetailScreen() {
             ))}
 
             {isEditable && (
-              <Button onPress={methods.handleSubmit(onSubmit)} disabled={editMeasurementDetailMutation.isPending}>
+              <Button
+                onPress={methods.handleSubmit(onSubmit)}
+                disabled={!methods.formState.isDirty || editMeasurementDetailMutation.isPending}
+              >
                 <Text className='font-inter-medium'>
                   {editMeasurementDetailMutation.isPending ? 'Saving...' : 'Save'}
                 </Text>
