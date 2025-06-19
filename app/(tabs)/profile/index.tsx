@@ -8,7 +8,7 @@ import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
 import { Switch } from '~/components/ui/switch'
 import { Text } from '~/components/ui/text'
-import CurrentUser from '~/features/auth/current-user/current-user'
+import CurrentUser from '~/features/auth/components/current-user'
 import { useAuth } from '~/hooks/use-auth'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
@@ -96,7 +96,7 @@ export default function ProfileScreen() {
       </View>
       <View className='bg-muted h-2' />
       <View className='flex flex-row items-baseline justify-between p-4 mb-2'>
-        <Text className='font-inter-medium'>My Purchases</Text>
+        <Text className='font-inter-medium text-sm'>My Purchases</Text>
         <TouchableOpacity className='flex flex-row items-start'>
           <Text className='text-xs text-muted-foreground mr-0.5'>View Purchase History</Text>
           <Feather name='chevron-right' size={18} color='lightgray' />
@@ -114,19 +114,19 @@ export default function ProfileScreen() {
 
       <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/profile/appointment')}>
         <Feather name='calendar' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5'>My Appointments</Text>
+        <Text className='font-inter-medium text-sm ml-2.5'>My Appointments</Text>
         <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
       </TouchableOpacity>
       <Separator />
       <TouchableOpacity className='flex-row items-center p-4'>
         <Feather name='percent' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5'>My Vouchers</Text>
+        <Text className='font-inter-medium text-sm ml-2.5'>My Vouchers</Text>
         <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
       </TouchableOpacity>
       <Separator />
       <Pressable className='flex-row items-center p-4' onPress={toggleColorScheme}>
         <Feather name='moon' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5 flex-1'>Dark Mode</Text>
+        <Text className='font-inter-medium text-sm ml-2.5 flex-1'>Dark Mode</Text>
         <Switch checked={checked} onCheckedChange={toggleColorScheme} />
       </Pressable>
     </SafeAreaView>

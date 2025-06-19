@@ -1,5 +1,5 @@
-import { RegisterFormSchema } from '~/features/auth/register/validations'
 import { SignInSchema } from '~/features/auth/sign-in/validations'
+import { RegisterFormSchema } from '~/features/auth/validations'
 import { api } from '~/lib/axios/axios'
 import { BaseResponse, Permission, SignInResponse } from '~/types/common'
 
@@ -62,7 +62,7 @@ const authApi = {
   currentUser: async () => {
     const { data } = await api.get<BaseResponse<Permission>>('auth/permission')
 
-    return data
+    return data.data
   },
   signInWithGoogle: async ({ jwtToken, notificationToken }: { jwtToken: string; notificationToken: string }) => {
     const { data } = await api.post<BaseResponse<SignInResponse>>('auth/login-google', {

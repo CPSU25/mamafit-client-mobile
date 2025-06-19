@@ -1,9 +1,10 @@
 import axios, { AxiosError, InternalAxiosRequestConfig, isAxiosError } from 'axios'
+import { router } from 'expo-router'
 import * as SecureStore from 'expo-secure-store'
+import * as Updates from 'expo-updates'
 import { BaseResponse } from '~/types/common'
 import { clear, setTokens } from '../redux-toolkit/slices/auth.slice'
 import { store } from '../redux-toolkit/store'
-import { router } from 'expo-router'
 
 export interface AuthTokens {
   accessToken: string
@@ -53,13 +54,14 @@ const clearAuthTokens = async (): Promise<void> => {
   try {
     await SecureStore.deleteItemAsync('auth-storage')
     store.dispatch(clear())
+    router.replace('/profile')
   } catch (error) {
     console.error('Error clearing auth tokens:', error)
     throw error
   }
 }
 
-const refresh = async (): Promise<AuthTokens> => {
+const refresh = async (): Promise<AuthTokens | undefined> => {
   try {
     const authData = await getAuthTokens()
     const currentRefreshToken = authData?.refreshToken
@@ -85,10 +87,9 @@ const refresh = async (): Promise<AuthTokens> => {
   } catch (error) {
     if (isAxiosError(error) && error.response?.status === 401) {
       await clearAuthTokens()
-      router.replace('/profile')
+      await Updates.reloadAsync()
     }
     console.log('error', JSON.stringify(error, null, 2))
-    throw error
   }
 }
 
@@ -112,7 +113,7 @@ const setTokenData = async (tokenData: AuthTokens, axiosClient: typeof api): Pro
   axiosClient.defaults.headers.common['Authorization'] = `Bearer ${tokenData.accessToken}`
 }
 
-const handleTokenRefresh = async (): Promise<AuthTokens> => {
+const handleTokenRefresh = async (): Promise<AuthTokens | undefined> => {
   try {
     return await refresh()
   } catch (error) {
@@ -173,7 +174,8 @@ export const applyAppTokenRefreshInterceptor = (axiosClient: typeof api, customO
     return new Promise((resolve, reject) => {
       options
         .handleTokenRefresh()
-        .then((tokenData: AuthTokens) => {
+        .then((tokenData: AuthTokens | undefined) => {
+          if (!tokenData) return reject(error)
           options.setTokenData(tokenData, axiosClient)
           options.attachTokenToRequest(originalRequest, tokenData.accessToken)
           processQueue(null, tokenData.accessToken)

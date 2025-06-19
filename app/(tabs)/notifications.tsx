@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
-import NotificationsList from '~/features/notifications/notifications-list'
+import NotificationsList from '~/features/notifications/components/notifications-list'
 import { useAuth } from '~/hooks/use-auth'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
@@ -23,25 +23,25 @@ const notifications: Notification[] = [
     id: 1,
     name: 'Promotions',
     description: 'Latest deals and special offers.',
-    icon: SvgIcon.promotions({ size: ICON_SIZE.LARGE })
+    icon: SvgIcon.promotions({ size: ICON_SIZE.MEDIUM })
   },
   {
     id: 2,
     name: 'Order Updates',
     description: 'Track your order from start to finish.',
-    icon: SvgIcon.orderUpdates({ size: ICON_SIZE.LARGE })
+    icon: SvgIcon.orderUpdates({ size: ICON_SIZE.MEDIUM })
   },
   {
     id: 3,
     name: 'Payment Status',
     description: "Don't forget to pay your bills on time.",
-    icon: SvgIcon.paymentStatus({ size: ICON_SIZE.LARGE })
+    icon: SvgIcon.paymentStatus({ size: ICON_SIZE.MEDIUM })
   },
   {
     id: 4,
     name: 'Appointment Reminders',
     description: "Don't forget your appointment.",
-    icon: SvgIcon.appointmentReminders({ size: ICON_SIZE.LARGE })
+    icon: SvgIcon.appointmentReminders({ size: ICON_SIZE.MEDIUM })
   }
 ]
 
