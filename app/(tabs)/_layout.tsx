@@ -38,7 +38,7 @@ const navigationOptions = [
   },
   {
     id: 3,
-    name: 'canvases',
+    name: 'canvas',
     title: 'Canvas',
     icon: (focused: boolean) => <Feather name='layout' size={22} color={focused ? PRIMARY_COLOR.LIGHT : 'gray'} />
   },
@@ -71,8 +71,10 @@ export default function TabsLayout() {
   const isDiaryDetail = isDisplayTabBar(segments, '/diary/detail')
   const isDiaryHistory = isDisplayTabBar(segments, '/diary/history')
   const isDiarySetting = isDisplayTabBar(segments, '/diary/setting')
+  const isCreateCanvas = isDisplayTabBar(segments, '/canvas/create')
 
-  const isDisplay = isCreateDiary || isAppointment || isDiaryDetail || isDiaryHistory || isDiarySetting
+  const isDisplay =
+    isCreateDiary || isAppointment || isDiaryDetail || isDiaryHistory || isDiarySetting || isCreateCanvas
 
   return (
     <Tabs
