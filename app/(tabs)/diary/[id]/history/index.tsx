@@ -21,7 +21,7 @@ export default function DiaryHistoryScreen() {
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='text-xl font-inter-semibold flex-1'>History</Text>
-        <TouchableOpacity onPress={() => router.push(`/diary/${id}/create`)}>
+        <TouchableOpacity onPress={() => router.push({ pathname: '/diary/[id]/create', params: { id } })}>
           <Feather name='plus' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>

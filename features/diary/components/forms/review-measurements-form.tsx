@@ -1,6 +1,6 @@
-import { FontAwesome } from '@expo/vector-icons'
 import { ScrollView, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
+import { InfoCard } from '~/components/ui/alert-card'
 import { Card } from '~/components/ui/card'
 import { Text } from '~/components/ui/text'
 import { MeasurementField } from '~/features/diary/components/measurement-field'
@@ -67,25 +67,11 @@ export default function ReviewMeasurementsForm() {
   return (
     <ScrollView showsVerticalScrollIndicator={false} className='p-4 mb-4'>
       <View className='flex flex-col gap-4 mb-4'>
-        <Animated.View
-          entering={FadeInDown.delay(100)}
-          className={cn(
-            'border rounded-2xl p-4 border-dashed',
-            isDarkColorScheme ? 'bg-sky-500/10 border-sky-900' : 'bg-sky-500/20 border-sky-500/30'
-          )}
-        >
-          <View className='flex flex-row items-baseline gap-3'>
-            <FontAwesome name='bell' size={16} color={isDarkColorScheme ? '#0ea5e9' : '#0284c7'} />
-            <View className='flex flex-col gap-0.5 flex-shrink'>
-              <Text className={cn('font-inter-semibold', isDarkColorScheme ? 'text-sky-500' : 'text-sky-600')}>
-                Your measurements are ready!
-              </Text>
-              <Text className={cn('text-xs', isDarkColorScheme ? 'text-sky-500' : 'text-sky-600')}>
-                Remember, these measurements are estimates. Please check and update if needed.
-              </Text>
-            </View>
-          </View>
-        </Animated.View>
+        <InfoCard
+          title='Your measurements are ready!'
+          delay={100}
+          description='Remember, these measurements are estimates. Please check and update if needed.'
+        />
 
         {measurementCategories.map((category, categoryIndex) => (
           <Animated.View

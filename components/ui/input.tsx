@@ -36,7 +36,7 @@ const Input = React.forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
     return (
       <View
         className={cn(
-          'flex-row items-center rounded-xl border border-input bg-background',
+          'flex-row items-center rounded-2xl border border-input bg-background',
           props.editable === false && 'opacity-50 web:cursor-not-allowed',
           className
         )}

@@ -47,7 +47,15 @@ export default function HomeScreen() {
           numColumns={2}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity className='flex-1' onPress={() => router.push(`/product/${item.id}`)}>
+            <TouchableOpacity
+              className='flex-1'
+              onPress={() =>
+                router.push({
+                  pathname: '/product/[id]',
+                  params: { id: item.id }
+                })
+              }
+            >
               <DressCard className='w-full' />
             </TouchableOpacity>
           )}

@@ -1,4 +1,4 @@
-import { Feather, FontAwesome, MaterialIcons } from '@expo/vector-icons'
+import { Feather, MaterialIcons } from '@expo/vector-icons'
 import { Controller, useFormContext } from 'react-hook-form'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
@@ -6,9 +6,9 @@ import Animated, { FadeInDown } from 'react-native-reanimated'
 import DatePicker from '~/components/date-picker'
 import FieldError from '~/components/field-error'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '~/components/ui/accordion'
+import { WarningCard } from '~/components/ui/alert-card'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
-import { useColorScheme } from '~/hooks/use-color-scheme'
 import { useFieldError } from '~/hooks/use-field-error'
 import { KEYBOARD_OFFSET, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { cn, isFormError } from '~/lib/utils'
@@ -19,31 +19,19 @@ export default function PregnancyInfoForm() {
     control,
     formState: { errors }
   } = useFormContext<PregnancyInfoFormInput>()
-  const { isDarkColorScheme } = useColorScheme()
+
   const className = useFieldError()
 
   return (
     <KeyboardAwareScrollView bottomOffset={KEYBOARD_OFFSET} showsVerticalScrollIndicator={false}>
       <View className='flex flex-col gap-4'>
-        <Animated.View
-          entering={FadeInDown.delay(100)}
-          className={cn(
-            'border rounded-2xl p-4 mx-4 border-dashed',
-            isDarkColorScheme ? 'bg-amber-500/10 border-amber-900' : 'bg-amber-500/20 border-amber-500/30'
-          )}
-        >
-          <View className='flex flex-row items-baseline gap-3'>
-            <FontAwesome name='exclamation-triangle' size={16} color={isDarkColorScheme ? '#f59e0b' : '#d97706'} />
-            <View className='flex flex-col gap-0.5 flex-shrink'>
-              <Text className={cn('font-inter-semibold', isDarkColorScheme ? 'text-amber-500' : 'text-amber-600')}>
-                Important Information
-              </Text>
-              <Text className={cn('text-xs', isDarkColorScheme ? 'text-amber-500' : 'text-amber-600')}>
-                This information will assist us in delivering the most precise results and recommendations.
-              </Text>
-            </View>
-          </View>
-        </Animated.View>
+        <View className='mx-4'>
+          <WarningCard title='Important Information' delay={100}>
+            <Text className='text-xs text-amber-600 dark:text-amber-500'>
+              This information will assist us in delivering the most precise results and recommendations.
+            </Text>
+          </WarningCard>
+        </View>
 
         <Animated.View entering={FadeInDown.delay(200)} className='flex flex-col gap-1 px-4'>
           <View className='flex flex-col gap-1'>

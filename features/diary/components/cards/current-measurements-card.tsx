@@ -60,14 +60,24 @@ export default function CurrentMeasurementsCard({ measurement, diaryId }: Curren
         <Animated.View entering={FadeInDown.delay(400)} className='flex flex-row justify-between items-center'>
           {isEmpty ? (
             <TouchableOpacity
-              onPress={() => router.push(`/diary/${diaryId}/create`)}
+              onPress={() =>
+                router.push({
+                  pathname: '/diary/[id]/create',
+                  params: { id: diaryId }
+                })
+              }
               className='bg-white/10 rounded-xl px-3 py-2'
             >
               <Text className='text-white text-xs font-inter-semibold'>Add measurement</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              onPress={() => router.push(`/diary/${diaryId}/history/${measurement?.id}`)}
+              onPress={() =>
+                router.push({
+                  pathname: '/diary/[id]/history/[measurementId]',
+                  params: { id: diaryId, measurementId: measurement?.id || '' }
+                })
+              }
               className='bg-white/10 rounded-xl px-3 py-2'
             >
               <Text className='text-white text-xs font-inter-semibold'>Press to edit now!</Text>
