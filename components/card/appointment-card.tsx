@@ -42,7 +42,12 @@ export default function AppointmentCard() {
         <Button variant='outline' size='sm' className='flex-1'>
           <Text className='text-rose-500 font-inter-medium'>Cancel</Text>
         </Button>
-        <Button variant='default' className='flex-[2]' size='sm' onPress={() => router.push('/profile/appointment/1')}>
+        <Button
+          variant='default'
+          className='flex-[2]'
+          size='sm'
+          onPress={() => router.push({ pathname: '/profile/appointment/[id]', params: { id: '1' } })}
+        >
           <Text className='font-inter-medium'>More</Text>
         </Button>
       </View>

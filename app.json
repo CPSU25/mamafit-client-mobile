@@ -2,7 +2,7 @@
   "expo": {
     "name": "Mama Fit",
     "slug": "mamafit-mobile",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/mamafit-app-icon.png",
     "scheme": "mamafit",

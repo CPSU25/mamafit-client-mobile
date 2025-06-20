@@ -29,7 +29,15 @@ export default function DiariesList({ nameSearch }: { nameSearch: string }) {
       data={diaries?.pages.flatMap((page) => page.items)}
       renderItem={({ item, index }) => (
         <Animated.View entering={FadeInDown.duration(200).delay(index * 50)}>
-          <Pressable className='' onPress={() => router.push(`/diary/${item.id}/detail`)}>
+          <Pressable
+            className=''
+            onPress={() =>
+              router.push({
+                pathname: '/diary/[id]/detail',
+                params: { id: item.id }
+              })
+            }
+          >
             <DiaryCard diary={item} />
           </Pressable>
         </Animated.View>

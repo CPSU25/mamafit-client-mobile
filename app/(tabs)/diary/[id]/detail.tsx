@@ -51,10 +51,10 @@ const DiaryHeader = ({ diaryId, onGoBack }: DiaryHeaderProps) => {
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='text-xl font-inter-semibold flex-1'>Diary Details</Text>
-        <TouchableOpacity onPress={() => router.push(`/diary/${diaryId}/history`)}>
+        <TouchableOpacity onPress={() => router.push({ pathname: '/diary/[id]/history', params: { id: diaryId } })}>
           <Feather name='clock' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => router.push(`/diary/${diaryId}/setting`)}>
+        <TouchableOpacity onPress={() => router.push({ pathname: '/diary/[id]/setting', params: { id: diaryId } })}>
           <Feather name='settings' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>
