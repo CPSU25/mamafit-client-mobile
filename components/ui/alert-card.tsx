@@ -115,16 +115,16 @@ export function AlertCard({
       entering={FadeInDown.delay(delay)}
       className={cn('border rounded-2xl p-3 border-dashed flex flex-col', colors.bg, colors.border, className)}
     >
-      <View className='flex flex-row items-center gap-3'>
+      <View className='flex flex-row items-center gap-2'>
         <FontAwesome name={iconName} size={16} color={colors.iconColor} />
         <View className='flex flex-col gap-0.5 flex-shrink'>
-          <Text className={cn('font-inter-semibold', colors.text)}>{title}</Text>
+          <Text className={cn('font-inter-medium text-sm', colors.text)}>{title}</Text>
         </View>
       </View>
 
-      {description && <Text className={cn('text-xs', colors.text)}>{description}</Text>}
+      {description && <Text className={cn('text-xs mt-1', colors.text)}>{description}</Text>}
 
-      {children && <View className='mt-0.5'>{children}</View>}
+      {children && <View className='mt-1'>{children}</View>}
     </Animated.View>
   )
 }

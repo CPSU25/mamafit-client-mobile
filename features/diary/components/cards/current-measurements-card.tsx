@@ -28,15 +28,7 @@ export default function CurrentMeasurementsCard({ measurement, diaryId }: Curren
       style={[styles.container, getShadowStyles()]}
     >
       <Image source={require('~/assets/images/mesh.jpg')} className='w-full h-full rounded-2xl absolute' />
-      <BlurView
-        intensity={40}
-        tint='dark'
-        className='absolute inset-0'
-        style={{
-          borderRadius: 16,
-          overflow: 'hidden'
-        }}
-      />
+      <BlurView intensity={40} tint='dark' className='absolute inset-0 rounded-2xl overflow-hidden' />
       <View className='relative flex-1 p-4 justify-between'>
         <Animated.View entering={FadeInDown.delay(300)} className='flex flex-row justify-between'>
           <View className='gap-0.5'>
