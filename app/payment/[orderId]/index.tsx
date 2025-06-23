@@ -31,16 +31,14 @@ export default function PaymentScreen() {
 
   return (
     <SafeAreaView className='flex-1'>
+      <View className='flex flex-row items-center gap-4 p-4'>
+        <TouchableOpacity onPress={handleGoBack}>
+          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+        </TouchableOpacity>
+        <Text className='font-inter-semibold text-xl'>Payment</Text>
+      </View>
+
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 46 }}>
-        <View className='flex flex-row items-center gap-4 p-4'>
-          <TouchableOpacity onPress={handleGoBack}>
-            <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
-          </TouchableOpacity>
-          <Text className='font-inter-semibold text-xl'>Payment</Text>
-        </View>
-
-        <View className='bg-muted h-2' />
-
         <View className='flex flex-col gap-2 p-2 bg-muted flex-1'>
           <Card className='p-3 flex flex-row items-baseline gap-2'>
             <Feather name='map-pin' size={16} color={PRIMARY_COLOR.LIGHT} />
