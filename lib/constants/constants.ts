@@ -29,12 +29,13 @@ export const ICON_SIZE = {
   SMALL: 28,
   MEDIUM: 32,
   LARGE: 40,
+  MEDIUM_LARGE: 62,
   EXTRA_LARGE: 100
 }
 
 export const getShadowStyles = (shadowColor: string = 'rgba(0, 0, 0, 0.1)') => ({
-  boxShadow: `0 0px 2px 0px ${shadowColor}`,
-  elevation: 10
+  boxShadow: `0 0px 5px 0px ${shadowColor}`,
+  elevation: 2
 })
 
 export const styles = StyleSheet.create({

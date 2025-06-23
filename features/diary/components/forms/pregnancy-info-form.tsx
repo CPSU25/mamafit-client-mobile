@@ -26,11 +26,11 @@ export default function PregnancyInfoForm() {
     <KeyboardAwareScrollView bottomOffset={KEYBOARD_OFFSET} showsVerticalScrollIndicator={false}>
       <View className='flex flex-col gap-4'>
         <View className='mx-4'>
-          <WarningCard title='Important Information' delay={100}>
-            <Text className='text-xs text-amber-600 dark:text-amber-500'>
-              This information will assist us in delivering the most precise results and recommendations.
-            </Text>
-          </WarningCard>
+          <WarningCard
+            title='Important Information'
+            delay={100}
+            description='This information will assist us in delivering the most precise results and recommendations.'
+          />
         </View>
 
         <Animated.View entering={FadeInDown.delay(200)} className='flex flex-col gap-1 px-4'>
