@@ -53,7 +53,7 @@ export default function GoogleAuthButton() {
       disabled={isSigningInWithGoogle}
     >
       {SvgIcon.google({ size: 22 })}
-      <Text className='native:text-sm font-inter-medium'>Continue with Google</Text>
+      <Text className='font-inter-medium'>Continue with Google</Text>
     </Button>
   )
 }
