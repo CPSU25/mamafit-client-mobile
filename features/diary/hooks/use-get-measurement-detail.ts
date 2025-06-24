@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import diaryApi from '~/apis/diary.api'
+import diaryService from '~/services/diary.service'
 
 export const useGetMeasurementDetail = (measurementId: string) => {
   return useQuery({
     queryKey: ['measurement-detail', measurementId],
-    queryFn: () => diaryApi.getMeasurementDetail(measurementId)
+    queryFn: () => diaryService.getMeasurementDetail(measurementId)
   })
 }

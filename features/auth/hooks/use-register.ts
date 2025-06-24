@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import authApi from '~/apis/auth.api'
 import { ERROR_MESSAGES } from '~/lib/constants/constants'
+import authService from '~/services/auth.service'
 import { registerFormSchema, RegisterFormSchema } from '../validations'
 
 interface UseRegisterProps {
@@ -21,7 +21,7 @@ export const useRegister = ({ onRegisterSuccess }: UseRegisterProps) => {
   })
 
   const sendCodeMutation = useMutation({
-    mutationFn: authApi.sendCode,
+    mutationFn: authService.sendCode,
     onSuccess: () => {
       onRegisterSuccess()
     },
@@ -31,11 +31,11 @@ export const useRegister = ({ onRegisterSuccess }: UseRegisterProps) => {
   })
 
   const resendCodeMutation = useMutation({
-    mutationFn: authApi.resendCode
+    mutationFn: authService.resendCode
   })
 
   const verifyCodeMutation = useMutation({
-    mutationFn: authApi.verifyCode,
+    mutationFn: authService.verifyCode,
     onSuccess: () => {
       onRegisterSuccess()
     },
@@ -46,7 +46,7 @@ export const useRegister = ({ onRegisterSuccess }: UseRegisterProps) => {
   })
 
   const completeRegisterMutation = useMutation({
-    mutationFn: authApi.completeRegister,
+    mutationFn: authService.completeRegister,
     onSuccess: () => {
       methods.reset()
       onRegisterSuccess()

@@ -1,8 +1,8 @@
 import { api } from '~/lib/axios/axios'
 import { BaseResponse, User } from '~/types/common'
 
-const userApi = {
-  getProfile: async (userId: string | undefined) => {
+class UserService {
+  async getProfile(userId: string | undefined) {
     if (!userId) return null
 
     const { data } = await api.get<BaseResponse<User>>(`user/${userId}`)
@@ -10,4 +10,5 @@ const userApi = {
   }
 }
 
-export default userApi
+const userService = new UserService()
+export default userService
