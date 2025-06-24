@@ -2,8 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { useForm } from 'react-hook-form'
-import diaryApi from '~/apis/diary.api'
 import { ERROR_MESSAGES } from '~/lib/constants/constants'
+import diaryService from '~/services/diary.service'
 import { initializeMeasurementsForm } from '../utils'
 import {
   MeasurementsFormInput,
@@ -74,7 +74,7 @@ export const useCreateDiary = (onSuccess: () => void, onFinish: () => void) => {
 
   // Mutations
   const previewDiaryMutation = useMutation({
-    mutationFn: diaryApi.previewDiary,
+    mutationFn: diaryService.previewDiary,
     onSuccess: (measurement) => {
       if (measurement) {
         initializeMeasurementsForm(measurement, measurementsMethods)
@@ -89,7 +89,7 @@ export const useCreateDiary = (onSuccess: () => void, onFinish: () => void) => {
   })
 
   const createDiaryMutation = useMutation({
-    mutationFn: diaryApi.createDiary,
+    mutationFn: diaryService.createDiary,
     onSuccess: (data) => {
       if (data) {
         queryClient.invalidateQueries({ queryKey: ['diaries'] })

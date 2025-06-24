@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
-import diaryApi from '~/apis/diary.api'
+import diaryService from '~/services/diary.service'
 import { Measurement } from '~/types/diary.type'
 import { initializeMeasurementsForm } from '../utils'
 import { MeasurementsFormInput, measurementsFormOutput, MeasurementsFormOutput } from '../validations'
@@ -42,7 +42,7 @@ export const useEditMeasurementDetail = () => {
   )
 
   const editMeasurementDetailMutation = useMutation({
-    mutationFn: diaryApi.editMeasurementDetail,
+    mutationFn: diaryService.editMeasurementDetail,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['diary-detail'] })
       queryClient.invalidateQueries({ queryKey: ['measurement-detail'] })

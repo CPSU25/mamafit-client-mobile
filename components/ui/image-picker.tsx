@@ -2,10 +2,10 @@ import { Feather } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import React, { useState } from 'react'
 import { Alert, Image, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
-import firebaseService from '~/apis/firebase.service'
 import { ICON_SIZE } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { validateImageConstraints } from '~/lib/utils'
+import firebaseService from '~/services/firebase.service'
 import { Text } from './text'
 
 interface ImagePickerComponentProps {
