@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { useForm } from 'react-hook-form'
 import { ERROR_MESSAGES } from '~/lib/constants/constants'
-import orderService from '~/services/order'
+import orderService from '~/services/order.service'
 import { createRequestSchema, CreateRequestSchema } from '../validations'
 
 export const useCreateDesignRequest = () => {
