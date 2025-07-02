@@ -3,23 +3,25 @@ import { useRouter } from 'expo-router'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import FieldError from '~/components/field-error'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
 import CreateDesignRequestForm from '~/features/design-request/components/create-request-form'
-import { useCreateRequest } from '~/features/design-request/hooks/use-create-request'
+import { useCreateDesignRequest } from '~/features/design-request/hooks/use-create-design-request'
 import { CreateRequestSchema } from '~/features/design-request/validations'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function CreateDesignRequest() {
   const router = useRouter()
-  const { methods } = useCreateRequest()
+  const { methods, createDesignRequestMutation } = useCreateDesignRequest()
+  const {
+    formState: { errors }
+  } = methods
+
+  const rootMsg = errors.root?.message || (errors as any)['']?.message || (errors as any)._errors?.[0]
 
   const onSubmit: SubmitHandler<CreateRequestSchema> = (data) => {
-    console.log('Design Request: ', data)
-    router.push({
-      pathname: '/payment/[orderId]',
-      params: { orderId: '123' }
-    })
+    createDesignRequestMutation.mutate(data)
   }
 
   const handleGoBack = () => {
@@ -42,9 +44,14 @@ export default function CreateDesignRequest() {
           <CreateDesignRequestForm />
         </FormProvider>
         <View className='flex-1' />
-        <Button onPress={methods.handleSubmit(onSubmit)}>
-          <Text className='font-inter-medium'>Send Request</Text>
-        </Button>
+        <View className='flex flex-col gap-2'>
+          {rootMsg && <FieldError message={rootMsg} />}
+          <Button onPress={methods.handleSubmit(onSubmit)} disabled={createDesignRequestMutation.isPending}>
+            <Text className='font-inter-medium'>
+              {createDesignRequestMutation.isPending ? 'Sending...' : 'Send Request'}
+            </Text>
+          </Button>
+        </View>
       </View>
     </SafeAreaView>
   )

@@ -3,7 +3,7 @@ import { ImagePickerAsset } from 'expo-image-picker'
 import { Platform } from 'react-native'
 import { generateImageFileName } from '~/lib/utils'
 
-const FILE_PATH = 'images'
+const FILE_PATH = 'design-requests'
 const UPLOAD_TIMEOUT = 30000
 
 class FirebaseService {
