@@ -118,13 +118,13 @@ export function AlertCard({
       <View className='flex flex-row items-center gap-2'>
         <FontAwesome name={iconName} size={16} color={colors.iconColor} />
         <View className='flex flex-col gap-0.5 flex-shrink'>
-          <Text className={cn('font-inter-medium text-sm', colors.text)}>{title}</Text>
+          <Text className={cn('font-inter-semibold text-sm', colors.text)}>{title}</Text>
         </View>
       </View>
 
-      {description && <Text className={cn('text-xs mt-1', colors.text)}>{description}</Text>}
+      {description && <Text className={cn('text-xs mt-0.5', colors.text)}>{description}</Text>}
 
-      {children && <View className='mt-1'>{children}</View>}
+      {children && <View className='mt-0.5'>{children}</View>}
     </Animated.View>
   )
 }
