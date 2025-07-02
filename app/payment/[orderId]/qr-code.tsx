@@ -17,6 +17,26 @@ import { ICON_SIZE, PRIMARY_COLOR, styles } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { cn } from '~/lib/utils'
 
+const getQRCodeParams = (url: string | undefined) => {
+  if (!url)
+    return {
+      acc: '',
+      bank: '',
+      amount: '0',
+      des: ''
+    }
+
+  const parsedUrl = new URL(url)
+  const params = new URLSearchParams(parsedUrl.search)
+
+  return {
+    acc: params.get('acc') ?? '',
+    bank: params.get('bank') ?? '',
+    amount: params.get('amount') ?? '0',
+    des: params.get('des') ?? ''
+  }
+}
+
 export default function PaymentQRCode() {
   const { isDarkColorScheme } = useColorScheme()
   const { orderId } = useLocalSearchParams() as { orderId: string }
@@ -45,15 +65,7 @@ export default function PaymentQRCode() {
     }
   }
 
-  const parsedUrl = new URL(qrCodeData?.qrUrl ?? '')
-  const params = new URLSearchParams(parsedUrl.search)
-
-  const qrCodeParams = {
-    acc: params.get('acc'),
-    bank: params.get('bank'),
-    amount: params.get('amount'),
-    des: params.get('des')
-  }
+  const qrCodeParams = getQRCodeParams(qrCodeData?.qrUrl)
 
   return (
     <SafeAreaView className='flex-1'>
@@ -168,7 +180,10 @@ export default function PaymentQRCode() {
                   <Text className='text-xs font-inter-medium'>Amount</Text>
                   <View className={cn('px-2 py-1 rounded-md', isDarkColorScheme ? 'bg-primary/30' : 'bg-primary/20')}>
                     <Text className='text-xs font-inter-bold text-primary'>
-                      đ{new Intl.NumberFormat('vi-VN').format(Number(qrCodeParams.amount))}
+                      đ
+                      {qrCodeParams?.amount
+                        ? new Intl.NumberFormat('vi-VN').format(Number(qrCodeParams.amount))
+                        : '0.000'}
                     </Text>
                   </View>
                 </View>
