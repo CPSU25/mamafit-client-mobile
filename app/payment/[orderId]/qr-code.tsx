@@ -1,5 +1,9 @@
 import { Feather } from '@expo/vector-icons'
-import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
+import * as FileSystem from 'expo-file-system'
+import * as MediaLibrary from 'expo-media-library'
+import { useLocalSearchParams } from 'expo-router'
+import { useState } from 'react'
+import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { WarningCard } from '~/components/ui/alert-card'
@@ -7,15 +11,61 @@ import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
+import { useGetQRCode } from '~/features/order/hooks/use-get-qr-code'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { ICON_SIZE, PRIMARY_COLOR, styles } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { cn } from '~/lib/utils'
 
-const orderCode = 'ORD-20250623-1058'
+const getQRCodeParams = (url: string | undefined) => {
+  if (!url)
+    return {
+      acc: '',
+      bank: '',
+      amount: '0',
+      des: ''
+    }
+
+  const parsedUrl = new URL(url)
+  const params = new URLSearchParams(parsedUrl.search)
+
+  return {
+    acc: params.get('acc') ?? '',
+    bank: params.get('bank') ?? '',
+    amount: params.get('amount') ?? '0',
+    des: params.get('des') ?? ''
+  }
+}
 
 export default function PaymentQRCode() {
   const { isDarkColorScheme } = useColorScheme()
+  const { orderId } = useLocalSearchParams() as { orderId: string }
+  const { data: qrCodeData } = useGetQRCode(orderId)
+  const [downloading, setDownloading] = useState(false)
+
+  const handleDownload = async (imageUrl: string | undefined) => {
+    if (!imageUrl) return
+
+    try {
+      setDownloading(true)
+      const fileUri = FileSystem.documentDirectory + 'qr-code.png'
+      const downloadResumable = FileSystem.createDownloadResumable(imageUrl, fileUri)
+      const { uri } = (await downloadResumable.downloadAsync()) as FileSystem.FileSystemDownloadResult
+
+      const { status } = await MediaLibrary.requestPermissionsAsync()
+      if (status !== 'granted') {
+        Alert.alert('Permission denied', 'Allow media access to save the image.')
+        return
+      }
+
+      const asset = await MediaLibrary.createAssetAsync(uri)
+      await MediaLibrary.createAlbumAsync('Download', asset, false)
+    } finally {
+      setDownloading(false)
+    }
+  }
+
+  const qrCodeParams = getQRCodeParams(qrCodeData?.qrUrl)
 
   return (
     <SafeAreaView className='flex-1'>
@@ -35,7 +85,7 @@ export default function PaymentQRCode() {
               Order confirmed!
             </Text>
             <Text className={cn('text-xs', isDarkColorScheme ? 'text-emerald-300/80' : 'text-emerald-600')}>
-              Order code #{orderCode}
+              Order code #{qrCodeData?.orderWithItem?.code}
             </Text>
           </View>
         </Animated.View>
@@ -83,7 +133,7 @@ export default function PaymentQRCode() {
                   </Text>
                 </View>
               </View>
-              <Image source={require('~/assets/images/qr-code.png')} className='w-full h-96 mt-4 rounded-2xl' />
+              <Image source={{ uri: qrCodeData?.qrUrl }} className='w-full h-96 mt-4 rounded-2xl' />
               <View className='p-1 gap-2 mt-2'>
                 <WarningCard
                   title='Important Payment Note'
@@ -96,9 +146,13 @@ export default function PaymentQRCode() {
                     'flex-row items-center gap-2 rounded-xl',
                     isDarkColorScheme ? 'border-primary/50' : 'border-primary/30'
                   )}
+                  onPress={() => handleDownload(qrCodeData?.qrUrl)}
+                  disabled={downloading}
                 >
                   <Feather name='download' size={16} color={PRIMARY_COLOR.LIGHT} />
-                  <Text className='native:text-sm font-inter-medium text-primary'>Download QR Code</Text>
+                  <Text className='native:text-sm font-inter-medium text-primary'>
+                    {downloading ? 'Downloading...' : 'Download QR Code'}
+                  </Text>
                 </Button>
               </View>
             </Card>
@@ -116,22 +170,27 @@ export default function PaymentQRCode() {
               <View className='flex flex-col gap-3 p-4'>
                 <View className='flex-row justify-between items-center'>
                   <Text className='text-xs font-inter-medium'>Account holder</Text>
-                  <Text className='text-xs font-inter-semibold'>NGUYEN HUU DANH</Text>
+                  <Text className='text-xs font-inter-semibold'>LE DUC ANH</Text>
                 </View>
                 <View className='flex-row justify-between items-center'>
                   <Text className='text-xs font-inter-medium'>Account number</Text>
-                  <Text className='text-xs font-inter-semibold'>1294 2840 2934 9278</Text>
+                  <Text className='text-xs font-inter-semibold'>{qrCodeParams.acc}</Text>
                 </View>
                 <View className='flex-row justify-between items-center'>
                   <Text className='text-xs font-inter-medium'>Amount</Text>
                   <View className={cn('px-2 py-1 rounded-md', isDarkColorScheme ? 'bg-primary/30' : 'bg-primary/20')}>
-                    <Text className='text-xs font-inter-bold text-primary'>đ100.000</Text>
+                    <Text className='text-xs font-inter-bold text-primary'>
+                      đ
+                      {qrCodeParams?.amount
+                        ? new Intl.NumberFormat('vi-VN').format(Number(qrCodeParams.amount))
+                        : '0.000'}
+                    </Text>
                   </View>
                 </View>
                 <View className='flex-row justify-between items-center'>
                   <Text className='text-xs font-inter-medium'>Transfer description</Text>
                   <View className={cn('px-2 py-1 rounded-md', isDarkColorScheme ? 'bg-gray-800' : 'bg-gray-100')}>
-                    <Text className='text-xs font-inter-semibold'>{orderCode}</Text>
+                    <Text className='text-xs font-inter-semibold'>{qrCodeParams.des}</Text>
                   </View>
                 </View>
               </View>
