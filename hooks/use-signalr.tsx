@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { useCallback, useEffect, useRef } from 'react'
 import { View } from 'react-native'
@@ -14,6 +15,7 @@ import { useAuth } from './use-auth'
 
 export const useSignalR = () => {
   const { isAuthenticated, user } = useAuth()
+  const queryClient = useQueryClient()
 
   const isAttemptedReconnect = useRef(false)
   const currentMessages = useRef(new Set<string>())
@@ -39,6 +41,9 @@ export const useSignalR = () => {
       const isNotMe = message.senderId !== user?.id
 
       if (isNotMe) {
+        queryClient.invalidateQueries({ queryKey: ['rooms'] })
+
+        // TODO: if user is at /chat, don't show toast
         toast.custom(
           <Card className='mx-4 mt-2' style={[styles.container]}>
             <View className='flex-row items-center gap-2 px-3 py-1'>
@@ -47,7 +52,7 @@ export const useSignalR = () => {
             </View>
             <Separator />
             <View className='flex-row items-center gap-3 p-3'>
-              <Avatar alt={message.senderName} className='size-10 border-2 border-primary'>
+              <Avatar alt={message.senderName} className='size-10 border-2 border-emerald-500'>
                 <AvatarImage source={{ uri: imageSource }} />
                 <AvatarFallback>
                   <Text>{message?.senderName?.charAt(0)}</Text>
@@ -69,7 +74,7 @@ export const useSignalR = () => {
         )
       }
     },
-    [user?.id]
+    [user?.id, queryClient]
   )
 
   // If the user is authenticated, listen for new messages

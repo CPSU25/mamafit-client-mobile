@@ -15,3 +15,19 @@ export interface Message {
   messageTimestamp: Date
   isRead: boolean | null
 }
+
+export interface ChatRoom {
+  id: string
+  name: string
+  memberCount: number
+  createdAt: string
+  lastMessage: string
+  lastTimestamp: string
+  lastUserId: string
+  lastUserName: string
+  members: {
+    memberId: string
+    memberName: string
+    memberAvatar: string | null
+  }[]
+}
