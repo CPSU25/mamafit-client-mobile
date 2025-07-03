@@ -8,6 +8,11 @@ export interface BaseResponse<T> {
   code: string | null
 }
 
+export interface RefreshResponse {
+  accessToken: string
+  refreshToken: string
+}
+
 export interface BasePaginationResponse<T> {
   data: {
     hasNextPage: boolean
