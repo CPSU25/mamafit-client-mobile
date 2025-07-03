@@ -1,6 +1,6 @@
 import { RegisterFormSchema, SignInSchema } from '~/features/auth/validations'
 import { api } from '~/lib/axios/axios'
-import { BaseResponse, Permission, SignInResponse } from '~/types/common'
+import { BaseResponse, Permission, RefreshResponse, SignInResponse } from '~/types/common'
 
 class AuthService {
   /**
@@ -119,16 +119,12 @@ class AuthService {
     return data.data
   }
 
-  /**
-   * Refresh authentication token
-   * @param refreshToken Current refresh token
-   * @returns Promise that resolves to new auth tokens
-   */
   async refreshToken(refreshToken: string) {
-    const { data } = await api.post<BaseResponse<SignInResponse>>('auth/refresh', {
+    const { data } = await api.post<BaseResponse<RefreshResponse>>('auth/refresh-token', {
       refreshToken
     })
-    return data
+
+    return data.data
   }
 }
 

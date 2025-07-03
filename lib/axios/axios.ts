@@ -2,16 +2,11 @@ import axios, { AxiosError, InternalAxiosRequestConfig, isAxiosError } from 'axi
 import { router } from 'expo-router'
 import * as SecureStore from 'expo-secure-store'
 import * as Updates from 'expo-updates'
-import { BaseResponse } from '~/types/common'
+import { BaseResponse, RefreshResponse } from '~/types/common'
 import { clear, setTokens } from '../redux-toolkit/slices/auth.slice'
 import { store } from '../redux-toolkit/store'
 
 export interface AuthTokens {
-  accessToken: string
-  refreshToken: string
-}
-
-interface RefreshResponse {
   accessToken: string
   refreshToken: string
 }
@@ -61,36 +56,44 @@ const clearAuthTokens = async (): Promise<void> => {
   }
 }
 
+let refreshPromise: Promise<AuthTokens | undefined> | null = null
+
 const refresh = async (): Promise<AuthTokens | undefined> => {
-  try {
-    const authData = await getAuthTokens()
-    const currentRefreshToken = authData?.refreshToken
+  if (refreshPromise) return refreshPromise
 
-    if (!currentRefreshToken) {
-      throw new Error('No refresh token available')
+  refreshPromise = (async () => {
+    try {
+      const authData = await getAuthTokens()
+      const currentRefreshToken = authData?.refreshToken
+
+      if (!currentRefreshToken) {
+        throw new Error('No refresh token available')
+      }
+
+      console.log('Refreshing token...', currentRefreshToken)
+
+      const { data } = await axios.post<BaseResponse<RefreshResponse>>(
+        `${baseURL}auth/refresh-token`,
+        { refreshToken: currentRefreshToken },
+        { headers: { 'Content-Type': 'application/json' } }
+      )
+
+      if (!data.data?.accessToken || !data.data?.refreshToken) {
+        throw new Error('Invalid refresh response')
+      }
+
+      await saveAuthTokens({ accessToken: data.data?.accessToken, refreshToken: data.data?.refreshToken })
+      return data.data
+    } catch (error) {
+      if (isAxiosError(error) && error.response?.status === 401) {
+        await clearAuthTokens()
+        await Updates.reloadAsync()
+      }
+      console.log('error', JSON.stringify(error, null, 2))
+    } finally {
+      refreshPromise = null
     }
-
-    console.log('Refreshing token...', currentRefreshToken)
-
-    const { data } = await axios.post<BaseResponse<RefreshResponse>>(
-      `${baseURL}auth/refresh-token`,
-      { refreshToken: currentRefreshToken },
-      { headers: { 'Content-Type': 'application/json' } }
-    )
-
-    if (!data.data?.accessToken || !data.data?.refreshToken) {
-      throw new Error('Invalid refresh response')
-    }
-
-    await saveAuthTokens({ accessToken: data.data?.accessToken, refreshToken: data.data?.refreshToken })
-    return data.data
-  } catch (error) {
-    if (isAxiosError(error) && error.response?.status === 401) {
-      await clearAuthTokens()
-      await Updates.reloadAsync()
-    }
-    console.log('error', JSON.stringify(error, null, 2))
-  }
+  })()
 }
 
 api.interceptors.request.use(
