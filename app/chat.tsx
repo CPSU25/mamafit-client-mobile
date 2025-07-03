@@ -1,11 +1,10 @@
 import { Feather } from '@expo/vector-icons'
 import { Redirect, useRouter } from 'expo-router'
 import * as React from 'react'
-import { FlatList, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-import { Separator } from '~/components/ui/separator'
+import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
 import { useAuth } from '~/hooks/use-auth'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
@@ -33,7 +32,12 @@ export default function ChatScreen() {
         <Text className='font-inter-semibold text-xl'>Chats</Text>
       </View>
       <View className='bg-muted h-2' />
-      <FlatList
+      <View className='p-4'>
+        <Button>
+          <Text className='font-inter-medium'>Connect SignalR</Text>
+        </Button>
+      </View>
+      {/* <FlatList
         data={chats}
         renderItem={({ item, index }) => (
           <>
@@ -56,7 +60,7 @@ export default function ChatScreen() {
           </>
         )}
         contentContainerClassName='gap-4 p-4'
-      />
+      /> */}
     </SafeAreaView>
   )
 }
