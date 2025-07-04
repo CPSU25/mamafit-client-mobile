@@ -1,6 +1,11 @@
 import { clsx, type ClassValue } from 'clsx'
+import { router } from 'expo-router'
+import * as SecureStore from 'expo-secure-store'
 import { FieldErrors } from 'react-hook-form'
 import { twMerge } from 'tailwind-merge'
+import { AuthTokens } from '~/types/common'
+import { clear, setTokens } from './redux-toolkit/slices/auth.slice'
+import { store } from './redux-toolkit/store'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -60,4 +65,38 @@ export const validateImageConstraints = (
   // }
 
   return { isValid: true }
+}
+
+export const getAuthTokens = async () => {
+  try {
+    const authData = await SecureStore.getItemAsync('auth-storage')
+    return authData ? JSON.parse(authData) : null
+  } catch (error) {
+    console.error('Error getting auth tokens:', error)
+    return null
+  }
+}
+
+export const saveAuthTokens = async (tokens: AuthTokens): Promise<void> => {
+  if (!tokens.accessToken || !tokens.refreshToken) {
+    throw new Error('Invalid tokens provided')
+  }
+  try {
+    await SecureStore.setItemAsync('auth-storage', JSON.stringify(tokens))
+    store.dispatch(setTokens(tokens))
+  } catch (error) {
+    console.error('Error saving auth tokens:', error)
+    throw error
+  }
+}
+
+export const clearAuthTokens = async (): Promise<void> => {
+  try {
+    await SecureStore.deleteItemAsync('auth-storage')
+    store.dispatch(clear())
+    router.replace('/profile')
+  } catch (error) {
+    console.error('Error clearing auth tokens:', error)
+    throw error
+  }
 }

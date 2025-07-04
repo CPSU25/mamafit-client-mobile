@@ -13,6 +13,11 @@ export interface RefreshResponse {
   refreshToken: string
 }
 
+export interface AuthTokens {
+  accessToken: string
+  refreshToken: string
+}
+
 export interface BasePaginationResponse<T> {
   data: {
     hasNextPage: boolean

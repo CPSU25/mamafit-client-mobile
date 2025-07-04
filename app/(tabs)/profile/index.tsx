@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Pressable, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
+import SignalRHealth from '~/components/signalr-health'
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
 import { Switch } from '~/components/ui/switch'
@@ -129,6 +130,8 @@ export default function ProfileScreen() {
         <Text className='font-inter-medium text-sm ml-2.5 flex-1'>Dark Mode</Text>
         <Switch checked={checked} onCheckedChange={toggleColorScheme} />
       </Pressable>
+
+      <SignalRHealth />
     </SafeAreaView>
   )
 }

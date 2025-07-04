@@ -1,15 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig, isAxiosError } from 'axios'
-import { router } from 'expo-router'
-import * as SecureStore from 'expo-secure-store'
 import * as Updates from 'expo-updates'
-import { BaseResponse, RefreshResponse } from '~/types/common'
-import { clear, setTokens } from '../redux-toolkit/slices/auth.slice'
-import { store } from '../redux-toolkit/store'
-
-export interface AuthTokens {
-  accessToken: string
-  refreshToken: string
-}
+import { AuthTokens, BaseResponse, RefreshResponse } from '~/types/common'
+import { clearAuthTokens, getAuthTokens, saveAuthTokens } from '../utils'
 
 const baseURL = process.env.EXPO_PUBLIC_API_BASE_URL
 if (!baseURL) throw new Error('EXPO_PUBLIC_API_BASE_URL is not defined')
@@ -21,40 +13,6 @@ export const api = axios.create({
     Accept: 'application/json'
   }
 })
-
-const getAuthTokens = async (): Promise<AuthTokens | null> => {
-  try {
-    const authData = await SecureStore.getItemAsync('auth-storage')
-    return authData ? JSON.parse(authData) : null
-  } catch (error) {
-    console.error('Error getting auth tokens:', error)
-    return null
-  }
-}
-
-const saveAuthTokens = async (tokens: AuthTokens): Promise<void> => {
-  if (!tokens.accessToken || !tokens.refreshToken) {
-    throw new Error('Invalid tokens provided')
-  }
-  try {
-    await SecureStore.setItemAsync('auth-storage', JSON.stringify(tokens))
-    store.dispatch(setTokens(tokens))
-  } catch (error) {
-    console.error('Error saving auth tokens:', error)
-    throw error
-  }
-}
-
-const clearAuthTokens = async (): Promise<void> => {
-  try {
-    await SecureStore.deleteItemAsync('auth-storage')
-    store.dispatch(clear())
-    router.replace('/profile')
-  } catch (error) {
-    console.error('Error clearing auth tokens:', error)
-    throw error
-  }
-}
 
 let refreshPromise: Promise<AuthTokens | undefined> | null = null
 
