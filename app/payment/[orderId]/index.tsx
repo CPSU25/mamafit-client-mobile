@@ -26,7 +26,11 @@ export default function PaymentScreen() {
   }
 
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/')
+    }
   }
 
   return (

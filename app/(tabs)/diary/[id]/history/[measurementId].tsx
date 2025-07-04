@@ -105,7 +105,14 @@ export default function DiaryHistoryDetailScreen() {
   ]
 
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace({
+        pathname: '/diary/[id]/history',
+        params: { id }
+      })
+    }
   }
 
   const onSubmit: SubmitHandler<MeasurementsFormOutput> = (data) => {

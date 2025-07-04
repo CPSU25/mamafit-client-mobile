@@ -135,7 +135,11 @@ export default function CreateMeasurementScreen() {
   const stepIconStyles = [stepIconStyle0, stepIconStyle1]
 
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/diary')
+    }
   }
 
   const onSubmitStepOne: SubmitHandler<PreviewMeasurementFormOutput> = (data) => {

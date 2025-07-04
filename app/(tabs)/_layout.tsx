@@ -56,7 +56,7 @@ const navigationOptions = [
   }
 ]
 
-const isDisplayTabBar = (segments: string[], route: string) => {
+const isHiddenTabBar = (segments: string[], route: string) => {
   const routes = route.split('/').filter((r) => r)
   return routes.every((r) => segments.includes(r))
 }
@@ -66,15 +66,14 @@ export default function TabsLayout() {
   const { bottom } = useSafeAreaInsets()
   const { isDarkColorScheme } = useColorScheme()
 
-  const isCreateDiary = isDisplayTabBar(segments, '/diary/create')
-  const isAppointment = isDisplayTabBar(segments, '/profile/appointment')
-  const isDiaryDetail = isDisplayTabBar(segments, '/diary/detail')
-  const isDiaryHistory = isDisplayTabBar(segments, '/diary/history')
-  const isDiarySetting = isDisplayTabBar(segments, '/diary/setting')
-  const isCreateCanvas = isDisplayTabBar(segments, '/canvas/create')
+  const isCreateDiary = isHiddenTabBar(segments, '/diary/create')
+  const isAppointment = isHiddenTabBar(segments, '/profile/appointment')
+  const isDiaryDetail = isHiddenTabBar(segments, '/diary/detail')
+  const isDiaryHistory = isHiddenTabBar(segments, '/diary/history')
+  const isDiarySetting = isHiddenTabBar(segments, '/diary/setting')
+  const isCreateCanvas = isHiddenTabBar(segments, '/canvas/create')
 
-  const isDisplay =
-    isCreateDiary || isAppointment || isDiaryDetail || isDiaryHistory || isDiarySetting || isCreateCanvas
+  const isHidden = isCreateDiary || isAppointment || isDiaryDetail || isDiaryHistory || isDiarySetting || isCreateCanvas
 
   return (
     <Tabs
@@ -89,7 +88,7 @@ export default function TabsLayout() {
           position: 'absolute',
           borderTopWidth: 1,
           height: bottom + 55,
-          display: isDisplay ? 'none' : 'flex'
+          display: isHidden ? 'none' : 'flex'
         }
       }}
     >

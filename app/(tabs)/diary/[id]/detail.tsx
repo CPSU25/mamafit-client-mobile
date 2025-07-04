@@ -166,7 +166,11 @@ export default function DiaryDetailScreen() {
   const { refreshControl } = useRefreshs(getAllRefetches())
 
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/diary')
+    }
   }
 
   if (isCurrentWeekLoading) {

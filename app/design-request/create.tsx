@@ -25,7 +25,11 @@ export default function CreateDesignRequest() {
   }
 
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/')
+    }
   }
 
   return (
