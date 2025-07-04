@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Text } from '~/components/ui/text'
 import { useAuth } from '~/hooks/use-auth'
@@ -19,8 +19,8 @@ export default function ChatRoom({ room }: ChatRoomProps) {
   const isMeLastMessage = room.lastUserId === user?.userId
 
   return (
-    <TouchableOpacity className='flex flex-row gap-4 items-center flex-1'>
-      <Avatar alt={sender?.memberName} className='size-14'>
+    <View className='flex flex-row gap-4 items-center flex-1'>
+      <Avatar alt={sender?.memberName} className='size-12'>
         <AvatarImage source={{ uri: imageSource }} />
         <AvatarFallback>
           <Text>{sender?.memberName?.charAt(0)}</Text>
@@ -34,6 +34,6 @@ export default function ChatRoom({ room }: ChatRoomProps) {
         </Text>
       </View>
       <Text className='self-start text-xs text-muted-foreground'>{format(room.lastTimestamp, 'HH:mm a')}</Text>
-    </TouchableOpacity>
+    </View>
   )
 }

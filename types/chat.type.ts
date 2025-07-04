@@ -1,7 +1,7 @@
 export enum MessageType {
-  Text = 'Text',
-  Image = 'Image',
-  File = 'File'
+  Text,
+  Image,
+  File
 }
 
 export interface Message {
@@ -12,7 +12,7 @@ export interface Message {
   chatRoomId: string
   senderAvatar?: string
   type: MessageType
-  messageTimestamp: Date
+  messageTimestamp: string
   isRead: boolean | null
 }
 

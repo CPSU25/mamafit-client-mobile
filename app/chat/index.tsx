@@ -1,35 +1,33 @@
 import { Feather } from '@expo/vector-icons'
-import { Redirect, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import * as React from 'react'
 import { FlatList, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import Loading from '~/components/loading'
+import SafeView from '~/components/safe-view'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import ChatRoom from '~/features/chat/components/chat-room'
 import { useGetRooms } from '~/features/chat/hooks/use-get-rooms'
-import { useAuth } from '~/hooks/use-auth'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function ChatScreen() {
   const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuth()
-  const { data: rooms, isLoading: isRoomsLoading, refetch } = useGetRooms()
+
+  const { data: rooms, refetch } = useGetRooms()
   const { refreshControl } = useRefreshs([refetch])
 
-  if (isLoading || isRoomsLoading) return <Loading />
-
-  if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
-
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/')
+    }
   }
 
-  const chats = [1, 2, 3, 4, 5]
+  // TODO: add badge number for new messages
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <View className='flex-1'>
         <View className='flex flex-row items-center gap-4 p-4'>
           <TouchableOpacity onPress={handleGoBack}>
@@ -44,14 +42,23 @@ export default function ChatScreen() {
           data={rooms}
           renderItem={({ item, index }) => (
             <>
-              <ChatRoom room={item} />
-              {index !== chats.length - 1 && <Separator className='mt-4' />}
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: '/chat/[roomId]',
+                    params: { roomId: item.id }
+                  })
+                }
+              >
+                <ChatRoom room={item} />
+              </TouchableOpacity>
+              {index !== (rooms?.length ?? 0) - 1 && <Separator className='mt-4' />}
             </>
           )}
           contentContainerClassName='gap-4 p-4'
           refreshControl={refreshControl}
         />
       </View>
-    </SafeAreaView>
+    </SafeView>
   )
 }

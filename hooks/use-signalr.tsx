@@ -1,35 +1,30 @@
+import NetInfo, { NetInfoState } from '@react-native-community/netinfo'
 import { useQueryClient } from '@tanstack/react-query'
-import { format } from 'date-fns'
+import { useSegments } from 'expo-router'
 import { useCallback, useEffect, useRef } from 'react'
-import { View } from 'react-native'
+import { AppState, AppStateStatus } from 'react-native'
 import { toast } from 'sonner-native'
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-import { Card } from '~/components/ui/card'
-import { Separator } from '~/components/ui/separator'
-import { Text } from '~/components/ui/text'
-import { placeholderImage, styles } from '~/lib/constants/constants'
-import { isValidUrl } from '~/lib/utils'
+import MessageToast from '~/components/toast/message-toast'
 import signalRService from '~/services/signalr.service'
-import { Message } from '~/types/chat.type'
+import { ChatRoom, Message } from '~/types/chat.type'
 import { useAuth } from './use-auth'
 
 export const useSignalR = () => {
   const { isAuthenticated, user } = useAuth()
+
   const queryClient = useQueryClient()
+  const segments = useSegments()
 
   const isAttemptedReconnect = useRef(false)
   const currentMessages = useRef(new Set<string>())
+  const appState = useRef(AppState.currentState)
 
   // Function to display incoming messages from other users across the app
   const displayMessage = useCallback(
     (message: Message) => {
-      const messageId = message.id || `${message.chatRoomId}-${message.messageTimestamp || Date.now()}`
-      const imageSource =
-        message.senderAvatar && isValidUrl(message.senderAvatar) ? message.senderAvatar : placeholderImage
+      const messageId = `${message.id}-${message.messageTimestamp}`
 
-      if (currentMessages.current.has(messageId)) {
-        return
-      }
+      if (currentMessages.current.has(messageId)) return
 
       currentMessages.current.add(messageId)
 
@@ -38,51 +33,72 @@ export const useSignalR = () => {
         currentMessages.current = new Set(recentMessages)
       }
 
-      const isNotMe = message.senderId !== user?.id
+      const { id, chatRoomId, messageTimestamp, senderAvatar, senderId, senderName, type, isRead } = message
+
+      const isNotMe = senderId !== user?.userId
 
       if (isNotMe) {
-        queryClient.invalidateQueries({ queryKey: ['rooms'] })
+        // Update rooms list
+        queryClient.setQueryData(['rooms', user?.userId], (oldData: ChatRoom[] | undefined) => {
+          if (!oldData) return oldData
 
-        // TODO: if user is at /chat, don't show toast
-        toast.custom(
-          <Card className='mx-4 mt-2' style={[styles.container]}>
-            <View className='flex-row items-center gap-2 px-3 py-1'>
-              <View className='size-2 rounded-full bg-emerald-500' />
-              <Text className='text-xs font-inter-medium'>New incoming message</Text>
-            </View>
-            <Separator />
-            <View className='flex-row items-center gap-3 p-3'>
-              <Avatar alt={message.senderName} className='size-10 border-2 border-emerald-500'>
-                <AvatarImage source={{ uri: imageSource }} />
-                <AvatarFallback>
-                  <Text>{message?.senderName?.charAt(0)}</Text>
-                </AvatarFallback>
-              </Avatar>
-              <View className='flex-1'>
-                <View className='flex-row items-center gap-2'>
-                  <Text className='text-sm font-inter-medium'>{message.senderName}</Text>
-                  <Text className='text-xs text-muted-foreground ml-auto'>
-                    {format(message.messageTimestamp, 'HH:mm a')}
-                  </Text>
-                </View>
-                <Text className='text-xs text-muted-foreground mr-1' numberOfLines={1}>
-                  {message.message}
-                </Text>
-              </View>
-            </View>
-          </Card>
-        )
+          const newRooms: ChatRoom[] = oldData.map((room) => {
+            if (room.id === chatRoomId) {
+              const newRoom: Partial<ChatRoom> = {
+                lastMessage: message.message,
+                lastTimestamp: messageTimestamp,
+                lastUserId: senderId,
+                lastUserName: senderName
+              }
+              return { ...room, ...newRoom }
+            }
+            return room
+          })
+
+          return newRooms
+        })
+
+        // Update room messages
+        queryClient.setQueryData(['room-messages', chatRoomId, user?.userId], (oldData: Message[] | undefined) => {
+          if (!oldData) return oldData
+
+          const newMessage: Message = {
+            id,
+            senderAvatar,
+            senderName,
+            message: message.message,
+            senderId,
+            chatRoomId,
+            type,
+            messageTimestamp,
+            isRead
+          }
+
+          return [...oldData, newMessage]
+        })
+
+        const isOnChatScreen = segments.length > 0 && segments.some((segment) => segment === 'chat')
+
+        if (!isOnChatScreen) {
+          toast.custom(<MessageToast message={message} />)
+        }
       }
     },
-    [user?.id, queryClient]
+    [user?.userId, queryClient, segments]
   )
 
-  // If the user is authenticated, listen for new messages
+  // Listen for new messages when authenticated
   useEffect(() => {
     if (isAuthenticated) {
       const messageHandler = (...args: unknown[]) => {
-        const message = args[0] as Message
-        displayMessage(message)
+        try {
+          const message = args[0] as Message
+          if (message) {
+            displayMessage(message)
+          }
+        } catch (error) {
+          console.error('Error handling SignalR message:', error)
+        }
       }
 
       signalRService.on('ReceiveMessage', messageHandler)
@@ -93,31 +109,74 @@ export const useSignalR = () => {
     }
   }, [isAuthenticated, displayMessage])
 
-  // Automatically connect/disconnect SignalR based on authentication state
+  // Handle connection based on authentication state
   useEffect(() => {
-    let mounted = true
+    if (isAuthenticated) {
+      if (!isAttemptedReconnect.current && !signalRService.isConnected) {
+        isAttemptedReconnect.current = true
+        signalRService.connect()
+      }
+    } else {
+      if (signalRService.isConnected) {
+        signalRService.disconnect()
+        isAttemptedReconnect.current = false
+        currentMessages.current.clear()
+      }
+    }
+  }, [isAuthenticated])
 
-    const handleConnectionChange = () => {
-      if (isAuthenticated) {
-        if (!isAttemptedReconnect.current && !signalRService.isConnected) {
-          isAttemptedReconnect.current = true
+  // Handle app state changes (foreground/background)
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'active' && appState.current !== 'active' && isAuthenticated) {
+        // App came to foreground - reconnect if needed
+        if (!signalRService.isConnected) {
           signalRService.connect()
         }
-      } else {
-        if (signalRService.isConnected) {
-          signalRService.disconnect()
-          isAttemptedReconnect.current = false
-          currentMessages.current.clear()
+      }
+      appState.current = nextAppState
+    }
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange)
+
+    return () => {
+      subscription?.remove()
+    }
+  }, [isAuthenticated])
+
+  useEffect(() => {
+    const handleNetworkChange = (state: NetInfoState) => {
+      if (state.isConnected && isAuthenticated) {
+        if (!signalRService.isConnected) {
+          signalRService.connect()
         }
       }
     }
 
-    if (mounted) {
-      handleConnectionChange()
-    }
+    const unsubscribe = NetInfo.addEventListener(handleNetworkChange)
 
     return () => {
-      mounted = false
+      unsubscribe()
     }
   }, [isAuthenticated])
+
+  useEffect(() => {
+    const handleError = (...args: unknown[]) => {
+      const error = args[0] as string
+
+      if (error.includes('Maximum reconnection attempts')) {
+        toast.error('Connection Failed', {
+          description: 'Unable to reconnect. Please try again later.',
+          action: { label: 'Retry', onClick: () => signalRService.connect() }
+        })
+      } else if (error.includes('Unauthorized')) {
+        signalRService.refresh()
+      } else {
+        toast.error('Connection Error', { description: 'Attempting to reconnect...' })
+      }
+    }
+    signalRService.on('Error', handleError)
+
+    return () => signalRService.off('Error', handleError)
+  }, [])
 }
