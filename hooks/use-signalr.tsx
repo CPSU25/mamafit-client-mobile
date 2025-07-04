@@ -5,8 +5,11 @@ import { useCallback, useEffect, useRef } from 'react'
 import { AppState, AppStateStatus } from 'react-native'
 import { toast } from 'sonner-native'
 import MessageToast from '~/components/toast/message-toast'
-import signalRService from '~/services/signalr.service'
+import NotificationToast from '~/components/toast/notification-toast'
+import chatHubService, { ChatHubEvents } from '~/services/signalr/chat-hub.service'
+import notificationHubService, { NotificationHubEvents } from '~/services/signalr/notification-hub.service'
 import { ChatRoom, Message } from '~/types/chat.type'
+import { Notification } from '~/types/notification.type'
 import { useAuth } from './use-auth'
 
 export const useSignalR = () => {
@@ -15,8 +18,12 @@ export const useSignalR = () => {
   const queryClient = useQueryClient()
   const segments = useSegments()
 
-  const isAttemptedReconnect = useRef(false)
+  const isAttemptedReconnectChatHub = useRef(false)
+  const isAttemptedReconnectNotificationHub = useRef(false)
+
   const currentMessages = useRef(new Set<string>())
+  const currentNotifications = useRef(new Set<string>())
+
   const appState = useRef(AppState.currentState)
 
   // Function to display incoming messages from other users across the app
@@ -87,7 +94,45 @@ export const useSignalR = () => {
     [user?.userId, queryClient, segments]
   )
 
-  // Listen for new messages when authenticated
+  // Function to display incoming notifications from other users across the app
+  const displayNotification = useCallback(
+    (notification: Notification) => {
+      const notificationId = `${notification.id}-${notification.createdAt}`
+
+      if (currentNotifications.current.has(notificationId)) return
+
+      currentNotifications.current.add(notificationId)
+
+      if (currentNotifications.current.size > 1000) {
+        const recentMessages = Array.from(currentNotifications.current).slice(-1000)
+        currentNotifications.current = new Set(recentMessages)
+      }
+
+      // const {
+      //   id,
+      //   createdAt,
+      //   createdBy,
+      //   isRead,
+      //   metadata,
+      //   notificationContent,
+      //   notificationTitle,
+      //   receiverId,
+      //   type,
+      //   updatedAt,
+      //   updatedBy
+      // } = notification
+
+      const isOnNotificationScreen = segments.length > 0 && segments.some((segment) => segment === 'notifications')
+
+      if (!isOnNotificationScreen) {
+        // TODO: Add notification to the query cache
+        toast.custom(<NotificationToast notification={notification} />)
+      }
+    },
+    [segments]
+  )
+
+  // Listen for new messages/notifications when authenticated
   useEffect(() => {
     if (isAuthenticated) {
       const messageHandler = (...args: unknown[]) => {
@@ -101,26 +146,50 @@ export const useSignalR = () => {
         }
       }
 
-      signalRService.on('ReceiveMessage', messageHandler)
+      const notificationHandler = (...args: unknown[]) => {
+        try {
+          const notification = args[0] as Notification
+          if (notification) {
+            displayNotification(notification)
+          }
+        } catch (error) {
+          console.error('Error handling SignalR notification:', error)
+        }
+      }
+
+      chatHubService.on(ChatHubEvents.ReceiveMessage, messageHandler)
+      notificationHubService.on(NotificationHubEvents.ReceiveNotification, notificationHandler)
 
       return () => {
-        signalRService.off('ReceiveMessage', messageHandler)
+        chatHubService.off(ChatHubEvents.ReceiveMessage, messageHandler)
+        notificationHubService.off(NotificationHubEvents.ReceiveNotification, notificationHandler)
       }
     }
-  }, [isAuthenticated, displayMessage])
+  }, [isAuthenticated, displayMessage, displayNotification])
 
   // Handle connection based on authentication state
   useEffect(() => {
     if (isAuthenticated) {
-      if (!isAttemptedReconnect.current && !signalRService.isConnected) {
-        isAttemptedReconnect.current = true
-        signalRService.connect()
+      if (!isAttemptedReconnectChatHub.current && !chatHubService.isConnected) {
+        isAttemptedReconnectChatHub.current = true
+        chatHubService.connect()
+      }
+
+      if (!isAttemptedReconnectNotificationHub.current && !notificationHubService.isConnected) {
+        isAttemptedReconnectNotificationHub.current = true
+        notificationHubService.connect()
       }
     } else {
-      if (signalRService.isConnected) {
-        signalRService.disconnect()
-        isAttemptedReconnect.current = false
+      if (chatHubService.isConnected) {
+        chatHubService.destroy()
+        isAttemptedReconnectChatHub.current = false
         currentMessages.current.clear()
+      }
+
+      if (notificationHubService.isConnected) {
+        notificationHubService.destroy()
+        isAttemptedReconnectNotificationHub.current = false
+        currentNotifications.current.clear()
       }
     }
   }, [isAuthenticated])
@@ -129,9 +198,11 @@ export const useSignalR = () => {
   useEffect(() => {
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
       if (nextAppState === 'active' && appState.current !== 'active' && isAuthenticated) {
-        // App came to foreground - reconnect if needed
-        if (!signalRService.isConnected) {
-          signalRService.connect()
+        if (!chatHubService.isConnected) {
+          chatHubService.connect()
+        }
+        if (!notificationHubService.isConnected) {
+          notificationHubService.connect()
         }
       }
       appState.current = nextAppState
@@ -144,11 +215,15 @@ export const useSignalR = () => {
     }
   }, [isAuthenticated])
 
+  // Handle network changes
   useEffect(() => {
     const handleNetworkChange = (state: NetInfoState) => {
       if (state.isConnected && isAuthenticated) {
-        if (!signalRService.isConnected) {
-          signalRService.connect()
+        if (!chatHubService.isConnected) {
+          chatHubService.connect()
+        }
+        if (!notificationHubService.isConnected) {
+          notificationHubService.connect()
         }
       }
     }
@@ -160,23 +235,46 @@ export const useSignalR = () => {
     }
   }, [isAuthenticated])
 
+  // Handle connection errors
   useEffect(() => {
-    const handleError = (...args: unknown[]) => {
+    const handleMessageError = (...args: unknown[]) => {
       const error = args[0] as string
 
       if (error.includes('Maximum reconnection attempts')) {
         toast.error('Connection Failed', {
           description: 'Unable to reconnect. Please try again later.',
-          action: { label: 'Retry', onClick: () => signalRService.connect() }
+          action: { label: 'Retry', onClick: () => chatHubService.connect() }
         })
-      } else if (error.includes('Unauthorized')) {
-        signalRService.refresh()
+      } else if (error.includes('Unauthorized') || error.includes('401')) {
+        // Token refresh is now handled centrally by axios interceptors
+        console.log('Authentication error detected, token refresh will be handled automatically')
       } else {
         toast.error('Connection Error', { description: 'Attempting to reconnect...' })
       }
     }
-    signalRService.on('Error', handleError)
 
-    return () => signalRService.off('Error', handleError)
+    const handleNotificationError = (...args: unknown[]) => {
+      const error = args[0] as string
+
+      if (error.includes('Maximum reconnection attempts')) {
+        toast.error('Notification Connection Failed', {
+          description: 'Unable to reconnect notifications. Please try again later.',
+          action: { label: 'Retry', onClick: () => notificationHubService.connect() }
+        })
+      } else if (error.includes('Unauthorized') || error.includes('401')) {
+        // Token refresh is now handled centrally by axios interceptors
+        console.log('Notification authentication error detected, token refresh will be handled automatically')
+      } else {
+        toast.error('Notification Connection Error', { description: 'Attempting to reconnect...' })
+      }
+    }
+
+    chatHubService.on(ChatHubEvents.Error, handleMessageError)
+    notificationHubService.on(NotificationHubEvents.Error, handleNotificationError)
+
+    return () => {
+      chatHubService.off(ChatHubEvents.Error, handleMessageError)
+      notificationHubService.off(NotificationHubEvents.Error, handleNotificationError)
+    }
   }, [])
 }

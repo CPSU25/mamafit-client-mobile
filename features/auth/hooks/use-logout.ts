@@ -2,7 +2,8 @@ import { useMutation } from '@tanstack/react-query'
 import * as Updates from 'expo-updates'
 import { useAuth } from '~/hooks/use-auth'
 import authService from '~/services/auth.service'
-import signalRService from '~/services/signalr.service'
+import chatHubService from '~/services/signalr/chat-hub.service'
+import notificationHubService from '~/services/signalr/notification-hub.service'
 
 export const useLogout = () => {
   const { handleLogout } = useAuth()
@@ -11,7 +12,8 @@ export const useLogout = () => {
     mutationFn: authService.logout,
     onSuccess: async () => {
       handleLogout()
-      await signalRService.disconnect()
+      chatHubService.destroy()
+      notificationHubService.destroy()
       await Updates.reloadAsync()
     }
   })

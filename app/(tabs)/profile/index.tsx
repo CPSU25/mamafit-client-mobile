@@ -54,7 +54,7 @@ function OrderStage({ status }: { status: OrderStatus }) {
 }
 
 export default function ProfileScreen() {
-  const { isLoading, isAuthenticated, tokens } = useAuth()
+  const { isLoading, isAuthenticated } = useAuth()
   const router = useRouter()
   const { isDarkColorScheme, setColorScheme } = useColorScheme()
   const [checked, setChecked] = useState(isDarkColorScheme ? true : false)
@@ -63,8 +63,6 @@ export default function ProfileScreen() {
     setColorScheme(newTheme)
     setChecked((prev) => !prev)
   }
-
-  console.log(tokens)
 
   if (isLoading) return <Loading />
 
