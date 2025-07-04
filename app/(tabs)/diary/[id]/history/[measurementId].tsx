@@ -4,8 +4,8 @@ import { useEffect } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
+import SafeView from '~/components/safe-view'
 import { InfoCard, WarningCard } from '~/components/ui/alert-card'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
@@ -129,7 +129,7 @@ export default function DiaryHistoryDetailScreen() {
   }
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <ScrollView showsVerticalScrollIndicator={false} className='flex-1' refreshControl={refreshControl}>
         <FormProvider {...methods}>
           <View className='flex flex-row items-center justify-between p-4'>
@@ -256,6 +256,6 @@ export default function DiaryHistoryDetailScreen() {
           </View>
         </FormProvider>
       </ScrollView>
-    </SafeAreaView>
+    </SafeView>
   )
 }

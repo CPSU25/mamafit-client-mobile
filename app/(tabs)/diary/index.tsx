@@ -2,8 +2,8 @@ import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDebounce } from 'use-debounce'
+import SafeView from '~/components/safe-view'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import DiariesList from '~/features/diary/components/lists/diaries-list'
@@ -15,7 +15,7 @@ export default function DiaryScreen() {
   const [debouncedNameSearch] = useDebounce(nameSearch, 500)
 
   return (
-    <SafeAreaView className='flex-1' edges={['top']}>
+    <SafeView>
       {/* Header */}
       <View className='flex flex-row justify-between items-center p-4'>
         <Text className='text-xl font-inter-semibold'>Your Diary</Text>
@@ -36,6 +36,6 @@ export default function DiaryScreen() {
 
       {/* Diaries List */}
       <DiariesList nameSearch={debouncedNameSearch} />
-    </SafeAreaView>
+    </SafeView>
   )
 }

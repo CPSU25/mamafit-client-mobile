@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Dimensions, Image, ImageStyle, StyleProp, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
 import { Text } from '~/components/ui/text'
@@ -39,7 +39,7 @@ export default function CreateCanvasScreen() {
   const [preset, setPreset] = useState<PresetWithComponentOptions | null>(null)
 
   return (
-    <SafeAreaView className='flex-1 bg-muted'>
+    <SafeView className='bg-muted'>
       <View className='flex-1 relative'>
         <View className='absolute inset-0 z-50 top-0'>
           <DressBuilder setPreset={setPreset} />
@@ -60,6 +60,6 @@ export default function CreateCanvasScreen() {
           </Button>
         </View>
       </View>
-    </SafeAreaView>
+    </SafeView>
   )
 }

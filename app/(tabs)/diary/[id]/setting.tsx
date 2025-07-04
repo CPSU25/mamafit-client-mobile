@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import SafeView from '~/components/safe-view'
 import { Text } from '~/components/ui/text'
 import { useGetDiaryDetail } from '~/features/diary/hooks/use-get-diary-detail'
 import { useColorScheme } from '~/hooks/use-color-scheme'
@@ -96,7 +96,7 @@ export default function DiarySettingScreen() {
   ]
 
   return (
-    <SafeAreaView className='flex-1 bg-background'>
+    <SafeView className='bg-background'>
       <View className='flex flex-row items-center justify-between p-4'>
         <View className='flex flex-row items-center gap-4'>
           <TouchableOpacity onPress={handleGoBack}>
@@ -141,6 +141,6 @@ export default function DiarySettingScreen() {
           </React.Fragment>
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </SafeView>
   )
 }

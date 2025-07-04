@@ -2,8 +2,8 @@ import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useCallback, useRef, useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
+import SafeView from '~/components/safe-view'
 import { Card } from '~/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Text } from '~/components/ui/text'
@@ -178,7 +178,7 @@ export default function DiaryDetailScreen() {
   }
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <DiaryHeader diaryId={id} onGoBack={handleGoBack} />
       <ScrollView showsVerticalScrollIndicator={false} className='flex-1' refreshControl={refreshControl}>
         <View className='flex flex-col gap-4 p-4'>
@@ -191,6 +191,6 @@ export default function DiaryDetailScreen() {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </SafeView>
   )
 }

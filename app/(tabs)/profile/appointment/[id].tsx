@@ -1,10 +1,10 @@
-import { SafeAreaView } from 'react-native-safe-area-context'
+import SafeView from '~/components/safe-view'
 import { Text } from '~/components/ui/text'
 
 export default function AppointmentDetailScreen() {
   return (
-    <SafeAreaView>
+    <SafeView>
       <Text>AppointmentDetailScreen</Text>
-    </SafeAreaView>
+    </SafeView>
   )
 }

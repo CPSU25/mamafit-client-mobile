@@ -2,8 +2,8 @@ import { Feather } from '@expo/vector-icons'
 import { Redirect, useRouter } from 'expo-router'
 import React from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
+import SafeView from '~/components/safe-view'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import NotificationsList from '~/features/notifications/components/notifications-list'
@@ -54,7 +54,7 @@ export default function NotificationsScreen() {
   if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <View className='flex flex-row justify-between items-center p-4'>
         <Text className='text-xl font-inter-semibold'>Notifications</Text>
         <View className='flex flex-row items-center gap-6 mr-1.5'>
@@ -85,7 +85,7 @@ export default function NotificationsScreen() {
         </TouchableOpacity>
       </View>
       <NotificationsList />
-    </SafeAreaView>
+    </SafeView>
   )
 }
 

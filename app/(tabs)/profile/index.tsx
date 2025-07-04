@@ -2,8 +2,8 @@ import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { Pressable, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
+import SafeView from '~/components/safe-view'
 import SignalRHealth from '~/components/signalr-health'
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
@@ -69,7 +69,7 @@ export default function ProfileScreen() {
   if (isLoading) return <Loading />
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <View className='flex flex-row items-center justify-between p-4'>
         <CurrentUser />
         {isAuthenticated ? (
@@ -132,6 +132,6 @@ export default function ProfileScreen() {
       </Pressable>
 
       <SignalRHealth />
-    </SafeAreaView>
+    </SafeView>
   )
 }

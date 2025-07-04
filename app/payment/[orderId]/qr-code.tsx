@@ -5,7 +5,7 @@ import { useLocalSearchParams } from 'expo-router'
 import { useState } from 'react'
 import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import SafeView from '~/components/safe-view'
 import { WarningCard } from '~/components/ui/alert-card'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
@@ -68,7 +68,7 @@ export default function PaymentQRCode() {
   const qrCodeParams = getQRCodeParams(qrCodeData?.qrUrl)
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>
         <Animated.View
           entering={FadeInDown.delay(100)}
@@ -198,6 +198,6 @@ export default function PaymentQRCode() {
           </Animated.View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </SafeView>
   )
 }

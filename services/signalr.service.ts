@@ -167,11 +167,8 @@ class SignalRService {
     this.emit('Error', error.message)
 
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
-      console.log('Old SignalR reconnecting...', this.reconnectAttempts)
       this.reconnectAttempts++
-      console.log('New SignalR reconnecting...', this.reconnectAttempts)
       const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000)
-      console.log('Delay:', delay)
       setTimeout(() => this.connect(), delay)
     } else {
       this.emit('Error', 'Maximum reconnection attempts reached')
