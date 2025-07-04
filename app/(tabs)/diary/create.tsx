@@ -103,7 +103,11 @@ export default function CreateDiaryScreen() {
     (measurementsErrors as any)._errors?.[0]
 
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/diary')
+    }
   }
 
   const onSubmitStepOne: SubmitHandler<PersonalInfoFormOutput> = () => {

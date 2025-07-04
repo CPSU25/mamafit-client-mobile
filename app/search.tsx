@@ -12,7 +12,11 @@ export default function SearchScreen() {
   const autoFocus = Boolean(searchParams.autoFocus)
 
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/')
+    }
   }
 
   return (

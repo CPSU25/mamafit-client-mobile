@@ -11,7 +11,11 @@ export default function DiaryHistoryScreen() {
   const { id } = useLocalSearchParams() as { id: string }
 
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/diary')
+    }
   }
 
   return (

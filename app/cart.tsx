@@ -23,7 +23,11 @@ export default function CartScreen() {
   if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
 
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/')
+    }
   }
 
   const cartItems = []

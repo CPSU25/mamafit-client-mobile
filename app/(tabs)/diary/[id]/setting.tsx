@@ -18,7 +18,11 @@ export default function DiarySettingScreen() {
   const { data: diaryDetail } = useGetDiaryDetail({ diaryId: id })
 
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/diary')
+    }
   }
 
   const sections = [

@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import RadioWrapper from '~/components/radio-wrapper'
+import { Text } from '~/components/ui/text'
 import { useGetCategoryDetail } from '~/features/category/hooks/use-get-category-detail'
 import StyleCard from './style-card'
 
@@ -25,7 +26,7 @@ export default function StyleSection<T extends FieldValues>({ categoryId, method
 
   return (
     <View className='gap-2 px-4 py-2'>
-      <Text className='font-inter-semibold text-xl text-foreground'>Choose Style</Text>
+      <Text className='font-inter-semibold text-xl'>Choose Style</Text>
       <Controller
         control={methods.control}
         name={name}

@@ -25,7 +25,11 @@ export default function AppointmentScreen() {
   const appointments = [1, 2, 3, 4, 5, 6]
 
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/profile')
+    }
   }
 
   return (
