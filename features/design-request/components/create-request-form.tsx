@@ -3,19 +3,49 @@ import { View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import FieldError from '~/components/field-error'
 import { TipCard, WarningCard } from '~/components/ui/alert-card'
-import { ImagePickerComponent } from '~/components/ui/image-picker'
+import { ImageGrid, ImagePickerTrigger, ImageResetButton } from '~/components/ui/image-picker'
 import { Text } from '~/components/ui/text'
 import { Textarea } from '~/components/ui/textarea'
 import { useFieldError } from '~/hooks/use-field-error'
+import { useImagePicker } from '~/hooks/use-image-picker'
 import { cn, isFormError } from '~/lib/utils'
 import { CreateRequestSchema } from '../validations'
 
 export default function CreateDesignRequestForm() {
   const {
     control,
-    formState: { errors }
+    formState: { errors },
+    setValue,
+    watch
   } = useFormContext<CreateRequestSchema>()
   const className = useFieldError()
+
+  // Watch the current images value from form
+  const currentImages = watch('images')
+
+  // Use the image picker hook for logic
+  const { pickImages, resetImages, isUploading, isMaxReached } = useImagePicker({
+    maxImages: 5,
+    maxSizeInMB: 5,
+    initialImages: currentImages
+  })
+
+  const handlePickImages = async () => {
+    const newUrls = await pickImages()
+    if (newUrls.length > 0) {
+      setValue('images', [...currentImages, ...newUrls])
+    }
+  }
+
+  const handleRemoveImage = (index: number) => {
+    const updatedImages = currentImages.filter((_, i) => i !== index)
+    setValue('images', updatedImages)
+  }
+
+  const handleResetImages = () => {
+    resetImages()
+    setValue('images', [])
+  }
 
   return (
     <View className='flex flex-col gap-4'>
@@ -24,20 +54,26 @@ export default function CreateDesignRequestForm() {
         <Text className='text-muted-foreground text-xs'>Complete the form below to submit your design request.</Text>
       </Animated.View>
 
-      {/* Images */}
+      {/* Custom Image Picker UI */}
       <Animated.View entering={FadeInDown.delay(200)}>
-        <Controller
-          control={control}
-          name='images'
-          render={({ field: { onChange, value } }) => (
-            <ImagePickerComponent
-              images={value}
-              onImagesChange={onChange}
-              maxImages={5}
-              placeholder='Choose images from your gallery'
-            />
-          )}
-        />
+        <View
+          className={`flex flex-col gap-4 p-2 border border-dashed rounded-2xl ${
+            isMaxReached ? 'border-rose-200 bg-rose-50/50' : 'border-input bg-muted/20'
+          }`}
+        >
+          <ImagePickerTrigger
+            onPress={handlePickImages}
+            isUploading={isUploading}
+            isMaxReached={isMaxReached}
+            currentCount={currentImages.length}
+            maxImages={5}
+            placeholder='Choose images from your gallery'
+          />
+
+          <ImageGrid images={currentImages} onRemoveImage={handleRemoveImage} />
+
+          {isMaxReached && <ImageResetButton onReset={handleResetImages} />}
+        </View>
       </Animated.View>
 
       {/* Description */}
