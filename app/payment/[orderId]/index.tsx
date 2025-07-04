@@ -2,7 +2,8 @@ import { Feather, FontAwesome } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
 import { Label } from '~/components/ui/label'
@@ -34,7 +35,7 @@ export default function PaymentScreen() {
   }
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <View className='flex flex-row items-center gap-4 p-4'>
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
@@ -184,7 +185,7 @@ export default function PaymentScreen() {
           <Text className='font-inter-medium'>Place Order</Text>
         </Button>
       </View>
-    </SafeAreaView>
+    </SafeView>
   )
 }
 

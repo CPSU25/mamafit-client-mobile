@@ -2,8 +2,8 @@ import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import FieldError from '~/components/field-error'
+import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
 import CreateDesignRequestForm from '~/features/design-request/components/create-request-form'
@@ -33,7 +33,7 @@ export default function CreateDesignRequest() {
   }
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <View className='flex flex-row items-center gap-4 p-4'>
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
@@ -57,6 +57,6 @@ export default function CreateDesignRequest() {
           </Button>
         </View>
       </View>
-    </SafeAreaView>
+    </SafeView>
   )
 }

@@ -1,8 +1,8 @@
 import Feather from '@expo/vector-icons/Feather'
 import { useRouter } from 'expo-router'
 import { FlatList, Pressable, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import DressCard from '~/components/card/dress-card'
+import SafeView from '~/components/safe-view'
 import { Text } from '~/components/ui/text'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
@@ -17,8 +17,8 @@ export default function HomeScreen() {
   const router = useRouter()
 
   return (
-    <SafeAreaView className='flex-1 p-4'>
-      <View className='flex flex-col gap-4'>
+    <SafeView>
+      <View className='flex flex-col gap-4 p-4'>
         {/* Header */}
         <View className='flex flex-row items-center gap-4'>
           <Pressable
@@ -63,6 +63,6 @@ export default function HomeScreen() {
           contentContainerClassName='pb-32 gap-2'
         />
       </View>
-    </SafeAreaView>
+    </SafeView>
   )
 }

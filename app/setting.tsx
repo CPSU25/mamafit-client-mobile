@@ -2,14 +2,14 @@ import { Feather } from '@expo/vector-icons'
 import { Redirect, useRouter } from 'expo-router'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
 import { useNotifications } from '~/components/providers/notifications.provider'
+import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
 import { useLogout } from '~/features/auth/hooks/use-logout'
-import { useGetProfile } from '~/features/user/hooks/use-get-profile'
 import ViewProfile from '~/features/user/components/view-profile'
+import { useGetProfile } from '~/features/user/hooks/use-get-profile'
 import { useAuth } from '~/hooks/use-auth'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
@@ -44,7 +44,7 @@ export default function SettingScreen() {
   }
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <View className='flex flex-row items-center gap-4 p-4'>
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
@@ -67,6 +67,6 @@ export default function SettingScreen() {
           </View>
         </>
       )}
-    </SafeAreaView>
+    </SafeView>
   )
 }

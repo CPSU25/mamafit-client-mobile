@@ -2,24 +2,16 @@ import { Feather } from '@expo/vector-icons'
 import { format } from 'date-fns'
 import { useRouter } from 'expo-router'
 import { FlatList, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import AppointmentCard from '~/components/card/appointment-card'
+import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 
 export default function AppointmentScreen() {
-  // const { isAuthenticated } = useAuth()
   const router = useRouter()
 
-  // if (!isAuthenticated) {
-  //   return (
-  //     <SafeAreaView>
-  //       <Text>Please login to continue</Text>
-  //     </SafeAreaView>
-  //   )
-  // }
   const formattedDate = format(new Date(), 'eeee, MMM d, yyyy')
 
   const appointments = [1, 2, 3, 4, 5, 6]
@@ -33,7 +25,7 @@ export default function AppointmentScreen() {
   }
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <View className='flex flex-row justify-between items-center p-4'>
         <View className='flex flex-row items-center gap-4'>
           <TouchableOpacity onPress={handleGoBack}>
@@ -65,6 +57,6 @@ export default function AppointmentScreen() {
           </View>
         )}
       </View>
-    </SafeAreaView>
+    </SafeView>
   )
 }

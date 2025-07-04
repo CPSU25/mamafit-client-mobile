@@ -2,8 +2,9 @@ import { Feather } from '@expo/vector-icons'
 import { Redirect, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
+import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
 import { Separator } from '~/components/ui/separator'
@@ -33,7 +34,7 @@ export default function CartScreen() {
   const cartItems = []
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <View className='flex flex-row items-center justify-between p-4'>
         <View className='flex flex-row items-center gap-4'>
           <TouchableOpacity onPress={handleGoBack}>
@@ -87,6 +88,6 @@ export default function CartScreen() {
           </Button>
         </View>
       </View>
-    </SafeAreaView>
+    </SafeView>
   )
 }
