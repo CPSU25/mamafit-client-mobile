@@ -4,7 +4,7 @@ export interface Notification {
   createdAt: string
   createdBy: string
   isRead: false
-  metadata: string
+  metadata: Record<string, string>
   notificationContent: string
   notificationTitle: string
   receiverId: string

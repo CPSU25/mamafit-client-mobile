@@ -44,6 +44,8 @@ export const useSignalR = () => {
 
       const isNotMe = senderId !== user?.userId
 
+      console.log('ChatHub', message)
+
       if (isNotMe) {
         // Update rooms list
         queryClient.setQueryData(['rooms', user?.userId], (oldData: ChatRoom[] | undefined) => {
@@ -108,28 +110,26 @@ export const useSignalR = () => {
         currentNotifications.current = new Set(recentMessages)
       }
 
-      // const {
-      //   id,
-      //   createdAt,
-      //   createdBy,
-      //   isRead,
-      //   metadata,
-      //   notificationContent,
-      //   notificationTitle,
-      //   receiverId,
-      //   type,
-      //   updatedAt,
-      //   updatedBy
-      // } = notification
-
       const isOnNotificationScreen = segments.length > 0 && segments.some((segment) => segment === 'notifications')
+
+      console.log('NotificationHub', notification)
 
       if (!isOnNotificationScreen) {
         // TODO: Add notification to the query cache
+        // 2: Payment related notification
+        if (notification.type === 2) {
+          queryClient.setQueryData(
+            ['payment-status', notification.metadata?.orderId, user?.userId],
+            (oldData: string | undefined) => {
+              if (!oldData) return oldData
+              return notification.metadata?.paymentStatus
+            }
+          )
+        }
         toast.custom(<NotificationToast notification={notification} />)
       }
     },
-    [segments]
+    [segments, user?.userId, queryClient]
   )
 
   // Listen for new messages/notifications when authenticated
