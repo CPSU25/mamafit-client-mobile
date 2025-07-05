@@ -15,6 +15,12 @@ class OrderService {
 
     return data.data
   }
+
+  async getPaymentStatus(orderId: string) {
+    const { data } = await api.get<BaseResponse<null>>(`sepay-auth/status/${orderId}`)
+
+    return data.message
+  }
 }
 
 const orderService = new OrderService()

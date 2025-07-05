@@ -1,10 +1,9 @@
-import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import * as Haptics from 'expo-haptics'
 import { useCallback, useState } from 'react'
 import { Alert, RefreshControl } from 'react-native'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
-type RefetchFunction = (options?: RefetchOptions) => Promise<QueryObserverResult>
+type RefetchFunction = () => void
 
 interface UseRefreshOptions {
   /** Show error alerts when refresh fails */

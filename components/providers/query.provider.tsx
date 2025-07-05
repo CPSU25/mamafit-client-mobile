@@ -13,7 +13,12 @@ const queryClient = new QueryClient({
     queries: {
       retry: (failureCount, error) => {
         // Don't retry on 401/403/404 errors
-        if (error.response?.status === 401 || error.response?.status === 403 || error.response?.status === 404)
+        if (
+          error.response?.status === 401 ||
+          error.response?.status === 403 ||
+          error.response?.status === 404 ||
+          error.response?.status === 400
+        )
           return false
         return failureCount < 1
       },
