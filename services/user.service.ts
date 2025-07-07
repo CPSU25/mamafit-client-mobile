@@ -6,7 +6,7 @@ class UserService {
     if (!userId) return null
 
     const { data } = await api.get<BaseResponse<User>>(`user/${userId}`)
-    return data
+    return data.data
   }
 }
 

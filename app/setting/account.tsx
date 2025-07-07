@@ -1,6 +1,5 @@
 import { Feather } from '@expo/vector-icons'
 import { Redirect, useRouter } from 'expo-router'
-import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import { useNotifications } from '~/components/providers/notifications.provider'
@@ -13,21 +12,15 @@ import { useGetProfile } from '~/features/user/hooks/use-get-profile'
 import { useAuth } from '~/hooks/use-auth'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
-// TODO: Refactor this screen
-
-export default function SettingScreen() {
-  const { isAuthenticated, isLoading: isAuthLoading, tokens, user } = useAuth()
-  const { data: userProfile, isLoading: isProfileLoading } = useGetProfile(user?.userId)
+export default function AccountScreen() {
   const router = useRouter()
-
   const { expoPushToken } = useNotifications()
+  const { user, tokens } = useAuth()
+  const { data: userProfile, isLoading } = useGetProfile(user?.userId)
+
   const {
     logoutMutation: { mutate, isPending }
   } = useLogout()
-
-  const isLoading = isAuthLoading || isProfileLoading
-
-  if (!isAuthenticated && !isLoading) return <Redirect href='/profile' />
 
   const handleLogout = async () => {
     if (!tokens?.refreshToken || !expoPushToken) return
@@ -39,9 +32,13 @@ export default function SettingScreen() {
     if (router.canGoBack()) {
       router.back()
     } else {
-      router.replace('/profile')
+      router.replace('/setting')
     }
   }
+
+  if (isLoading) return <Loading />
+
+  if (!userProfile) return <Redirect href='/profile' />
 
   return (
     <SafeView>
@@ -49,24 +46,21 @@ export default function SettingScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>Settings</Text>
+        <Text className='font-inter-semibold text-xl'>Account</Text>
       </View>
+
       <View className='bg-muted h-2' />
 
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <>
-          {userProfile?.data && <ViewProfile user={userProfile.data} />}
-          <View className='flex-1' />
-          <View className='p-4'>
-            <Text className='text-xs text-muted-foreground text-center mb-2'>MamaFit &copy; 2025</Text>
-            <Button size='lg' variant='outline' onPress={handleLogout} disabled={isPending}>
-              <Text className='text-rose-500 font-inter-medium'>{isPending ? 'Logging out...' : 'Logout'}</Text>
-            </Button>
-          </View>
-        </>
-      )}
+      <ViewProfile user={userProfile} />
+
+      <View className='flex-1' />
+
+      <View className='p-4'>
+        <Text className='text-xs text-muted-foreground text-center mb-2'>MamaFit &copy; 2025</Text>
+        <Button size='lg' variant='outline' onPress={handleLogout} disabled={isPending}>
+          <Text className='text-rose-500 font-inter-medium'>{isPending ? 'Logging out...' : 'Logout'}</Text>
+        </Button>
+      </View>
     </SafeView>
   )
 }
