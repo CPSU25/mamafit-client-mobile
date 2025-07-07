@@ -2,8 +2,8 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { useSecureStore } from '~/hooks/use-secure-store'
-import { AuthTokens } from '~/lib/axios/axios'
 import authService from '~/services/auth.service'
+import { AuthTokens } from '~/types/common'
 
 export const useGoogleAuth = () => {
   const router = useRouter()

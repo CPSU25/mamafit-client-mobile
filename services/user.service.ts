@@ -1,3 +1,4 @@
+import { AddAddressFormSchema } from '~/features/user/validations'
 import { api } from '~/lib/axios/axios'
 import { BaseResponse, User } from '~/types/common'
 
@@ -6,6 +7,12 @@ class UserService {
     if (!userId) return null
 
     const { data } = await api.get<BaseResponse<User>>(`user/${userId}`)
+    return data.data
+  }
+
+  async addAddress(address: AddAddressFormSchema) {
+    const { data } = await api.post<BaseResponse<null>>(`address`, address)
+
     return data.data
   }
 }

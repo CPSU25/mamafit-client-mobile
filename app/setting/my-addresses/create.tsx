@@ -1,11 +1,35 @@
 import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { FormProvider, SubmitHandler } from 'react-hook-form'
+import { TouchableOpacity, View } from 'react-native'
+import { useDebounce } from 'use-debounce'
+import FieldError from '~/components/field-error'
 import SafeView from '~/components/safe-view'
+import { Button } from '~/components/ui/button'
+import { Text } from '~/components/ui/text'
+import AddAddressForm from '~/features/user/components/add-address-form'
+import { useAddAddress } from '~/features/user/hooks/use-add-address'
+import { useGetForwardGeocoding } from '~/features/user/hooks/use-get-forward-geocoding'
+import { AddAddressFormSchema } from '~/features/user/validations'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function CreateAddressScreen() {
   const router = useRouter()
+  const { methods, addAddressMutation } = useAddAddress()
+  const {
+    formState: { errors }
+  } = methods
+
+  const [debouncedProvince] = useDebounce(methods.watch('province'), 500)
+  const [debouncedDistrict] = useDebounce(methods.watch('district'), 500)
+  const [debouncedWard] = useDebounce(methods.watch('ward'), 500)
+  const [debouncedStreet] = useDebounce(methods.watch('street'), 500)
+
+  const address = [debouncedStreet, debouncedWard, debouncedDistrict, debouncedProvince].filter(Boolean)
+  const hasAllFields = address.length === 4
+
+  const { data: geocodingData, isLoading: isGeocoding } = useGetForwardGeocoding(address.join(', '), hasAllFields)
+  const rootMsg = errors.root?.message || (errors as any)['']?.message || (errors as any)._errors?.[0]
 
   const handleGoBack = () => {
     if (router.canGoBack()) {
@@ -13,6 +37,10 @@ export default function CreateAddressScreen() {
     } else {
       router.replace('/setting')
     }
+  }
+
+  const onSubmit: SubmitHandler<AddAddressFormSchema> = (data) => {
+    addAddressMutation.mutate(data)
   }
 
   return (
@@ -26,8 +54,19 @@ export default function CreateAddressScreen() {
 
       <View className='bg-muted h-2' />
 
-      <View className='p-4'>
-        <Text>Create Address</Text>
+      <View className='p-4 flex-1'>
+        <FormProvider {...methods}>
+          <AddAddressForm geocodingData={geocodingData} isGeocoding={isGeocoding} />
+          <View className='flex-1' />
+          <View className='gap-2'>
+            {rootMsg && <FieldError message={rootMsg} />}
+            <Button onPress={methods.handleSubmit(onSubmit)} disabled={isGeocoding || addAddressMutation.isPending}>
+              <Text className='font-inter-medium'>
+                {addAddressMutation.isPending || isGeocoding ? 'Processing...' : 'Save'}
+              </Text>
+            </Button>
+          </View>
+        </FormProvider>
       </View>
     </SafeView>
   )
