@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { useForm } from 'react-hook-form'
 import { ERROR_MESSAGES } from '~/lib/constants/constants'
@@ -19,6 +19,7 @@ const defaultValues: AddAddressFormSchema = {
 
 export const useAddAddress = () => {
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const methods = useForm<AddAddressFormSchema>({
     defaultValues,
@@ -34,6 +35,7 @@ export const useAddAddress = () => {
       } else {
         router.replace('/setting/my-addresses')
       }
+      queryClient.invalidateQueries({ queryKey: ['addresses'] })
     },
     onError: (error) => {
       methods.setError('root', { message: error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG })
