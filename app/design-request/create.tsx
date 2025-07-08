@@ -9,6 +9,7 @@ import { Text } from '~/components/ui/text'
 import CreateDesignRequestForm from '~/features/design-request/components/create-request-form'
 import { useCreateDesignRequest } from '~/features/design-request/hooks/use-create-design-request'
 import { CreateRequestSchema } from '~/features/design-request/validations'
+import { useImagePicker } from '~/hooks/use-image-picker'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function CreateDesignRequest() {
@@ -17,6 +18,14 @@ export default function CreateDesignRequest() {
   const {
     formState: { errors }
   } = methods
+
+  const currentImages = methods.watch('images')
+
+  const { pickImages, resetImages, isUploading, isMaxReached } = useImagePicker({
+    maxImages: 5,
+    maxSizeInMB: 5,
+    initialImages: currentImages
+  })
 
   const rootMsg = errors.root?.message || (errors as any)['']?.message || (errors as any)._errors?.[0]
 
@@ -45,12 +54,21 @@ export default function CreateDesignRequest() {
 
       <View className='flex-1 p-4'>
         <FormProvider {...methods}>
-          <CreateDesignRequestForm />
+          <CreateDesignRequestForm
+            pickImages={pickImages}
+            resetImages={resetImages}
+            isUploading={isUploading}
+            isMaxReached={isMaxReached}
+            currentImages={currentImages}
+          />
         </FormProvider>
         <View className='flex-1' />
         <View className='flex flex-col gap-2'>
           {rootMsg && <FieldError message={rootMsg} />}
-          <Button onPress={methods.handleSubmit(onSubmit)} disabled={createDesignRequestMutation.isPending}>
+          <Button
+            onPress={methods.handleSubmit(onSubmit)}
+            disabled={createDesignRequestMutation.isPending || isUploading}
+          >
             <Text className='font-inter-medium'>
               {createDesignRequestMutation.isPending ? 'Sending...' : 'Send Request'}
             </Text>
