@@ -5,10 +5,9 @@ import { decodeJwt } from 'jose'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '~/hooks/use-auth'
 import { useSecureStore } from '~/hooks/use-secure-store'
-import { AuthTokens } from '~/lib/axios/axios'
 import { ERROR_MESSAGES } from '~/lib/constants/constants'
 import authService from '~/services/auth.service'
-import { JwtUser } from '~/types/common'
+import { AuthTokens, JwtUser } from '~/types/common'
 import { SignInSchema, signInSchema } from '../validations'
 
 export const useSignIn = () => {

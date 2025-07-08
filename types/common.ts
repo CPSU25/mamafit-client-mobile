@@ -70,3 +70,35 @@ export interface User {
   updatedAt: string
   updatedBy: string | null
 }
+
+export interface ForwardGeocodingResponse {
+  results: {
+    address_components: {
+      long_name: string
+      short_name: string
+    }[]
+    formatted_address: string
+    geometry: {
+      location: {
+        lat: number
+        lng: number
+      }
+      boundary: null
+    }
+    place_id: string
+    reference: string
+    plus_code: {
+      compound_code: string
+      global_code: string
+    }
+    compound: {
+      district: string
+      commune: string
+      province: string
+    }
+    types: string[]
+    name: string
+    address: string
+  }[]
+  status: string
+}
