@@ -7,28 +7,30 @@ import { ImageGrid, ImagePickerTrigger, ImageResetButton } from '~/components/ui
 import { Text } from '~/components/ui/text'
 import { Textarea } from '~/components/ui/textarea'
 import { useFieldError } from '~/hooks/use-field-error'
-import { useImagePicker } from '~/hooks/use-image-picker'
 import { cn, isFormError } from '~/lib/utils'
 import { CreateRequestSchema } from '../validations'
 
-export default function CreateDesignRequestForm() {
+interface CreateDesignRequestFormProps {
+  pickImages: () => Promise<string[]>
+  resetImages: () => void
+  isUploading: boolean
+  isMaxReached: boolean
+  currentImages: string[]
+}
+
+export default function CreateDesignRequestForm({
+  pickImages,
+  resetImages,
+  isUploading,
+  isMaxReached,
+  currentImages
+}: CreateDesignRequestFormProps) {
   const {
     control,
     formState: { errors },
-    setValue,
-    watch
+    setValue
   } = useFormContext<CreateRequestSchema>()
   const className = useFieldError()
-
-  // Watch the current images value from form
-  const currentImages = watch('images')
-
-  // Use the image picker hook for logic
-  const { pickImages, resetImages, isUploading, isMaxReached } = useImagePicker({
-    maxImages: 5,
-    maxSizeInMB: 5,
-    initialImages: currentImages
-  })
 
   const handlePickImages = async () => {
     const newUrls = await pickImages()
