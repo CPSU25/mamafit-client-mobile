@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
+import { Control, Controller, FieldValues, Path, UseFormSetValue } from 'react-hook-form'
 import { View } from 'react-native'
 import RadioWrapper from '~/components/radio-wrapper'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '~/components/ui/accordion'
@@ -8,24 +8,29 @@ import { useGetComponentsByStyleId } from '~/features/component/hooks/use-get-co
 import { useGetDefaultPreset } from '../hooks/use-get-default-preset'
 
 interface ComponentSectionProps<T extends FieldValues> {
-  methods: UseFormReturn<T>
+  control: Control<T>
+  setValue: UseFormSetValue<T>
   styleId: string
 }
 
-export default function ComponentSection<T extends FieldValues>({ methods, styleId }: ComponentSectionProps<T>) {
+export default function ComponentSection<T extends FieldValues>({
+  styleId,
+  control,
+  setValue
+}: ComponentSectionProps<T>) {
   const { data: defaultPreset } = useGetDefaultPreset(styleId)
   const { data: componentsByStyle } = useGetComponentsByStyleId(styleId)
 
   useEffect(() => {
     if (defaultPreset) {
       defaultPreset.componentOptions.forEach((option) => {
-        methods.setValue(option.componentName.toLowerCase() as Path<T>, option.id as T[Path<T>], {
+        setValue(option.componentName.toLowerCase() as Path<T>, option.id as T[Path<T>], {
           shouldDirty: false,
           shouldTouch: false
         })
       })
     }
-  }, [defaultPreset, methods])
+  }, [defaultPreset, setValue])
 
   const defaultValues = componentsByStyle?.map((component) => `item-${component.id}`) || []
 
@@ -46,7 +51,7 @@ export default function ComponentSection<T extends FieldValues>({ methods, style
             </AccordionTrigger>
             <AccordionContent>
               <Controller
-                control={methods.control}
+                control={control}
                 name={component.name.toLowerCase() as Path<T>}
                 render={({ field: { value, onChange } }) => (
                   <View className='flex-row gap-2 flex-wrap'>

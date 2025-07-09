@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
+import { Control, Controller, FieldValues, Path, UseFormSetValue } from 'react-hook-form'
 import { View } from 'react-native'
 import RadioWrapper from '~/components/radio-wrapper'
 import { Text } from '~/components/ui/text'
@@ -8,27 +8,33 @@ import StyleCard from './style-card'
 
 interface StyleSectionProps<T extends FieldValues> {
   categoryId: string
-  methods: UseFormReturn<T>
+  control: Control<T>
+  setValue: UseFormSetValue<T>
   name: Path<T>
 }
 
-export default function StyleSection<T extends FieldValues>({ categoryId, methods, name }: StyleSectionProps<T>) {
+export default function StyleSection<T extends FieldValues>({
+  categoryId,
+  control,
+  setValue,
+  name
+}: StyleSectionProps<T>) {
   const { data: stylesByCategory } = useGetCategoryDetail(categoryId)
 
   useEffect(() => {
     if (stylesByCategory) {
-      methods.setValue(name, stylesByCategory.styles?.[0]?.id as T[Path<T>], {
+      setValue(name, stylesByCategory.styles?.[0]?.id as T[Path<T>], {
         shouldDirty: false,
         shouldTouch: false
       })
     }
-  }, [stylesByCategory, methods, name])
+  }, [stylesByCategory, setValue, name])
 
   return (
     <View className='gap-2 px-4 py-2'>
       <Text className='font-inter-semibold text-xl'>Choose Style</Text>
       <Controller
-        control={methods.control}
+        control={control}
         name={name}
         render={({ field: { value, onChange } }) => (
           <View className='flex-row gap-2 flex-wrap'>
