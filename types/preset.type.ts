@@ -1,6 +1,6 @@
 import { ComponentOption } from './component-option.type'
 
-interface ComponentOptionWithComponent extends ComponentOption {
+export interface ComponentOptionWithComponent extends ComponentOption {
   componentId: string
   componentName: string
 }

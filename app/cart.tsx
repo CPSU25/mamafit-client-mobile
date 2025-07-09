@@ -83,7 +83,7 @@ export default function CartScreen() {
             <Checkbox checked={checkAll} onCheckedChange={setCheckAll} />
             <Text className='text-sm font-inter-medium'>All</Text>
           </View>
-          <Button>
+          <Button onPress={() => router.push('/order/review')}>
             <Text className='text-white text-center font-inter-medium'>Check Out (2)</Text>
           </Button>
         </View>

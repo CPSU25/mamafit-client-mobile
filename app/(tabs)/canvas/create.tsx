@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
-import { Dimensions, Image, ImageStyle, StyleProp, View } from 'react-native'
+import { useState } from 'react'
+import { Dimensions, View } from 'react-native'
+import AutoHeightImage from '~/components/auto-height-image'
 import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
@@ -7,33 +8,6 @@ import { Text } from '~/components/ui/text'
 import DressBuilder from '~/features/preset/components/dress-builder'
 import { getShadowStyles, styles } from '~/lib/constants/constants'
 import { PresetWithComponentOptions } from '~/types/preset.type'
-
-type AutoHeightImageProps = {
-  uri: string
-  width: number
-  style?: StyleProp<ImageStyle>
-}
-
-const AutoHeightImage = ({ uri, width, style }: AutoHeightImageProps) => {
-  const [height, setHeight] = useState<number | null>(null)
-
-  useEffect(() => {
-    Image.getSize(
-      uri,
-      (originalWidth, originalHeight) => {
-        const ratio = originalHeight / originalWidth
-        setHeight(width * ratio)
-      },
-      (error) => {
-        console.warn('Failed to get image size:', error)
-      }
-    )
-  }, [uri, width])
-
-  if (height === null) return <View style={{ width, height: 0 }} />
-
-  return <Image source={{ uri }} style={[{ width, height, resizeMode: 'cover' }, style]} />
-}
 
 export default function CreateCanvasScreen() {
   const [preset, setPreset] = useState<PresetWithComponentOptions | null>(null)

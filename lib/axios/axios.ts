@@ -14,6 +14,17 @@ export const api = axios.create({
   }
 })
 
+const ghtkBaseURL = process.env.EXPO_PUBLIC_API_GHTK_BASE_URL
+if (!ghtkBaseURL) throw new Error('EXPO_PUBLIC_API_GHTK_BASE_URL is not defined')
+
+export const ghtkApi = axios.create({
+  baseURL: ghtkBaseURL,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
+  }
+})
+
 // Use centralized token refresh
 
 api.interceptors.request.use(
