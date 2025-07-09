@@ -11,7 +11,6 @@ export default function CanvasScreen() {
 
   return (
     <SafeView>
-      {/* Header */}
       <View className='flex flex-row justify-between items-center p-4'>
         <Text className='text-xl font-inter-semibold'>Design Your Dress</Text>
         <TouchableOpacity onPress={() => router.push('/canvas/create')}>
@@ -20,8 +19,10 @@ export default function CanvasScreen() {
       </View>
       <View className='bg-muted h-2' />
 
-      <View className='flex flex-col gap-4 p-4'>
+      <View className='p-4 flex-col gap-4'>
         <HeroSection />
+
+        <Text>Show most sold presets</Text>
       </View>
     </SafeView>
   )
