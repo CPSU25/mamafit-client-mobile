@@ -93,6 +93,7 @@ export const useCreateDiary = (onSuccess: () => void, onFinish: () => void) => {
     onSuccess: (data) => {
       if (data) {
         queryClient.invalidateQueries({ queryKey: ['diaries'] })
+        queryClient.invalidateQueries({ queryKey: ['all-diaries'] })
         router.replace(`/diary/${data.diaryId}/detail`)
 
         setTimeout(() => {

@@ -20,6 +20,7 @@ export interface Diary {
   waist: number
   weeksFromUltrasound: number
   weight: number
+  isActive: boolean
 }
 
 export interface DiaryDetail extends Diary {

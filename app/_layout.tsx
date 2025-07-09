@@ -1,6 +1,6 @@
 import '~/global.css'
 
-import { AntDesign, Feather, FontAwesome, MaterialIcons } from '@expo/vector-icons'
+import { AntDesign, Feather, FontAwesome, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
@@ -55,6 +55,7 @@ export default function RootLayout() {
     ...Feather.font,
     ...AntDesign.font,
     ...MaterialIcons.font,
+    ...MaterialCommunityIcons.font,
     ...FontAwesome.font,
     'Inter-Light': require('~/assets/fonts/Inter-Light.ttf'),
     'Inter-Regular': require('~/assets/fonts/Inter-Regular.ttf'),
@@ -110,8 +111,12 @@ export default function RootLayout() {
             options={{ title: 'Create Design Request', headerShown: false, animation: 'ios_from_right' }}
           />
           <Stack.Screen
-            name='payment/[orderId]'
+            name='payment/[orderId]/qr-code'
             options={{ title: 'Payment', headerShown: false, animation: 'ios_from_right' }}
+          />
+          <Stack.Screen
+            name='order/review'
+            options={{ title: 'Review Order', headerShown: false, animation: 'ios_from_right' }}
           />
         </Stack>
       </ThemeProvider>
