@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons'
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
 import { TouchableOpacity, View } from 'react-native'
 import { Card } from '~/components/ui/card'
 import { Skeleton } from '~/components/ui/skeleton'
@@ -27,7 +27,7 @@ export default function AddressCard({ address, fullName, phoneNumber, isLoading,
   return (
     <TouchableOpacity onPress={onPress}>
       <Card className='p-3 flex flex-row items-baseline gap-2' style={[styles.container]}>
-        <Feather name='map-pin' size={16} color={PRIMARY_COLOR.LIGHT} />
+        <MaterialCommunityIcons name='map-marker' size={18} color={PRIMARY_COLOR.LIGHT} />
         <View className='flex-1 gap-1'>
           <Text className='font-inter-medium' numberOfLines={1}>
             {fullName} <Text className='text-muted-foreground text-sm'>(+84) {phoneNumber}</Text>

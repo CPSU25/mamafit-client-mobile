@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Image, ImageStyle, StyleProp, View } from 'react-native'
+import { ActivityIndicator, Image, ImageProps, StyleSheet, View } from 'react-native'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
-type AutoHeightImageProps = {
+interface AutoHeightImageProps extends ImageProps {
   uri: string
   width: number
-  style?: StyleProp<ImageStyle>
 }
 
-export default function AutoHeightImage({ uri, width, style }: AutoHeightImageProps) {
+export default function AutoHeightImage({ uri, width, style, ...props }: AutoHeightImageProps) {
   const [height, setHeight] = useState<number | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     Image.getSize(
@@ -25,5 +26,25 @@ export default function AutoHeightImage({ uri, width, style }: AutoHeightImagePr
 
   if (height === null) return <View style={{ width, height: 0 }} />
 
-  return <Image source={{ uri }} style={[{ width, height, resizeMode: 'cover' }, style]} />
+  return (
+    <View
+      style={[
+        { width, height },
+        { justifyContent: 'center', alignItems: 'center' }
+      ]}
+    >
+      <Image
+        source={{ uri }}
+        style={[{ width, height, resizeMode: 'cover' }, style]}
+        onLoadStart={() => setIsLoading(true)}
+        onLoadEnd={() => setIsLoading(false)}
+        {...props}
+      />
+      {isLoading && (
+        <View style={StyleSheet.absoluteFill} pointerEvents='none'>
+          <ActivityIndicator color={PRIMARY_COLOR.LIGHT} className='flex-1' />
+        </View>
+      )}
+    </View>
+  )
 }
