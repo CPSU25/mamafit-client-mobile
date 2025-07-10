@@ -16,7 +16,7 @@ export enum PaymentMethod {
 }
 
 // Schema for preset order placement
-export const placeOrderPresetFormSchema = z.object({
+export const placePresetOrderFormSchema = z.object({
   presetId: z.string().min(1, { message: 'Preset is required' }),
   addressId: z.string().nullable(),
   branchId: z.string().nullable(),
@@ -29,4 +29,14 @@ export const placeOrderPresetFormSchema = z.object({
   deliveryMethod: z.nativeEnum(DeliveryMethod)
 })
 
-export type PlaceOrderPresetFormSchema = z.infer<typeof placeOrderPresetFormSchema>
+// Schema for design request order placement
+export const placeDesignRequestOrderFormSchema = z.object({
+  description: z
+    .string()
+    .min(1, { message: 'Description is required' })
+    .max(1000, { message: 'Description is too long' }),
+  images: z.array(z.string().url({ message: 'Invalid URL format' }))
+})
+
+export type PlacePresetOrderFormSchema = z.infer<typeof placePresetOrderFormSchema>
+export type PlaceDesignRequestOrderFormSchema = z.infer<typeof placeDesignRequestOrderFormSchema>

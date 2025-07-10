@@ -4,20 +4,20 @@ import { useRouter } from 'expo-router'
 import { useForm } from 'react-hook-form'
 import { ERROR_MESSAGES } from '~/lib/constants/constants'
 import orderService from '~/services/order.service'
-import { createRequestSchema, CreateRequestSchema } from '../validations'
+import { placeDesignRequestOrderFormSchema, PlaceDesignRequestOrderFormSchema } from '../validations'
 
-export const useCreateDesignRequest = () => {
+export const usePlaceDesignRequestOrder = () => {
   const router = useRouter()
-  const methods = useForm<CreateRequestSchema>({
-    resolver: zodResolver(createRequestSchema),
+  const methods = useForm<PlaceDesignRequestOrderFormSchema>({
+    resolver: zodResolver(placeDesignRequestOrderFormSchema),
     defaultValues: {
       description: '',
       images: []
     }
   })
 
-  const createDesignRequestMutation = useMutation({
-    mutationFn: orderService.createDesignRequest,
+  const placeDesignRequestMutation = useMutation({
+    mutationFn: orderService.placeDesignRequestOrder,
     onSuccess: (orderId) => {
       if (orderId) {
         router.replace({
@@ -32,5 +32,5 @@ export const useCreateDesignRequest = () => {
     }
   })
 
-  return { methods, createDesignRequestMutation }
+  return { methods, placeDesignRequestMutation }
 }

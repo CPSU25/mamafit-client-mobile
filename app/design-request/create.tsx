@@ -7,14 +7,14 @@ import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
 import CreateDesignRequestForm from '~/features/design-request/components/create-request-form'
-import { useCreateDesignRequest } from '~/features/design-request/hooks/use-create-design-request'
-import { CreateRequestSchema } from '~/features/design-request/validations'
+import { usePlaceDesignRequestOrder } from '~/features/order/hooks/use-place-design-request-order'
+import { PlaceDesignRequestOrderFormSchema } from '~/features/order/validations'
 import { useImagePicker } from '~/hooks/use-image-picker'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function CreateDesignRequest() {
   const router = useRouter()
-  const { methods, createDesignRequestMutation } = useCreateDesignRequest()
+  const { methods, placeDesignRequestMutation } = usePlaceDesignRequestOrder()
   const {
     formState: { errors }
   } = methods
@@ -29,8 +29,8 @@ export default function CreateDesignRequest() {
 
   const rootMsg = errors.root?.message || (errors as any)['']?.message || (errors as any)._errors?.[0]
 
-  const onSubmit: SubmitHandler<CreateRequestSchema> = (data) => {
-    createDesignRequestMutation.mutate(data)
+  const onSubmit: SubmitHandler<PlaceDesignRequestOrderFormSchema> = (data) => {
+    placeDesignRequestMutation.mutate(data)
   }
 
   const handleGoBack = () => {
@@ -67,10 +67,10 @@ export default function CreateDesignRequest() {
           {rootMsg && <FieldError message={rootMsg} />}
           <Button
             onPress={methods.handleSubmit(onSubmit)}
-            disabled={createDesignRequestMutation.isPending || isUploading}
+            disabled={placeDesignRequestMutation.isPending || isUploading}
           >
             <Text className='font-inter-medium'>
-              {createDesignRequestMutation.isPending ? 'Sending...' : 'Send Request'}
+              {placeDesignRequestMutation.isPending ? 'Sending...' : 'Send Request'}
             </Text>
           </Button>
         </View>
