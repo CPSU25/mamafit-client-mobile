@@ -5,10 +5,11 @@ import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
+import { formatVnPhone } from '~/lib/utils'
 import { Address } from '~/types/address.type'
 
 interface AddressCardProps {
-  address?: Address
+  address: Address
   fullName?: string
   phoneNumber?: string
   isLoading?: boolean
@@ -22,25 +23,18 @@ export default function AddressCard({ address, fullName, phoneNumber, isLoading,
     return <Skeleton className='h-24 w-full rounded-2xl' />
   }
 
-  const isEmptyAddress = !address?.street && !address?.ward && !address?.district && !address?.province
-
   return (
     <TouchableOpacity onPress={onPress}>
       <Card className='p-3 flex flex-row items-baseline gap-2' style={[styles.container]}>
         <MaterialCommunityIcons name='map-marker' size={18} color={PRIMARY_COLOR.LIGHT} />
         <View className='flex-1 gap-1'>
           <Text className='font-inter-medium' numberOfLines={1}>
-            {fullName} <Text className='text-muted-foreground text-sm'>(+84) {phoneNumber}</Text>
+            {fullName} <Text className='text-muted-foreground text-sm'>(+84) {formatVnPhone(phoneNumber)}</Text>
           </Text>
-          {isEmptyAddress ? (
-            <Text numberOfLines={2} className='text-sm text-rose-500'>
-              Add your address to place your order
-            </Text>
-          ) : (
-            <Text numberOfLines={2} className={`text-sm ${isDarkColorScheme ? 'text-white/70' : 'text-black/70'}`}>
-              {address?.street}, {address?.ward}, {address?.district}, {address?.province}
-            </Text>
-          )}
+
+          <Text numberOfLines={2} className={`text-sm ${isDarkColorScheme ? 'text-white/70' : 'text-black/70'}`}>
+            {address?.street}, {address?.ward}, {address?.district}, {address?.province}
+          </Text>
         </View>
         <Feather name='chevron-right' size={20} color='lightgray' className='self-center' />
       </Card>

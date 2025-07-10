@@ -102,6 +102,7 @@ export const clearAuthTokens = async (): Promise<void> => {
     throw error
   }
 }
+
 export const getOrderedComponentOptions = (options: ComponentOptionWithComponent[]) => {
   if (!Array.isArray(options)) return []
 
@@ -109,4 +110,20 @@ export const getOrderedComponentOptions = (options: ComponentOptionWithComponent
     const option = options.find((option) => option?.componentName === key)
     return option || null
   }).filter(Boolean)
+}
+
+export const formatVnPhone = (phone: string | undefined) => {
+  if (!phone) return
+
+  let digits = phone.replace(/\D/g, '')
+
+  if (digits.startsWith('0')) {
+    digits = digits.substring(1)
+  }
+
+  if (digits.length === 9) {
+    return `${digits.substring(0, 3)} ${digits.substring(3, 6)} ${digits.substring(6)}`
+  }
+
+  return digits
 }

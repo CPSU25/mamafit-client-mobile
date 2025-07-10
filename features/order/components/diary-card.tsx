@@ -7,7 +7,7 @@ import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { Diary } from '~/types/diary.type'
 
 interface DiaryCardProps {
-  diary?: Diary
+  diary: Diary
   isLoading?: boolean
   onPress: () => void
 }
