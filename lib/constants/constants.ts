@@ -52,3 +52,5 @@ export const ERROR_MESSAGES = {
   WRONG_CREDENTIALS: 'Wrong credentials! Please try again.',
   INSUFFICIENT_PERMISSION: 'You are not authorized to access this app.'
 }
+
+export const ORDERED_COMPONENTS_OPTIONS = ['Neckline', 'Sleeves', 'Waist', 'Hem', 'Color', 'Fabric']

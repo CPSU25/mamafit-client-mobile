@@ -24,10 +24,7 @@ export default function ComponentSection<T extends FieldValues>({
   useEffect(() => {
     if (defaultPreset) {
       defaultPreset.componentOptions.forEach((option) => {
-        setValue(option.componentName.toLowerCase() as Path<T>, option.id as T[Path<T>], {
-          shouldDirty: false,
-          shouldTouch: false
-        })
+        setValue(option.componentName.toLowerCase() as Path<T>, option.id as T[Path<T>])
       })
     }
   }, [defaultPreset, setValue])

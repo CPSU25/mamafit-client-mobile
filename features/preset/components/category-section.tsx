@@ -24,10 +24,7 @@ export default function CategorySection<T extends FieldValues>({
   useEffect(() => {
     if (categories) {
       const category = watch(name)
-      setValue(name, (category ? category : (categories?.[0]?.id ?? '')) as T[Path<T>], {
-        shouldDirty: false,
-        shouldTouch: false
-      })
+      setValue(name, (category ? category : (categories?.[0]?.id ?? '')) as T[Path<T>])
     }
   }, [categories, setValue, watch, name])
 

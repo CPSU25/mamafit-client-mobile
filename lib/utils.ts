@@ -6,6 +6,8 @@ import { twMerge } from 'tailwind-merge'
 import { AuthTokens } from '~/types/common'
 import { clear, setTokens } from './redux-toolkit/slices/auth.slice'
 import { store } from './redux-toolkit/store'
+import { ComponentOptionWithComponent } from '~/types/preset.type'
+import { ORDERED_COMPONENTS_OPTIONS } from './constants/constants'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -99,4 +101,12 @@ export const clearAuthTokens = async (): Promise<void> => {
     console.error('Error clearing auth tokens:', error)
     throw error
   }
+}
+export const getOrderedComponentOptions = (options: ComponentOptionWithComponent[]) => {
+  if (!Array.isArray(options)) return []
+
+  return ORDERED_COMPONENTS_OPTIONS.map((key) => {
+    const option = options.find((option) => option?.componentName === key)
+    return option || null
+  }).filter(Boolean)
 }
