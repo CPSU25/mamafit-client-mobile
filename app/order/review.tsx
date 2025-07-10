@@ -98,7 +98,7 @@ const clearOrderItems = async () => {
 export default function ReviewOrderScreen() {
   const router = useRouter()
   const { user } = useAuth()
-  const { methods, initForm } = usePlacePresetOrder()
+  const { methods, initForm, placePresetOrderMutation } = usePlacePresetOrder(clearOrderItems)
   const { bottom } = useSafeAreaInsets()
   const { isDarkColorScheme } = useColorScheme()
 
@@ -211,6 +211,11 @@ export default function ReviewOrderScreen() {
   // Place order
   const onSubmit: SubmitHandler<PlaceOrderPresetFormSchema> = (data) => {
     console.log(data)
+    if (orderType === 'preset') {
+      placePresetOrderMutation.mutate(data)
+    } else {
+      console.log('Not implemented')
+    }
   }
 
   // Initialize form with default address + selected preset
@@ -539,8 +544,10 @@ export default function ReviewOrderScreen() {
                     {voucherId ? '12.800' : '0'}
                   </Text>
                 </View>
-                <Button onPress={methods.handleSubmit(onSubmit)}>
-                  <Text className='font-inter-medium'>Place Order</Text>
+                <Button onPress={methods.handleSubmit(onSubmit)} disabled={placePresetOrderMutation.isPending}>
+                  <Text className='font-inter-medium'>
+                    {placePresetOrderMutation.isPending ? 'Placing Order...' : 'Place Order'}
+                  </Text>
                 </Button>
               </View>
 
