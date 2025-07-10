@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetFlatList, BottomSheetModal } from '@gorhom/bottom-sheet'
 import { BlurView } from 'expo-blur'
 import { forwardRef } from 'react'
@@ -50,7 +50,7 @@ const AddressSelectionModal = forwardRef<BottomSheetModal, AddressSelectionModal
                   {item.street}
                 </Text>
                 <View className='flex-row items-center gap-1'>
-                  <Feather name='map-pin' size={14} color={PRIMARY_COLOR.LIGHT} />
+                  <MaterialCommunityIcons name='map-marker' size={18} color={PRIMARY_COLOR.LIGHT} />
                   <Text className='text-sm text-muted-foreground' numberOfLines={1}>
                     {item.ward}, {item.district}, {item.province}
                   </Text>

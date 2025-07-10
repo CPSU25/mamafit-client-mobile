@@ -18,7 +18,7 @@ class UserService {
   }
 
   async getAddresses() {
-    const { data } = await api.get<BaseResponse<Address[]>>(`address/by-user`)
+    const { data } = await api.get<BaseResponse<Address[]>>(`address/by-token`)
 
     return data.data
   }
