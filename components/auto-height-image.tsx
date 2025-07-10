@@ -1,28 +1,54 @@
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Image, ImageProps, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Image, ImageProps, ImageSourcePropType, StyleSheet, View } from 'react-native'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
-interface AutoHeightImageProps extends ImageProps {
-  uri: string
+interface AutoHeightImageProps extends Omit<ImageProps, 'source'> {
+  uri?: string
+  source?: ImageSourcePropType
   width: number
 }
 
-export default function AutoHeightImage({ uri, width, style, ...props }: AutoHeightImageProps) {
+export default function AutoHeightImage({ uri, source, width, style, ...props }: AutoHeightImageProps) {
   const [height, setHeight] = useState<number | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    Image.getSize(
-      uri,
-      (originalWidth, originalHeight) => {
-        const ratio = originalHeight / originalWidth
+    let isMounted = true
+
+    if (uri) {
+      // Remote image
+      Image.getSize(
+        uri,
+        (originalWidth, originalHeight) => {
+          if (isMounted) {
+            const ratio = originalHeight / originalWidth
+            setHeight(width * ratio)
+          }
+        },
+        (error) => {
+          if (isMounted) {
+            console.warn('Failed to get image size:', error)
+            setHeight(width) // fallback: square
+          }
+        }
+      )
+    } else if (source) {
+      // Local image
+      const resolved = Image.resolveAssetSource(source)
+      if (resolved?.width && resolved?.height) {
+        const ratio = resolved.height / resolved.width
         setHeight(width * ratio)
-      },
-      (error) => {
-        console.warn('Failed to get image size:', error)
+      } else {
+        setHeight(width) // fallback: square
       }
-    )
-  }, [uri, width])
+    } else {
+      setHeight(null)
+    }
+
+    return () => {
+      isMounted = false
+    }
+  }, [uri, source, width])
 
   if (height === null) return <View style={{ width, height: 0 }} />
 
@@ -34,15 +60,15 @@ export default function AutoHeightImage({ uri, width, style, ...props }: AutoHei
       ]}
     >
       <Image
-        source={{ uri }}
+        source={uri ? { uri } : source!}
         style={[{ width, height, resizeMode: 'cover' }, style]}
         onLoadStart={() => setIsLoading(true)}
         onLoadEnd={() => setIsLoading(false)}
         {...props}
       />
       {isLoading && (
-        <View style={StyleSheet.absoluteFill} pointerEvents='none'>
-          <ActivityIndicator color={PRIMARY_COLOR.LIGHT} className='flex-1' />
+        <View style={StyleSheet.absoluteFillObject} pointerEvents='none'>
+          <ActivityIndicator color={PRIMARY_COLOR.LIGHT} style={{ flex: 1 }} />
         </View>
       )}
     </View>

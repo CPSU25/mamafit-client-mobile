@@ -23,10 +23,7 @@ export default function StyleSection<T extends FieldValues>({
 
   useEffect(() => {
     if (stylesByCategory) {
-      setValue(name, stylesByCategory.styles?.[0]?.id as T[Path<T>], {
-        shouldDirty: false,
-        shouldTouch: false
-      })
+      setValue(name, stylesByCategory.styles?.[0]?.id as T[Path<T>])
     }
   }, [stylesByCategory, setValue, name])
 
