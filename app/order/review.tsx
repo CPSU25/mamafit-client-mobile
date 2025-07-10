@@ -23,7 +23,7 @@ import DiaryCard from '~/features/order/components/diary-card'
 import DiarySelectionModal from '~/features/order/components/diary-selection-modal'
 import { useGetShippingFee } from '~/features/order/hooks/use-get-shipping-fee'
 import { usePlacePresetOrder } from '~/features/order/hooks/use-place-preset-order'
-import { DeliveryMethod, PaymentType, PlaceOrderPresetFormSchema } from '~/features/order/validations'
+import { DeliveryMethod, PaymentType, PlacePresetOrderFormSchema } from '~/features/order/validations'
 import { useGetAddresses } from '~/features/user/hooks/use-get-addresses'
 import { useGetProfile } from '~/features/user/hooks/use-get-profile'
 import { useAuth } from '~/hooks/use-auth'
@@ -209,7 +209,7 @@ export default function ReviewOrderScreen() {
   }
 
   // Place order
-  const onSubmit: SubmitHandler<PlaceOrderPresetFormSchema> = (data) => {
+  const onSubmit: SubmitHandler<PlacePresetOrderFormSchema> = (data) => {
     console.log(data)
     if (orderType === 'preset') {
       placePresetOrderMutation.mutate(data)

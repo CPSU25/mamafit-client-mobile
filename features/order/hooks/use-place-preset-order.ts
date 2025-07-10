@@ -9,11 +9,11 @@ import {
   DeliveryMethod,
   PaymentMethod,
   PaymentType,
-  placeOrderPresetFormSchema,
-  PlaceOrderPresetFormSchema
+  placePresetOrderFormSchema,
+  PlacePresetOrderFormSchema
 } from '../validations'
 
-const defaultValues: PlaceOrderPresetFormSchema = {
+const defaultValues: PlacePresetOrderFormSchema = {
   presetId: '',
   addressId: null,
   branchId: null,
@@ -28,9 +28,9 @@ const defaultValues: PlaceOrderPresetFormSchema = {
 
 export const usePlacePresetOrder = (onSuccess: () => void) => {
   const router = useRouter()
-  const methods = useForm<PlaceOrderPresetFormSchema>({
+  const methods = useForm<PlacePresetOrderFormSchema>({
     defaultValues,
-    resolver: zodResolver(placeOrderPresetFormSchema)
+    resolver: zodResolver(placePresetOrderFormSchema)
   })
 
   const initForm = useCallback(
