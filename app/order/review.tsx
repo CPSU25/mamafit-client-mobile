@@ -1,19 +1,19 @@
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useRouter } from 'expo-router'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useFocusEffect, useRouter } from 'expo-router'
+import { useCallback, useRef, useState } from 'react'
 import { Controller, FormProvider, SubmitHandler } from 'react-hook-form'
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import AutoHeightImage from '~/components/auto-height-image'
-import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
+import { WarningCard } from '~/components/ui/alert-card'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
 import { Label } from '~/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
 import { Separator } from '~/components/ui/separator'
+import { Skeleton } from '~/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Text } from '~/components/ui/text'
 import { useGetAllDiaries } from '~/features/diary/hooks/use-get-all-diaries'
@@ -31,27 +31,17 @@ import { useColorScheme } from '~/hooks/use-color-scheme'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { ICON_SIZE, PRIMARY_COLOR, styles } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
-import { cn } from '~/lib/utils'
+import { cn, getOrderedComponentOptions } from '~/lib/utils'
 import { Address } from '~/types/address.type'
 import { Diary } from '~/types/diary.type'
-import { ComponentOptionWithComponent, PresetWithComponentOptions } from '~/types/preset.type'
+import { PresetWithComponentOptions } from '~/types/preset.type'
 
 interface OrderItem<T> {
   type: string
   items: T[]
 }
 
-const ORDERED_COMPONENTS_OPTIONS = ['Neckline', 'Sleeves', 'Waist', 'Hem', 'Color', 'Fabric']
 const SMALL_ICON_SIZE = 18
-
-const getOrderedComponentOptions = (options: ComponentOptionWithComponent[]) => {
-  if (!Array.isArray(options)) return []
-
-  return ORDERED_COMPONENTS_OPTIONS.map((key) => {
-    const option = options.find((option) => option?.componentName === key)
-    return option || null
-  }).filter(Boolean)
-}
 
 const getDefaultAddress = (addresses: Address[] | null | undefined) => {
   if (!addresses || !Array.isArray(addresses) || addresses.length === 0) return null
@@ -99,7 +89,6 @@ export default function ReviewOrderScreen() {
   const router = useRouter()
   const { user } = useAuth()
   const { methods, initForm, placePresetOrderMutation } = usePlacePresetOrder(clearOrderItems)
-  const { bottom } = useSafeAreaInsets()
   const { isDarkColorScheme } = useColorScheme()
 
   const addressSelectionModalRef = useRef<BottomSheetModal>(null)
@@ -218,11 +207,12 @@ export default function ReviewOrderScreen() {
     }
   }
 
-  // Initialize form with default address + selected preset
-  useEffect(() => {
-    const initializeForm = async () => {
-      if (isFetchedAddresses && isFetchedDiaries && defaultAddress?.id && activeDiary?.id) {
+  // Set preset to form
+  useFocusEffect(
+    useCallback(() => {
+      const getPreset = async () => {
         const items = await getOrderItems()
+
         if (!items) {
           router.replace('/')
           return
@@ -230,33 +220,61 @@ export default function ReviewOrderScreen() {
 
         setOrderItems(items)
 
-        if (items?.type === 'preset' && Array.isArray(items.items) && items.items.length > 0) {
-          const presetItem = items.items[0]
-          if (presetItem && typeof presetItem === 'object' && 'id' in presetItem) {
-            const typedPreset = presetItem as PresetWithComponentOptions
-            setPreset(typedPreset)
-            if (initForm && typedPreset.id && defaultAddress.id && activeDiary.id) {
-              initForm(typedPreset.id, defaultAddress.id, activeDiary.id)
+        if (Array.isArray(items.items) && items.items.length > 0) {
+          if (items?.type === 'preset') {
+            const presetItem = items.items[0]
+            if (presetItem && typeof presetItem === 'object' && 'id' in presetItem) {
+              const typedPreset = presetItem as PresetWithComponentOptions
+              setPreset(typedPreset)
+              methods.setValue('presetId', typedPreset.id)
             }
           }
         }
       }
-    }
 
-    initializeForm()
-  }, [initForm, defaultAddress, isFetchedAddresses, isFetchedDiaries, activeDiary, router])
+      getPreset()
+    }, [methods, router])
+  )
 
   // Set shipping fee to form
-  useEffect(() => {
-    if (isFetchedShippingFee && shippingFee && methods?.setValue) {
-      methods.setValue('shippingFee', shippingFee)
-    }
-  }, [isFetchedShippingFee, shippingFee, methods])
+  useFocusEffect(
+    useCallback(() => {
+      if (isFetchedShippingFee && shippingFee && methods?.setValue) {
+        methods.setValue('shippingFee', shippingFee)
+      }
+    }, [isFetchedShippingFee, shippingFee, methods])
+  )
+
+  // Set default address to form
+  useFocusEffect(
+    useCallback(() => {
+      if (isFetchedAddresses && defaultAddress?.id && methods?.setValue) {
+        methods.setValue('addressId', defaultAddress.id)
+      }
+    }, [isFetchedAddresses, defaultAddress, methods])
+  )
+
+  // Set active diary to form
+  useFocusEffect(
+    useCallback(() => {
+      if (isFetchedDiaries && activeDiary?.id && methods?.setValue) {
+        methods.setValue('measurementDiaryId', activeDiary.id)
+      }
+    }, [isFetchedDiaries, activeDiary, methods])
+  )
+
+  // If address changes, refetch shipping fee
+  useFocusEffect(
+    useCallback(() => {
+      if (currentAddress?.province && currentAddress?.district) {
+        refetchShippingFee()
+      }
+    }, [currentAddress?.province, currentAddress?.district, refetchShippingFee])
+  )
 
   const renderOrderSummaryContent = () => {
-    // TODO: Add UI for empty order items
     if (!orderItems) {
-      return null
+      return <Skeleton className='h-60 m-2 rounded-2xl' />
     }
 
     if (orderType === 'preset' && preset) {
@@ -302,278 +320,277 @@ export default function ReviewOrderScreen() {
 
   return (
     <SafeView>
-      {orderItems ? (
-        <>
-          <View className='flex-row items-center gap-4 p-4'>
-            <TouchableOpacity onPress={handleGoBack}>
-              <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
-            </TouchableOpacity>
-            <Text className='font-inter-semibold text-xl'>Review Order</Text>
+      <View className='flex-row items-center gap-4 p-4'>
+        <TouchableOpacity onPress={handleGoBack}>
+          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+        </TouchableOpacity>
+        <Text className='font-inter-semibold text-xl'>Review Order</Text>
+      </View>
+
+      <BottomSheetModalProvider>
+        <FormProvider {...methods}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 46 }}
+            refreshControl={refreshControl}
+          >
+            <View className='flex flex-col gap-4 p-2 flex-1'>
+              {/* Address Selection */}
+              <Tabs
+                value={tabValue}
+                onValueChange={(value) => handleSwitchTab(value as DeliveryMethod)}
+                className='w-full max-w-[400px] mx-auto flex-col gap-1.5'
+              >
+                <TabsList className='flex-row w-full'>
+                  <TabsTrigger value={DeliveryMethod.DELIVERY} className='flex-1 flex-row items-center gap-2'>
+                    {SvgIcon.toReceive({ size: SMALL_ICON_SIZE })}
+                    <Text>Delivery</Text>
+                  </TabsTrigger>
+                  <TabsTrigger value={DeliveryMethod.PICK_UP} className='flex-1 flex-row items-center gap-2'>
+                    {SvgIcon.shop({ size: SMALL_ICON_SIZE })}
+                    <Text>Pick Up</Text>
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value='DELIVERY'>
+                  {isLoadingAddressCard ? (
+                    <Skeleton className='rounded-2xl h-16' />
+                  ) : currentAddress ? (
+                    <AddressCard
+                      address={currentAddress}
+                      fullName={currentUserProfile?.fullName || undefined}
+                      phoneNumber={currentUserProfile?.phoneNumber || undefined}
+                      isLoading={isLoadingAddressCard}
+                      onPress={handlePresentAddressModal}
+                    />
+                  ) : (
+                    <TouchableOpacity onPress={() => router.push('/setting/my-addresses/create')}>
+                      <WarningCard
+                        title='Oops! No address found'
+                        description='Please add your address first to select this delivery method'
+                      />
+                    </TouchableOpacity>
+                  )}
+                </TabsContent>
+                {/* TODO: Add Pick Up option */}
+                <TabsContent value='PICK_UP'></TabsContent>
+              </Tabs>
+
+              {/* Diary Selection */}
+              {isLoadingDiaries ? (
+                <Skeleton className='rounded-2xl h-32' />
+              ) : currentDiary ? (
+                <Card className='p-1 gap-2' style={[styles.container]}>
+                  <View
+                    className={cn(
+                      'rounded-xl p-2 flex-row items-center gap-2',
+                      isDarkColorScheme ? 'bg-primary/20' : 'bg-primary/10'
+                    )}
+                  >
+                    {SvgIcon.folderFavorite({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })}
+                    <View className='flex-1'>
+                      <Text
+                        className={cn(
+                          'font-inter-medium text-sm',
+                          isDarkColorScheme ? 'text-primary-foreground' : 'text-primary'
+                        )}
+                      >
+                        Choose a diary
+                      </Text>
+                      <Text
+                        className={cn('text-xs', isDarkColorScheme ? 'text-primary-foreground/70' : 'text-primary/70')}
+                      >
+                        This will help shape your maternity dress
+                      </Text>
+                    </View>
+                  </View>
+                  <DiaryCard diary={currentDiary} isLoading={isLoadingDiaries} onPress={handlePresetDiaryModal} />
+                </Card>
+              ) : (
+                <TouchableOpacity onPress={() => router.push('/diary/create')}>
+                  <WarningCard
+                    title='Oops! No diary found'
+                    description='Press to create your diary first to place your order'
+                  />
+                </TouchableOpacity>
+              )}
+
+              {/* Order Summary */}
+              <Card style={[styles.container]}>
+                <View className='flex flex-row items-center gap-2 p-3'>
+                  <MaterialCommunityIcons name='card-text' size={SMALL_ICON_SIZE} color={PRIMARY_COLOR.LIGHT} />
+                  <Text className='text-sm font-inter-medium'>Order Summary</Text>
+                </View>
+
+                <Separator />
+
+                {renderOrderSummaryContent()}
+
+                <Separator />
+
+                <View className='p-3 flex flex-col gap-2'>
+                  <View className='flex-row items-center gap-2'>
+                    <MaterialCommunityIcons name='truck-fast' size={SMALL_ICON_SIZE} color='#047857' />
+                    <Text className='font-inter-medium text-sm'>Shipping Option</Text>
+                  </View>
+                  <View className='bg-emerald-50 border border-emerald-200 rounded-2xl py-3 px-4 flex-row items-center justify-center gap-2'>
+                    <View className='flex-1'>
+                      <Text className='text-sm font-inter-medium text-emerald-700'>Standard Delivery</Text>
+                      <Text className='text-xs text-emerald-600'>3-5 business days</Text>
+                    </View>
+                    {isLoadingShippingFee ? (
+                      <ActivityIndicator size={SMALL_ICON_SIZE} color='#047857' />
+                    ) : (
+                      <Text className='text-emerald-700 text-sm font-inter-medium'>
+                        <Text className='underline text-sm text-emerald-700 font-inter-medium'>đ</Text>
+                        {shippingFee ? shippingFee.toLocaleString('vi-VN') : '0'}
+                      </Text>
+                    )}
+                  </View>
+                </View>
+                <Separator />
+                <View className='p-3 flex flex-row'>
+                  <Text className='text-sm font-inter-medium flex-1'>
+                    Total {orderItems?.items && Array.isArray(orderItems.items) ? orderItems.items.length : 0} Item(s)
+                  </Text>
+                  <Text className='font-inter-medium'>
+                    <Text className='underline font-inter-medium text-sm'>đ</Text>
+                    {preset?.price && preset?.price?.toLocaleString('vi-VN')}
+                  </Text>
+                </View>
+              </Card>
+
+              {/* MamaFit Vouchers */}
+              <Card className='p-3' style={[styles.container]}>
+                <View className='flex-row items-center'>
+                  <View className='flex-row items-center gap-2 flex-1'>
+                    <MaterialCommunityIcons name='ticket-percent' size={SMALL_ICON_SIZE} color={PRIMARY_COLOR.LIGHT} />
+                    <Text className='font-inter-medium text-sm'>MamaFit Vouchers</Text>
+                  </View>
+                  <View className='flex flex-row items-center gap-1'>
+                    <Text className='text-xs text-muted-foreground'>View All</Text>
+                    <Feather name='chevron-right' size={20} color='lightgray' />
+                  </View>
+                </View>
+              </Card>
+
+              {/* Payment Methods */}
+              <Card className='p-2 flex flex-col gap-4 text-sky-50' style={[styles.container]}>
+                <Controller
+                  control={methods.control}
+                  name='paymentType'
+                  render={({ field: { value, onChange } }) => (
+                    <RadioGroup value={value} onValueChange={(val) => onChange(val as PaymentType)} className='gap-2'>
+                      <RadioGroupItemWithLabel
+                        value='FULL'
+                        onPress={() => onChange('FULL')}
+                        label='Full Payment (Banking)'
+                        iconColor='#38bdf8'
+                        backgroundColor='#f0f9ff'
+                        description='Pay the full amount now'
+                      />
+                      <RadioGroupItemWithLabel
+                        value='DEPOSIT'
+                        onPress={() => onChange('DEPOSIT')}
+                        label='Deposit 50% (Banking)'
+                        iconColor='#fbbf24'
+                        backgroundColor='#fffbeb'
+                        description='Pay 50% of the total amount now'
+                      />
+                    </RadioGroup>
+                  )}
+                />
+              </Card>
+
+              {/* Payment Details */}
+              <Card className='p-3' style={[styles.container]}>
+                <View className='flex-row items-center gap-2'>
+                  <MaterialCommunityIcons name='information' size={SMALL_ICON_SIZE} color={PRIMARY_COLOR.LIGHT} />
+                  <Text className='font-inter-medium text-sm'>Payment Details</Text>
+                </View>
+                <View className='flex flex-col gap-2 mt-2'>
+                  <View className='flex-row items-baseline'>
+                    <Text className='text-xs text-muted-foreground flex-1'>Merchandise Subtotal</Text>
+                    <Text className='text-xs text-muted-foreground'>
+                      <Text className='underline text-xs text-muted-foreground'>đ</Text>
+                      {preset?.price && preset?.price?.toLocaleString('vi-VN')}
+                    </Text>
+                  </View>
+                  <View className='flex-row items-baseline'>
+                    <Text className='text-xs text-muted-foreground flex-1'>Shipping Subtotal</Text>
+                    <Text className='text-xs text-muted-foreground'>
+                      <Text className='underline text-xs text-muted-foreground'>đ</Text>
+                      {shippingFee ? shippingFee.toLocaleString('vi-VN') : '0'}
+                    </Text>
+                  </View>
+                  {voucherId ? (
+                    <View className='flex-row items-baseline'>
+                      <Text className='text-xs text-muted-foreground flex-1'>Discount Subtotal</Text>
+                      <Text className='text-xs text-primary'>
+                        -<Text className='underline text-xs text-primary'>đ</Text>12.800
+                      </Text>
+                    </View>
+                  ) : null}
+                  <Separator />
+                  <View className='flex-row items-baseline'>
+                    <Text className='text-sm font-inter-medium flex-1'>Total Payment</Text>
+                    <Text className='font-inter-medium text-sm'>
+                      <Text className='underline font-inter-medium text-xs'>đ</Text>
+                      {totalPayment.toLocaleString('vi-VN')}
+                    </Text>
+                  </View>
+                </View>
+              </Card>
+
+              <Text className='text-xs text-muted-foreground px-2 mb-4'>
+                By clicking &apos;Place Order&apos;, you are agreeing to MamaFit&apos;s General Transaction Terms
+              </Text>
+            </View>
+          </ScrollView>
+
+          {/* Place Order */}
+          <View
+            className='absolute bottom-0 left-0 right-0 flex-row justify-end gap-3 bg-background p-3 border-t border-border'
+            style={{ boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
+          >
+            <View className='flex flex-col items-end gap-1'>
+              <Text className='font-inter-semibold text-primary'>
+                <Text className='text-sm'>Total</Text>{' '}
+                <Text className='underline font-inter-semibold text-sm text-primary'>đ</Text>
+                {totalPayment.toLocaleString('vi-VN')}
+              </Text>
+
+              <Text className='font-inter-medium text-primary text-sm'>
+                <Text className='text-xs'>Saved</Text>{' '}
+                <Text className='underline font-inter-medium text-sm text-primary'>đ</Text>
+                {voucherId ? '12.800' : '0'}
+              </Text>
+            </View>
+            <Button onPress={methods.handleSubmit(onSubmit)} disabled={placePresetOrderMutation.isPending}>
+              <Text className='font-inter-medium'>
+                {placePresetOrderMutation.isPending ? 'Placing Order...' : 'Place Order'}
+              </Text>
+            </Button>
           </View>
 
-          <BottomSheetModalProvider>
-            <FormProvider {...methods}>
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 46 }}
-                refreshControl={refreshControl}
-              >
-                <View className='flex flex-col gap-4 p-2 flex-1'>
-                  {/* Address Selection */}
-                  <Tabs
-                    value={tabValue}
-                    onValueChange={(value) => handleSwitchTab(value as DeliveryMethod)}
-                    className='w-full max-w-[400px] mx-auto flex-col gap-1.5'
-                  >
-                    <TabsList className='flex-row w-full'>
-                      <TabsTrigger value={DeliveryMethod.DELIVERY} className='flex-1 flex-row items-center gap-2'>
-                        {SvgIcon.toReceive({ size: SMALL_ICON_SIZE })}
-                        <Text>Delivery</Text>
-                      </TabsTrigger>
-                      <TabsTrigger value={DeliveryMethod.PICK_UP} className='flex-1 flex-row items-center gap-2'>
-                        {SvgIcon.shop({ size: SMALL_ICON_SIZE })}
-                        <Text>Pick Up</Text>
-                      </TabsTrigger>
-                    </TabsList>
-                    <TabsContent value='DELIVERY'>
-                      <AddressCard
-                        address={currentAddress || undefined}
-                        fullName={currentUserProfile?.fullName || undefined}
-                        phoneNumber={currentUserProfile?.phoneNumber || undefined}
-                        isLoading={isLoadingAddressCard}
-                        onPress={handlePresentAddressModal}
-                      />
-                    </TabsContent>
-                    {/* TODO: Add Pick Up option */}
-                    <TabsContent value='PICK_UP'></TabsContent>
-                  </Tabs>
+          {addresses && Array.isArray(addresses) && (
+            <AddressSelectionModal
+              ref={addressSelectionModalRef}
+              addresses={addresses}
+              selectedAddressId={addressId || undefined}
+              onSelectAddress={handleSelectAddress}
+            />
+          )}
 
-                  {/* Diary Selection */}
-                  <Card className='p-1 gap-2' style={[styles.container]}>
-                    <View
-                      className={cn(
-                        'rounded-xl p-2 flex-row items-center gap-2',
-                        isDarkColorScheme ? 'bg-primary/20' : 'bg-primary/10'
-                      )}
-                    >
-                      {SvgIcon.folderFavorite({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })}
-                      <View className='flex-1'>
-                        <Text
-                          className={cn(
-                            'font-inter-medium text-sm',
-                            isDarkColorScheme ? 'text-primary-foreground' : 'text-primary'
-                          )}
-                        >
-                          Choose a diary
-                        </Text>
-                        <Text
-                          className={cn(
-                            'text-xs',
-                            isDarkColorScheme ? 'text-primary-foreground/70' : 'text-primary/70'
-                          )}
-                        >
-                          This will help shape your maternity dress
-                        </Text>
-                      </View>
-                    </View>
-
-                    <DiaryCard
-                      diary={currentDiary || undefined}
-                      isLoading={isLoadingDiaries}
-                      onPress={handlePresetDiaryModal}
-                    />
-                  </Card>
-
-                  {/* Order Summary */}
-                  <Card style={[styles.container]}>
-                    <View className='flex flex-row items-center gap-2 p-3'>
-                      <MaterialCommunityIcons name='card-text' size={SMALL_ICON_SIZE} color={PRIMARY_COLOR.LIGHT} />
-                      <Text className='text-sm font-inter-medium'>Order Summary</Text>
-                    </View>
-
-                    <Separator />
-
-                    {renderOrderSummaryContent()}
-
-                    <Separator />
-
-                    <View className='p-3 flex flex-col gap-2'>
-                      <View className='flex-row items-center gap-2'>
-                        <MaterialCommunityIcons name='truck-fast' size={SMALL_ICON_SIZE} color='#047857' />
-                        <Text className='font-inter-medium text-sm'>Shipping Option</Text>
-                      </View>
-                      <View className='bg-emerald-50 border border-emerald-200 rounded-2xl py-3 px-4 flex-row items-center justify-center gap-2'>
-                        <View className='flex-1'>
-                          <Text className='text-sm font-inter-medium text-emerald-700'>Standard Delivery</Text>
-                          <Text className='text-xs text-emerald-600'>3-5 business days</Text>
-                        </View>
-                        {isLoadingShippingFee ? (
-                          <ActivityIndicator size={SMALL_ICON_SIZE} color='#047857' />
-                        ) : (
-                          <Text className='text-emerald-700 text-sm font-inter-medium'>
-                            <Text className='underline text-sm text-emerald-700 font-inter-medium'>đ</Text>
-                            {shippingFee && shippingFee.toLocaleString('vi-VN')}
-                          </Text>
-                        )}
-                      </View>
-                    </View>
-                    <Separator />
-                    <View className='p-3 flex flex-row'>
-                      <Text className='text-sm font-inter-medium flex-1'>
-                        Total {orderItems?.items && Array.isArray(orderItems.items) ? orderItems.items.length : 0}{' '}
-                        Item(s)
-                      </Text>
-                      <Text className='font-inter-medium'>
-                        <Text className='underline font-inter-medium text-sm'>đ</Text>
-                        {preset?.price && preset?.price?.toLocaleString('vi-VN')}
-                      </Text>
-                    </View>
-                  </Card>
-
-                  {/* MamaFit Vouchers */}
-                  <Card className='p-3' style={[styles.container]}>
-                    <View className='flex-row items-center'>
-                      <View className='flex-row items-center gap-2 flex-1'>
-                        <MaterialCommunityIcons
-                          name='ticket-percent'
-                          size={SMALL_ICON_SIZE}
-                          color={PRIMARY_COLOR.LIGHT}
-                        />
-                        <Text className='font-inter-medium text-sm'>MamaFit Vouchers</Text>
-                      </View>
-                      <View className='flex flex-row items-center gap-1'>
-                        <Text className='text-xs text-muted-foreground'>View All</Text>
-                        <Feather name='chevron-right' size={20} color='lightgray' />
-                      </View>
-                    </View>
-                  </Card>
-
-                  {/* Payment Methods */}
-                  <Card className='p-2 flex flex-col gap-4 text-sky-50' style={[styles.container]}>
-                    <Controller
-                      control={methods.control}
-                      name='paymentType'
-                      render={({ field: { value, onChange } }) => (
-                        <RadioGroup
-                          value={value}
-                          onValueChange={(val) => onChange(val as PaymentType)}
-                          className='gap-2'
-                        >
-                          <RadioGroupItemWithLabel
-                            value='FULL'
-                            onPress={() => onChange('FULL')}
-                            label='Full Payment (Banking)'
-                            iconColor='#38bdf8'
-                            backgroundColor='#f0f9ff'
-                            description='Pay the full amount now'
-                          />
-                          <RadioGroupItemWithLabel
-                            value='DEPOSIT'
-                            onPress={() => onChange('DEPOSIT')}
-                            label='Deposit 50% (Banking)'
-                            iconColor='#fbbf24'
-                            backgroundColor='#fffbeb'
-                            description='Pay 50% of the total amount now'
-                          />
-                        </RadioGroup>
-                      )}
-                    />
-                  </Card>
-
-                  {/* Payment Details */}
-                  <Card className='p-3' style={[styles.container]}>
-                    <View className='flex-row items-center gap-2'>
-                      <MaterialCommunityIcons name='information' size={SMALL_ICON_SIZE} color={PRIMARY_COLOR.LIGHT} />
-                      <Text className='font-inter-medium text-sm'>Payment Details</Text>
-                    </View>
-                    <View className='flex flex-col gap-2 mt-2'>
-                      <View className='flex-row items-baseline'>
-                        <Text className='text-xs text-muted-foreground flex-1'>Merchandise Subtotal</Text>
-                        <Text className='text-xs text-muted-foreground'>
-                          <Text className='underline text-xs text-muted-foreground'>đ</Text>
-                          {preset?.price && preset?.price?.toLocaleString('vi-VN')}
-                        </Text>
-                      </View>
-                      <View className='flex-row items-baseline'>
-                        <Text className='text-xs text-muted-foreground flex-1'>Shipping Subtotal</Text>
-                        <Text className='text-xs text-muted-foreground'>
-                          <Text className='underline text-xs text-muted-foreground'>đ</Text>
-                          {shippingFee && shippingFee.toLocaleString('vi-VN')}
-                        </Text>
-                      </View>
-                      {voucherId ? (
-                        <View className='flex-row items-baseline'>
-                          <Text className='text-xs text-muted-foreground flex-1'>Discount Subtotal</Text>
-                          <Text className='text-xs text-primary'>
-                            -<Text className='underline text-xs text-primary'>đ</Text>12.800
-                          </Text>
-                        </View>
-                      ) : null}
-                      <Separator />
-                      <View className='flex-row items-baseline'>
-                        <Text className='text-sm font-inter-medium flex-1'>Total Payment</Text>
-                        <Text className='font-inter-medium text-sm'>
-                          <Text className='underline font-inter-medium text-xs'>đ</Text>
-                          {totalPayment.toLocaleString('vi-VN')}
-                        </Text>
-                      </View>
-                    </View>
-                  </Card>
-
-                  <Text className='text-xs text-muted-foreground px-2 mb-4'>
-                    By clicking &apos;Place Order&apos;, you are agreeing to MamaFit&apos;s General Transaction Terms
-                  </Text>
-                </View>
-              </ScrollView>
-
-              {/* Place Order */}
-              <View
-                className='absolute bottom-0 left-0 right-0 flex-row justify-end gap-3 bg-background p-3 border-t border-border'
-                style={{ paddingBottom: bottom, boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
-              >
-                <View className='flex flex-col items-end gap-1'>
-                  <Text className='font-inter-semibold text-primary'>
-                    <Text className='text-sm'>Total</Text>{' '}
-                    <Text className='underline font-inter-semibold text-sm text-primary'>đ</Text>
-                    {totalPayment.toLocaleString('vi-VN')}
-                  </Text>
-
-                  <Text className='font-inter-medium text-primary text-sm'>
-                    <Text className='text-xs'>Saved</Text>{' '}
-                    <Text className='underline font-inter-medium text-sm text-primary'>đ</Text>
-                    {voucherId ? '12.800' : '0'}
-                  </Text>
-                </View>
-                <Button onPress={methods.handleSubmit(onSubmit)} disabled={placePresetOrderMutation.isPending}>
-                  <Text className='font-inter-medium'>
-                    {placePresetOrderMutation.isPending ? 'Placing Order...' : 'Place Order'}
-                  </Text>
-                </Button>
-              </View>
-
-              {addresses && Array.isArray(addresses) && (
-                <AddressSelectionModal
-                  ref={addressSelectionModalRef}
-                  addresses={addresses}
-                  selectedAddressId={addressId || undefined}
-                  onSelectAddress={handleSelectAddress}
-                />
-              )}
-
-              {diaries && diaries.items && Array.isArray(diaries.items) && (
-                <DiarySelectionModal
-                  ref={diarySelectionModalRef}
-                  diaries={diaries.items}
-                  selectedDiaryId={diaryId || undefined}
-                  onSelectDiary={handleSelectDiary}
-                />
-              )}
-            </FormProvider>
-          </BottomSheetModalProvider>
-        </>
-      ) : (
-        <Loading />
-      )}
+          {diaries && diaries.items && Array.isArray(diaries.items) && (
+            <DiarySelectionModal
+              ref={diarySelectionModalRef}
+              diaries={diaries.items}
+              selectedDiaryId={diaryId || undefined}
+              onSelectDiary={handleSelectDiary}
+            />
+          )}
+        </FormProvider>
+      </BottomSheetModalProvider>
     </SafeView>
   )
 }
