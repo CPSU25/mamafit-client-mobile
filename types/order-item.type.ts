@@ -12,3 +12,8 @@ export interface OrderItem {
   warrantyDate: string | null
   warrantyNumber: number
 }
+
+export interface OrderItemTemp<T> {
+  type: string
+  items: T[]
+}
