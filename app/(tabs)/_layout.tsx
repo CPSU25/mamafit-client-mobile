@@ -1,10 +1,9 @@
-import Feather from '@expo/vector-icons/Feather'
 import { Tabs, useSegments } from 'expo-router'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
-import { PRIMARY_COLOR } from '~/lib/constants/constants'
+import { SvgIcon } from '~/lib/constants/svg-icon'
 import { cn } from '~/lib/utils'
 
 const TabIcon = ({ focused, icon, title }: { focused: boolean; icon: React.ReactNode; title: string }) => {
@@ -13,8 +12,8 @@ const TabIcon = ({ focused, icon, title }: { focused: boolean; icon: React.React
       {icon}
       <Text
         className={cn(
-          'text-xs w-full text-center mt-1 font-inter',
-          focused ? 'text-primary font-inter-medium' : 'text-muted-foreground'
+          'text-xs w-full text-center mt-0.5',
+          focused ? 'text-primary font-inter-semibold' : 'text-muted-foreground'
         )}
       >
         {title}
@@ -28,31 +27,31 @@ const navigationOptions = [
     id: 1,
     name: 'index',
     title: 'Home',
-    icon: (focused: boolean) => <Feather name='home' size={22} color={focused ? PRIMARY_COLOR.LIGHT : 'gray'} />
+    icon: (focused: boolean) => SvgIcon.home({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 2,
     name: 'diary',
     title: 'Diary',
-    icon: (focused: boolean) => <Feather name='book-open' size={22} color={focused ? PRIMARY_COLOR.LIGHT : 'gray'} />
+    icon: (focused: boolean) => SvgIcon.diary({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 3,
     name: 'canvas',
     title: 'Canvas',
-    icon: (focused: boolean) => <Feather name='layout' size={22} color={focused ? PRIMARY_COLOR.LIGHT : 'gray'} />
+    icon: (focused: boolean) => SvgIcon.penTool({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 4,
     name: 'notifications',
     title: 'Notifications',
-    icon: (focused: boolean) => <Feather name='bell' size={22} color={focused ? PRIMARY_COLOR.LIGHT : 'gray'} />
+    icon: (focused: boolean) => SvgIcon.notification({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 5,
     name: 'profile',
     title: 'Profile',
-    icon: (focused: boolean) => <Feather name='user' size={22} color={focused ? PRIMARY_COLOR.LIGHT : 'gray'} />
+    icon: (focused: boolean) => SvgIcon.user({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
   }
 ]
 
@@ -87,7 +86,7 @@ export default function TabsLayout() {
           backgroundColor: isDarkColorScheme ? 'black' : 'white',
           position: 'absolute',
           borderTopWidth: 1,
-          height: bottom + 55,
+          height: bottom + 60,
           display: isHidden ? 'none' : 'flex'
         }
       }}
