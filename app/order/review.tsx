@@ -2,7 +2,7 @@ import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFocusEffect, useRouter } from 'expo-router'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, FormProvider, SubmitHandler } from 'react-hook-form'
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native'
 import AutoHeightImage from '~/components/auto-height-image'
@@ -17,10 +17,10 @@ import { Skeleton } from '~/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Text } from '~/components/ui/text'
 import { useGetAllDiaries } from '~/features/diary/hooks/use-get-all-diaries'
-import AddressCard from '~/features/order/components/address-card'
-import AddressSelectionModal from '~/features/order/components/address-selection-modal'
-import DiaryCard from '~/features/order/components/diary-card'
-import DiarySelectionModal from '~/features/order/components/diary-selection-modal'
+import AddressCard from '~/features/order/components/address-section/address-card'
+import AddressSelectionModal from '~/features/order/components/address-section/address-selection-modal'
+import DiaryCard from '~/features/order/components/diary-section/diary-card'
+import DiarySelectionModal from '~/features/order/components/diary-section/diary-selection-modal'
 import { useGetShippingFee } from '~/features/order/hooks/use-get-shipping-fee'
 import { usePlacePresetOrder } from '~/features/order/hooks/use-place-preset-order'
 import { DeliveryMethod, PaymentType, PlacePresetOrderFormSchema } from '~/features/order/validations'
@@ -88,7 +88,7 @@ const clearOrderItems = async () => {
 export default function ReviewOrderScreen() {
   const router = useRouter()
   const { user } = useAuth()
-  const { methods, initForm, placePresetOrderMutation } = usePlacePresetOrder(clearOrderItems)
+  const { methods, placePresetOrderMutation } = usePlacePresetOrder(clearOrderItems)
   const { isDarkColorScheme } = useColorScheme()
 
   const addressSelectionModalRef = useRef<BottomSheetModal>(null)
@@ -208,33 +208,31 @@ export default function ReviewOrderScreen() {
   }
 
   // Set preset to form
-  useFocusEffect(
-    useCallback(() => {
-      const getPreset = async () => {
-        const items = await getOrderItems()
+  useEffect(() => {
+    const getPreset = async () => {
+      const items = await getOrderItems()
 
-        if (!items) {
-          router.replace('/')
-          return
-        }
+      if (!items) {
+        router.replace('/')
+        return
+      }
 
-        setOrderItems(items)
+      setOrderItems(items)
 
-        if (Array.isArray(items.items) && items.items.length > 0) {
-          if (items?.type === 'preset') {
-            const presetItem = items.items[0]
-            if (presetItem && typeof presetItem === 'object' && 'id' in presetItem) {
-              const typedPreset = presetItem as PresetWithComponentOptions
-              setPreset(typedPreset)
-              methods.setValue('presetId', typedPreset.id)
-            }
+      if (Array.isArray(items.items) && items.items.length > 0) {
+        if (items?.type === 'preset') {
+          const presetItem = items.items[0]
+          if (presetItem && typeof presetItem === 'object' && 'id' in presetItem) {
+            const typedPreset = presetItem as PresetWithComponentOptions
+            setPreset(typedPreset)
+            methods.setValue('presetId', typedPreset.id)
           }
         }
       }
+    }
 
-      getPreset()
-    }, [methods, router])
-  )
+    getPreset()
+  }, [methods, router])
 
   // Set shipping fee to form
   useFocusEffect(

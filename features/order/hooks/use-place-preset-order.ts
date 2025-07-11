@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
-import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { ERROR_MESSAGES } from '~/lib/constants/constants'
 import orderService from '~/services/order.service'
@@ -19,7 +18,7 @@ const defaultValues: PlacePresetOrderFormSchema = {
   branchId: null,
   shippingFee: 0,
   voucherDiscountId: null,
-  measurementDiaryId: null,
+  measurementDiaryId: '',
   isOnline: true,
   paymentMethod: PaymentMethod.ONLINE_BANKING,
   paymentType: PaymentType.FULL,
@@ -32,18 +31,6 @@ export const usePlacePresetOrder = (onSuccess: () => void) => {
     defaultValues,
     resolver: zodResolver(placePresetOrderFormSchema)
   })
-
-  const initForm = useCallback(
-    (presetId: string, addressId: string, measurementDiaryId: string) => {
-      methods.reset({
-        ...defaultValues,
-        presetId,
-        addressId,
-        measurementDiaryId
-      })
-    },
-    [methods]
-  )
 
   const placePresetOrderMutation = useMutation({
     mutationFn: orderService.placePresetOrder,
@@ -61,5 +48,5 @@ export const usePlacePresetOrder = (onSuccess: () => void) => {
     }
   })
 
-  return { methods, initForm, placePresetOrderMutation }
+  return { methods, placePresetOrderMutation }
 }
