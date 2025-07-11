@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner-native'
 import { ERROR_MESSAGES } from '~/lib/constants/constants'
 import orderService from '~/services/order.service'
 import {
@@ -44,7 +45,7 @@ export const usePlacePresetOrder = (onSuccess: () => void) => {
       }
     },
     onError: (error) => {
-      methods.setError('root', { message: error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG })
+      toast.error(error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG)
     }
   })
 

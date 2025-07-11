@@ -1,6 +1,7 @@
 import { useQueries } from '@tanstack/react-query'
 import { useAuth } from '~/hooks/use-auth'
 import diaryService from '~/services/diary.service'
+import orderService from '~/services/order.service'
 import userService from '~/services/user.service'
 
 export const useReviewOrderQueries = (userId: string | undefined) => {
@@ -21,6 +22,11 @@ export const useReviewOrderQueries = (userId: string | undefined) => {
       {
         queryKey: ['all-diaries-queries', user?.userId],
         queryFn: () => diaryService.getDiaries(user?.userId ?? '', 1, 100),
+        enabled: isAuthenticated
+      },
+      {
+        queryKey: ['branches-queries', user?.userId],
+        queryFn: () => orderService.getBranches(),
         enabled: isAuthenticated
       }
     ]

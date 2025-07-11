@@ -4,10 +4,10 @@ import * as SecureStore from 'expo-secure-store'
 import { FieldErrors } from 'react-hook-form'
 import { twMerge } from 'tailwind-merge'
 import { AuthTokens } from '~/types/common'
-import { clear, setTokens } from './redux-toolkit/slices/auth.slice'
-import { store } from './redux-toolkit/store'
 import { ComponentOptionWithComponent } from '~/types/preset.type'
 import { ORDERED_COMPONENTS_OPTIONS } from './constants/constants'
+import { clear, setTokens } from './redux-toolkit/slices/auth.slice'
+import { store } from './redux-toolkit/store'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -115,14 +115,14 @@ export const getOrderedComponentOptions = (options: ComponentOptionWithComponent
 export const formatVnPhone = (phone: string | undefined) => {
   if (!phone) return
 
-  let digits = phone.replace(/\D/g, '')
+  const digits = phone.replace(/\D/g, '')
 
-  if (digits.startsWith('0')) {
-    digits = digits.substring(1)
+  if (digits.length === 10) {
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`
   }
 
-  if (digits.length === 9) {
-    return `${digits.substring(0, 3)} ${digits.substring(3, 6)} ${digits.substring(6)}`
+  if (digits.length === 11) {
+    return `(${digits.slice(0, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`
   }
 
   return digits

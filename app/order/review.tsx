@@ -13,6 +13,7 @@ import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
 import AddressSection from '~/features/order/components/address-section/address-section'
 import AddressSelectionModal from '~/features/order/components/address-section/address-selection-modal'
+import BranchSelectionModal from '~/features/order/components/address-section/branch-selection-modal'
 import DiarySection from '~/features/order/components/diary-section/diary-section'
 import DiarySelectionModal from '~/features/order/components/diary-section/diary-selection-modal'
 import OrderSummarySection from '~/features/order/components/order-summary-section/order-summary-section'
@@ -30,6 +31,7 @@ import { getOrderedComponentOptions } from '~/lib/utils'
 import { Address } from '~/types/address.type'
 import { Diary } from '~/types/diary.type'
 import { OrderItemTemp } from '~/types/order-item.type'
+import { Branch } from '~/types/order.type'
 import { PresetWithComponentOptions } from '~/types/preset.type'
 
 const SMALL_ICON_SIZE = 18
@@ -44,6 +46,11 @@ const getActiveDiary = (diaries: Diary[] | null | undefined) => {
   if (!diaries || !Array.isArray(diaries) || diaries.length === 0) return null
   const activeDiary = diaries.find((diary) => diary?.isActive)
   return activeDiary || diaries[0] || null
+}
+
+const getDefaultBranch = (branches: Branch[] | null | undefined) => {
+  if (!branches || !Array.isArray(branches) || branches.length === 0) return null
+  return branches[0] || null
 }
 
 const getOrderItems = async () => {
@@ -80,15 +87,15 @@ export default function ReviewOrderScreen() {
   const router = useRouter()
   const { user } = useAuth()
   const { methods, placePresetOrderMutation } = usePlacePresetOrder(clearOrderItems)
-  const {
-    setValue,
-    formState: { errors }
-  } = methods
+  const { setValue } = methods
+
+  const deliveryMethod = methods.watch('deliveryMethod')
 
   // UI states
-  const [tabValue, setTabValue] = useState<DeliveryMethod>(methods.watch('deliveryMethod'))
+  const [tabValue, setTabValue] = useState<DeliveryMethod>(deliveryMethod)
   const addressSelectionModalRef = useRef<BottomSheetModal>(null)
   const diarySelectionModalRef = useRef<BottomSheetModal>(null)
+  const branchSelectionModalRef = useRef<BottomSheetModal>(null)
 
   // Data from AsyncStorage states
   const [orderItems, setOrderItems] = useState<OrderItemTemp<unknown> | null>(null)
@@ -98,24 +105,29 @@ export default function ReviewOrderScreen() {
   const {
     '0': { data: addresses, refetch: refetchAddresses, isLoading: isLoadingAddresses, isFetched: isFetchedAddresses },
     '1': { data: currentUserProfile, refetch: refetchUserProfile, isLoading: isLoadingUserProfile },
-    '2': { data: diaries, refetch: refetchDiaries, isLoading: isLoadingDiaries, isFetched: isFetchedDiaries }
+    '2': { data: diaries, refetch: refetchDiaries, isLoading: isLoadingDiaries, isFetched: isFetchedDiaries },
+    '3': { data: branches, refetch: refetchBranches, isLoading: isLoadingBranches, isFetched: isFetchedBranches }
   } = useReviewOrderQueries(user?.userId)
 
   // Get default address + active diary for auto selecting
   const defaultAddress = getDefaultAddress(addresses)
   const activeDiary = getActiveDiary(diaries?.items)
+  const defaultBranch = getDefaultBranch(branches)
 
   // Get form values
   const addressId = methods.watch('addressId')
   const diaryId = methods.watch('measurementDiaryId')
+  const branchId = methods.watch('branchId')
   const voucherId = methods.watch('voucherDiscountId')
-  const rootMsg = errors.root?.message || (errors as any)['']?.message || (errors as any)._errors?.[0]
 
   // Get current address + diary base on form values (if present)
   const currentAddress =
     (Array.isArray(addresses) ? addresses.find((address) => address?.id === addressId) : null) || defaultAddress
   const currentDiary =
     (Array.isArray(diaries?.items) ? diaries.items.find((diary) => diary?.id === diaryId) : null) || activeDiary
+
+  const currentBranch =
+    (Array.isArray(branches) ? branches.find((branch) => branch?.id === branchId) : null) || defaultBranch
 
   // Get shipping fee from current address
   const {
@@ -124,8 +136,10 @@ export default function ReviewOrderScreen() {
     refetch: refetchShippingFee,
     isFetched: isFetchedShippingFee
   } = useGetShippingFee({
-    province: currentAddress?.province || '',
-    district: currentAddress?.district || '',
+    province:
+      deliveryMethod === DeliveryMethod.DELIVERY ? currentAddress?.province || '' : currentBranch?.province || '',
+    district:
+      deliveryMethod === DeliveryMethod.DELIVERY ? currentAddress?.district || '' : currentBranch?.district || '',
     weight: 500
   })
 
@@ -133,7 +147,13 @@ export default function ReviewOrderScreen() {
   const orderType = orderItems?.type || null
   const totalPayment = shippingFee ? (preset?.price || 0) + shippingFee : preset?.price || 0
 
-  const { refreshControl } = useRefreshs([refetchAddresses, refetchUserProfile, refetchShippingFee, refetchDiaries])
+  const { refreshControl } = useRefreshs([
+    refetchAddresses,
+    refetchUserProfile,
+    refetchShippingFee,
+    refetchDiaries,
+    refetchBranches
+  ])
 
   // Modal handlers
   const handlePresentAddressModal = useCallback(() => {
@@ -164,6 +184,20 @@ export default function ReviewOrderScreen() {
     [setValue]
   )
 
+  const handlePresentBranchModal = useCallback(() => {
+    branchSelectionModalRef.current?.present()
+  }, [])
+
+  const handleSelectBranch = useCallback(
+    (branchId: string) => {
+      if (setValue) {
+        setValue('branchId', branchId)
+      }
+      branchSelectionModalRef.current?.dismiss()
+    },
+    [setValue]
+  )
+
   // Tab handler
   const handleSwitchTab = (value: DeliveryMethod) => {
     setTabValue(value)
@@ -184,7 +218,13 @@ export default function ReviewOrderScreen() {
 
   // Place order
   const onSubmit: SubmitHandler<PlacePresetOrderFormSchema> = (data) => {
+    if (!currentUserProfile?.phoneNumber) {
+      toast.error('Please add your phone number first')
+      return
+    }
+
     console.log(data)
+
     if (orderType === 'preset') {
       placePresetOrderMutation.mutate(data)
     } else {
@@ -219,12 +259,21 @@ export default function ReviewOrderScreen() {
     getPreset()
   }, [setValue, router])
 
-  // Set default address to form
+  // Set default address to form if delivery method is delivery
   useEffect(() => {
-    if (isFetchedAddresses && defaultAddress?.id && setValue) {
+    if (isFetchedAddresses && defaultAddress?.id && setValue && deliveryMethod === DeliveryMethod.DELIVERY) {
       setValue('addressId', defaultAddress.id)
+      setValue('branchId', null)
     }
-  }, [isFetchedAddresses, defaultAddress, setValue])
+  }, [isFetchedAddresses, defaultAddress, setValue, deliveryMethod])
+
+  // Set default branch to form if delivery method is pick up
+  useEffect(() => {
+    if (isFetchedBranches && defaultBranch?.id && setValue && deliveryMethod === DeliveryMethod.PICK_UP) {
+      setValue('branchId', defaultBranch.id)
+      setValue('addressId', null)
+    }
+  }, [isFetchedBranches, defaultBranch, setValue, deliveryMethod])
 
   // Set active diary to form
   useEffect(() => {
@@ -239,12 +288,6 @@ export default function ReviewOrderScreen() {
       setValue('shippingFee', shippingFee)
     }
   }, [isFetchedShippingFee, shippingFee, setValue])
-
-  useEffect(() => {
-    if (rootMsg) {
-      toast.error(rootMsg)
-    }
-  }, [rootMsg])
 
   const renderOrderSummaryContent = () => {
     if (!orderItems) {
@@ -312,12 +355,15 @@ export default function ReviewOrderScreen() {
               {/* Address Section */}
               <AddressSection
                 tabValue={tabValue}
-                isLoading={isLoadingAddressSection}
-                currentAddress={currentAddress}
+                isLoadingAddress={isLoadingAddressSection}
+                isLoadingBranch={isLoadingBranches}
+                address={currentAddress}
+                branch={currentBranch}
                 currentUserProfile={currentUserProfile}
                 iconSize={SMALL_ICON_SIZE}
                 handleSwitchTab={handleSwitchTab}
                 handlePresentAddressModal={handlePresentAddressModal}
+                handlePresentBranchModal={handlePresentBranchModal}
               />
 
               {/* Diary Section */}
@@ -399,6 +445,15 @@ export default function ReviewOrderScreen() {
               diaries={diaries.items}
               selectedDiaryId={diaryId || undefined}
               onSelectDiary={handleSelectDiary}
+            />
+          )}
+
+          {branches && Array.isArray(branches) && deliveryMethod === DeliveryMethod.PICK_UP && (
+            <BranchSelectionModal
+              ref={branchSelectionModalRef}
+              branches={branches}
+              selectedBranchId={branchId || undefined}
+              onSelectBranch={handleSelectBranch}
             />
           )}
         </FormProvider>

@@ -7,29 +7,91 @@ import { Text } from '~/components/ui/text'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { Address } from '~/types/address.type'
 import { User } from '~/types/common'
+import { Branch } from '~/types/order.type'
 import { DeliveryMethod } from '../../validations'
 import AddressCard from './address-card'
+import BranchCard from './branch-card'
 
 interface AddressSectionProps {
   tabValue: DeliveryMethod
-  isLoading: boolean
-  currentAddress: Address | null
+  isLoadingAddress: boolean
+  isLoadingBranch: boolean
+  address: Address | null
+  branch: Branch | null
   currentUserProfile: User | null | undefined
   iconSize: number
   handleSwitchTab: (value: DeliveryMethod) => void
   handlePresentAddressModal: () => void
+  handlePresentBranchModal: () => void
 }
 
 export default function AddressSection({
   tabValue,
   handleSwitchTab,
-  isLoading,
-  currentAddress,
+  isLoadingAddress,
+  isLoadingBranch,
+  address,
+  branch,
   currentUserProfile,
   iconSize,
-  handlePresentAddressModal
+  handlePresentAddressModal,
+  handlePresentBranchModal
 }: AddressSectionProps) {
   const router = useRouter()
+
+  const renderAddressContent = () => {
+    if (isLoadingAddress) {
+      return <Skeleton className='rounded-2xl h-20' />
+    }
+
+    if (!currentUserProfile?.phoneNumber) {
+      return (
+        <TouchableOpacity onPress={() => router.push('/setting/account')}>
+          <WarningCard title='Oops! No phone number found' description='Please add your phone number first' />
+        </TouchableOpacity>
+      )
+    }
+
+    if (address) {
+      return (
+        <AddressCard
+          address={address}
+          fullName={currentUserProfile?.fullName || undefined}
+          phoneNumber={currentUserProfile?.phoneNumber || undefined}
+          onPress={handlePresentAddressModal}
+        />
+      )
+    } else {
+      return (
+        <TouchableOpacity onPress={() => router.push('/setting/my-addresses/create')}>
+          <WarningCard
+            title='Oops! No address found'
+            description='Please add your address first to select this delivery method'
+          />
+        </TouchableOpacity>
+      )
+    }
+  }
+
+  const renderBranchContent = () => {
+    if (isLoadingBranch) {
+      return <Skeleton className='rounded-2xl h-20' />
+    }
+
+    if (!currentUserProfile?.phoneNumber) {
+      return (
+        <TouchableOpacity onPress={() => router.push('/setting/account')}>
+          <WarningCard title='Oops! No phone number found' description='Please add your phone number first' />
+        </TouchableOpacity>
+      )
+    }
+
+    if (branch) {
+      return <BranchCard branch={branch} onPress={handlePresentBranchModal} />
+    }
+
+    return <WarningCard title='Oops! No branch found' description='This feature is not available yet' />
+  }
 
   return (
     <Tabs
@@ -47,28 +109,8 @@ export default function AddressSection({
           <Text>Pick Up</Text>
         </TabsTrigger>
       </TabsList>
-      <TabsContent value='DELIVERY'>
-        {isLoading ? (
-          <Skeleton className='rounded-2xl h-16' />
-        ) : currentAddress ? (
-          <AddressCard
-            address={currentAddress}
-            fullName={currentUserProfile?.fullName || undefined}
-            phoneNumber={currentUserProfile?.phoneNumber || undefined}
-            isLoading={isLoading}
-            onPress={handlePresentAddressModal}
-          />
-        ) : (
-          <TouchableOpacity onPress={() => router.push('/setting/my-addresses/create')}>
-            <WarningCard
-              title='Oops! No address found'
-              description='Please add your address first to select this delivery method'
-            />
-          </TouchableOpacity>
-        )}
-      </TabsContent>
-      {/* TODO: Add Pick Up option */}
-      <TabsContent value='PICK_UP'></TabsContent>
+      <TabsContent value='DELIVERY'>{renderAddressContent()}</TabsContent>
+      <TabsContent value='PICK_UP'>{renderBranchContent()}</TabsContent>
     </Tabs>
   )
 }

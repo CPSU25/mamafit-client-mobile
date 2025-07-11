@@ -4,30 +4,27 @@ import { Card } from '~/components/ui/card'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
-import { formatVnPhone } from '~/lib/utils'
-import { Address } from '~/types/address.type'
+import { Branch } from '~/types/order.type'
 
-interface AddressCardProps {
-  address: Address
-  fullName?: string
-  phoneNumber?: string
+interface BranchCardProps {
+  branch: Branch
   onPress: () => void
 }
 
-export default function AddressCard({ address, fullName, phoneNumber, onPress }: AddressCardProps) {
+export default function BranchCard({ branch, onPress }: BranchCardProps) {
   const { isDarkColorScheme } = useColorScheme()
 
   return (
     <TouchableOpacity onPress={onPress}>
       <Card className='p-3 flex flex-row items-start gap-2' style={[styles.container]}>
-        <MaterialCommunityIcons name='map-marker' size={18} color={PRIMARY_COLOR.LIGHT} />
+        <MaterialCommunityIcons name='storefront' size={18} color={PRIMARY_COLOR.LIGHT} />
         <View className='flex-1 gap-0.5'>
           <Text className='text-sm font-inter-medium' numberOfLines={1}>
-            {fullName} <Text className='text-muted-foreground text-xs'>{formatVnPhone(phoneNumber)}</Text>
+            {branch.name}
           </Text>
 
           <Text numberOfLines={2} className={`text-xs ${isDarkColorScheme ? 'text-white/70' : 'text-black/70'}`}>
-            {address?.street}, {address?.ward}, {address?.district}, {address?.province}
+            {branch?.street}, {branch?.ward}, {branch?.district}, {branch?.province}
           </Text>
         </View>
         <Feather name='chevron-right' size={20} color='lightgray' className='self-center' />
