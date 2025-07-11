@@ -1,16 +1,16 @@
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useFocusEffect, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
+import { toast } from 'sonner-native'
 import AutoHeightImage from '~/components/auto-height-image'
 import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
-import { useGetAllDiaries } from '~/features/diary/hooks/use-get-all-diaries'
 import AddressSection from '~/features/order/components/address-section/address-section'
 import AddressSelectionModal from '~/features/order/components/address-section/address-selection-modal'
 import DiarySection from '~/features/order/components/diary-section/diary-section'
@@ -21,9 +21,8 @@ import PaymentMethodsSection from '~/features/order/components/payment-methods-s
 import VouchersSection from '~/features/order/components/vouchers-section/vouchers-section'
 import { useGetShippingFee } from '~/features/order/hooks/use-get-shipping-fee'
 import { usePlacePresetOrder } from '~/features/order/hooks/use-place-preset-order'
+import { useReviewOrderQueries } from '~/features/order/hooks/use-review-order-queries'
 import { DeliveryMethod, PlacePresetOrderFormSchema } from '~/features/order/validations'
-import { useGetAddresses } from '~/features/user/hooks/use-get-addresses'
-import { useGetProfile } from '~/features/user/hooks/use-get-profile'
 import { useAuth } from '~/hooks/use-auth'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
@@ -81,51 +80,44 @@ export default function ReviewOrderScreen() {
   const router = useRouter()
   const { user } = useAuth()
   const { methods, placePresetOrderMutation } = usePlacePresetOrder(clearOrderItems)
+  const {
+    setValue,
+    formState: { errors }
+  } = methods
 
+  // UI states
+  const [tabValue, setTabValue] = useState<DeliveryMethod>(methods.watch('deliveryMethod'))
   const addressSelectionModalRef = useRef<BottomSheetModal>(null)
   const diarySelectionModalRef = useRef<BottomSheetModal>(null)
 
-  const [tabValue, setTabValue] = useState<DeliveryMethod>(methods.watch('deliveryMethod'))
+  // Data from AsyncStorage states
   const [orderItems, setOrderItems] = useState<OrderItemTemp<unknown> | null>(null)
   const [preset, setPreset] = useState<PresetWithComponentOptions | null>(null)
 
+  // Queries to get user addresses, profile and diaries
   const {
-    data: addresses,
-    refetch: refetchAddresses,
-    isLoading: isLoadingAddresses,
-    isFetched: isFetchedAddresses
-  } = useGetAddresses()
-  const {
-    data: currentUserProfile,
-    refetch: refetchUserProfile,
-    isLoading: isLoadingUserProfile
-  } = useGetProfile(user?.userId)
+    '0': { data: addresses, refetch: refetchAddresses, isLoading: isLoadingAddresses, isFetched: isFetchedAddresses },
+    '1': { data: currentUserProfile, refetch: refetchUserProfile, isLoading: isLoadingUserProfile },
+    '2': { data: diaries, refetch: refetchDiaries, isLoading: isLoadingDiaries, isFetched: isFetchedDiaries }
+  } = useReviewOrderQueries(user?.userId)
 
-  const {
-    data: diaries,
-    refetch: refetchDiaries,
-    isLoading: isLoadingDiaries,
-    isFetched: isFetchedDiaries
-  } = useGetAllDiaries()
-
-  const isLoadingAddressSection = isLoadingAddresses || isLoadingUserProfile
-
-  // Get default address or first address on load
+  // Get default address + active diary for auto selecting
   const defaultAddress = getDefaultAddress(addresses)
   const activeDiary = getActiveDiary(diaries?.items)
 
-  // Take user selected address to calculate shipping fee
+  // Get form values
   const addressId = methods.watch('addressId')
   const diaryId = methods.watch('measurementDiaryId')
   const voucherId = methods.watch('voucherDiscountId')
+  const rootMsg = errors.root?.message || (errors as any)['']?.message || (errors as any)._errors?.[0]
 
+  // Get current address + diary base on form values (if present)
   const currentAddress =
     (Array.isArray(addresses) ? addresses.find((address) => address?.id === addressId) : null) || defaultAddress
   const currentDiary =
     (Array.isArray(diaries?.items) ? diaries.items.find((diary) => diary?.id === diaryId) : null) || activeDiary
 
-  const orderType = orderItems?.type || null
-
+  // Get shipping fee from current address
   const {
     data: shippingFee,
     isLoading: isLoadingShippingFee,
@@ -137,6 +129,8 @@ export default function ReviewOrderScreen() {
     weight: 500
   })
 
+  const isLoadingAddressSection = isLoadingAddresses || isLoadingUserProfile
+  const orderType = orderItems?.type || null
   const totalPayment = shippingFee ? (preset?.price || 0) + shippingFee : preset?.price || 0
 
   const { refreshControl } = useRefreshs([refetchAddresses, refetchUserProfile, refetchShippingFee, refetchDiaries])
@@ -148,12 +142,12 @@ export default function ReviewOrderScreen() {
 
   const handleSelectAddress = useCallback(
     (addressId: string) => {
-      if (methods?.setValue) {
-        methods.setValue('addressId', addressId)
+      if (setValue) {
+        setValue('addressId', addressId)
       }
       addressSelectionModalRef.current?.dismiss()
     },
-    [methods]
+    [setValue]
   )
 
   const handlePresentDiaryModal = useCallback(() => {
@@ -162,19 +156,19 @@ export default function ReviewOrderScreen() {
 
   const handleSelectDiary = useCallback(
     (diaryId: string) => {
-      if (methods?.setValue) {
-        methods.setValue('measurementDiaryId', diaryId)
+      if (setValue) {
+        setValue('measurementDiaryId', diaryId)
       }
       diarySelectionModalRef.current?.dismiss()
     },
-    [methods]
+    [setValue]
   )
 
   // Tab handler
   const handleSwitchTab = (value: DeliveryMethod) => {
     setTabValue(value)
-    if (methods?.setValue) {
-      methods.setValue('deliveryMethod', value)
+    if (setValue) {
+      setValue('deliveryMethod', value)
     }
   }
 
@@ -216,50 +210,41 @@ export default function ReviewOrderScreen() {
           if (presetItem && typeof presetItem === 'object' && 'id' in presetItem) {
             const typedPreset = presetItem as PresetWithComponentOptions
             setPreset(typedPreset)
-            methods.setValue('presetId', typedPreset.id)
+            setValue('presetId', typedPreset.id)
           }
         }
       }
     }
 
     getPreset()
-  }, [methods, router])
-
-  // Set shipping fee to form
-  useFocusEffect(
-    useCallback(() => {
-      if (isFetchedShippingFee && shippingFee && methods?.setValue) {
-        methods.setValue('shippingFee', shippingFee)
-      }
-    }, [isFetchedShippingFee, shippingFee, methods])
-  )
+  }, [setValue, router])
 
   // Set default address to form
-  useFocusEffect(
-    useCallback(() => {
-      if (isFetchedAddresses && defaultAddress?.id && methods?.setValue) {
-        methods.setValue('addressId', defaultAddress.id)
-      }
-    }, [isFetchedAddresses, defaultAddress, methods])
-  )
+  useEffect(() => {
+    if (isFetchedAddresses && defaultAddress?.id && setValue) {
+      setValue('addressId', defaultAddress.id)
+    }
+  }, [isFetchedAddresses, defaultAddress, setValue])
 
   // Set active diary to form
-  useFocusEffect(
-    useCallback(() => {
-      if (isFetchedDiaries && activeDiary?.id && methods?.setValue) {
-        methods.setValue('measurementDiaryId', activeDiary.id)
-      }
-    }, [isFetchedDiaries, activeDiary, methods])
-  )
+  useEffect(() => {
+    if (isFetchedDiaries && currentDiary?.id && setValue) {
+      setValue('measurementDiaryId', currentDiary.id)
+    }
+  }, [isFetchedDiaries, currentDiary, setValue])
 
-  // If address changes, refetch shipping fee
-  useFocusEffect(
-    useCallback(() => {
-      if (currentAddress?.province && currentAddress?.district) {
-        refetchShippingFee()
-      }
-    }, [currentAddress?.province, currentAddress?.district, refetchShippingFee])
-  )
+  // Set shipping fee to form
+  useEffect(() => {
+    if (isFetchedShippingFee && shippingFee && setValue) {
+      setValue('shippingFee', shippingFee)
+    }
+  }, [isFetchedShippingFee, shippingFee, setValue])
+
+  useEffect(() => {
+    if (rootMsg) {
+      toast.error(rootMsg)
+    }
+  }, [rootMsg])
 
   const renderOrderSummaryContent = () => {
     if (!orderItems) {

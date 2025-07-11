@@ -36,6 +36,8 @@ export const useAddAddress = () => {
         router.replace('/setting/my-addresses')
       }
       queryClient.invalidateQueries({ queryKey: ['addresses'] })
+      queryClient.invalidateQueries({ queryKey: ['addresses-queries'] })
+      queryClient.invalidateQueries({ queryKey: ['shipping-fee'] })
     },
     onError: (error) => {
       methods.setError('root', { message: error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG })
