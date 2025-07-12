@@ -1,10 +1,11 @@
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { BlurView } from 'expo-blur'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
-import { ScrollView, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { toast } from 'sonner-native'
 import AutoHeightImage from '~/components/auto-height-image'
@@ -355,127 +356,148 @@ export default function ReviewOrderScreen() {
 
   return (
     <SafeView>
-      <View className='flex-row items-center gap-4 p-4'>
-        <TouchableOpacity onPress={handleGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
-        </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>Review Order</Text>
+      <View className='flex-1 relative'>
+        {isLoading && (
+          <>
+            <BlurView
+              experimentalBlurMethod='dimezisBlurView'
+              tint='dark'
+              intensity={5}
+              style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: 50 }}
+            />
+            <ActivityIndicator
+              className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[51]'
+              size='large'
+              color={PRIMARY_COLOR.LIGHT}
+            />
+          </>
+        )}
+
+        <View className='flex-row items-center gap-4 p-4'>
+          <TouchableOpacity onPress={handleGoBack}>
+            <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          </TouchableOpacity>
+          <Text className='font-inter-semibold text-xl'>Review Order</Text>
+        </View>
+
+        <BottomSheetModalProvider>
+          <FormProvider {...methods}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 46 }}
+              refreshControl={refreshControl}
+            >
+              <View className='flex flex-col gap-4 p-2 flex-1'>
+                {/* Address Section */}
+                <AddressSection
+                  tabValue={tabValue}
+                  isLoadingAddress={isLoadingAddressSection}
+                  isLoadingBranch={isLoadingBranches}
+                  address={currentAddress}
+                  branch={currentBranch}
+                  currentUserProfile={currentUserProfile}
+                  iconSize={SMALL_ICON_SIZE}
+                  handleSwitchTab={handleSwitchTab}
+                  handlePresentAddressModal={handlePresentAddressModal}
+                  handlePresentBranchModal={handlePresentBranchModal}
+                />
+
+                {/* Diary Section */}
+                <DiarySection
+                  isLoading={isLoadingDiaries}
+                  diary={currentDiary}
+                  handlePresentDiaryModal={handlePresentDiaryModal}
+                />
+
+                {/* Order Summary Section */}
+                <OrderSummarySection
+                  isLoadingShippingFee={isLoadingShippingFee}
+                  shippingFee={shippingFee}
+                  renderOrderSummaryContent={renderOrderSummaryContent}
+                  iconSize={SMALL_ICON_SIZE}
+                  orderItems={orderItems}
+                  preset={preset}
+                />
+
+                {/* MamaFit Vouchers */}
+                <VouchersSection iconSize={SMALL_ICON_SIZE} />
+
+                {/* Payment Methods Section */}
+                <PaymentMethodsSection />
+
+                {/* Payment Details Section */}
+                <PaymentDetailsSection
+                  iconSize={SMALL_ICON_SIZE}
+                  preset={preset}
+                  shippingFee={shippingFee}
+                  voucherId={voucherId}
+                  totalPayment={totalPayment}
+                />
+
+                <Text className='text-xs text-muted-foreground px-2 mb-4'>
+                  By clicking &apos;Place Order&apos;, you are agreeing to MamaFit&apos;s General Transaction Terms
+                </Text>
+              </View>
+            </ScrollView>
+
+            {/* Place Order */}
+            <View
+              className='absolute bottom-0 left-0 right-0 flex-row justify-end gap-3 bg-background p-3 border-t border-border'
+              style={{ paddingBottom: bottom, boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
+            >
+              <View className='flex flex-col items-end gap-1'>
+                <Text className='font-inter-semibold text-primary'>
+                  <Text className='text-sm'>Total</Text>{' '}
+                  <Text className='underline font-inter-semibold text-sm text-primary'>đ</Text>
+                  {totalPayment.toLocaleString('vi-VN')}
+                </Text>
+
+                <Text className='font-inter-medium text-primary text-sm'>
+                  <Text className='text-xs'>Saved</Text>{' '}
+                  <Text className='underline font-inter-medium text-sm text-primary'>đ</Text>
+                  {voucherId ? '12.800' : '0'}
+                </Text>
+              </View>
+              <Button
+                onPress={methods.handleSubmit(onSubmit)}
+                disabled={placePresetOrderMutation.isPending || isLoading}
+              >
+                <Text className='font-inter-medium'>
+                  {placePresetOrderMutation.isPending ? 'Placing Order...' : 'Place Order'}
+                </Text>
+              </Button>
+            </View>
+
+            {/* Modals */}
+            {addresses && Array.isArray(addresses) && (
+              <AddressSelectionModal
+                ref={addressSelectionModalRef}
+                addresses={addresses}
+                selectedAddressId={addressId || undefined}
+                onSelectAddress={handleSelectAddress}
+              />
+            )}
+
+            {diaries && diaries.items && Array.isArray(diaries.items) && (
+              <DiarySelectionModal
+                ref={diarySelectionModalRef}
+                diaries={diaries.items}
+                selectedDiaryId={diaryId || undefined}
+                onSelectDiary={handleSelectDiary}
+              />
+            )}
+
+            {branches && Array.isArray(branches) && deliveryMethod === DeliveryMethod.PICK_UP && (
+              <BranchSelectionModal
+                ref={branchSelectionModalRef}
+                branches={branches}
+                selectedBranchId={branchId || undefined}
+                onSelectBranch={handleSelectBranch}
+              />
+            )}
+          </FormProvider>
+        </BottomSheetModalProvider>
       </View>
-
-      <BottomSheetModalProvider>
-        <FormProvider {...methods}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 46 }}
-            refreshControl={refreshControl}
-          >
-            <View className='flex flex-col gap-4 p-2 flex-1'>
-              {/* Address Section */}
-              <AddressSection
-                tabValue={tabValue}
-                isLoadingAddress={isLoadingAddressSection}
-                isLoadingBranch={isLoadingBranches}
-                address={currentAddress}
-                branch={currentBranch}
-                currentUserProfile={currentUserProfile}
-                iconSize={SMALL_ICON_SIZE}
-                handleSwitchTab={handleSwitchTab}
-                handlePresentAddressModal={handlePresentAddressModal}
-                handlePresentBranchModal={handlePresentBranchModal}
-              />
-
-              {/* Diary Section */}
-              <DiarySection
-                isLoading={isLoadingDiaries}
-                diary={currentDiary}
-                handlePresentDiaryModal={handlePresentDiaryModal}
-              />
-
-              {/* Order Summary Section */}
-              <OrderSummarySection
-                isLoadingShippingFee={isLoadingShippingFee}
-                shippingFee={shippingFee}
-                renderOrderSummaryContent={renderOrderSummaryContent}
-                iconSize={SMALL_ICON_SIZE}
-                orderItems={orderItems}
-                preset={preset}
-              />
-
-              {/* MamaFit Vouchers */}
-              <VouchersSection iconSize={SMALL_ICON_SIZE} />
-
-              {/* Payment Methods Section */}
-              <PaymentMethodsSection />
-
-              {/* Payment Details Section */}
-              <PaymentDetailsSection
-                iconSize={SMALL_ICON_SIZE}
-                preset={preset}
-                shippingFee={shippingFee}
-                voucherId={voucherId}
-                totalPayment={totalPayment}
-              />
-
-              <Text className='text-xs text-muted-foreground px-2 mb-4'>
-                By clicking &apos;Place Order&apos;, you are agreeing to MamaFit&apos;s General Transaction Terms
-              </Text>
-            </View>
-          </ScrollView>
-
-          {/* Place Order */}
-          <View
-            className='absolute bottom-0 left-0 right-0 flex-row justify-end gap-3 bg-background p-3 border-t border-border'
-            style={{ paddingBottom: bottom, boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
-          >
-            <View className='flex flex-col items-end gap-1'>
-              <Text className='font-inter-semibold text-primary'>
-                <Text className='text-sm'>Total</Text>{' '}
-                <Text className='underline font-inter-semibold text-sm text-primary'>đ</Text>
-                {totalPayment.toLocaleString('vi-VN')}
-              </Text>
-
-              <Text className='font-inter-medium text-primary text-sm'>
-                <Text className='text-xs'>Saved</Text>{' '}
-                <Text className='underline font-inter-medium text-sm text-primary'>đ</Text>
-                {voucherId ? '12.800' : '0'}
-              </Text>
-            </View>
-            <Button onPress={methods.handleSubmit(onSubmit)} disabled={placePresetOrderMutation.isPending || isLoading}>
-              <Text className='font-inter-medium'>
-                {placePresetOrderMutation.isPending ? 'Placing Order...' : 'Place Order'}
-              </Text>
-            </Button>
-          </View>
-
-          {/* Modals */}
-          {addresses && Array.isArray(addresses) && (
-            <AddressSelectionModal
-              ref={addressSelectionModalRef}
-              addresses={addresses}
-              selectedAddressId={addressId || undefined}
-              onSelectAddress={handleSelectAddress}
-            />
-          )}
-
-          {diaries && diaries.items && Array.isArray(diaries.items) && (
-            <DiarySelectionModal
-              ref={diarySelectionModalRef}
-              diaries={diaries.items}
-              selectedDiaryId={diaryId || undefined}
-              onSelectDiary={handleSelectDiary}
-            />
-          )}
-
-          {branches && Array.isArray(branches) && deliveryMethod === DeliveryMethod.PICK_UP && (
-            <BranchSelectionModal
-              ref={branchSelectionModalRef}
-              branches={branches}
-              selectedBranchId={branchId || undefined}
-              onSelectBranch={handleSelectBranch}
-            />
-          )}
-        </FormProvider>
-      </BottomSheetModalProvider>
     </SafeView>
   )
 }
