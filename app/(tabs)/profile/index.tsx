@@ -18,6 +18,7 @@ import { SvgIcon } from '~/lib/constants/svg-icon'
 interface OrderStatus {
   id: number
   name: string
+  url: string
   icon: React.ReactNode
 }
 
@@ -25,21 +26,25 @@ const statuses: OrderStatus[] = [
   {
     id: 1,
     name: 'To Pay',
+    url: '/order/to-pay',
     icon: SvgIcon.toPay({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 2,
     name: 'To Ship',
+    url: '/order/to-ship',
     icon: SvgIcon.toShip({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 3,
     name: 'To Receive',
+    url: '/order/to-receive',
     icon: SvgIcon.toReceive({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 4,
     name: 'To Rate',
+    url: '/order/to-rate',
     icon: SvgIcon.toRate({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   }
 ]
@@ -103,7 +108,7 @@ export default function ProfileScreen() {
       </View>
       <View className='flex flex-row items-center justify-around mb-6'>
         {statuses.map((status) => (
-          <TouchableOpacity key={status.id}>
+          <TouchableOpacity key={status.id} onPress={() => router.push(status.url as any)}>
             <OrderStage status={status} />
           </TouchableOpacity>
         ))}

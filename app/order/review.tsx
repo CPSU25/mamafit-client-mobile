@@ -6,7 +6,6 @@ import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { toast } from 'sonner-native'
 import AutoHeightImage from '~/components/auto-height-image'
 import SafeView from '~/components/safe-view'
@@ -90,7 +89,6 @@ export default function ReviewOrderScreen() {
   const { user } = useAuth()
   const { methods, placePresetOrderMutation } = usePlacePresetOrder(clearOrderItems)
   const { setValue } = methods
-  const { bottom } = useSafeAreaInsets()
 
   const deliveryMethod = methods.watch('deliveryMethod')
 
@@ -384,7 +382,7 @@ export default function ReviewOrderScreen() {
           <FormProvider {...methods}>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: 46 }}
+              contentContainerStyle={{ paddingBottom: 56 }}
               refreshControl={refreshControl}
             >
               <View className='flex flex-col gap-4 p-2 flex-1'>
@@ -425,25 +423,27 @@ export default function ReviewOrderScreen() {
                 {/* Payment Methods Section */}
                 <PaymentMethodsSection />
 
-                {/* Payment Details Section */}
-                <PaymentDetailsSection
-                  iconSize={SMALL_ICON_SIZE}
-                  preset={preset}
-                  shippingFee={shippingFee}
-                  voucherId={voucherId}
-                  totalPayment={totalPayment}
-                />
+                <View className='gap-2'>
+                  {/* Payment Details Section */}
+                  <PaymentDetailsSection
+                    iconSize={SMALL_ICON_SIZE}
+                    preset={preset}
+                    shippingFee={shippingFee}
+                    voucherId={voucherId}
+                    totalPayment={totalPayment}
+                  />
 
-                <Text className='text-xs text-muted-foreground px-2 mb-4'>
-                  By clicking &apos;Place Order&apos;, you are agreeing to MamaFit&apos;s General Transaction Terms
-                </Text>
+                  <Text className='text-xs text-muted-foreground px-2 mb-4'>
+                    By clicking &apos;Place Order&apos;, you are agreeing to MamaFit&apos;s General Transaction Terms
+                  </Text>
+                </View>
               </View>
             </ScrollView>
 
             {/* Place Order */}
             <View
               className='absolute bottom-0 left-0 right-0 flex-row justify-end gap-3 bg-background p-3 border-t border-border'
-              style={{ paddingBottom: bottom, boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
+              style={{ boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
             >
               <View className='flex flex-col items-end gap-1'>
                 <Text className='font-inter-semibold text-primary'>
