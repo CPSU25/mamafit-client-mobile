@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { toast } from 'sonner-native'
 import AutoHeightImage from '~/components/auto-height-image'
 import SafeView from '~/components/safe-view'
@@ -88,6 +89,7 @@ export default function ReviewOrderScreen() {
   const { user } = useAuth()
   const { methods, placePresetOrderMutation } = usePlacePresetOrder(clearOrderItems)
   const { setValue } = methods
+  const { bottom } = useSafeAreaInsets()
 
   const deliveryMethod = methods.watch('deliveryMethod')
 
@@ -96,6 +98,7 @@ export default function ReviewOrderScreen() {
   const addressSelectionModalRef = useRef<BottomSheetModal>(null)
   const diarySelectionModalRef = useRef<BottomSheetModal>(null)
   const branchSelectionModalRef = useRef<BottomSheetModal>(null)
+  const voucherSelectionModalRef = useRef<BottomSheetModal>(null)
 
   // Data from AsyncStorage states
   const [orderItems, setOrderItems] = useState<OrderItemTemp<unknown> | null>(null)
@@ -144,6 +147,7 @@ export default function ReviewOrderScreen() {
   })
 
   const isLoadingAddressSection = isLoadingAddresses || isLoadingUserProfile
+  const isLoading = isLoadingAddressSection || isLoadingDiaries || isLoadingBranches || isLoadingShippingFee
   const orderType = orderItems?.type || null
   const totalPayment = shippingFee ? (preset?.price || 0) + shippingFee : preset?.price || 0
 
@@ -194,6 +198,20 @@ export default function ReviewOrderScreen() {
         setValue('branchId', branchId)
       }
       branchSelectionModalRef.current?.dismiss()
+    },
+    [setValue]
+  )
+
+  const handlePresentVoucherModal = useCallback(() => {
+    voucherSelectionModalRef.current?.present()
+  }, [])
+
+  const handleSelectVoucher = useCallback(
+    (voucherId: string) => {
+      if (setValue) {
+        setValue('voucherDiscountId', voucherId)
+      }
+      voucherSelectionModalRef.current?.dismiss()
     },
     [setValue]
   )
@@ -407,7 +425,7 @@ export default function ReviewOrderScreen() {
           {/* Place Order */}
           <View
             className='absolute bottom-0 left-0 right-0 flex-row justify-end gap-3 bg-background p-3 border-t border-border'
-            style={{ boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
+            style={{ paddingBottom: bottom, boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
           >
             <View className='flex flex-col items-end gap-1'>
               <Text className='font-inter-semibold text-primary'>
@@ -422,7 +440,7 @@ export default function ReviewOrderScreen() {
                 {voucherId ? '12.800' : '0'}
               </Text>
             </View>
-            <Button onPress={methods.handleSubmit(onSubmit)} disabled={placePresetOrderMutation.isPending}>
+            <Button onPress={methods.handleSubmit(onSubmit)} disabled={placePresetOrderMutation.isPending || isLoading}>
               <Text className='font-inter-medium'>
                 {placePresetOrderMutation.isPending ? 'Placing Order...' : 'Place Order'}
               </Text>
