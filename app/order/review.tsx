@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native'
+import Animated, { FadeInDown } from 'react-native-reanimated'
 import { toast } from 'sonner-native'
 import AutoHeightImage from '~/components/auto-height-image'
 import SafeView from '~/components/safe-view'
@@ -21,6 +22,7 @@ import OrderSummarySection from '~/features/order/components/order-summary-secti
 import PaymentDetailsSection from '~/features/order/components/payment-details-section/payment-details-section'
 import PaymentMethodsSection from '~/features/order/components/payment-methods-section/payment-methods-section'
 import VouchersSection from '~/features/order/components/vouchers-section/vouchers-section'
+import VouchersSelectionModal from '~/features/order/components/vouchers-section/vouchers-selection-modal'
 import { useGetShippingFee } from '~/features/order/hooks/use-get-shipping-fee'
 import { usePlacePresetOrder } from '~/features/order/hooks/use-place-preset-order'
 import { useReviewOrderQueries } from '~/features/order/hooks/use-review-order-queries'
@@ -34,6 +36,7 @@ import { Diary } from '~/types/diary.type'
 import { OrderItemTemp } from '~/types/order-item.type'
 import { Branch } from '~/types/order.type'
 import { PresetWithComponentOptions } from '~/types/preset.type'
+import { FlattenedVoucher, VoucherBatchWithVouchers } from '~/types/voucher.type'
 
 const SMALL_ICON_SIZE = 18
 
@@ -76,6 +79,36 @@ const getOrderItems = async () => {
   }
 }
 
+export function getSavedAmount(voucher: FlattenedVoucher | null, merchandiseTotal: number): number {
+  if (!voucher) return 0
+
+  if (voucher.discountType === 'FIXED') {
+    return voucher.discountValue
+  }
+
+  const percentageDiscount = (voucher.discountValue * merchandiseTotal) / 100
+
+  const cappedDiscount =
+    voucher.maximumDiscountValue > 0 ? Math.min(percentageDiscount, voucher.maximumDiscountValue) : percentageDiscount
+
+  return cappedDiscount
+}
+
+const getFlattenedVouchers = (vouchers: VoucherBatchWithVouchers[]): FlattenedVoucher[] => {
+  return vouchers.flatMap((batch) => {
+    const { details, id: voucherBatchId, ...parentRest } = batch
+    return details.map((detail) => {
+      const { id: voucherId, voucherBatchId: _omit, ...detailRest } = detail
+      return {
+        voucherId,
+        voucherBatchId,
+        ...detailRest,
+        ...parentRest
+      }
+    })
+  })
+}
+
 const clearOrderItems = async () => {
   try {
     await AsyncStorage.removeItem('order-items')
@@ -108,7 +141,8 @@ export default function ReviewOrderScreen() {
     '0': { data: addresses, refetch: refetchAddresses, isLoading: isLoadingAddresses, isFetched: isFetchedAddresses },
     '1': { data: currentUserProfile, refetch: refetchUserProfile, isLoading: isLoadingUserProfile },
     '2': { data: diaries, refetch: refetchDiaries, isLoading: isLoadingDiaries, isFetched: isFetchedDiaries },
-    '3': { data: branches, refetch: refetchBranches, isLoading: isLoadingBranches, isFetched: isFetchedBranches }
+    '3': { data: branches, refetch: refetchBranches, isLoading: isLoadingBranches, isFetched: isFetchedBranches },
+    '4': { data: vouchers, refetch: refetchVouchers, isLoading: isLoadingVouchers }
   } = useReviewOrderQueries(user?.userId)
 
   // Get default address + active diary for auto selecting
@@ -127,9 +161,12 @@ export default function ReviewOrderScreen() {
     (Array.isArray(addresses) ? addresses.find((address) => address?.id === addressId) : null) || defaultAddress
   const currentDiary =
     (Array.isArray(diaries?.items) ? diaries.items.find((diary) => diary?.id === diaryId) : null) || activeDiary
-
   const currentBranch =
     (Array.isArray(branches) ? branches.find((branch) => branch?.id === branchId) : null) || defaultBranch
+  const currentVoucher =
+    (Array.isArray(vouchers)
+      ? getFlattenedVouchers(vouchers).find((voucher) => voucher?.voucherId === voucherId)
+      : null) || null
 
   // Get shipping fee from current address
   const {
@@ -146,16 +183,22 @@ export default function ReviewOrderScreen() {
   })
 
   const isLoadingAddressSection = isLoadingAddresses || isLoadingUserProfile
-  const isLoading = isLoadingAddressSection || isLoadingDiaries || isLoadingBranches || isLoadingShippingFee
+  const isLoading =
+    isLoadingAddressSection || isLoadingDiaries || isLoadingBranches || isLoadingShippingFee || isLoadingVouchers
   const orderType = orderItems?.type || null
-  const totalPayment = shippingFee ? (preset?.price || 0) + shippingFee : preset?.price || 0
+
+  const merchandiseTotal = orderType === 'preset' ? preset?.price || 0 : 0
+  const savedAmount = getSavedAmount(currentVoucher, merchandiseTotal)
+
+  const totalPayment = shippingFee ? merchandiseTotal + shippingFee - savedAmount : merchandiseTotal - savedAmount
 
   const { refreshControl } = useRefreshs([
     refetchAddresses,
     refetchUserProfile,
     refetchShippingFee,
     refetchDiaries,
-    refetchBranches
+    refetchBranches,
+    refetchVouchers
   ])
 
   // Modal handlers
@@ -294,10 +337,10 @@ export default function ReviewOrderScreen() {
 
   // Set active diary to form
   useEffect(() => {
-    if (isFetchedDiaries && currentDiary?.id && setValue) {
-      setValue('measurementDiaryId', currentDiary.id)
+    if (isFetchedDiaries && activeDiary?.id && setValue) {
+      setValue('measurementDiaryId', activeDiary.id)
     }
-  }, [isFetchedDiaries, currentDiary, setValue])
+  }, [isFetchedDiaries, activeDiary, setValue])
 
   // Set shipping fee to form
   useEffect(() => {
@@ -387,43 +430,58 @@ export default function ReviewOrderScreen() {
             >
               <View className='flex flex-col gap-4 p-2 flex-1'>
                 {/* Address Section */}
-                <AddressSection
-                  tabValue={tabValue}
-                  isLoadingAddress={isLoadingAddressSection}
-                  isLoadingBranch={isLoadingBranches}
-                  address={currentAddress}
-                  branch={currentBranch}
-                  currentUserProfile={currentUserProfile}
-                  iconSize={SMALL_ICON_SIZE}
-                  handleSwitchTab={handleSwitchTab}
-                  handlePresentAddressModal={handlePresentAddressModal}
-                  handlePresentBranchModal={handlePresentBranchModal}
-                />
+                <Animated.View entering={FadeInDown.delay(100)}>
+                  <AddressSection
+                    tabValue={tabValue}
+                    isLoadingAddress={isLoadingAddressSection}
+                    isLoadingBranch={isLoadingBranches}
+                    address={currentAddress}
+                    branch={currentBranch}
+                    currentUserProfile={currentUserProfile}
+                    iconSize={SMALL_ICON_SIZE}
+                    handleSwitchTab={handleSwitchTab}
+                    handlePresentAddressModal={handlePresentAddressModal}
+                    handlePresentBranchModal={handlePresentBranchModal}
+                  />
+                </Animated.View>
 
                 {/* Diary Section */}
-                <DiarySection
-                  isLoading={isLoadingDiaries}
-                  diary={currentDiary}
-                  handlePresentDiaryModal={handlePresentDiaryModal}
-                />
+                <Animated.View entering={FadeInDown.delay(200)}>
+                  <DiarySection
+                    isLoading={isLoadingDiaries}
+                    diary={currentDiary}
+                    handlePresentDiaryModal={handlePresentDiaryModal}
+                  />
+                </Animated.View>
 
                 {/* Order Summary Section */}
-                <OrderSummarySection
-                  isLoadingShippingFee={isLoadingShippingFee}
-                  shippingFee={shippingFee}
-                  renderOrderSummaryContent={renderOrderSummaryContent}
-                  iconSize={SMALL_ICON_SIZE}
-                  orderItems={orderItems}
-                  preset={preset}
-                />
+                <Animated.View entering={FadeInDown.delay(300)}>
+                  <OrderSummarySection
+                    isLoadingShippingFee={isLoadingShippingFee}
+                    shippingFee={shippingFee}
+                    renderOrderSummaryContent={renderOrderSummaryContent}
+                    iconSize={SMALL_ICON_SIZE}
+                    orderItems={orderItems}
+                    preset={preset}
+                  />
+                </Animated.View>
 
                 {/* MamaFit Vouchers */}
-                <VouchersSection iconSize={SMALL_ICON_SIZE} />
+                <Animated.View entering={FadeInDown.delay(400)}>
+                  <VouchersSection
+                    iconSize={SMALL_ICON_SIZE}
+                    voucher={currentVoucher}
+                    onPress={handlePresentVoucherModal}
+                    savedAmount={savedAmount}
+                  />
+                </Animated.View>
 
                 {/* Payment Methods Section */}
-                <PaymentMethodsSection />
+                <Animated.View entering={FadeInDown.delay(500)}>
+                  <PaymentMethodsSection />
+                </Animated.View>
 
-                <View className='gap-2'>
+                <Animated.View entering={FadeInDown.delay(600)} className='gap-2'>
                   {/* Payment Details Section */}
                   <PaymentDetailsSection
                     iconSize={SMALL_ICON_SIZE}
@@ -431,12 +489,13 @@ export default function ReviewOrderScreen() {
                     shippingFee={shippingFee}
                     voucherId={voucherId}
                     totalPayment={totalPayment}
+                    savedAmount={savedAmount}
                   />
 
                   <Text className='text-xs text-muted-foreground px-2 mb-4'>
                     By clicking &apos;Place Order&apos;, you are agreeing to MamaFit&apos;s General Transaction Terms
                   </Text>
-                </View>
+                </Animated.View>
               </View>
             </ScrollView>
 
@@ -455,7 +514,7 @@ export default function ReviewOrderScreen() {
                 <Text className='font-inter-medium text-primary text-sm'>
                   <Text className='text-xs'>Saved</Text>{' '}
                   <Text className='underline font-inter-medium text-sm text-primary'>đ</Text>
-                  {voucherId ? '12.800' : '0'}
+                  {voucherId ? savedAmount.toLocaleString('vi-VN') : '0'}
                 </Text>
               </View>
               <Button
@@ -493,6 +552,16 @@ export default function ReviewOrderScreen() {
                 branches={branches}
                 selectedBranchId={branchId || undefined}
                 onSelectBranch={handleSelectBranch}
+              />
+            )}
+
+            {vouchers && Array.isArray(vouchers) && (
+              <VouchersSelectionModal
+                ref={voucherSelectionModalRef}
+                vouchers={getFlattenedVouchers(vouchers)}
+                selectedVoucherId={voucherId || undefined}
+                onSelectVoucher={handleSelectVoucher}
+                merchandiseTotal={merchandiseTotal}
               />
             )}
           </FormProvider>

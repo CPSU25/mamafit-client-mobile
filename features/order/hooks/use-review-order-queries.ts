@@ -3,6 +3,7 @@ import { useAuth } from '~/hooks/use-auth'
 import diaryService from '~/services/diary.service'
 import orderService from '~/services/order.service'
 import userService from '~/services/user.service'
+import voucherService from '~/services/voucher.service'
 
 export const useReviewOrderQueries = (userId: string | undefined) => {
   const { user, isAuthenticated } = useAuth()
@@ -27,6 +28,11 @@ export const useReviewOrderQueries = (userId: string | undefined) => {
       {
         queryKey: ['branches-queries', user?.userId],
         queryFn: () => orderService.getBranches(),
+        enabled: isAuthenticated
+      },
+      {
+        queryKey: ['vouchers-queries', user?.userId],
+        queryFn: voucherService.getVouchers,
         enabled: isAuthenticated
       }
     ]

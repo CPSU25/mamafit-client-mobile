@@ -112,9 +112,7 @@ export const getOrderedComponentOptions = (options: ComponentOptionWithComponent
   }).filter(Boolean)
 }
 
-export const formatVnPhone = (phone: string | undefined) => {
-  if (!phone) return
-
+export const formatVnPhone = (phone: string) => {
   const digits = phone.replace(/\D/g, '')
 
   if (digits.length === 10) {

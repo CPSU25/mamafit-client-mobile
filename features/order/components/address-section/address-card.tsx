@@ -23,7 +23,10 @@ export default function AddressCard({ address, fullName, phoneNumber, onPress }:
         <MaterialCommunityIcons name='map-marker' size={18} color={PRIMARY_COLOR.LIGHT} />
         <View className='flex-1 gap-0.5'>
           <Text className='text-sm font-inter-medium' numberOfLines={1}>
-            {fullName} <Text className='text-muted-foreground text-xs'>{formatVnPhone(phoneNumber)}</Text>
+            {fullName}{' '}
+            <Text className='text-muted-foreground text-xs'>
+              {phoneNumber ? formatVnPhone(phoneNumber) : '(missing phone number)'}
+            </Text>
           </Text>
 
           <Text numberOfLines={2} className={`text-xs ${isDarkColorScheme ? 'text-white/70' : 'text-black/70'}`}>

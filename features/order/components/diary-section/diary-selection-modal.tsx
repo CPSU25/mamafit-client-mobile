@@ -45,6 +45,7 @@ const DiarySelectionModal = forwardRef<BottomSheetModal, DiarySelectionModalProp
           keyExtractor={(diary) => diary.id}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
+            // TODO: improve ui
             <TouchableOpacity onPress={() => onSelectDiary(item.id)}>
               <Card className={cn('p-4 gap-1', item.id === selectedDiaryId && 'border-primary bg-primary/10')}>
                 <Text className='font-inter-medium'>{item.name}</Text>

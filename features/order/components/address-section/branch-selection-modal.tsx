@@ -43,6 +43,7 @@ const BranchSelectionModal = forwardRef<BottomSheetModal, BranchSelectionModalPr
           keyExtractor={(address) => address.id}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
+            // TODO: improve ui
             <TouchableOpacity onPress={() => onSelectBranch(item.id)}>
               <Card className={cn('p-4 gap-1', item.id === selectedBranchId && 'border-primary bg-primary/10')}>
                 <Text className='font-inter-medium' numberOfLines={1}>

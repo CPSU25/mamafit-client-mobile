@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner-native'
@@ -28,6 +28,8 @@ const defaultValues: PlacePresetOrderFormSchema = {
 
 export const usePlacePresetOrder = (onSuccess: () => void) => {
   const router = useRouter()
+  const queryClient = useQueryClient()
+
   const methods = useForm<PlacePresetOrderFormSchema>({
     defaultValues,
     resolver: zodResolver(placePresetOrderFormSchema)
@@ -37,6 +39,7 @@ export const usePlacePresetOrder = (onSuccess: () => void) => {
     mutationFn: orderService.placePresetOrder,
     onSuccess: (orderId) => {
       if (orderId) {
+        queryClient.invalidateQueries({ queryKey: ['vouchers-queries'] })
         router.replace({ pathname: '/payment/[orderId]/qr-code', params: { orderId } })
         setTimeout(() => {
           onSuccess()

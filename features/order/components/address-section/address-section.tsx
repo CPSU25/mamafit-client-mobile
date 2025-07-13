@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { WarningCard } from '~/components/ui/alert-card'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
@@ -44,22 +44,25 @@ export default function AddressSection({
       return <Skeleton className='rounded-2xl h-20' />
     }
 
-    if (!currentUserProfile?.phoneNumber) {
-      return (
-        <TouchableOpacity onPress={() => router.push('/setting/account')}>
-          <WarningCard title='Oops! No phone number found' description='Please add your phone number first' />
-        </TouchableOpacity>
-      )
-    }
-
     if (address) {
       return (
-        <AddressCard
-          address={address}
-          fullName={currentUserProfile?.fullName || undefined}
-          phoneNumber={currentUserProfile?.phoneNumber || undefined}
-          onPress={handlePresentAddressModal}
-        />
+        <View className='gap-2'>
+          {!currentUserProfile?.phoneNumber && (
+            <TouchableOpacity onPress={() => router.push('/setting/account')}>
+              <WarningCard
+                title='Oops! No phone number found'
+                description='Please add your phone number first'
+                hasAnimation={false}
+              />
+            </TouchableOpacity>
+          )}
+          <AddressCard
+            address={address}
+            fullName={currentUserProfile?.fullName || undefined}
+            phoneNumber={currentUserProfile?.phoneNumber || undefined}
+            onPress={handlePresentAddressModal}
+          />
+        </View>
       )
     } else {
       return (
@@ -78,16 +81,21 @@ export default function AddressSection({
       return <Skeleton className='rounded-2xl h-20' />
     }
 
-    if (!currentUserProfile?.phoneNumber) {
-      return (
-        <TouchableOpacity onPress={() => router.push('/setting/account')}>
-          <WarningCard title='Oops! No phone number found' description='Please add your phone number first' />
-        </TouchableOpacity>
-      )
-    }
-
     if (branch) {
-      return <BranchCard branch={branch} onPress={handlePresentBranchModal} />
+      return (
+        <View className='gap-2'>
+          {!currentUserProfile?.phoneNumber && (
+            <TouchableOpacity onPress={() => router.push('/setting/account')}>
+              <WarningCard
+                title='Oops! No phone number found'
+                description='Please add your phone number first'
+                hasAnimation={false}
+              />
+            </TouchableOpacity>
+          )}
+          <BranchCard branch={branch} onPress={handlePresentBranchModal} />
+        </View>
+      )
     }
 
     return <WarningCard title='Oops! No branch found' description='This feature is not available yet' />

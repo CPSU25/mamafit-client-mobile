@@ -12,6 +12,7 @@ interface PaymentDetailsSectionProps {
   shippingFee: number | undefined
   voucherId: string | null
   totalPayment: number
+  savedAmount: number
 }
 
 export default function PaymentDetailsSection({
@@ -19,7 +20,8 @@ export default function PaymentDetailsSection({
   preset,
   shippingFee,
   voucherId,
-  totalPayment
+  totalPayment,
+  savedAmount
 }: PaymentDetailsSectionProps) {
   return (
     <Card className='p-3' style={[styles.container]}>
@@ -46,7 +48,8 @@ export default function PaymentDetailsSection({
           <View className='flex-row items-baseline'>
             <Text className='text-xs text-muted-foreground flex-1'>Discount Subtotal</Text>
             <Text className='text-xs text-primary'>
-              -<Text className='underline text-xs text-primary'>đ</Text>12.800
+              -<Text className='underline text-xs text-primary'>đ</Text>
+              {savedAmount.toLocaleString('vi-VN')}
             </Text>
           </View>
         ) : null}
