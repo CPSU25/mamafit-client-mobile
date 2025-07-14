@@ -45,7 +45,7 @@ export const placePresetOrderFormSchema = z
         message: 'Please select a branch for pick up.'
       })
     }
-    console.log(data.shippingFee)
+
     // Require shippingFee > 0 for DELIVERY
     if (data.deliveryMethod === DeliveryMethod.DELIVERY && (!data.shippingFee || data.shippingFee <= 0)) {
       ctx.addIssue({

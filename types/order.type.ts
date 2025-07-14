@@ -31,3 +31,19 @@ export interface QRCodeResponse {
     orderItems: OrderItem[]
   }
 }
+
+export interface Branch {
+  id: string
+  branchManagerId: string
+  name: string
+  description: string
+  openingHour: string | null
+  images: string[]
+  mapId: string
+  province: string
+  district: string
+  ward: string
+  street: string
+  latitude: number
+  longitude: number
+}

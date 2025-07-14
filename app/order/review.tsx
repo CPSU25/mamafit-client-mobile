@@ -1,45 +1,42 @@
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useFocusEffect, useRouter } from 'expo-router'
-import { useCallback, useRef, useState } from 'react'
-import { Controller, FormProvider, SubmitHandler } from 'react-hook-form'
+import { BlurView } from 'expo-blur'
+import { useRouter } from 'expo-router'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native'
+import Animated, { FadeInDown } from 'react-native-reanimated'
+import { toast } from 'sonner-native'
 import AutoHeightImage from '~/components/auto-height-image'
 import SafeView from '~/components/safe-view'
-import { WarningCard } from '~/components/ui/alert-card'
 import { Button } from '~/components/ui/button'
-import { Card } from '~/components/ui/card'
-import { Label } from '~/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
-import { Separator } from '~/components/ui/separator'
 import { Skeleton } from '~/components/ui/skeleton'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Text } from '~/components/ui/text'
-import { useGetAllDiaries } from '~/features/diary/hooks/use-get-all-diaries'
-import AddressCard from '~/features/order/components/address-card'
-import AddressSelectionModal from '~/features/order/components/address-selection-modal'
-import DiaryCard from '~/features/order/components/diary-card'
-import DiarySelectionModal from '~/features/order/components/diary-selection-modal'
+import AddressSection from '~/features/order/components/address-section/address-section'
+import AddressSelectionModal from '~/features/order/components/address-section/address/address-selection-modal'
+import BranchSelectionModal from '~/features/order/components/address-section/branch/branch-selection-modal'
+import DiarySection from '~/features/order/components/diary-section/diary-section'
+import DiarySelectionModal from '~/features/order/components/diary-section/diary-selection-modal'
+import OrderSummarySection from '~/features/order/components/order-summary-section/order-summary-section'
+import PaymentDetailsSection from '~/features/order/components/payment-details-section/payment-details-section'
+import PaymentMethodsSection from '~/features/order/components/payment-methods-section/payment-methods-section'
+import VouchersSection from '~/features/order/components/vouchers-section/vouchers-section'
+import VouchersSelectionModal from '~/features/order/components/vouchers-section/vouchers-selection-modal'
 import { useGetShippingFee } from '~/features/order/hooks/use-get-shipping-fee'
 import { usePlacePresetOrder } from '~/features/order/hooks/use-place-preset-order'
+import { useReviewOrderQueries } from '~/features/order/hooks/use-review-order-queries'
 import { DeliveryMethod, PaymentType, PlacePresetOrderFormSchema } from '~/features/order/validations'
-import { useGetAddresses } from '~/features/user/hooks/use-get-addresses'
-import { useGetProfile } from '~/features/user/hooks/use-get-profile'
 import { useAuth } from '~/hooks/use-auth'
-import { useColorScheme } from '~/hooks/use-color-scheme'
 import { useRefreshs } from '~/hooks/use-refresh'
-import { ICON_SIZE, PRIMARY_COLOR, styles } from '~/lib/constants/constants'
-import { SvgIcon } from '~/lib/constants/svg-icon'
-import { cn, getOrderedComponentOptions } from '~/lib/utils'
+import { DEPOSIT_PERCENTAGE, PRIMARY_COLOR } from '~/lib/constants/constants'
+import { getOrderedComponentOptions } from '~/lib/utils'
 import { Address } from '~/types/address.type'
 import { Diary } from '~/types/diary.type'
+import { OrderItemTemp } from '~/types/order-item.type'
+import { Branch } from '~/types/order.type'
 import { PresetWithComponentOptions } from '~/types/preset.type'
-
-interface OrderItem<T> {
-  type: string
-  items: T[]
-}
+import { FlattenedVoucher, VoucherBatchWithVouchers } from '~/types/voucher.type'
 
 const SMALL_ICON_SIZE = 18
 
@@ -55,12 +52,17 @@ const getActiveDiary = (diaries: Diary[] | null | undefined) => {
   return activeDiary || diaries[0] || null
 }
 
+const getDefaultBranch = (branches: Branch[] | null | undefined) => {
+  if (!branches || !Array.isArray(branches) || branches.length === 0) return null
+  return branches[0] || null
+}
+
 const getOrderItems = async () => {
   try {
     const orderItems = await AsyncStorage.getItem('order-items')
     if (!orderItems) return null
 
-    const parsedOrderItems = JSON.parse(orderItems) as OrderItem<unknown>
+    const parsedOrderItems = JSON.parse(orderItems) as OrderItemTemp<unknown>
     if (
       parsedOrderItems &&
       typeof parsedOrderItems === 'object' &&
@@ -77,6 +79,36 @@ const getOrderItems = async () => {
   }
 }
 
+export function getSavedAmount(voucher: FlattenedVoucher | null, merchandiseTotal: number): number {
+  if (!voucher) return 0
+
+  if (voucher.discountType === 'FIXED') {
+    return voucher.discountValue
+  }
+
+  const percentageDiscount = (voucher.discountValue * merchandiseTotal) / 100
+
+  const cappedDiscount =
+    voucher.maximumDiscountValue > 0 ? Math.min(percentageDiscount, voucher.maximumDiscountValue) : percentageDiscount
+
+  return cappedDiscount
+}
+
+const getFlattenedVouchers = (vouchers: VoucherBatchWithVouchers[]): FlattenedVoucher[] => {
+  return vouchers.flatMap((batch) => {
+    const { details, id: voucherBatchId, ...parentRest } = batch
+    return details.map((detail) => {
+      const { id: voucherId, voucherBatchId: _omit, ...detailRest } = detail
+      return {
+        voucherId,
+        voucherBatchId,
+        ...detailRest,
+        ...parentRest
+      }
+    })
+  })
+}
+
 const clearOrderItems = async () => {
   try {
     await AsyncStorage.removeItem('order-items')
@@ -88,67 +120,92 @@ const clearOrderItems = async () => {
 export default function ReviewOrderScreen() {
   const router = useRouter()
   const { user } = useAuth()
-  const { methods, initForm, placePresetOrderMutation } = usePlacePresetOrder(clearOrderItems)
-  const { isDarkColorScheme } = useColorScheme()
+  const { methods, placePresetOrderMutation } = usePlacePresetOrder(clearOrderItems)
+  const { setValue } = methods
 
+  const deliveryMethod = methods.watch('deliveryMethod')
+
+  // UI states
+  const [tabValue, setTabValue] = useState<DeliveryMethod>(deliveryMethod)
   const addressSelectionModalRef = useRef<BottomSheetModal>(null)
   const diarySelectionModalRef = useRef<BottomSheetModal>(null)
+  const branchSelectionModalRef = useRef<BottomSheetModal>(null)
+  const voucherSelectionModalRef = useRef<BottomSheetModal>(null)
 
-  const [tabValue, setTabValue] = useState<DeliveryMethod>(methods.watch('deliveryMethod'))
-  const [orderItems, setOrderItems] = useState<OrderItem<unknown> | null>(null)
+  // Data from AsyncStorage states
+  const [orderItems, setOrderItems] = useState<OrderItemTemp<unknown> | null>(null)
   const [preset, setPreset] = useState<PresetWithComponentOptions | null>(null)
 
+  // Queries to get user addresses, profile and diaries
   const {
-    data: addresses,
-    refetch: refetchAddresses,
-    isLoading: isLoadingAddresses,
-    isFetched: isFetchedAddresses
-  } = useGetAddresses()
-  const {
-    data: currentUserProfile,
-    refetch: refetchUserProfile,
-    isLoading: isLoadingUserProfile
-  } = useGetProfile(user?.userId)
+    '0': { data: addresses, refetch: refetchAddresses, isLoading: isLoadingAddresses, isFetched: isFetchedAddresses },
+    '1': { data: currentUserProfile, refetch: refetchUserProfile, isLoading: isLoadingUserProfile },
+    '2': { data: diaries, refetch: refetchDiaries, isLoading: isLoadingDiaries, isFetched: isFetchedDiaries },
+    '3': { data: branches, refetch: refetchBranches, isLoading: isLoadingBranches, isFetched: isFetchedBranches },
+    '4': { data: vouchers, refetch: refetchVouchers, isLoading: isLoadingVouchers }
+  } = useReviewOrderQueries(user?.userId)
 
-  const {
-    data: diaries,
-    refetch: refetchDiaries,
-    isLoading: isLoadingDiaries,
-    isFetched: isFetchedDiaries
-  } = useGetAllDiaries()
-
-  const isLoadingAddressCard = isLoadingAddresses || isLoadingUserProfile
-
-  // Get default address or first address on load
+  // Get default address + active diary for auto selecting
   const defaultAddress = getDefaultAddress(addresses)
   const activeDiary = getActiveDiary(diaries?.items)
+  const defaultBranch = getDefaultBranch(branches)
 
-  // Take user selected address to calculate shipping fee
+  // Get form values
   const addressId = methods.watch('addressId')
   const diaryId = methods.watch('measurementDiaryId')
+  const branchId = methods.watch('branchId')
   const voucherId = methods.watch('voucherDiscountId')
+  const paymentType = methods.watch('paymentType')
 
+  // Get current address + diary base on form values (if present)
   const currentAddress =
     (Array.isArray(addresses) ? addresses.find((address) => address?.id === addressId) : null) || defaultAddress
   const currentDiary =
     (Array.isArray(diaries?.items) ? diaries.items.find((diary) => diary?.id === diaryId) : null) || activeDiary
+  const currentBranch =
+    (Array.isArray(branches) ? branches.find((branch) => branch?.id === branchId) : null) || defaultBranch
+  const currentVoucher =
+    (Array.isArray(vouchers)
+      ? getFlattenedVouchers(vouchers).find((voucher) => voucher?.voucherId === voucherId)
+      : null) || null
 
-  const orderType = orderItems?.type || null
-
+  // Get shipping fee from current address
   const {
     data: shippingFee,
     isLoading: isLoadingShippingFee,
     refetch: refetchShippingFee,
     isFetched: isFetchedShippingFee
   } = useGetShippingFee({
-    province: currentAddress?.province || '',
-    district: currentAddress?.district || '',
+    province:
+      deliveryMethod === DeliveryMethod.DELIVERY ? currentAddress?.province || '' : currentBranch?.province || '',
+    district:
+      deliveryMethod === DeliveryMethod.DELIVERY ? currentAddress?.district || '' : currentBranch?.district || '',
     weight: 500
   })
 
-  const totalPayment = shippingFee ? (preset?.price || 0) + shippingFee : preset?.price || 0
+  const isLoadingAddressSection = isLoadingAddresses || isLoadingUserProfile
+  const isLoading =
+    isLoadingAddressSection || isLoadingDiaries || isLoadingBranches || isLoadingShippingFee || isLoadingVouchers
+  const orderType = orderItems?.type || null
 
-  const { refreshControl } = useRefreshs([refetchAddresses, refetchUserProfile, refetchShippingFee, refetchDiaries])
+  const merchandiseTotal =
+    orderType === 'preset'
+      ? paymentType === PaymentType.DEPOSIT
+        ? (preset?.price || 0) * DEPOSIT_PERCENTAGE
+        : preset?.price || 0
+      : 0
+  const savedAmount = getSavedAmount(currentVoucher, merchandiseTotal)
+
+  const totalPayment = shippingFee ? merchandiseTotal + shippingFee - savedAmount : merchandiseTotal - savedAmount
+
+  const { refreshControl } = useRefreshs([
+    refetchAddresses,
+    refetchUserProfile,
+    refetchShippingFee,
+    refetchDiaries,
+    refetchBranches,
+    refetchVouchers
+  ])
 
   // Modal handlers
   const handlePresentAddressModal = useCallback(() => {
@@ -157,33 +214,61 @@ export default function ReviewOrderScreen() {
 
   const handleSelectAddress = useCallback(
     (addressId: string) => {
-      if (methods?.setValue) {
-        methods.setValue('addressId', addressId)
+      if (setValue) {
+        setValue('addressId', addressId)
       }
       addressSelectionModalRef.current?.dismiss()
     },
-    [methods]
+    [setValue]
   )
 
-  const handlePresetDiaryModal = useCallback(() => {
+  const handlePresentDiaryModal = useCallback(() => {
     diarySelectionModalRef.current?.present()
   }, [])
 
   const handleSelectDiary = useCallback(
     (diaryId: string) => {
-      if (methods?.setValue) {
-        methods.setValue('measurementDiaryId', diaryId)
+      if (setValue) {
+        setValue('measurementDiaryId', diaryId)
       }
       diarySelectionModalRef.current?.dismiss()
     },
-    [methods]
+    [setValue]
+  )
+
+  const handlePresentBranchModal = useCallback(() => {
+    branchSelectionModalRef.current?.present()
+  }, [])
+
+  const handleSelectBranch = useCallback(
+    (branchId: string) => {
+      if (setValue) {
+        setValue('branchId', branchId)
+      }
+      branchSelectionModalRef.current?.dismiss()
+    },
+    [setValue]
+  )
+
+  const handlePresentVoucherModal = useCallback(() => {
+    voucherSelectionModalRef.current?.present()
+  }, [])
+
+  const handleSelectVoucher = useCallback(
+    (voucherId: string) => {
+      if (setValue) {
+        setValue('voucherDiscountId', voucherId)
+      }
+      voucherSelectionModalRef.current?.dismiss()
+    },
+    [setValue]
   )
 
   // Tab handler
   const handleSwitchTab = (value: DeliveryMethod) => {
     setTabValue(value)
-    if (methods?.setValue) {
-      methods.setValue('deliveryMethod', value)
+    if (setValue) {
+      setValue('deliveryMethod', value)
     }
   }
 
@@ -199,7 +284,13 @@ export default function ReviewOrderScreen() {
 
   // Place order
   const onSubmit: SubmitHandler<PlacePresetOrderFormSchema> = (data) => {
+    if (!currentUserProfile?.phoneNumber) {
+      toast.error('Please add your phone number first')
+      return
+    }
+
     console.log(data)
+
     if (orderType === 'preset') {
       placePresetOrderMutation.mutate(data)
     } else {
@@ -208,69 +299,61 @@ export default function ReviewOrderScreen() {
   }
 
   // Set preset to form
-  useFocusEffect(
-    useCallback(() => {
-      const getPreset = async () => {
-        const items = await getOrderItems()
+  useEffect(() => {
+    const getPreset = async () => {
+      const items = await getOrderItems()
 
-        if (!items) {
-          router.replace('/')
-          return
-        }
+      if (!items) {
+        router.replace('/')
+        return
+      }
 
-        setOrderItems(items)
+      setOrderItems(items)
 
-        if (Array.isArray(items.items) && items.items.length > 0) {
-          if (items?.type === 'preset') {
-            const presetItem = items.items[0]
-            if (presetItem && typeof presetItem === 'object' && 'id' in presetItem) {
-              const typedPreset = presetItem as PresetWithComponentOptions
-              setPreset(typedPreset)
-              methods.setValue('presetId', typedPreset.id)
-            }
+      if (Array.isArray(items.items) && items.items.length > 0) {
+        if (items?.type === 'preset') {
+          const presetItem = items.items[0]
+          if (presetItem && typeof presetItem === 'object' && 'id' in presetItem) {
+            const typedPreset = presetItem as PresetWithComponentOptions
+            setPreset(typedPreset)
+            setValue('presetId', typedPreset.id)
           }
         }
       }
+    }
 
-      getPreset()
-    }, [methods, router])
-  )
+    getPreset()
+  }, [setValue, router])
 
-  // Set shipping fee to form
-  useFocusEffect(
-    useCallback(() => {
-      if (isFetchedShippingFee && shippingFee && methods?.setValue) {
-        methods.setValue('shippingFee', shippingFee)
-      }
-    }, [isFetchedShippingFee, shippingFee, methods])
-  )
+  // Set default address to form if delivery method is delivery
+  useEffect(() => {
+    if (isFetchedAddresses && defaultAddress?.id && setValue && deliveryMethod === DeliveryMethod.DELIVERY) {
+      setValue('addressId', defaultAddress.id)
+      setValue('branchId', null)
+    }
+  }, [isFetchedAddresses, defaultAddress, setValue, deliveryMethod])
 
-  // Set default address to form
-  useFocusEffect(
-    useCallback(() => {
-      if (isFetchedAddresses && defaultAddress?.id && methods?.setValue) {
-        methods.setValue('addressId', defaultAddress.id)
-      }
-    }, [isFetchedAddresses, defaultAddress, methods])
-  )
+  // Set default branch to form if delivery method is pick up
+  useEffect(() => {
+    if (isFetchedBranches && defaultBranch?.id && setValue && deliveryMethod === DeliveryMethod.PICK_UP) {
+      setValue('branchId', defaultBranch.id)
+      setValue('addressId', null)
+    }
+  }, [isFetchedBranches, defaultBranch, setValue, deliveryMethod])
 
   // Set active diary to form
-  useFocusEffect(
-    useCallback(() => {
-      if (isFetchedDiaries && activeDiary?.id && methods?.setValue) {
-        methods.setValue('measurementDiaryId', activeDiary.id)
-      }
-    }, [isFetchedDiaries, activeDiary, methods])
-  )
+  useEffect(() => {
+    if (isFetchedDiaries && activeDiary?.id && setValue) {
+      setValue('measurementDiaryId', activeDiary.id)
+    }
+  }, [isFetchedDiaries, activeDiary, setValue])
 
-  // If address changes, refetch shipping fee
-  useFocusEffect(
-    useCallback(() => {
-      if (currentAddress?.province && currentAddress?.district) {
-        refetchShippingFee()
-      }
-    }, [currentAddress?.province, currentAddress?.district, refetchShippingFee])
-  )
+  // Set shipping fee to form
+  useEffect(() => {
+    if (isFetchedShippingFee && shippingFee && setValue) {
+      setValue('shippingFee', shippingFee)
+    }
+  }, [isFetchedShippingFee, shippingFee, setValue])
 
   const renderOrderSummaryContent = () => {
     if (!orderItems) {
@@ -320,309 +403,177 @@ export default function ReviewOrderScreen() {
 
   return (
     <SafeView>
-      <View className='flex-row items-center gap-4 p-4'>
-        <TouchableOpacity onPress={handleGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
-        </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>Review Order</Text>
-      </View>
+      <View className='flex-1 relative'>
+        {isLoading && (
+          <>
+            <BlurView
+              experimentalBlurMethod='dimezisBlurView'
+              tint='dark'
+              intensity={5}
+              style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: 50 }}
+            />
+            <ActivityIndicator
+              className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[51]'
+              size='large'
+              color={PRIMARY_COLOR.LIGHT}
+            />
+          </>
+        )}
 
-      <BottomSheetModalProvider>
-        <FormProvider {...methods}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 46 }}
-            refreshControl={refreshControl}
-          >
-            <View className='flex flex-col gap-4 p-2 flex-1'>
-              {/* Address Selection */}
-              <Tabs
-                value={tabValue}
-                onValueChange={(value) => handleSwitchTab(value as DeliveryMethod)}
-                className='w-full max-w-[400px] mx-auto flex-col gap-1.5'
-              >
-                <TabsList className='flex-row w-full'>
-                  <TabsTrigger value={DeliveryMethod.DELIVERY} className='flex-1 flex-row items-center gap-2'>
-                    {SvgIcon.toReceive({ size: SMALL_ICON_SIZE })}
-                    <Text>Delivery</Text>
-                  </TabsTrigger>
-                  <TabsTrigger value={DeliveryMethod.PICK_UP} className='flex-1 flex-row items-center gap-2'>
-                    {SvgIcon.shop({ size: SMALL_ICON_SIZE })}
-                    <Text>Pick Up</Text>
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent value='DELIVERY'>
-                  {isLoadingAddressCard ? (
-                    <Skeleton className='rounded-2xl h-16' />
-                  ) : currentAddress ? (
-                    <AddressCard
-                      address={currentAddress}
-                      fullName={currentUserProfile?.fullName || undefined}
-                      phoneNumber={currentUserProfile?.phoneNumber || undefined}
-                      isLoading={isLoadingAddressCard}
-                      onPress={handlePresentAddressModal}
-                    />
-                  ) : (
-                    <TouchableOpacity onPress={() => router.push('/setting/my-addresses/create')}>
-                      <WarningCard
-                        title='Oops! No address found'
-                        description='Please add your address first to select this delivery method'
-                      />
-                    </TouchableOpacity>
-                  )}
-                </TabsContent>
-                {/* TODO: Add Pick Up option */}
-                <TabsContent value='PICK_UP'></TabsContent>
-              </Tabs>
+        <View className='flex-row items-center gap-4 p-4'>
+          <TouchableOpacity onPress={handleGoBack}>
+            <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          </TouchableOpacity>
+          <Text className='font-inter-semibold text-xl'>Review Order</Text>
+        </View>
 
-              {/* Diary Selection */}
-              {isLoadingDiaries ? (
-                <Skeleton className='rounded-2xl h-32' />
-              ) : currentDiary ? (
-                <Card className='p-1 gap-2' style={[styles.container]}>
-                  <View
-                    className={cn(
-                      'rounded-xl p-2 flex-row items-center gap-2',
-                      isDarkColorScheme ? 'bg-primary/20' : 'bg-primary/10'
-                    )}
-                  >
-                    {SvgIcon.folderFavorite({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })}
-                    <View className='flex-1'>
-                      <Text
-                        className={cn(
-                          'font-inter-medium text-sm',
-                          isDarkColorScheme ? 'text-primary-foreground' : 'text-primary'
-                        )}
-                      >
-                        Choose a diary
-                      </Text>
-                      <Text
-                        className={cn('text-xs', isDarkColorScheme ? 'text-primary-foreground/70' : 'text-primary/70')}
-                      >
-                        This will help shape your maternity dress
-                      </Text>
-                    </View>
-                  </View>
-                  <DiaryCard diary={currentDiary} isLoading={isLoadingDiaries} onPress={handlePresetDiaryModal} />
-                </Card>
-              ) : (
-                <TouchableOpacity onPress={() => router.push('/diary/create')}>
-                  <WarningCard
-                    title='Oops! No diary found'
-                    description='Press to create your diary first to place your order'
+        <BottomSheetModalProvider>
+          <FormProvider {...methods}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 56 }}
+              refreshControl={refreshControl}
+            >
+              <View className='flex flex-col gap-4 p-2 flex-1'>
+                {/* Address Section */}
+                <Animated.View entering={FadeInDown.delay(100)}>
+                  <AddressSection
+                    tabValue={tabValue}
+                    isLoadingAddress={isLoadingAddressSection}
+                    isLoadingBranch={isLoadingBranches}
+                    address={currentAddress}
+                    branch={currentBranch}
+                    currentUserProfile={currentUserProfile}
+                    iconSize={SMALL_ICON_SIZE}
+                    handleSwitchTab={handleSwitchTab}
+                    handlePresentAddressModal={handlePresentAddressModal}
+                    handlePresentBranchModal={handlePresentBranchModal}
                   />
-                </TouchableOpacity>
-              )}
+                </Animated.View>
 
-              {/* Order Summary */}
-              <Card style={[styles.container]}>
-                <View className='flex flex-row items-center gap-2 p-3'>
-                  <MaterialCommunityIcons name='card-text' size={SMALL_ICON_SIZE} color={PRIMARY_COLOR.LIGHT} />
-                  <Text className='text-sm font-inter-medium'>Order Summary</Text>
-                </View>
+                {/* Diary Section */}
+                <Animated.View entering={FadeInDown.delay(200)}>
+                  <DiarySection
+                    isLoading={isLoadingDiaries}
+                    diary={currentDiary}
+                    handlePresentDiaryModal={handlePresentDiaryModal}
+                  />
+                </Animated.View>
 
-                <Separator />
+                {/* Order Summary Section */}
+                <Animated.View entering={FadeInDown.delay(300)}>
+                  <OrderSummarySection
+                    isLoadingShippingFee={isLoadingShippingFee}
+                    shippingFee={shippingFee}
+                    renderOrderSummaryContent={renderOrderSummaryContent}
+                    iconSize={SMALL_ICON_SIZE}
+                    orderItems={orderItems}
+                    preset={preset}
+                  />
+                </Animated.View>
 
-                {renderOrderSummaryContent()}
+                {/* MamaFit Vouchers */}
+                <Animated.View entering={FadeInDown.delay(400)}>
+                  <VouchersSection
+                    iconSize={SMALL_ICON_SIZE}
+                    voucher={currentVoucher}
+                    onPress={handlePresentVoucherModal}
+                    savedAmount={savedAmount}
+                  />
+                </Animated.View>
 
-                <Separator />
+                {/* Payment Methods Section */}
+                <Animated.View entering={FadeInDown.delay(500)}>
+                  <PaymentMethodsSection />
+                </Animated.View>
 
-                <View className='p-3 flex flex-col gap-2'>
-                  <View className='flex-row items-center gap-2'>
-                    <MaterialCommunityIcons name='truck-fast' size={SMALL_ICON_SIZE} color='#047857' />
-                    <Text className='font-inter-medium text-sm'>Shipping Option</Text>
-                  </View>
-                  <View className='bg-emerald-50 border border-emerald-200 rounded-2xl py-3 px-4 flex-row items-center justify-center gap-2'>
-                    <View className='flex-1'>
-                      <Text className='text-sm font-inter-medium text-emerald-700'>Standard Delivery</Text>
-                      <Text className='text-xs text-emerald-600'>3-5 business days</Text>
-                    </View>
-                    {isLoadingShippingFee ? (
-                      <ActivityIndicator size={SMALL_ICON_SIZE} color='#047857' />
-                    ) : (
-                      <Text className='text-emerald-700 text-sm font-inter-medium'>
-                        <Text className='underline text-sm text-emerald-700 font-inter-medium'>đ</Text>
-                        {shippingFee ? shippingFee.toLocaleString('vi-VN') : '0'}
-                      </Text>
-                    )}
-                  </View>
-                </View>
-                <Separator />
-                <View className='p-3 flex flex-row'>
-                  <Text className='text-sm font-inter-medium flex-1'>
-                    Total {orderItems?.items && Array.isArray(orderItems.items) ? orderItems.items.length : 0} Item(s)
+                <Animated.View entering={FadeInDown.delay(600)} className='gap-2'>
+                  {/* Payment Details Section */}
+                  <PaymentDetailsSection
+                    iconSize={SMALL_ICON_SIZE}
+                    preset={preset}
+                    shippingFee={shippingFee}
+                    voucherId={voucherId}
+                    totalPayment={totalPayment}
+                    savedAmount={savedAmount}
+                    paymentType={paymentType}
+                  />
+
+                  <Text className='text-xs text-muted-foreground px-2 mb-4'>
+                    By clicking &apos;Place Order&apos;, you are agreeing to MamaFit&apos;s General Transaction Terms
                   </Text>
-                  <Text className='font-inter-medium'>
-                    <Text className='underline font-inter-medium text-sm'>đ</Text>
-                    {preset?.price && preset?.price?.toLocaleString('vi-VN')}
-                  </Text>
-                </View>
-              </Card>
+                </Animated.View>
+              </View>
+            </ScrollView>
 
-              {/* MamaFit Vouchers */}
-              <Card className='p-3' style={[styles.container]}>
-                <View className='flex-row items-center'>
-                  <View className='flex-row items-center gap-2 flex-1'>
-                    <MaterialCommunityIcons name='ticket-percent' size={SMALL_ICON_SIZE} color={PRIMARY_COLOR.LIGHT} />
-                    <Text className='font-inter-medium text-sm'>MamaFit Vouchers</Text>
-                  </View>
-                  <View className='flex flex-row items-center gap-1'>
-                    <Text className='text-xs text-muted-foreground'>View All</Text>
-                    <Feather name='chevron-right' size={20} color='lightgray' />
-                  </View>
-                </View>
-              </Card>
+            {/* Place Order */}
+            <View
+              className='absolute bottom-0 left-0 right-0 flex-row justify-end gap-3 bg-background p-3 border-t border-border'
+              style={{ boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
+            >
+              <View className='flex flex-col items-end gap-1'>
+                <Text className='font-inter-semibold text-primary'>
+                  <Text className='text-sm'>Total</Text>{' '}
+                  <Text className='underline font-inter-semibold text-sm text-primary'>đ</Text>
+                  {totalPayment.toLocaleString('vi-VN')}
+                </Text>
 
-              {/* Payment Methods */}
-              <Card className='p-2 flex flex-col gap-4 text-sky-50' style={[styles.container]}>
-                <Controller
-                  control={methods.control}
-                  name='paymentType'
-                  render={({ field: { value, onChange } }) => (
-                    <RadioGroup value={value} onValueChange={(val) => onChange(val as PaymentType)} className='gap-2'>
-                      <RadioGroupItemWithLabel
-                        value='FULL'
-                        onPress={() => onChange('FULL')}
-                        label='Full Payment (Banking)'
-                        iconColor='#38bdf8'
-                        backgroundColor='#f0f9ff'
-                        description='Pay the full amount now'
-                      />
-                      <RadioGroupItemWithLabel
-                        value='DEPOSIT'
-                        onPress={() => onChange('DEPOSIT')}
-                        label='Deposit 50% (Banking)'
-                        iconColor='#fbbf24'
-                        backgroundColor='#fffbeb'
-                        description='Pay 50% of the total amount now'
-                      />
-                    </RadioGroup>
-                  )}
-                />
-              </Card>
-
-              {/* Payment Details */}
-              <Card className='p-3' style={[styles.container]}>
-                <View className='flex-row items-center gap-2'>
-                  <MaterialCommunityIcons name='information' size={SMALL_ICON_SIZE} color={PRIMARY_COLOR.LIGHT} />
-                  <Text className='font-inter-medium text-sm'>Payment Details</Text>
-                </View>
-                <View className='flex flex-col gap-2 mt-2'>
-                  <View className='flex-row items-baseline'>
-                    <Text className='text-xs text-muted-foreground flex-1'>Merchandise Subtotal</Text>
-                    <Text className='text-xs text-muted-foreground'>
-                      <Text className='underline text-xs text-muted-foreground'>đ</Text>
-                      {preset?.price && preset?.price?.toLocaleString('vi-VN')}
-                    </Text>
-                  </View>
-                  <View className='flex-row items-baseline'>
-                    <Text className='text-xs text-muted-foreground flex-1'>Shipping Subtotal</Text>
-                    <Text className='text-xs text-muted-foreground'>
-                      <Text className='underline text-xs text-muted-foreground'>đ</Text>
-                      {shippingFee ? shippingFee.toLocaleString('vi-VN') : '0'}
-                    </Text>
-                  </View>
-                  {voucherId ? (
-                    <View className='flex-row items-baseline'>
-                      <Text className='text-xs text-muted-foreground flex-1'>Discount Subtotal</Text>
-                      <Text className='text-xs text-primary'>
-                        -<Text className='underline text-xs text-primary'>đ</Text>12.800
-                      </Text>
-                    </View>
-                  ) : null}
-                  <Separator />
-                  <View className='flex-row items-baseline'>
-                    <Text className='text-sm font-inter-medium flex-1'>Total Payment</Text>
-                    <Text className='font-inter-medium text-sm'>
-                      <Text className='underline font-inter-medium text-xs'>đ</Text>
-                      {totalPayment.toLocaleString('vi-VN')}
-                    </Text>
-                  </View>
-                </View>
-              </Card>
-
-              <Text className='text-xs text-muted-foreground px-2 mb-4'>
-                By clicking &apos;Place Order&apos;, you are agreeing to MamaFit&apos;s General Transaction Terms
-              </Text>
+                <Text className='font-inter-medium text-primary text-sm'>
+                  <Text className='text-xs'>Saved</Text>{' '}
+                  <Text className='underline font-inter-medium text-sm text-primary'>đ</Text>
+                  {voucherId ? savedAmount.toLocaleString('vi-VN') : '0'}
+                </Text>
+              </View>
+              <Button
+                onPress={methods.handleSubmit(onSubmit)}
+                disabled={placePresetOrderMutation.isPending || isLoading}
+              >
+                <Text className='font-inter-medium'>
+                  {placePresetOrderMutation.isPending ? 'Placing Order...' : 'Place Order'}
+                </Text>
+              </Button>
             </View>
-          </ScrollView>
 
-          {/* Place Order */}
-          <View
-            className='absolute bottom-0 left-0 right-0 flex-row justify-end gap-3 bg-background p-3 border-t border-border'
-            style={{ boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
-          >
-            <View className='flex flex-col items-end gap-1'>
-              <Text className='font-inter-semibold text-primary'>
-                <Text className='text-sm'>Total</Text>{' '}
-                <Text className='underline font-inter-semibold text-sm text-primary'>đ</Text>
-                {totalPayment.toLocaleString('vi-VN')}
-              </Text>
+            {/* Modals */}
+            {addresses && Array.isArray(addresses) && (
+              <AddressSelectionModal
+                ref={addressSelectionModalRef}
+                addresses={addresses}
+                selectedAddressId={addressId || undefined}
+                onSelectAddress={handleSelectAddress}
+              />
+            )}
 
-              <Text className='font-inter-medium text-primary text-sm'>
-                <Text className='text-xs'>Saved</Text>{' '}
-                <Text className='underline font-inter-medium text-sm text-primary'>đ</Text>
-                {voucherId ? '12.800' : '0'}
-              </Text>
-            </View>
-            <Button onPress={methods.handleSubmit(onSubmit)} disabled={placePresetOrderMutation.isPending}>
-              <Text className='font-inter-medium'>
-                {placePresetOrderMutation.isPending ? 'Placing Order...' : 'Place Order'}
-              </Text>
-            </Button>
-          </View>
+            {diaries && diaries.items && Array.isArray(diaries.items) && (
+              <DiarySelectionModal
+                ref={diarySelectionModalRef}
+                diaries={diaries.items}
+                selectedDiaryId={diaryId || undefined}
+                onSelectDiary={handleSelectDiary}
+              />
+            )}
 
-          {addresses && Array.isArray(addresses) && (
-            <AddressSelectionModal
-              ref={addressSelectionModalRef}
-              addresses={addresses}
-              selectedAddressId={addressId || undefined}
-              onSelectAddress={handleSelectAddress}
-            />
-          )}
+            {branches && Array.isArray(branches) && deliveryMethod === DeliveryMethod.PICK_UP && (
+              <BranchSelectionModal
+                ref={branchSelectionModalRef}
+                branches={branches}
+                selectedBranchId={branchId || undefined}
+                onSelectBranch={handleSelectBranch}
+              />
+            )}
 
-          {diaries && diaries.items && Array.isArray(diaries.items) && (
-            <DiarySelectionModal
-              ref={diarySelectionModalRef}
-              diaries={diaries.items}
-              selectedDiaryId={diaryId || undefined}
-              onSelectDiary={handleSelectDiary}
-            />
-          )}
-        </FormProvider>
-      </BottomSheetModalProvider>
-    </SafeView>
-  )
-}
-const RadioGroupItemWithLabel = ({
-  value,
-  onPress,
-  label,
-  iconColor,
-  backgroundColor,
-  description
-}: {
-  value: string
-  onPress: () => void
-  label: string
-  iconColor: string
-  backgroundColor: string
-  description: string
-}) => {
-  return (
-    <TouchableOpacity className='flex-row justify-between items-center p-2 rounded-xl' onPress={onPress}>
-      <View className='flex flex-row items-center gap-3'>
-        <View className='p-2 rounded-full' style={{ backgroundColor }}>
-          <MaterialCommunityIcons name='credit-card' size={20} color={iconColor} />
-        </View>
-        <View>
-          <Label className='native:text-sm font-inter-medium' nativeID={`label-for-${value}`} onPress={onPress}>
-            {label}
-          </Label>
-          <Text className='text-xs text-muted-foreground'>{description}</Text>
-        </View>
+            {vouchers && Array.isArray(vouchers) && (
+              <VouchersSelectionModal
+                ref={voucherSelectionModalRef}
+                vouchers={getFlattenedVouchers(vouchers)}
+                selectedVoucherId={voucherId || undefined}
+                onSelectVoucher={handleSelectVoucher}
+                merchandiseTotal={merchandiseTotal}
+              />
+            )}
+          </FormProvider>
+        </BottomSheetModalProvider>
       </View>
-      <RadioGroupItem aria-labelledby={`label-for-${value}`} value={value} />
-    </TouchableOpacity>
+    </SafeView>
   )
 }

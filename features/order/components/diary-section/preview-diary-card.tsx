@@ -6,13 +6,13 @@ import { Text } from '~/components/ui/text'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { Diary } from '~/types/diary.type'
 
-interface DiaryCardProps {
+interface PreviewDiaryCardProps {
   diary: Diary
   isLoading?: boolean
   onPress: () => void
 }
 
-export default function DiaryCard({ diary, isLoading, onPress }: DiaryCardProps) {
+export default function PreviewDiaryCard({ diary, isLoading, onPress }: PreviewDiaryCardProps) {
   if (isLoading) {
     return <Skeleton className='h-16 w-full rounded-2xl' />
   }
@@ -22,12 +22,12 @@ export default function DiaryCard({ diary, isLoading, onPress }: DiaryCardProps)
       <View className='p-2 flex-row items-center'>
         <View className='flex-1 gap-1'>
           <Text className='font-inter-medium' numberOfLines={1}>
-            {diary?.name}
+            {diary?.name} <Text className='text-xs text-muted-foreground'>({diary?.age} years old)</Text>
           </Text>
           <View className='flex-row items-center gap-2'>
-            <Text className='text-xs text-muted-foreground'>Weight: {diary?.weight}</Text>
+            <Text className='text-xs text-muted-foreground'>Weight: {diary?.weight}kg</Text>
             <Separator orientation='vertical' className='h-4' />
-            <Text className='text-xs text-muted-foreground'>Height: {diary?.height}</Text>
+            <Text className='text-xs text-muted-foreground'>Height: {diary?.height}cm</Text>
             <Separator orientation='vertical' className='h-4' />
             <Text className='text-xs text-muted-foreground'>
               Pregnancy: {diary?.numberOfPregnancy}

@@ -114,10 +114,7 @@ export default function RootLayout() {
             name='payment/[orderId]/qr-code'
             options={{ title: 'Payment', headerShown: false, animation: 'ios_from_right' }}
           />
-          <Stack.Screen
-            name='order/review'
-            options={{ title: 'Review Order', headerShown: false, animation: 'ios_from_right' }}
-          />
+          <Stack.Screen name='order' options={{ title: 'Orders', headerShown: false, animation: 'ios_from_right' }} />
         </Stack>
       </ThemeProvider>
     </AppProvider>

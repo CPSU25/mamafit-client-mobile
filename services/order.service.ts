@@ -1,7 +1,7 @@
 import { PlaceDesignRequestOrderFormSchema, PlacePresetOrderFormSchema } from '~/features/order/validations'
 import { api } from '~/lib/axios/axios'
-import { BaseResponse } from '~/types/common'
-import { QRCodeResponse } from '~/types/order.type'
+import { BasePaginationResponse, BaseResponse } from '~/types/common'
+import { Branch, QRCodeResponse } from '~/types/order.type'
 
 class OrderService {
   async placeDesignRequestOrder(designRequest: PlaceDesignRequestOrderFormSchema) {
@@ -14,6 +14,14 @@ class OrderService {
     const { data } = await api.post<BaseResponse<string>>('order/preset', presetOrder)
 
     return data.data
+  }
+
+  async getBranches(index: number = 1, pageSize: number = 20) {
+    const { data } = await api.get<BasePaginationResponse<Branch>>(
+      `branch?index=${index}&pageSize=${pageSize}&sortBy=createdat_desc`
+    )
+
+    return data.data.items
   }
 
   async getQRCode(orderId: string) {

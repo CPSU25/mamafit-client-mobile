@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
-import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner-native'
 import { ERROR_MESSAGES } from '~/lib/constants/constants'
 import orderService from '~/services/order.service'
 import {
@@ -19,7 +19,7 @@ const defaultValues: PlacePresetOrderFormSchema = {
   branchId: null,
   shippingFee: 0,
   voucherDiscountId: null,
-  measurementDiaryId: null,
+  measurementDiaryId: '',
   isOnline: true,
   paymentMethod: PaymentMethod.ONLINE_BANKING,
   paymentType: PaymentType.FULL,
@@ -28,27 +28,18 @@ const defaultValues: PlacePresetOrderFormSchema = {
 
 export const usePlacePresetOrder = (onSuccess: () => void) => {
   const router = useRouter()
+  const queryClient = useQueryClient()
+
   const methods = useForm<PlacePresetOrderFormSchema>({
     defaultValues,
     resolver: zodResolver(placePresetOrderFormSchema)
   })
 
-  const initForm = useCallback(
-    (presetId: string, addressId: string, measurementDiaryId: string) => {
-      methods.reset({
-        ...defaultValues,
-        presetId,
-        addressId,
-        measurementDiaryId
-      })
-    },
-    [methods]
-  )
-
   const placePresetOrderMutation = useMutation({
     mutationFn: orderService.placePresetOrder,
     onSuccess: (orderId) => {
       if (orderId) {
+        queryClient.invalidateQueries({ queryKey: ['vouchers-queries'] })
         router.replace({ pathname: '/payment/[orderId]/qr-code', params: { orderId } })
         setTimeout(() => {
           onSuccess()
@@ -57,9 +48,9 @@ export const usePlacePresetOrder = (onSuccess: () => void) => {
       }
     },
     onError: (error) => {
-      methods.setError('root', { message: error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG })
+      toast.error(error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG)
     }
   })
 
-  return { methods, initForm, placePresetOrderMutation }
+  return { methods, placePresetOrderMutation }
 }

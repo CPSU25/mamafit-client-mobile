@@ -16,6 +16,7 @@ interface AlertCardProps {
   children?: React.ReactNode
   delay?: number
   className?: string
+  hasAnimation?: boolean
 }
 
 const variantConfig = {
@@ -103,6 +104,7 @@ export function AlertCard({
   icon,
   children,
   delay = 100,
+  hasAnimation = true,
   className
 }: AlertCardProps) {
   const { isDarkColorScheme } = useColorScheme()
@@ -110,11 +112,28 @@ export function AlertCard({
   const colors = isDarkColorScheme ? config.darkColors : config.lightColors
   const iconName = icon || config.icon
 
+  if (hasAnimation) {
+    return (
+      <Animated.View
+        entering={FadeInDown.delay(delay)}
+        className={cn('border rounded-2xl p-3 border-dashed flex flex-col', colors.bg, colors.border, className)}
+      >
+        <View className='flex flex-row items-center gap-2'>
+          <FontAwesome name={iconName} size={16} color={colors.iconColor} />
+          <View className='flex flex-col gap-0.5 flex-shrink'>
+            <Text className={cn('font-inter-semibold text-sm', colors.text)}>{title}</Text>
+          </View>
+        </View>
+
+        {description && <Text className={cn('text-xs mt-0.5', colors.text)}>{description}</Text>}
+
+        {children && <View className='mt-0.5'>{children}</View>}
+      </Animated.View>
+    )
+  }
+
   return (
-    <Animated.View
-      entering={FadeInDown.delay(delay)}
-      className={cn('border rounded-2xl p-3 border-dashed flex flex-col', colors.bg, colors.border, className)}
-    >
+    <View className={cn('border rounded-2xl p-3 border-dashed flex flex-col', colors.bg, colors.border, className)}>
       <View className='flex flex-row items-center gap-2'>
         <FontAwesome name={iconName} size={16} color={colors.iconColor} />
         <View className='flex flex-col gap-0.5 flex-shrink'>
@@ -125,7 +144,7 @@ export function AlertCard({
       {description && <Text className={cn('text-xs mt-0.5', colors.text)}>{description}</Text>}
 
       {children && <View className='mt-0.5'>{children}</View>}
-    </Animated.View>
+    </View>
   )
 }
 
