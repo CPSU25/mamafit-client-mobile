@@ -4,7 +4,7 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import { Card } from '~/components/ui/card'
 import { Label } from '~/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
-import { styles } from '~/lib/constants/constants'
+import { DEPOSIT_PERCENTAGE, styles } from '~/lib/constants/constants'
 import { PaymentType, PlacePresetOrderFormSchema } from '../../validations'
 
 export default function PaymentMethodsSection() {
@@ -28,10 +28,10 @@ export default function PaymentMethodsSection() {
             <RadioGroupItemWithLabel
               value='DEPOSIT'
               onPress={() => onChange('DEPOSIT')}
-              label='Deposit 50% (Banking)'
+              label={`Deposit ${DEPOSIT_PERCENTAGE * 100}% (Banking)`}
               iconColor='#fbbf24'
               backgroundColor='#fffbeb'
-              description='Pay 50% of the total amount now'
+              description={`Pay ${DEPOSIT_PERCENTAGE * 100}% of the total amount now`}
             />
           </RadioGroup>
         )}

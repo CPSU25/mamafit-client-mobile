@@ -3,8 +3,9 @@ import { View } from 'react-native'
 import { Card } from '~/components/ui/card'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
-import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
+import { DEPOSIT_PERCENTAGE, PRIMARY_COLOR, styles } from '~/lib/constants/constants'
 import { PresetWithComponentOptions } from '~/types/preset.type'
+import { PaymentType } from '../../validations'
 
 interface PaymentDetailsSectionProps {
   iconSize: number
@@ -13,6 +14,7 @@ interface PaymentDetailsSectionProps {
   voucherId: string | null
   totalPayment: number
   savedAmount: number
+  paymentType: PaymentType
 }
 
 export default function PaymentDetailsSection({
@@ -21,7 +23,8 @@ export default function PaymentDetailsSection({
   shippingFee,
   voucherId,
   totalPayment,
-  savedAmount
+  savedAmount,
+  paymentType
 }: PaymentDetailsSectionProps) {
   return (
     <Card className='p-3' style={[styles.container]}>
@@ -31,10 +34,14 @@ export default function PaymentDetailsSection({
       </View>
       <View className='flex flex-col gap-2 mt-2'>
         <View className='flex-row items-baseline'>
-          <Text className='text-xs text-muted-foreground flex-1'>Merchandise Subtotal</Text>
+          <Text className='text-xs text-muted-foreground flex-1'>
+            Merchandise Subtotal {paymentType === PaymentType.DEPOSIT ? `(${DEPOSIT_PERCENTAGE * 100}%)` : ''}
+          </Text>
           <Text className='text-xs text-muted-foreground'>
             <Text className='underline text-xs text-muted-foreground'>đ</Text>
-            {preset?.price && preset?.price?.toLocaleString('vi-VN')}
+            {preset?.price && paymentType === PaymentType.DEPOSIT
+              ? (preset?.price * DEPOSIT_PERCENTAGE).toLocaleString('vi-VN')
+              : preset?.price?.toLocaleString('vi-VN')}
           </Text>
         </View>
         <View className='flex-row items-baseline'>

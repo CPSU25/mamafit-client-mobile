@@ -67,7 +67,7 @@ const VouchersSelectionModal = forwardRef<BottomSheetModal, VouchersSelectionMod
           maxHeight: '100%'
         }}
         ref={ref}
-        snapPoints={['50%']}
+        snapPoints={['50%', '80%']}
         enableDynamicSizing={false}
         enablePanDownToClose
         backdropComponent={({ style }) => (

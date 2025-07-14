@@ -9,7 +9,7 @@ import { ICON_SIZE, styles } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { cn } from '~/lib/utils'
 import { Diary } from '~/types/diary.type'
-import DiaryCard from './diary-card'
+import PreviewDiaryCard from './preview-diary-card'
 
 interface DiarySectionProps {
   isLoading: boolean
@@ -49,7 +49,7 @@ export default function DiarySection({ isLoading, diary, handlePresentDiaryModal
             </Text>
           </View>
         </View>
-        <DiaryCard diary={diary} isLoading={isLoading} onPress={handlePresentDiaryModal} />
+        <PreviewDiaryCard diary={diary} isLoading={isLoading} onPress={handlePresentDiaryModal} />
       </Card>
     )
   }

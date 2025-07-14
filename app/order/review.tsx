@@ -14,8 +14,8 @@ import { Button } from '~/components/ui/button'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
 import AddressSection from '~/features/order/components/address-section/address-section'
-import AddressSelectionModal from '~/features/order/components/address-section/address-selection-modal'
-import BranchSelectionModal from '~/features/order/components/address-section/branch-selection-modal'
+import AddressSelectionModal from '~/features/order/components/address-section/address/address-selection-modal'
+import BranchSelectionModal from '~/features/order/components/address-section/branch/branch-selection-modal'
 import DiarySection from '~/features/order/components/diary-section/diary-section'
 import DiarySelectionModal from '~/features/order/components/diary-section/diary-selection-modal'
 import OrderSummarySection from '~/features/order/components/order-summary-section/order-summary-section'
@@ -26,10 +26,10 @@ import VouchersSelectionModal from '~/features/order/components/vouchers-section
 import { useGetShippingFee } from '~/features/order/hooks/use-get-shipping-fee'
 import { usePlacePresetOrder } from '~/features/order/hooks/use-place-preset-order'
 import { useReviewOrderQueries } from '~/features/order/hooks/use-review-order-queries'
-import { DeliveryMethod, PlacePresetOrderFormSchema } from '~/features/order/validations'
+import { DeliveryMethod, PaymentType, PlacePresetOrderFormSchema } from '~/features/order/validations'
 import { useAuth } from '~/hooks/use-auth'
 import { useRefreshs } from '~/hooks/use-refresh'
-import { PRIMARY_COLOR } from '~/lib/constants/constants'
+import { DEPOSIT_PERCENTAGE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { getOrderedComponentOptions } from '~/lib/utils'
 import { Address } from '~/types/address.type'
 import { Diary } from '~/types/diary.type'
@@ -155,6 +155,7 @@ export default function ReviewOrderScreen() {
   const diaryId = methods.watch('measurementDiaryId')
   const branchId = methods.watch('branchId')
   const voucherId = methods.watch('voucherDiscountId')
+  const paymentType = methods.watch('paymentType')
 
   // Get current address + diary base on form values (if present)
   const currentAddress =
@@ -187,7 +188,12 @@ export default function ReviewOrderScreen() {
     isLoadingAddressSection || isLoadingDiaries || isLoadingBranches || isLoadingShippingFee || isLoadingVouchers
   const orderType = orderItems?.type || null
 
-  const merchandiseTotal = orderType === 'preset' ? preset?.price || 0 : 0
+  const merchandiseTotal =
+    orderType === 'preset'
+      ? paymentType === PaymentType.DEPOSIT
+        ? (preset?.price || 0) * DEPOSIT_PERCENTAGE
+        : preset?.price || 0
+      : 0
   const savedAmount = getSavedAmount(currentVoucher, merchandiseTotal)
 
   const totalPayment = shippingFee ? merchandiseTotal + shippingFee - savedAmount : merchandiseTotal - savedAmount
@@ -490,6 +496,7 @@ export default function ReviewOrderScreen() {
                     voucherId={voucherId}
                     totalPayment={totalPayment}
                     savedAmount={savedAmount}
+                    paymentType={paymentType}
                   />
 
                   <Text className='text-xs text-muted-foreground px-2 mb-4'>

@@ -9,8 +9,8 @@ import { Address } from '~/types/address.type'
 import { User } from '~/types/common'
 import { Branch } from '~/types/order.type'
 import { DeliveryMethod } from '../../validations'
-import AddressCard from './address-card'
-import BranchCard from './branch-card'
+import PreviewAddressCard from './address/preview-address-card'
+import PreviewBranchCard from './branch/preview-branch-card'
 
 interface AddressSectionProps {
   tabValue: DeliveryMethod
@@ -56,7 +56,7 @@ export default function AddressSection({
               />
             </TouchableOpacity>
           )}
-          <AddressCard
+          <PreviewAddressCard
             address={address}
             fullName={currentUserProfile?.fullName || undefined}
             phoneNumber={currentUserProfile?.phoneNumber || undefined}
@@ -93,7 +93,7 @@ export default function AddressSection({
               />
             </TouchableOpacity>
           )}
-          <BranchCard branch={branch} onPress={handlePresentBranchModal} />
+          <PreviewBranchCard branch={branch} onPress={handlePresentBranchModal} />
         </View>
       )
     }
