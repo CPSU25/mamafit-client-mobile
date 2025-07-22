@@ -8,7 +8,6 @@ import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { toast } from 'sonner-native'
-import AutoHeightImage from '~/components/auto-height-image'
 import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Skeleton } from '~/components/ui/skeleton'
@@ -19,6 +18,7 @@ import BranchSelectionModal from '~/features/order/components/address-section/br
 import DiarySection from '~/features/order/components/diary-section/diary-section'
 import DiarySelectionModal from '~/features/order/components/diary-section/diary-selection-modal'
 import OrderSummarySection from '~/features/order/components/order-summary-section/order-summary-section'
+import PresetOrderItem from '~/features/order/components/order-summary-section/preset-order-item'
 import PaymentDetailsSection from '~/features/order/components/payment-details-section/payment-details-section'
 import PaymentMethodsSection from '~/features/order/components/payment-methods-section/payment-methods-section'
 import VouchersSection from '~/features/order/components/vouchers-section/vouchers-section'
@@ -30,7 +30,6 @@ import { DeliveryMethod, PaymentType, PlacePresetOrderFormSchema } from '~/featu
 import { useAuth } from '~/hooks/use-auth'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { DEPOSIT_PERCENTAGE, PRIMARY_COLOR } from '~/lib/constants/constants'
-import { getOrderedComponentOptions } from '~/lib/utils'
 import { Address } from '~/types/address.type'
 import { Diary } from '~/types/diary.type'
 import { OrderItemTemp } from '~/types/order-item.type'
@@ -79,19 +78,62 @@ const getOrderItems = async () => {
   }
 }
 
+const getPaymentDetails = ({
+  orderType,
+  price = 0,
+  paymentType,
+  shippingFee,
+  voucher
+}: {
+  orderType: string | null
+  price: number
+  paymentType: PaymentType
+  shippingFee: number
+  voucher: FlattenedVoucher | null
+}) => {
+  // Original cost (no deposit, no vouchers, no shipping fee)
+  // Used to check if this order is able to use voucher that has minimum order value
+  const fullMerchandiseTotal = orderType === 'preset' ? price : 0
+
+  // How much user saved on this order
+  const savedAmount = getSavedAmount(voucher, fullMerchandiseTotal)
+
+  // Final price after applying voucher
+  const discountedMerchandiseTotal = fullMerchandiseTotal - savedAmount
+
+  // How much user must pay (if the option is deposit - pay 50% else 100%)
+  const payableMerchandisePortion =
+    paymentType === 'DEPOSIT' ? discountedMerchandiseTotal * DEPOSIT_PERCENTAGE : discountedMerchandiseTotal
+
+  // Final amount (voucher + shipping fee + deposit/full)
+  const totalPaymentNow = shippingFee > 0 ? payableMerchandisePortion + shippingFee : payableMerchandisePortion
+
+  // How much user must pay after the order is completed at the factory (for deposit)
+  const remainingBalance = paymentType === 'DEPOSIT' ? discountedMerchandiseTotal * (1 - DEPOSIT_PERCENTAGE) : 0
+
+  return {
+    isVoucherValid: true,
+    fullMerchandiseTotal,
+    savedAmount,
+    discountedMerchandiseTotal,
+    payableMerchandisePortion,
+    totalPaymentNow,
+    remainingBalance
+  }
+}
+
 export function getSavedAmount(voucher: FlattenedVoucher | null, merchandiseTotal: number): number {
   if (!voucher) return 0
 
   if (voucher.discountType === 'FIXED') {
-    return voucher.discountValue
+    return Math.min(voucher.discountValue, merchandiseTotal)
   }
 
   const percentageDiscount = (voucher.discountValue * merchandiseTotal) / 100
-
   const cappedDiscount =
     voucher.maximumDiscountValue > 0 ? Math.min(percentageDiscount, voucher.maximumDiscountValue) : percentageDiscount
 
-  return cappedDiscount
+  return Math.min(cappedDiscount, merchandiseTotal)
 }
 
 const getFlattenedVouchers = (vouchers: VoucherBatchWithVouchers[]): FlattenedVoucher[] => {
@@ -188,15 +230,13 @@ export default function ReviewOrderScreen() {
     isLoadingAddressSection || isLoadingDiaries || isLoadingBranches || isLoadingShippingFee || isLoadingVouchers
   const orderType = orderItems?.type || null
 
-  const merchandiseTotal =
-    orderType === 'preset'
-      ? paymentType === PaymentType.DEPOSIT
-        ? (preset?.price || 0) * DEPOSIT_PERCENTAGE
-        : preset?.price || 0
-      : 0
-  const savedAmount = getSavedAmount(currentVoucher, merchandiseTotal)
-
-  const totalPayment = shippingFee ? merchandiseTotal + shippingFee - savedAmount : merchandiseTotal - savedAmount
+  const { fullMerchandiseTotal, savedAmount, payableMerchandisePortion, totalPaymentNow } = getPaymentDetails({
+    orderType,
+    price: orderType === 'preset' ? preset?.price || 0 : 0,
+    paymentType,
+    shippingFee: shippingFee || 0,
+    voucher: currentVoucher
+  })
 
   const { refreshControl } = useRefreshs([
     refetchAddresses,
@@ -361,35 +401,7 @@ export default function ReviewOrderScreen() {
     }
 
     if (orderType === 'preset' && preset) {
-      const presetImage =
-        preset.images && Array.isArray(preset.images) && preset.images.length > 0 ? preset.images[0] : ''
-      const componentOptions =
-        preset.componentOptions && Array.isArray(preset.componentOptions) ? preset.componentOptions : []
-
-      return (
-        <View className='p-4'>
-          <View className='flex flex-row gap-4 items-center'>
-            {presetImage && <AutoHeightImage uri={presetImage} width={120} />}
-
-            <View className='flex-1'>
-              <Text className='font-inter-semibold'>{preset.styleName || 'Unknown'} Dress</Text>
-              <Text className='text-xs text-muted-foreground'>Custom Made-to-Order</Text>
-
-              <View className='bg-muted/70 rounded-2xl p-3 gap-2 mt-2'>
-                {getOrderedComponentOptions(componentOptions).map(
-                  (option) =>
-                    option && (
-                      <View className='flex-row items-center justify-between' key={option.componentName}>
-                        <Text className='text-xs text-muted-foreground'>{option.componentName}</Text>
-                        <Text className='text-xs font-inter-medium text-foreground'>{option.name}</Text>
-                      </View>
-                    )
-                )}
-              </View>
-            </View>
-          </View>
-        </View>
-      )
+      return <PresetOrderItem preset={preset} iconSize={SMALL_ICON_SIZE} />
     }
 
     // TODO: Handle other order types here
@@ -491,12 +503,12 @@ export default function ReviewOrderScreen() {
                   {/* Payment Details Section */}
                   <PaymentDetailsSection
                     iconSize={SMALL_ICON_SIZE}
-                    preset={preset}
+                    fullMerchandiseTotal={fullMerchandiseTotal}
                     shippingFee={shippingFee}
-                    voucherId={voucherId}
-                    totalPayment={totalPayment}
+                    totalPaymentNow={totalPaymentNow}
                     savedAmount={savedAmount}
                     paymentType={paymentType}
+                    payableMerchandisePortion={payableMerchandisePortion}
                   />
 
                   <Text className='text-xs text-muted-foreground px-2 mb-4'>
@@ -515,13 +527,13 @@ export default function ReviewOrderScreen() {
                 <Text className='font-inter-semibold text-primary'>
                   <Text className='text-sm'>Total</Text>{' '}
                   <Text className='underline font-inter-semibold text-sm text-primary'>đ</Text>
-                  {totalPayment.toLocaleString('vi-VN')}
+                  {totalPaymentNow.toLocaleString('vi-VN')}
                 </Text>
 
                 <Text className='font-inter-medium text-primary text-sm'>
                   <Text className='text-xs'>Saved</Text>{' '}
                   <Text className='underline font-inter-medium text-sm text-primary'>đ</Text>
-                  {voucherId ? savedAmount.toLocaleString('vi-VN') : '0'}
+                  {savedAmount > 0 ? savedAmount.toLocaleString('vi-VN') : '0'}
                 </Text>
               </View>
               <Button
@@ -568,7 +580,7 @@ export default function ReviewOrderScreen() {
                 vouchers={getFlattenedVouchers(vouchers)}
                 selectedVoucherId={voucherId || undefined}
                 onSelectVoucher={handleSelectVoucher}
-                merchandiseTotal={merchandiseTotal}
+                fullMerchandiseTotal={fullMerchandiseTotal}
               />
             )}
           </FormProvider>

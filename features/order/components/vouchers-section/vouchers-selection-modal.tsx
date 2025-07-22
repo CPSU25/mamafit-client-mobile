@@ -11,7 +11,7 @@ interface VouchersSelectionModalProps {
   vouchers: FlattenedVoucher[]
   selectedVoucherId?: string
   onSelectVoucher: (id: string) => void
-  merchandiseTotal: number
+  fullMerchandiseTotal: number
 }
 
 type VoucherStatus = {
@@ -19,7 +19,7 @@ type VoucherStatus = {
   errorMessage?: string
 }
 
-const getVoucherStatus = (voucher: FlattenedVoucher, merchandiseTotal: number): VoucherStatus => {
+const getVoucherStatus = (voucher: FlattenedVoucher, fullMerchandiseTotal: number): VoucherStatus => {
   const now = new Date()
   const startDate = new Date(voucher.startDate)
   const endDate = new Date(voucher.endDate)
@@ -45,10 +45,10 @@ const getVoucherStatus = (voucher: FlattenedVoucher, merchandiseTotal: number): 
     }
   }
 
-  if (merchandiseTotal < voucher.minimumOrderValue) {
+  if (fullMerchandiseTotal < voucher.minimumOrderValue) {
     return {
       isDisabled: true,
-      errorMessage: `Need to spend đ${(voucher.minimumOrderValue - merchandiseTotal).toLocaleString('vi-VN')} more to use`
+      errorMessage: `Need to spend đ${(voucher.minimumOrderValue - fullMerchandiseTotal).toLocaleString('vi-VN')} more to use`
     }
   }
 
@@ -58,7 +58,7 @@ const getVoucherStatus = (voucher: FlattenedVoucher, merchandiseTotal: number): 
 }
 
 const VouchersSelectionModal = forwardRef<BottomSheetModal, VouchersSelectionModalProps>(
-  ({ vouchers, onSelectVoucher, selectedVoucherId, merchandiseTotal }, ref) => {
+  ({ vouchers, onSelectVoucher, selectedVoucherId, fullMerchandiseTotal }, ref) => {
     return (
       <BottomSheetModal
         style={{
@@ -84,8 +84,13 @@ const VouchersSelectionModal = forwardRef<BottomSheetModal, VouchersSelectionMod
           data={vouchers}
           keyExtractor={(voucher) => voucher.voucherId}
           showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <View className='mx-auto mt-24'>
+              <Text className='text-sm text-muted-foreground'>No vouchers found</Text>
+            </View>
+          }
           renderItem={({ item }) => {
-            const { isDisabled, errorMessage } = getVoucherStatus(item, merchandiseTotal)
+            const { isDisabled, errorMessage } = getVoucherStatus(item, fullMerchandiseTotal)
 
             return (
               <TouchableOpacity

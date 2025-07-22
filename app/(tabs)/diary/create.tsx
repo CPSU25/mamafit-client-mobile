@@ -1,5 +1,5 @@
 import { Feather } from '@expo/vector-icons'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
@@ -48,6 +48,7 @@ export default function CreateDiaryScreen() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(0)
   const { isDarkColorScheme } = useColorScheme()
+  const { redirectTo } = useLocalSearchParams() as { redirectTo: string }
 
   const next = () => {
     setCurrentStep((prev) => {
@@ -72,7 +73,7 @@ export default function CreateDiaryScreen() {
   }
 
   const { stepOneMethods, stepTwoMethods, measurementsMethods, previewDiaryMutation, createDiaryMutation } =
-    useCreateDiary(next, handleReset)
+    useCreateDiary(next, handleReset, redirectTo)
 
   const {
     handleSubmit: handleSubmitStepOne,
@@ -103,6 +104,10 @@ export default function CreateDiaryScreen() {
     (measurementsErrors as any)._errors?.[0]
 
   const handleGoBack = () => {
+    if (redirectTo) {
+      router.replace(redirectTo as any)
+    }
+
     if (router.canGoBack()) {
       router.back()
     } else {

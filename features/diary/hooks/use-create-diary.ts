@@ -54,7 +54,7 @@ const defaultMeasurementsValues: MeasurementsFormInput = {
   sleeveLength: '0'
 }
 
-export const useCreateDiary = (onSuccess: () => void, onFinish: () => void) => {
+export const useCreateDiary = (onSuccess: () => void, onFinish: () => void, redirectTo: string) => {
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -95,7 +95,11 @@ export const useCreateDiary = (onSuccess: () => void, onFinish: () => void) => {
         queryClient.invalidateQueries({ queryKey: ['diaries'] })
         queryClient.invalidateQueries({ queryKey: ['all-diaries'] })
         queryClient.invalidateQueries({ queryKey: ['all-diaries-queries'] })
-        router.replace(`/diary/${data.diaryId}/detail`)
+        if (redirectTo) {
+          router.replace(redirectTo as any)
+        } else {
+          router.replace(`/diary/${data.diaryId}/detail`)
+        }
 
         setTimeout(() => {
           stepOneMethods.reset()

@@ -65,5 +65,15 @@ export const placeDesignRequestOrderFormSchema = z.object({
   images: z.array(z.string().url({ message: 'Invalid URL format' }))
 })
 
+// Schema for adding new add-on option
+export const selectAddOnOptionFormSchema = z.object({
+  addOnId: z.string().min(1, { message: 'Add-on is required' }),
+  positionId: z.string().min(1, { message: 'Position is required' }),
+  sizeId: z.string().min(1, { message: 'Size is required' }),
+  type: z.string().min(1, { message: 'Type is required' }),
+  value: z.string().min(1, { message: 'Value is required' })
+})
+
 export type PlacePresetOrderFormSchema = z.infer<typeof placePresetOrderFormSchema>
 export type PlaceDesignRequestOrderFormSchema = z.infer<typeof placeDesignRequestOrderFormSchema>
+export type SelectAddOnOptionFormSchema = z.infer<typeof selectAddOnOptionFormSchema>
