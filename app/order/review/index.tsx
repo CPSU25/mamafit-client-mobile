@@ -36,7 +36,7 @@ import {
 import { DeliveryMethod, PaymentType, PlacePresetOrderFormSchema } from '~/features/order/validations'
 import { useAuth } from '~/hooks/use-auth'
 import { useRefreshs } from '~/hooks/use-refresh'
-import { DEPOSIT_PERCENTAGE, PRIMARY_COLOR } from '~/lib/constants/constants'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { Address } from '~/types/address.type'
 import { Diary } from '~/types/diary.type'
 import { OrderItemTemp } from '~/types/order-item.type'
@@ -68,7 +68,8 @@ const getPaymentDetails = ({
   paymentType,
   shippingFee,
   voucher,
-  addOnOptions
+  addOnOptions,
+  depositRate
 }: {
   orderType: string | null
   price: number
@@ -76,6 +77,7 @@ const getPaymentDetails = ({
   shippingFee: number
   voucher: FlattenedVoucher | null
   addOnOptions: AddOnOptionItem[]
+  depositRate: number
 }) => {
   // Original cost (no deposit, no vouchers, no shipping fee)
   // Used to check if this order is able to use voucher that has minimum order value
@@ -91,7 +93,7 @@ const getPaymentDetails = ({
 
   // How much user must pay (if the option is deposit - pay 50% else 100%)
   const payableMerchandisePortion =
-    paymentType === 'DEPOSIT' ? discountedMerchandiseTotal * DEPOSIT_PERCENTAGE : discountedMerchandiseTotal
+    paymentType === 'DEPOSIT' ? discountedMerchandiseTotal * depositRate : discountedMerchandiseTotal
 
   // Final amount (voucher + shipping fee + deposit/full)
   const totalPaymentNow =
@@ -100,7 +102,7 @@ const getPaymentDetails = ({
       : payableMerchandisePortion + addOnsSubtotal
 
   // How much user must pay after the order is completed at the factory (for deposit)
-  const remainingBalance = paymentType === 'DEPOSIT' ? discountedMerchandiseTotal * (1 - DEPOSIT_PERCENTAGE) : 0
+  const remainingBalance = paymentType === 'DEPOSIT' ? discountedMerchandiseTotal * (1 - depositRate) : 0
 
   return {
     isVoucherValid: true,
@@ -185,7 +187,8 @@ export default function ReviewOrderScreen() {
     '1': { data: currentUserProfile, refetch: refetchUserProfile, isLoading: isLoadingUserProfile },
     '2': { data: diaries, refetch: refetchDiaries, isLoading: isLoadingDiaries, isFetched: isFetchedDiaries },
     '3': { data: branches, refetch: refetchBranches, isLoading: isLoadingBranches, isFetched: isFetchedBranches },
-    '4': { data: vouchers, refetch: refetchVouchers, isLoading: isLoadingVouchers }
+    '4': { data: vouchers, refetch: refetchVouchers, isLoading: isLoadingVouchers },
+    '5': { data: config, refetch: refetchConfig, isLoading: isLoadingConfig }
   } = useReviewOrderQueries(user?.userId)
 
   // Get default address + active diary for auto selecting
@@ -228,7 +231,12 @@ export default function ReviewOrderScreen() {
 
   const isLoadingAddressSection = isLoadingAddresses || isLoadingUserProfile
   const isLoading =
-    isLoadingAddressSection || isLoadingDiaries || isLoadingBranches || isLoadingShippingFee || isLoadingVouchers
+    isLoadingAddressSection ||
+    isLoadingDiaries ||
+    isLoadingBranches ||
+    isLoadingShippingFee ||
+    isLoadingVouchers ||
+    isLoadingConfig
   const orderType = orderItems?.type || null
 
   const { fullMerchandiseTotal, savedAmount, payableMerchandisePortion, totalPaymentNow, addOnsSubtotal } =
@@ -238,7 +246,8 @@ export default function ReviewOrderScreen() {
       paymentType,
       shippingFee: shippingFee || 0,
       voucher: currentVoucher,
-      addOnOptions: preset?.addOnOptions || []
+      addOnOptions: preset?.addOnOptions || [],
+      depositRate: config?.depositRate || 0
     })
 
   const { refreshControl } = useRefreshs([
@@ -247,7 +256,8 @@ export default function ReviewOrderScreen() {
     refetchShippingFee,
     refetchDiaries,
     refetchBranches,
-    refetchVouchers
+    refetchVouchers,
+    refetchConfig
   ])
 
   // Modal handlers
@@ -483,7 +493,12 @@ export default function ReviewOrderScreen() {
 
     if (orderType === 'preset' && preset) {
       return (
-        <PresetOrderItem preset={preset} iconSize={SMALL_ICON_SIZE} onRemoveAddOnOption={handleRemoveAddOnOption} />
+        <PresetOrderItem
+          preset={preset}
+          iconSize={SMALL_ICON_SIZE}
+          onRemoveAddOnOption={handleRemoveAddOnOption}
+          addOnsSubtotal={addOnsSubtotal}
+        />
       )
     }
 
@@ -579,7 +594,7 @@ export default function ReviewOrderScreen() {
 
                 {/* Payment Methods Section */}
                 <Animated.View entering={FadeInDown.delay(500)}>
-                  <PaymentMethodsSection iconSize={SMALL_ICON_SIZE} />
+                  <PaymentMethodsSection iconSize={SMALL_ICON_SIZE} depositRate={config?.depositRate || 0} />
                 </Animated.View>
 
                 <Animated.View entering={FadeInDown.delay(600)} className='gap-2'>
@@ -594,6 +609,7 @@ export default function ReviewOrderScreen() {
                     payableMerchandisePortion={payableMerchandisePortion}
                     addOnsSubtotal={addOnsSubtotal}
                     addOnsCount={preset?.addOnOptions?.length || 0}
+                    depositRate={config?.depositRate || 0}
                   />
 
                   <Text className='text-xs text-muted-foreground px-2 mb-4'>
