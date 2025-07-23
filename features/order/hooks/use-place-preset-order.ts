@@ -20,6 +20,7 @@ const defaultValues: PlacePresetOrderFormSchema = {
   shippingFee: 0,
   voucherDiscountId: null,
   measurementDiaryId: '',
+  options: [],
   isOnline: true,
   paymentMethod: PaymentMethod.ONLINE_BANKING,
   paymentType: PaymentType.FULL,

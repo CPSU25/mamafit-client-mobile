@@ -109,11 +109,14 @@ export default function AddressSection({
     >
       <TabsList className='flex-row w-full'>
         <TabsTrigger value={DeliveryMethod.DELIVERY} className='flex-1 flex-row items-center gap-2'>
-          {SvgIcon.toReceive({ size: iconSize })}
+          {SvgIcon.toReceive({
+            size: iconSize,
+            color: tabValue === DeliveryMethod.DELIVERY ? 'PRIMARY' : 'GRAY'
+          })}
           <Text>Delivery</Text>
         </TabsTrigger>
         <TabsTrigger value={DeliveryMethod.PICK_UP} className='flex-1 flex-row items-center gap-2'>
-          {SvgIcon.shop({ size: iconSize })}
+          {SvgIcon.shop({ size: iconSize, color: tabValue === DeliveryMethod.PICK_UP ? 'PRIMARY' : 'GRAY' })}
           <Text>Pick Up</Text>
         </TabsTrigger>
       </TabsList>

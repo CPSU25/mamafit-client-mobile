@@ -14,7 +14,15 @@ interface BranchCardProps {
 export default function BranchCard({ isSelected, branch }: BranchCardProps) {
   return (
     <Card className={cn('p-2 flex-row gap-3', isSelected && 'border-primary bg-primary/10')}>
-      <Image source={{ uri: branch.images[0] }} className='w-20 h-20 rounded-xl' />
+      <Image
+        source={
+          branch.images && branch.images[0]
+            ? { uri: branch.images[0] }
+            : require('~/assets/images/branch-placeholder.png')
+        }
+        className='w-20 h-20 rounded-xl'
+        resizeMode='cover'
+      />
       <View className='flex-1 justify-between'>
         <Text className='text-lg font-inter-medium' numberOfLines={1}>
           {branch.name}
@@ -25,7 +33,7 @@ export default function BranchCard({ isSelected, branch }: BranchCardProps) {
           </Text>
           <View className='flex-row items-center gap-1'>
             <MaterialCommunityIcons name='storefront' size={14} color={PRIMARY_COLOR.LIGHT} />
-            <Text className='text-xs text-muted-foreground' numberOfLines={1}>
+            <Text className='text-xs text-muted-foreground flex-1' numberOfLines={1}>
               {branch.ward}, {branch.district}, {branch.province}
             </Text>
           </View>

@@ -55,7 +55,7 @@ export default function DiarySection({ isLoading, diary, handlePresentDiaryModal
   }
 
   return (
-    <TouchableOpacity onPress={() => router.push('/diary/create')}>
+    <TouchableOpacity onPress={() => router.push('/diary/create?redirectTo=/order/review')}>
       <WarningCard title='Oops! No diary found' description='Press to create your diary first to place your order' />
     </TouchableOpacity>
   )

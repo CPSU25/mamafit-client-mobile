@@ -35,7 +35,7 @@ export function useImagePicker({
     return true
   }
 
-  const pickImages = async (): Promise<string[]> => {
+  const pickImages = async (path?: string): Promise<string[]> => {
     try {
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
@@ -71,7 +71,7 @@ export function useImagePicker({
         )
       }
 
-      const urls = await firebaseService.uploadImages(validAssets)
+      const urls = await firebaseService.uploadImages(validAssets, path)
       const newImages = [...images, ...urls]
       setImages(newImages)
 

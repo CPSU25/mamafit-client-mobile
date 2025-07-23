@@ -1,5 +1,6 @@
 import { PlaceDesignRequestOrderFormSchema, PlacePresetOrderFormSchema } from '~/features/order/validations'
 import { api } from '~/lib/axios/axios'
+import { AddOn } from '~/types/add-on.type'
 import { BasePaginationResponse, BaseResponse } from '~/types/common'
 import { Branch, QRCodeResponse } from '~/types/order.type'
 
@@ -18,7 +19,7 @@ class OrderService {
 
   async getBranches(index: number = 1, pageSize: number = 20) {
     const { data } = await api.get<BasePaginationResponse<Branch>>(
-      `branch?index=${index}&pageSize=${pageSize}&sortBy=createdat_desc`
+      `branch?index=${index}&pageSize=${pageSize}&sortBy=CREATED_AT_DESC`
     )
 
     return data.data.items
@@ -34,6 +35,12 @@ class OrderService {
     const { data } = await api.get<BaseResponse<null>>(`sepay-auth/status/${orderId}`)
 
     return data.message
+  }
+
+  async getAddOns() {
+    const { data } = await api.get<BasePaginationResponse<AddOn>>('add-on')
+
+    return data.data.items
   }
 }
 

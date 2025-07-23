@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios, { isAxiosError } from 'axios'
 import * as Updates from 'expo-updates'
 import tokenEventService from '~/services/signalr/token-event.service'
@@ -50,6 +51,7 @@ export const refreshAuthTokens = async (): Promise<AuthTokens> => {
       if (isAxiosError(error) && error.response?.status === 401) {
         await clearAuthTokens()
         tokenEventService.emit('AuthFailed')
+        await AsyncStorage.clear()
         await Updates.reloadAsync()
       }
 

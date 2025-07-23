@@ -13,13 +13,13 @@ class FirebaseService {
     this.filePath = filePath
   }
 
-  async uploadImages(assets: ImagePickerAsset[]) {
+  async uploadImages(assets: ImagePickerAsset[], path?: string) {
     if (!assets || assets.length === 0) {
       throw new Error('No assets provided for upload')
     }
 
     try {
-      const uploadPromises = assets.map((asset) => this.uploadSingleImage(asset))
+      const uploadPromises = assets.map((asset) => this.uploadSingleImage(asset, path))
 
       const results = await Promise.allSettled(uploadPromises)
 
@@ -50,7 +50,7 @@ class FirebaseService {
     }
   }
 
-  async uploadSingleImage(asset: ImagePickerAsset) {
+  async uploadSingleImage(asset: ImagePickerAsset, path?: string) {
     if (!asset.uri) {
       throw new Error('Asset URI is required for upload')
     }
@@ -59,7 +59,7 @@ class FirebaseService {
       // Generate unique filename and path
       const extension = this.getFileExtension(asset.uri, asset.mimeType)
       const filename = asset.fileName || generateImageFileName(extension.replace('.', ''))
-      const uploadPath = `${this.filePath}/${filename}`
+      const uploadPath = `${path ? path : this.filePath}/${filename}`
 
       // Prepare URI for different platforms
       const uploadUri = Platform.OS === 'ios' ? asset.uri.replace('file://', '') : asset.uri

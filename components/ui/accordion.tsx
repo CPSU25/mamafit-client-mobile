@@ -51,8 +51,12 @@ const Trigger = Platform.OS === 'web' ? View : Pressable
 function AccordionTrigger({
   className,
   children,
+  iconSize,
+  iconColor,
   ...props
 }: AccordionPrimitive.TriggerProps & {
+  iconSize?: number
+  iconColor?: string
   children?: React.ReactNode
   ref?: React.RefObject<AccordionPrimitive.TriggerRef>
 }) {
@@ -79,7 +83,11 @@ function AccordionTrigger({
           >
             {children}
             <Animated.View style={chevronStyle}>
-              <Feather name='chevron-down' size={18} color={isDarkColorScheme ? 'white' : 'black'} />
+              <Feather
+                name='chevron-down'
+                size={iconSize ? iconSize : 18}
+                color={iconColor ? iconColor : isDarkColorScheme ? 'white' : 'black'}
+              />
             </Animated.View>
           </Trigger>
         </AccordionPrimitive.Trigger>

@@ -4,27 +4,30 @@ import { Card } from '~/components/ui/card'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { DEPOSIT_PERCENTAGE, PRIMARY_COLOR, styles } from '~/lib/constants/constants'
-import { PresetWithComponentOptions } from '~/types/preset.type'
 import { PaymentType } from '../../validations'
 
 interface PaymentDetailsSectionProps {
   iconSize: number
-  preset: PresetWithComponentOptions | null
+  fullMerchandiseTotal: number
   shippingFee: number | undefined
-  voucherId: string | null
-  totalPayment: number
+  totalPaymentNow: number
   savedAmount: number
   paymentType: PaymentType
+  payableMerchandisePortion: number
+  addOnsSubtotal: number
+  addOnsCount: number
 }
 
 export default function PaymentDetailsSection({
   iconSize,
-  preset,
+  fullMerchandiseTotal,
   shippingFee,
-  voucherId,
-  totalPayment,
+  totalPaymentNow,
   savedAmount,
-  paymentType
+  paymentType,
+  payableMerchandisePortion,
+  addOnsSubtotal,
+  addOnsCount
 }: PaymentDetailsSectionProps) {
   return (
     <Card className='p-3' style={[styles.container]}>
@@ -34,16 +37,33 @@ export default function PaymentDetailsSection({
       </View>
       <View className='flex flex-col gap-2 mt-2'>
         <View className='flex-row items-baseline'>
-          <Text className='text-xs text-muted-foreground flex-1'>
-            Merchandise Subtotal {paymentType === PaymentType.DEPOSIT ? `(${DEPOSIT_PERCENTAGE * 100}%)` : ''}
-          </Text>
+          <Text className='text-xs text-muted-foreground flex-1'>Merchandise Subtotal</Text>
           <Text className='text-xs text-muted-foreground'>
             <Text className='underline text-xs text-muted-foreground'>đ</Text>
-            {preset?.price && paymentType === PaymentType.DEPOSIT
-              ? (preset?.price * DEPOSIT_PERCENTAGE).toLocaleString('vi-VN')
-              : preset?.price?.toLocaleString('vi-VN')}
+            {fullMerchandiseTotal.toLocaleString('vi-VN')}
           </Text>
         </View>
+
+        {savedAmount > 0 ? (
+          <View className='flex-row items-baseline'>
+            <Text className='text-xs text-muted-foreground flex-1'>Voucher Discount</Text>
+            <Text className='text-xs text-primary'>
+              -<Text className='underline text-xs text-primary'>đ</Text>
+              {savedAmount.toLocaleString('vi-VN')}
+            </Text>
+          </View>
+        ) : null}
+
+        {paymentType === PaymentType.DEPOSIT && payableMerchandisePortion > 0 ? (
+          <View className='flex-row items-baseline'>
+            <Text className='text-xs text-muted-foreground flex-1'>Deposit Subtotal ({DEPOSIT_PERCENTAGE * 100}%)</Text>
+            <Text className='text-xs text-muted-foreground'>
+              <Text className='underline text-xs text-muted-foreground'>đ</Text>
+              {payableMerchandisePortion.toLocaleString('vi-VN')}
+            </Text>
+          </View>
+        ) : null}
+
         <View className='flex-row items-baseline'>
           <Text className='text-xs text-muted-foreground flex-1'>Shipping Subtotal</Text>
           <Text className='text-xs text-muted-foreground'>
@@ -51,21 +71,24 @@ export default function PaymentDetailsSection({
             {shippingFee ? shippingFee.toLocaleString('vi-VN') : '0'}
           </Text>
         </View>
-        {voucherId ? (
+
+        {addOnsSubtotal > 0 && addOnsCount > 0 && (
           <View className='flex-row items-baseline'>
-            <Text className='text-xs text-muted-foreground flex-1'>Discount Subtotal</Text>
-            <Text className='text-xs text-primary'>
-              -<Text className='underline text-xs text-primary'>đ</Text>
-              {savedAmount.toLocaleString('vi-VN')}
+            <Text className='text-xs text-muted-foreground flex-1'>Add-ons Subtotal ({addOnsCount})</Text>
+            <Text className='text-xs text-muted-foreground'>
+              <Text className='underline text-xs text-muted-foreground'>đ</Text>
+              {addOnsSubtotal.toLocaleString('vi-VN')}
             </Text>
           </View>
-        ) : null}
-        <Separator />
+        )}
+
+        <Separator className='my-1' />
+
         <View className='flex-row items-baseline'>
-          <Text className='text-sm font-inter-medium flex-1'>Total Payment</Text>
+          <Text className='font-inter-medium text-sm flex-1'>Total Payment</Text>
           <Text className='font-inter-medium text-sm'>
-            <Text className='underline font-inter-medium text-xs'>đ</Text>
-            {totalPayment.toLocaleString('vi-VN')}
+            <Text className='underline font-inter-medium text-sm'>đ</Text>
+            {totalPaymentNow.toLocaleString('vi-VN')}
           </Text>
         </View>
       </View>

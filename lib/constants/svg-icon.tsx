@@ -3,7 +3,8 @@ import { G, Path, Svg } from 'react-native-svg'
 export const COLORS = {
   GRAY: '#C4C8CC',
   PRIMARY: '#6d28d9',
-  WHITE: '#FFFFFF'
+  WHITE: '#FFFFFF',
+  SKY: '#0284c7'
 }
 
 interface SvgIconProps {
@@ -891,6 +892,32 @@ export const SvgIcon = {
         <Path
           opacity='0.4'
           d='M20.25 12.5C20.25 13.46 21.04 14.25 22 14.25C22.41 14.25 22.75 14.59 22.75 15C22.75 19.41 21.41 20.75 17 20.75H10.75V18.5C10.75 18.09 10.41 17.75 10 17.75V14.92C10.41 14.92 10.75 14.58 10.75 14.17V9.83C10.75 9.42 10.41 9.08 10 9.08V6.25C10.41 6.25 10.75 5.91 10.75 5.5V3.25H17C21.41 3.25 22.75 4.59 22.75 9V10C22.75 10.41 22.41 10.75 22 10.75C21.04 10.75 20.25 11.54 20.25 12.5Z'
+          fill={COLORS[color]}
+        ></Path>
+      </G>
+    </Svg>
+  ),
+  elementPlus: ({ size, color = 'PRIMARY' }: SvgIconProps) => (
+    <Svg width={size} height={size} viewBox='0 0 24 24' fill='none'>
+      <G id='SVGRepo_bgCarrier' stroke-width='0'></G>
+      <G id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></G>
+      <G id='SVGRepo_iconCarrier'>
+        <Path
+          d='M20.5 16.75H18.25V14.5C18.25 14.09 17.91 13.75 17.5 13.75C17.09 13.75 16.75 14.09 16.75 14.5V16.75H14.5C14.09 16.75 13.75 17.09 13.75 17.5C13.75 17.91 14.09 18.25 14.5 18.25H16.75V20.5C16.75 20.91 17.09 21.25 17.5 21.25C17.91 21.25 18.25 20.91 18.25 20.5V18.25H20.5C20.91 18.25 21.25 17.91 21.25 17.5C21.25 17.09 20.91 16.75 20.5 16.75Z'
+          fill={COLORS[color]}
+        ></Path>
+        <Path
+          opacity='0.4'
+          d='M22 8.52V3.98C22 2.57 21.36 2 19.77 2H15.73C14.14 2 13.5 2.57 13.5 3.98V8.51C13.5 9.93 14.14 10.49 15.73 10.49H19.77C21.36 10.5 22 9.93 22 8.52Z'
+          fill={COLORS[color]}
+        ></Path>
+        <Path
+          d='M10.5 8.52V3.98C10.5 2.57 9.86 2 8.27 2H4.23C2.64 2 2 2.57 2 3.98V8.51C2 9.93 2.64 10.49 4.23 10.49H8.27C9.86 10.5 10.5 9.93 10.5 8.52Z'
+          fill={COLORS[color]}
+        ></Path>
+        <Path
+          opacity='0.4'
+          d='M10.5 19.77V15.73C10.5 14.14 9.86 13.5 8.27 13.5H4.23C2.64 13.5 2 14.14 2 15.73V19.77C2 21.36 2.64 22 4.23 22H8.27C9.86 22 10.5 21.36 10.5 19.77Z'
           fill={COLORS[color]}
         ></Path>
       </G>
