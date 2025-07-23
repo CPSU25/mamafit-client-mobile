@@ -40,7 +40,6 @@ const BranchSelectionModal = forwardRef<BottomSheetModal, BranchSelectionModalPr
           keyExtractor={(address) => address.id}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            // TODO: improve ui
             <TouchableOpacity onPress={() => onSelectBranch(item.id)}>
               <BranchCard isSelected={item.id === selectedBranchId} branch={item} />
             </TouchableOpacity>

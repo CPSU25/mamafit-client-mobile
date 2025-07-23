@@ -1,4 +1,5 @@
 import { AddOnOption } from '~/types/add-on.type'
+import { PresetWithComponentOptions } from '~/types/preset.type'
 
 export interface AddOnMap {
   id: string
@@ -22,9 +23,11 @@ export interface SizeInfo {
 
 export interface ValidPair {
   id: string
+  name: string
   positionId: string
   sizeId: string
   type: string
+  price: number
 }
 
 export interface OptionMap {
@@ -41,4 +44,20 @@ export interface AddOnImageConfig {
   url: any
   color: string
   textColor: string
+}
+
+export interface PresetItem extends PresetWithComponentOptions {
+  addOnOptions: AddOnOptionItem[]
+}
+
+export interface AddOnOptionItem {
+  addOnOptionId: string
+  name: string
+  sizeName: string
+  sizeId: string
+  value: string
+  type: string
+  positionName: string
+  positionId: string
+  price: number
 }

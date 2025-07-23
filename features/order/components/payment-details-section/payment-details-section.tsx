@@ -14,6 +14,8 @@ interface PaymentDetailsSectionProps {
   savedAmount: number
   paymentType: PaymentType
   payableMerchandisePortion: number
+  addOnsSubtotal: number
+  addOnsCount: number
 }
 
 export default function PaymentDetailsSection({
@@ -23,7 +25,9 @@ export default function PaymentDetailsSection({
   totalPaymentNow,
   savedAmount,
   paymentType,
-  payableMerchandisePortion
+  payableMerchandisePortion,
+  addOnsSubtotal,
+  addOnsCount
 }: PaymentDetailsSectionProps) {
   return (
     <Card className='p-3' style={[styles.container]}>
@@ -67,6 +71,16 @@ export default function PaymentDetailsSection({
             {shippingFee ? shippingFee.toLocaleString('vi-VN') : '0'}
           </Text>
         </View>
+
+        {addOnsSubtotal > 0 && addOnsCount > 0 && (
+          <View className='flex-row items-baseline'>
+            <Text className='text-xs text-muted-foreground flex-1'>Add-ons Subtotal ({addOnsCount})</Text>
+            <Text className='text-xs text-muted-foreground'>
+              <Text className='underline text-xs text-muted-foreground'>đ</Text>
+              {addOnsSubtotal.toLocaleString('vi-VN')}
+            </Text>
+          </View>
+        )}
 
         <Separator className='my-1' />
 

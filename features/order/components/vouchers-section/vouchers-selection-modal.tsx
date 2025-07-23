@@ -4,13 +4,13 @@ import { BlurView } from 'expo-blur'
 import { forwardRef } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { Text } from '~/components/ui/text'
-import { SvgIcon } from '~/lib/constants/svg-icon'
 import { FlattenedVoucher } from '~/types/voucher.type'
+import VoucherCard from './voucher-card'
 
 interface VouchersSelectionModalProps {
   vouchers: FlattenedVoucher[]
   selectedVoucherId?: string
-  onSelectVoucher: (id: string) => void
+  onSelectVoucher: (id: string | null) => void
   fullMerchandiseTotal: number
 }
 
@@ -67,7 +67,7 @@ const VouchersSelectionModal = forwardRef<BottomSheetModal, VouchersSelectionMod
           maxHeight: '100%'
         }}
         ref={ref}
-        snapPoints={['50%', '80%']}
+        snapPoints={['50%', '90%']}
         enableDynamicSizing={false}
         enablePanDownToClose
         backdropComponent={({ style }) => (
@@ -97,7 +97,7 @@ const VouchersSelectionModal = forwardRef<BottomSheetModal, VouchersSelectionMod
                 onPress={() => {
                   if (!isDisabled) {
                     if (item.voucherId === selectedVoucherId) {
-                      onSelectVoucher('')
+                      onSelectVoucher(null)
                     } else {
                       onSelectVoucher(item.voucherId)
                     }
@@ -105,44 +105,11 @@ const VouchersSelectionModal = forwardRef<BottomSheetModal, VouchersSelectionMod
                 }}
                 className={isDisabled ? 'opacity-50' : ''}
               >
-                <View className='flex-row'>
-                  <View className='w-8 h-32 bg-emerald-500 rounded-l-xl flex justify-center items-center'>
-                    {SvgIcon.ticket({
-                      size: 18,
-                      color: 'WHITE'
-                    })}
-                  </View>
-                  <View className='flex-1 p-3 border border-y-border border-r-border border-l-transparent flex-row rounded-r-xl'>
-                    <View className='flex-1'>
-                      <View className='mb-2'>
-                        {item.discountType === 'FIXED' ? (
-                          <Text className='font-inter-semibold text-xl text-emerald-500'>
-                            <Text className='underline font-inter-semibold text-emerald-500 text-lg'>đ</Text>
-                            {item.discountValue.toLocaleString('vi-VN')}
-                          </Text>
-                        ) : (
-                          <Text className='font-inter-semibold text-xl text-emerald-500'>
-                            {item.discountValue}% OFF Capped at{' '}
-                            <Text className='underline font-inter-semibold text-emerald-500 text-lg'>đ</Text>
-                            {item.maximumDiscountValue.toLocaleString('vi-VN')}
-                          </Text>
-                        )}
-                      </View>
-                      <Text className='text-sm' numberOfLines={1}>
-                        Min. Spend <Text className='underline text-sm'>đ</Text>
-                        {item.minimumOrderValue.toLocaleString('vi-VN')}
-                      </Text>
-                      <Text className='text-xs text-muted-foreground'>
-                        Valid till: {format(new Date(item.endDate), 'dd/MM/yyyy')}
-                      </Text>
-                      {errorMessage && <Text className='text-xs text-rose-500 mt-auto'>{errorMessage}</Text>}
-                    </View>
-
-                    <View className='w-6 h-6 border border-black/50 rounded-full self-center flex justify-center items-center'>
-                      {item.voucherId === selectedVoucherId && <View className='w-4 h-4 bg-emerald-500 rounded-full' />}
-                    </View>
-                  </View>
-                </View>
+                <VoucherCard
+                  voucher={item}
+                  errorMessage={errorMessage || ''}
+                  isSelected={item.voucherId === selectedVoucherId}
+                />
               </TouchableOpacity>
             )
           }}

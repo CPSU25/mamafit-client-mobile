@@ -1,6 +1,8 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AddOn, AddOnOption } from '~/types/add-on.type'
+import { OrderItemTemp } from '~/types/order-item.type'
 import { ADD_ON_IMAGE_CONFIG, DEFAULT_ADD_ON_IMAGE, ORDERED_SIZES, ORDERED_TYPES } from './constants'
-import { AddOnImageConfig, AddOnMap, OptionMap, PositionInfo, SizeInfo } from './types'
+import { AddOnImageConfig, AddOnMap, AddOnOptionItem, OptionMap, PositionInfo, PresetItem, SizeInfo } from './types'
 
 export const getAddOnImage = (name: string): AddOnImageConfig => {
   return ADD_ON_IMAGE_CONFIG[name] ?? DEFAULT_ADD_ON_IMAGE
@@ -85,7 +87,7 @@ export const transformOptions = (groupOptions: AddOnOption[]): OptionMap[] => {
 
   groupOptions.forEach((option) => {
     const key = `${option.addOnId}-${option.name}`
-    const pairKey = `${option.id}-${option.position.id}-${option.size.id}-${option.itemServiceType}`
+    const pairKey = `${option.id}-${option.name}-${option.position.id}-${option.size.id}-${option.itemServiceType}-${option.price}`
 
     let currentOption = optionsMap.get(key)
 
@@ -147,8 +149,8 @@ export const transformOptions = (groupOptions: AddOnOption[]): OptionMap[] => {
       positions: Array.from(option.positions.values()),
       sizes: sortedSizes,
       validPairs: Array.from(option.validPairs).map((pairKey) => {
-        const [id, positionId, sizeId, type] = pairKey.split('-')
-        return { id, positionId, sizeId, type }
+        const [id, name, positionId, sizeId, type, price] = pairKey.split('-')
+        return { id, name, positionId, sizeId, type, price: Number(price) }
       })
     }
   })
@@ -173,8 +175,71 @@ export const getAvailableTypes = (optionDetail: OptionMap, positionId: string, s
   return sortTypesSafely(types)
 }
 
-export const getPairAddOnId = (optionDetail: OptionMap, positionId: string, sizeId: string, type: string) => {
+export const getValidPair = (optionDetail: OptionMap, positionId: string, sizeId: string, type: string) => {
   return optionDetail.validPairs.find(
     (pair) => pair.positionId === positionId && pair.sizeId === sizeId && pair.type === type
-  )?.id
+  )
+}
+
+export const getOrderItems = async () => {
+  try {
+    const orderItems = await AsyncStorage.getItem('order-items')
+    if (!orderItems) return null
+
+    const parsedOrderItems = JSON.parse(orderItems) as OrderItemTemp<unknown>
+    if (
+      parsedOrderItems &&
+      typeof parsedOrderItems === 'object' &&
+      'type' in parsedOrderItems &&
+      'items' in parsedOrderItems
+    ) {
+      return parsedOrderItems
+    }
+
+    return null
+  } catch (error) {
+    console.error('Error getting order items:', error)
+    return null
+  }
+}
+
+export const savePresetToAsyncStorage = async (preset: PresetItem) => {
+  try {
+    await AsyncStorage.setItem(
+      'order-items',
+      JSON.stringify({
+        type: 'preset',
+        items: [preset]
+      })
+    )
+    return true
+  } catch (error) {
+    console.error('Error saving preset to AsyncStorage:', error)
+    return false
+  }
+}
+
+export const removeAddOnOptionFromPreset = (preset: PresetItem, optionId: string): PresetItem => {
+  const updatedAddOnOptions = preset.addOnOptions?.filter((option) => option.addOnOptionId !== optionId) || []
+  return { ...preset, addOnOptions: updatedAddOnOptions }
+}
+
+export const addAddOnOptionToPreset = (preset: PresetItem, newOption: AddOnOptionItem): PresetItem => {
+  const existingOptions = preset.addOnOptions || []
+  // Remove duplicates by id and position
+  const filteredOptions = existingOptions.filter(
+    (option) => option.addOnOptionId !== newOption.addOnOptionId && option.positionId !== newOption.positionId
+  )
+
+  return {
+    ...preset,
+    addOnOptions: [...filteredOptions, newOption]
+  }
+}
+
+export const convertAddOnOptionsToFormFormat = (addOnOptions: AddOnOptionItem[]) => {
+  return addOnOptions.map((option) => ({
+    addOnOptionId: option.addOnOptionId,
+    value: option.value
+  }))
 }

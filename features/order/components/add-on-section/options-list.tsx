@@ -20,7 +20,7 @@ export default function OptionsList({ onPress, options }: OptionsListProps) {
             <GeneralAddOnOptionCard option={item} onPress={() => onPress(item)} />
           </Animated.View>
         )}
-        contentContainerClassName='gap-4 p-4'
+        contentContainerClassName='gap-2 p-4'
       />
     </View>
   )

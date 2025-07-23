@@ -1,9 +1,13 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as Updates from 'expo-updates'
 import { decodeJwt } from 'jose'
 import { useCallback, useEffect, useState } from 'react'
 import { useRefreshToken } from '~/features/auth/hooks/use-refresh-token'
 import { useAppDispatch, useAppSelector } from '~/lib/redux-toolkit/hooks'
 import { clear, setTokens, setUser, StorageState } from '~/lib/redux-toolkit/slices/auth.slice'
 import { RootState } from '~/lib/redux-toolkit/store'
+import chatHubService from '~/services/signalr/chat-hub.service'
+import notificationHubService from '~/services/signalr/notification-hub.service'
 import { JwtUser } from '~/types/common'
 import { useSecureStore } from './use-secure-store'
 
@@ -80,6 +84,10 @@ export const useAuth = () => {
   const handleLogout = async () => {
     try {
       await clearAuthState()
+      await AsyncStorage.clear()
+      chatHubService.destroy()
+      notificationHubService.destroy()
+      await Updates.reloadAsync()
     } catch (error) {
       console.error('Error logging out:', error)
     }

@@ -3,7 +3,8 @@ import { G, Path, Svg } from 'react-native-svg'
 export const COLORS = {
   GRAY: '#C4C8CC',
   PRIMARY: '#6d28d9',
-  WHITE: '#FFFFFF'
+  WHITE: '#FFFFFF',
+  SKY: '#0284c7'
 }
 
 interface SvgIconProps {

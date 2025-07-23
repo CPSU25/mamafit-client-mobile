@@ -4,7 +4,7 @@ import { Card } from '~/components/ui/card'
 import { Text } from '~/components/ui/text'
 import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
 import { FlattenedVoucher } from '~/types/voucher.type'
-import VoucherCard from './voucher-card'
+import PreviewVoucherCard from './preview-voucher-card'
 
 interface VoucherSectionProps {
   iconSize: number
@@ -27,7 +27,7 @@ export default function VouchersSection({ iconSize, voucher, onPress, savedAmoun
             <Feather name='chevron-right' size={20} color='lightgray' />
           </View>
         </View>
-        {voucher && <VoucherCard voucher={voucher} savedAmount={savedAmount} />}
+        {voucher && <PreviewVoucherCard voucher={voucher} savedAmount={savedAmount} />}
       </Card>
     </TouchableOpacity>
   )

@@ -10,6 +10,7 @@ import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
 import { Text } from '~/components/ui/text'
+import { PresetItem } from '~/features/order/types'
 import DressBuilderForm from '~/features/preset/components/dress-builder-form'
 import { useGetPreset } from '~/features/preset/hooks/use-get-preset'
 import { DressBuilderFormSchema, keysToExtract } from '~/features/preset/validations'
@@ -44,11 +45,17 @@ export default function CreateCanvasScreen() {
 
     try {
       setIsSaving(true)
+
+      const newPreset: PresetItem = {
+        ...preset,
+        addOnOptions: []
+      }
+
       await AsyncStorage.setItem(
         'order-items',
         JSON.stringify({
           type: 'preset',
-          items: [preset]
+          items: [newPreset]
         })
       )
       router.push('/order/review')

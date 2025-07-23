@@ -15,6 +15,12 @@ export enum PaymentMethod {
   ONLINE_BANKING = 'ONLINE_BANKING'
 }
 
+// Schema for add-on option in form
+export const addOnOptionFormSchema = z.object({
+  addOnOptionId: z.string().min(1, { message: 'Option ID is required' }),
+  value: z.string()
+})
+
 // Schema for preset order placement
 export const placePresetOrderFormSchema = z
   .object({
@@ -24,6 +30,7 @@ export const placePresetOrderFormSchema = z
     shippingFee: z.number().min(0, { message: 'Shipping fee is required' }),
     voucherDiscountId: z.string().nullable(),
     measurementDiaryId: z.string().min(1, { message: 'Measurement diary is required' }),
+    options: z.array(addOnOptionFormSchema),
     isOnline: z.boolean(),
     paymentMethod: z.nativeEnum(PaymentMethod),
     paymentType: z.nativeEnum(PaymentType),
@@ -66,14 +73,27 @@ export const placeDesignRequestOrderFormSchema = z.object({
 })
 
 // Schema for adding new add-on option
-export const selectAddOnOptionFormSchema = z.object({
-  addOnId: z.string().min(1, { message: 'Add-on is required' }),
-  positionId: z.string().min(1, { message: 'Position is required' }),
-  sizeId: z.string().min(1, { message: 'Size is required' }),
-  type: z.string().min(1, { message: 'Type is required' }),
-  value: z.string().min(1, { message: 'Value is required' })
-})
+export const selectAddOnOptionFormSchema = z
+  .object({
+    addOnId: z.string().min(1, { message: 'Add-on is required' }),
+    positionId: z.string().min(1, { message: 'Position is required' }),
+    positionName: z.string().min(1, { message: 'Position is required' }),
+    sizeId: z.string().min(1, { message: 'Size is required' }),
+    sizeName: z.string().min(1, { message: 'Size is required' }),
+    type: z.string().min(1, { message: 'Type is required' }),
+    value: z.string()
+  })
+  .superRefine((data, ctx) => {
+    if (data.type !== 'PATTERN' && !data.value) {
+      ctx.addIssue({
+        path: ['value'],
+        code: z.ZodIssueCode.custom,
+        message: 'Content is required'
+      })
+    }
+  })
 
+export type AddOnOptionFormSchema = z.infer<typeof addOnOptionFormSchema>
 export type PlacePresetOrderFormSchema = z.infer<typeof placePresetOrderFormSchema>
 export type PlaceDesignRequestOrderFormSchema = z.infer<typeof placeDesignRequestOrderFormSchema>
 export type SelectAddOnOptionFormSchema = z.infer<typeof selectAddOnOptionFormSchema>

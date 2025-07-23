@@ -6,9 +6,9 @@ import { TipCard, WarningCard } from '~/components/ui/alert-card'
 import { ImageGrid, ImagePickerTrigger, ImageResetButton } from '~/components/ui/image-picker'
 import { Text } from '~/components/ui/text'
 import { Textarea } from '~/components/ui/textarea'
+import { PlaceDesignRequestOrderFormSchema } from '~/features/order/validations'
 import { useFieldError } from '~/hooks/use-field-error'
 import { cn, isFormError } from '~/lib/utils'
-import { CreateRequestSchema } from '../validations'
 
 interface CreateDesignRequestFormProps {
   pickImages: () => Promise<string[]>
@@ -29,7 +29,7 @@ export default function CreateDesignRequestForm({
     control,
     formState: { errors },
     setValue
-  } = useFormContext<CreateRequestSchema>()
+  } = useFormContext<PlaceDesignRequestOrderFormSchema>()
   const className = useFieldError()
 
   const handlePickImages = async () => {

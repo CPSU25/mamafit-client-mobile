@@ -33,7 +33,7 @@ export default function BranchCard({ isSelected, branch }: BranchCardProps) {
           </Text>
           <View className='flex-row items-center gap-1'>
             <MaterialCommunityIcons name='storefront' size={14} color={PRIMARY_COLOR.LIGHT} />
-            <Text className='text-xs text-muted-foreground' numberOfLines={1}>
+            <Text className='text-xs text-muted-foreground flex-1' numberOfLines={1}>
               {branch.ward}, {branch.district}, {branch.province}
             </Text>
           </View>

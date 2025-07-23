@@ -19,7 +19,7 @@ class OrderService {
 
   async getBranches(index: number = 1, pageSize: number = 20) {
     const { data } = await api.get<BasePaginationResponse<Branch>>(
-      `branch?index=${index}&pageSize=${pageSize}&sortBy=createdat_desc`
+      `branch?index=${index}&pageSize=${pageSize}&sortBy=CREATED_AT_DESC`
     )
 
     return data.data.items

@@ -2,9 +2,9 @@ import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from 'expo-blur'
-import { useRouter } from 'expo-router'
+import { useFocusEffect, useRouter } from 'expo-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { FormProvider, SubmitHandler } from 'react-hook-form'
+import { FormProvider, SubmitHandler, useFieldArray } from 'react-hook-form'
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { toast } from 'sonner-native'
@@ -26,6 +26,13 @@ import VouchersSelectionModal from '~/features/order/components/vouchers-section
 import { useGetShippingFee } from '~/features/order/hooks/use-get-shipping-fee'
 import { usePlacePresetOrder } from '~/features/order/hooks/use-place-preset-order'
 import { useReviewOrderQueries } from '~/features/order/hooks/use-review-order-queries'
+import { AddOnOptionItem, PresetItem } from '~/features/order/types'
+import {
+  convertAddOnOptionsToFormFormat,
+  getOrderItems,
+  removeAddOnOptionFromPreset,
+  savePresetToAsyncStorage
+} from '~/features/order/utils'
 import { DeliveryMethod, PaymentType, PlacePresetOrderFormSchema } from '~/features/order/validations'
 import { useAuth } from '~/hooks/use-auth'
 import { useRefreshs } from '~/hooks/use-refresh'
@@ -34,7 +41,6 @@ import { Address } from '~/types/address.type'
 import { Diary } from '~/types/diary.type'
 import { OrderItemTemp } from '~/types/order-item.type'
 import { Branch } from '~/types/order.type'
-import { PresetWithComponentOptions } from '~/types/preset.type'
 import { FlattenedVoucher, VoucherBatchWithVouchers } from '~/types/voucher.type'
 
 const SMALL_ICON_SIZE = 18
@@ -56,44 +62,26 @@ const getDefaultBranch = (branches: Branch[] | null | undefined) => {
   return branches[0] || null
 }
 
-const getOrderItems = async () => {
-  try {
-    const orderItems = await AsyncStorage.getItem('order-items')
-    if (!orderItems) return null
-
-    const parsedOrderItems = JSON.parse(orderItems) as OrderItemTemp<unknown>
-    if (
-      parsedOrderItems &&
-      typeof parsedOrderItems === 'object' &&
-      'type' in parsedOrderItems &&
-      'items' in parsedOrderItems
-    ) {
-      return parsedOrderItems
-    }
-
-    return null
-  } catch (error) {
-    console.log(error)
-    return null
-  }
-}
-
 const getPaymentDetails = ({
   orderType,
   price = 0,
   paymentType,
   shippingFee,
-  voucher
+  voucher,
+  addOnOptions
 }: {
   orderType: string | null
   price: number
   paymentType: PaymentType
   shippingFee: number
   voucher: FlattenedVoucher | null
+  addOnOptions: AddOnOptionItem[]
 }) => {
   // Original cost (no deposit, no vouchers, no shipping fee)
   // Used to check if this order is able to use voucher that has minimum order value
   const fullMerchandiseTotal = orderType === 'preset' ? price : 0
+
+  const addOnsSubtotal = addOnOptions.reduce((acc, addOn) => acc + addOn.price, 0)
 
   // How much user saved on this order
   const savedAmount = getSavedAmount(voucher, fullMerchandiseTotal)
@@ -106,7 +94,10 @@ const getPaymentDetails = ({
     paymentType === 'DEPOSIT' ? discountedMerchandiseTotal * DEPOSIT_PERCENTAGE : discountedMerchandiseTotal
 
   // Final amount (voucher + shipping fee + deposit/full)
-  const totalPaymentNow = shippingFee > 0 ? payableMerchandisePortion + shippingFee : payableMerchandisePortion
+  const totalPaymentNow =
+    shippingFee > 0
+      ? payableMerchandisePortion + shippingFee + addOnsSubtotal
+      : payableMerchandisePortion + addOnsSubtotal
 
   // How much user must pay after the order is completed at the factory (for deposit)
   const remainingBalance = paymentType === 'DEPOSIT' ? discountedMerchandiseTotal * (1 - DEPOSIT_PERCENTAGE) : 0
@@ -118,7 +109,8 @@ const getPaymentDetails = ({
     discountedMerchandiseTotal,
     payableMerchandisePortion,
     totalPaymentNow,
-    remainingBalance
+    remainingBalance,
+    addOnsSubtotal
   }
 }
 
@@ -165,6 +157,15 @@ export default function ReviewOrderScreen() {
   const { methods, placePresetOrderMutation } = usePlacePresetOrder(clearOrderItems)
   const { setValue } = methods
 
+  const {
+    append: appendAddOnOption,
+    remove: removeAddOnOption,
+    replace: replaceAddOnOptions
+  } = useFieldArray({
+    control: methods.control,
+    name: 'options'
+  })
+
   const deliveryMethod = methods.watch('deliveryMethod')
 
   // UI states
@@ -176,7 +177,7 @@ export default function ReviewOrderScreen() {
 
   // Data from AsyncStorage states
   const [orderItems, setOrderItems] = useState<OrderItemTemp<unknown> | null>(null)
-  const [preset, setPreset] = useState<PresetWithComponentOptions | null>(null)
+  const [preset, setPreset] = useState<PresetItem | null>(null)
 
   // Queries to get user addresses, profile and diaries
   const {
@@ -230,13 +231,15 @@ export default function ReviewOrderScreen() {
     isLoadingAddressSection || isLoadingDiaries || isLoadingBranches || isLoadingShippingFee || isLoadingVouchers
   const orderType = orderItems?.type || null
 
-  const { fullMerchandiseTotal, savedAmount, payableMerchandisePortion, totalPaymentNow } = getPaymentDetails({
-    orderType,
-    price: orderType === 'preset' ? preset?.price || 0 : 0,
-    paymentType,
-    shippingFee: shippingFee || 0,
-    voucher: currentVoucher
-  })
+  const { fullMerchandiseTotal, savedAmount, payableMerchandisePortion, totalPaymentNow, addOnsSubtotal } =
+    getPaymentDetails({
+      orderType,
+      price: orderType === 'preset' ? preset?.price || 0 : 0,
+      paymentType,
+      shippingFee: shippingFee || 0,
+      voucher: currentVoucher,
+      addOnOptions: preset?.addOnOptions || []
+    })
 
   const { refreshControl } = useRefreshs([
     refetchAddresses,
@@ -295,7 +298,7 @@ export default function ReviewOrderScreen() {
   }, [])
 
   const handleSelectVoucher = useCallback(
-    (voucherId: string) => {
+    (voucherId: string | null) => {
       if (setValue) {
         setValue('voucherDiscountId', voucherId)
       }
@@ -329,7 +332,14 @@ export default function ReviewOrderScreen() {
       return
     }
 
-    console.log(data)
+    console.log({
+      ...data,
+      fullMerchandiseTotal,
+      savedAmount,
+      payableMerchandisePortion,
+      totalPaymentNow,
+      addOnsSubtotal
+    })
 
     if (orderType === 'preset') {
       placePresetOrderMutation.mutate(data)
@@ -338,32 +348,103 @@ export default function ReviewOrderScreen() {
     }
   }
 
-  // Set preset to form
-  useEffect(() => {
-    const getPreset = async () => {
-      const items = await getOrderItems()
+  // Sync preset data from storage with form
+  const syncPresetWithForm = useCallback(
+    (presetItem: PresetItem) => {
+      // TODO: Cover when data is deleted in DB but not in form + storage
+      setValue('presetId', presetItem.id)
 
-      if (!items) {
-        router.replace('/')
-        return
+      // Sync add-on options with form using utility function
+      if (presetItem.addOnOptions && Array.isArray(presetItem.addOnOptions)) {
+        const newFormOptions = convertAddOnOptionsToFormFormat(presetItem.addOnOptions)
+        const currentFormOptions = methods.getValues('options') || []
+
+        if (currentFormOptions.length === 0) {
+          // First time loading - replace entire array in form with new options
+          replaceAddOnOptions(newFormOptions)
+        } else {
+          // Find new options present in storage but not in the form
+          const newOptions = newFormOptions.filter(
+            (newOption) => !currentFormOptions.some((current) => current.addOnOptionId === newOption.addOnOptionId)
+          )
+
+          // Find options present in the form but not in storage (to remove)
+          const optionsToRemove: number[] = []
+          currentFormOptions.forEach((currentOption, index) => {
+            if (!newFormOptions.some((newOption) => newOption.addOnOptionId === currentOption.addOnOptionId)) {
+              optionsToRemove.push(index)
+            }
+          })
+
+          // Remove options from form that are not in storage (from last to first to avoid index issues)
+          optionsToRemove.reverse().forEach((index) => {
+            removeAddOnOption(index)
+          })
+
+          // Append new options from storage to form
+          newOptions.forEach((option) => {
+            appendAddOnOption(option)
+          })
+        }
+      } else {
+        replaceAddOnOptions([])
+      }
+    },
+    [setValue, replaceAddOnOptions, appendAddOnOption, removeAddOnOption, methods]
+  )
+
+  // Helper function to remove add-on option
+  const handleRemoveAddOnOption = useCallback(
+    async (optionId: string) => {
+      if (!preset) return
+
+      // Find the index in the form array and remove by index
+      const currentFormOptions = methods.getValues('options') || []
+      const optionIndex = currentFormOptions.findIndex((option) => option.addOnOptionId === optionId)
+
+      if (optionIndex !== -1) {
+        removeAddOnOption(optionIndex)
       }
 
-      setOrderItems(items)
+      // Remove from preset and update AsyncStorage
+      const updatedPreset = removeAddOnOptionFromPreset(preset, optionId)
+      const success = await savePresetToAsyncStorage(updatedPreset)
 
-      if (Array.isArray(items.items) && items.items.length > 0) {
-        if (items?.type === 'preset') {
-          const presetItem = items.items[0]
-          if (presetItem && typeof presetItem === 'object' && 'id' in presetItem) {
-            const typedPreset = presetItem as PresetWithComponentOptions
-            setPreset(typedPreset)
-            setValue('presetId', typedPreset.id)
+      if (success) {
+        setPreset(updatedPreset)
+      }
+    },
+    [preset, methods, removeAddOnOption]
+  )
+
+  // Set preset to form
+  useFocusEffect(
+    useCallback(() => {
+      const getPreset = async () => {
+        const items = await getOrderItems()
+
+        if (!items) {
+          router.replace('/')
+          return
+        }
+
+        setOrderItems(items)
+
+        if (Array.isArray(items.items) && items.items.length > 0) {
+          if (items?.type === 'preset') {
+            const presetItem = items.items[0]
+            if (presetItem && typeof presetItem === 'object' && 'id' in presetItem) {
+              const typedPreset = presetItem as PresetItem
+              setPreset(typedPreset)
+              syncPresetWithForm(typedPreset)
+            }
           }
         }
       }
-    }
 
-    getPreset()
-  }, [setValue, router])
+      getPreset()
+    }, [syncPresetWithForm, router])
+  )
 
   // Set default address to form if delivery method is delivery
   useEffect(() => {
@@ -401,7 +482,9 @@ export default function ReviewOrderScreen() {
     }
 
     if (orderType === 'preset' && preset) {
-      return <PresetOrderItem preset={preset} iconSize={SMALL_ICON_SIZE} />
+      return (
+        <PresetOrderItem preset={preset} iconSize={SMALL_ICON_SIZE} onRemoveAddOnOption={handleRemoveAddOnOption} />
+      )
     }
 
     // TODO: Handle other order types here
@@ -496,7 +579,7 @@ export default function ReviewOrderScreen() {
 
                 {/* Payment Methods Section */}
                 <Animated.View entering={FadeInDown.delay(500)}>
-                  <PaymentMethodsSection />
+                  <PaymentMethodsSection iconSize={SMALL_ICON_SIZE} />
                 </Animated.View>
 
                 <Animated.View entering={FadeInDown.delay(600)} className='gap-2'>
@@ -509,6 +592,8 @@ export default function ReviewOrderScreen() {
                     savedAmount={savedAmount}
                     paymentType={paymentType}
                     payableMerchandisePortion={payableMerchandisePortion}
+                    addOnsSubtotal={addOnsSubtotal}
+                    addOnsCount={preset?.addOnOptions?.length || 0}
                   />
 
                   <Text className='text-xs text-muted-foreground px-2 mb-4'>
