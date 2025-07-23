@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '~/hooks/use-auth'
-import ghtkService from '~/types/ghtk.service'
+import ghtkService from '~/services/ghtk.service'
 
 export const useGetShippingFee = ({
   province,
