@@ -102,3 +102,7 @@ export interface ForwardGeocodingResponse {
   }[]
   status: string
 }
+
+export interface AppConfig {
+  fields: { depositRate: number; designRequestServiceFee: number; name: string; presetVersions: number }
+}

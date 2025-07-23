@@ -54,5 +54,3 @@ export const ERROR_MESSAGES = {
 }
 
 export const ORDERED_COMPONENTS_OPTIONS = ['Neckline', 'Sleeves', 'Waist', 'Hem', 'Color', 'Fabric']
-
-export const DEPOSIT_PERCENTAGE = 0.5

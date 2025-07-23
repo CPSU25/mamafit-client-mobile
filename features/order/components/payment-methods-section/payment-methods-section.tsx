@@ -4,14 +4,15 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import { Card } from '~/components/ui/card'
 import { Label } from '~/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
-import { DEPOSIT_PERCENTAGE, PRIMARY_COLOR, styles } from '~/lib/constants/constants'
+import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
 import { PaymentType, PlacePresetOrderFormSchema } from '../../validations'
 
 interface PaymentMethodsSectionProps {
   iconSize: number
+  depositRate: number
 }
 
-export default function PaymentMethodsSection({ iconSize }: PaymentMethodsSectionProps) {
+export default function PaymentMethodsSection({ iconSize, depositRate }: PaymentMethodsSectionProps) {
   const { control } = useFormContext<PlacePresetOrderFormSchema>()
 
   return (
@@ -31,8 +32,8 @@ export default function PaymentMethodsSection({ iconSize }: PaymentMethodsSectio
             <RadioGroupItemWithLabel
               value='DEPOSIT'
               onPress={() => onChange('DEPOSIT')}
-              label={`Deposit ${DEPOSIT_PERCENTAGE * 100}% (Banking)`}
-              description={`Pay ${DEPOSIT_PERCENTAGE * 100}% of the total amount now`}
+              label={`Deposit ${depositRate * 100}% (Banking)`}
+              description={`Pay ${depositRate * 100}% of the total amount now`}
               icon={<MaterialCommunityIcons name='credit-card-clock' size={iconSize} color={PRIMARY_COLOR.LIGHT} />}
             />
           </RadioGroup>

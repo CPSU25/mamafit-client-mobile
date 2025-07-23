@@ -1,5 +1,6 @@
 import { useQueries } from '@tanstack/react-query'
 import { useAuth } from '~/hooks/use-auth'
+import contentfulService from '~/services/contentful.service'
 import diaryService from '~/services/diary.service'
 import orderService from '~/services/order.service'
 import userService from '~/services/user.service'
@@ -33,6 +34,11 @@ export const useReviewOrderQueries = (userId: string | undefined) => {
       {
         queryKey: ['vouchers-queries', user?.userId],
         queryFn: voucherService.getVouchers,
+        enabled: isAuthenticated
+      },
+      {
+        queryKey: ['config-queries', user?.userId],
+        queryFn: contentfulService.getConfig,
         enabled: isAuthenticated
       }
     ]

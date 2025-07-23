@@ -2,12 +2,14 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import FieldError from '~/components/field-error'
+import Loading from '~/components/loading'
 import { TipCard, WarningCard } from '~/components/ui/alert-card'
 import { ImageGrid, ImagePickerTrigger, ImageResetButton } from '~/components/ui/image-picker'
 import { Text } from '~/components/ui/text'
 import { Textarea } from '~/components/ui/textarea'
 import { PlaceDesignRequestOrderFormSchema } from '~/features/order/validations'
 import { useFieldError } from '~/hooks/use-field-error'
+import { useGetConfig } from '~/hooks/use-get-config'
 import { cn, isFormError } from '~/lib/utils'
 
 interface CreateDesignRequestFormProps {
@@ -25,6 +27,7 @@ export default function CreateDesignRequestForm({
   isMaxReached,
   currentImages
 }: CreateDesignRequestFormProps) {
+  const { data: config, isLoading: isLoadingConfig } = useGetConfig()
   const {
     control,
     formState: { errors },
@@ -47,6 +50,10 @@ export default function CreateDesignRequestForm({
   const handleResetImages = () => {
     resetImages()
     setValue('images', [])
+  }
+
+  if (isLoadingConfig) {
+    return <Loading />
   }
 
   return (
@@ -99,8 +106,11 @@ export default function CreateDesignRequestForm({
       <WarningCard title='Notes' delay={400}>
         <Text className='text-xs text-amber-600 dark:text-amber-500'>
           You will be charged
-          <Text className='text-xs font-inter-semibold text-amber-600 dark:text-amber-500'> 100.000 VND</Text> service
-          fee for each design request.
+          <Text className='text-xs font-inter-semibold text-amber-600 dark:text-amber-500'>
+            {' '}
+            {config && config.designRequestServiceFee && config.designRequestServiceFee.toLocaleString('vi-VN')} VND
+          </Text>{' '}
+          service fee for each design request.
         </Text>
       </WarningCard>
 

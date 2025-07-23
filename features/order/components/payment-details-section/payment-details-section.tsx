@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import { Card } from '~/components/ui/card'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
-import { DEPOSIT_PERCENTAGE, PRIMARY_COLOR, styles } from '~/lib/constants/constants'
+import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
 import { PaymentType } from '../../validations'
 
 interface PaymentDetailsSectionProps {
@@ -16,6 +16,7 @@ interface PaymentDetailsSectionProps {
   payableMerchandisePortion: number
   addOnsSubtotal: number
   addOnsCount: number
+  depositRate: number
 }
 
 export default function PaymentDetailsSection({
@@ -27,7 +28,8 @@ export default function PaymentDetailsSection({
   paymentType,
   payableMerchandisePortion,
   addOnsSubtotal,
-  addOnsCount
+  addOnsCount,
+  depositRate
 }: PaymentDetailsSectionProps) {
   return (
     <Card className='p-3' style={[styles.container]}>
@@ -56,21 +58,13 @@ export default function PaymentDetailsSection({
 
         {paymentType === PaymentType.DEPOSIT && payableMerchandisePortion > 0 ? (
           <View className='flex-row items-baseline'>
-            <Text className='text-xs text-muted-foreground flex-1'>Deposit Subtotal ({DEPOSIT_PERCENTAGE * 100}%)</Text>
+            <Text className='text-xs text-muted-foreground flex-1'>Deposit Subtotal ({depositRate * 100}%)</Text>
             <Text className='text-xs text-muted-foreground'>
               <Text className='underline text-xs text-muted-foreground'>đ</Text>
               {payableMerchandisePortion.toLocaleString('vi-VN')}
             </Text>
           </View>
         ) : null}
-
-        <View className='flex-row items-baseline'>
-          <Text className='text-xs text-muted-foreground flex-1'>Shipping Subtotal</Text>
-          <Text className='text-xs text-muted-foreground'>
-            <Text className='underline text-xs text-muted-foreground'>đ</Text>
-            {shippingFee ? shippingFee.toLocaleString('vi-VN') : '0'}
-          </Text>
-        </View>
 
         {addOnsSubtotal > 0 && addOnsCount > 0 && (
           <View className='flex-row items-baseline'>
@@ -81,6 +75,14 @@ export default function PaymentDetailsSection({
             </Text>
           </View>
         )}
+
+        <View className='flex-row items-baseline'>
+          <Text className='text-xs text-muted-foreground flex-1'>Shipping Subtotal</Text>
+          <Text className='text-xs text-muted-foreground'>
+            <Text className='underline text-xs text-muted-foreground'>đ</Text>
+            {shippingFee ? shippingFee.toLocaleString('vi-VN') : '0'}
+          </Text>
+        </View>
 
         <Separator className='my-1' />
 

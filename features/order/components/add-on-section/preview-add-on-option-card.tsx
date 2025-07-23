@@ -28,8 +28,8 @@ export default function PreviewAddOnOptionCard({ option, onRemove, iconSize }: P
         <Text className='text-xs text-muted-foreground'>Position: {option.positionName}</Text>
       </View>
 
-      <Text className='text-sm font-inter-medium text-primary'>
-        +<Text className='underline font-inter-medium text-xs text-primary'>đ</Text>
+      <Text className='text-sm font-inter-medium text-blue-600'>
+        +<Text className='underline font-inter-medium text-xs text-blue-600'>đ</Text>
         {option.price.toLocaleString('vi-VN')}
       </Text>
     </View>
