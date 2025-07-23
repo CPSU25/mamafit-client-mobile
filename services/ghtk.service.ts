@@ -1,5 +1,5 @@
 import { ghtkApi } from '~/lib/axios/axios'
-import { GHTKFeeResponse } from './ghtk.type'
+import { GHTKFeeResponse } from '~/types/ghtk.type'
 
 class GHTKService {
   async getShippingFee({ province, district, weight }: { province: string; district: string; weight: number }) {
