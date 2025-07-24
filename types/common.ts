@@ -103,6 +103,68 @@ export interface ForwardGeocodingResponse {
   status: string
 }
 
+export enum Vehicle {
+  Bike = 'bike',
+  Car = 'car',
+  Truck = 'truck',
+  Taxi = 'taxi',
+  Hd = 'hd'
+}
+
+export interface DirectionResponse {
+  geocoded_waypoints: GeocodedWaypoint[]
+  routes: Route[]
+}
+
+export interface GeocodedWaypoint {
+  geocoder_status: string
+  place_id: string
+}
+
+export interface Route {
+  bounds: Record<string, unknown>
+  legs: Leg[]
+  overview_polyline: Polyline
+  summary: string
+  warnings: string[]
+  waypoint_order: number[]
+}
+
+export interface Leg {
+  distance: TextValue
+  duration: TextValue
+  end_address: string
+  end_location: LatLng
+  start_address: string
+  start_location: LatLng
+  steps: Step[]
+}
+
+export interface Step {
+  distance: TextValue
+  duration: TextValue
+  end_location: LatLng
+  html_instructions: string
+  maneuver: string
+  polyline: Polyline
+  start_location: LatLng
+  travel_mode: string
+}
+
+export interface LatLng {
+  lat: number
+  lng: number
+}
+
+export interface TextValue {
+  text: string
+  value: number
+}
+
+export interface Polyline {
+  points: string
+}
+
 export interface AppConfig {
   fields: { depositRate: number; designRequestServiceFee: number; name: string; presetVersions: number }
 }

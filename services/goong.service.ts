@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ForwardGeocodingResponse } from '~/types/common'
+import { DirectionResponse, ForwardGeocodingResponse, Vehicle } from '~/types/common'
 
 if (!process.env.EXPO_PUBLIC_GOONG_MAP_API_KEY) {
   throw new Error('EXPO_PUBLIC_GOONG_MAP_API_KEY is not set')
@@ -18,6 +18,19 @@ class GoongService {
     })
 
     return data.results
+  }
+
+  async getDirection(origin: string, destination: string, vehicle: Vehicle = Vehicle.Bike) {
+    const { data } = await axios.get<DirectionResponse>(`${this.baseUrl}/Direction`, {
+      params: {
+        origin,
+        destination,
+        vehicle,
+        api_key: this.apiKey
+      }
+    })
+
+    return data
   }
 }
 
