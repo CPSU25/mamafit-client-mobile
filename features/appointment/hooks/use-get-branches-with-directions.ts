@@ -70,6 +70,8 @@ export const useGetBranchesWithDirections = (
   return {
     branchesWithDirections,
     isLoading,
-    isError
+    isError,
+    refetch: () => branchQueries.forEach((query) => query.refetch()),
+    isRefetching: branchQueries.some((query) => query.isRefetching)
   }
 }

@@ -38,8 +38,8 @@ export default function BranchCard({ branch, onPress, isFirstBranch }: BranchCar
             <View className='flex-row items-center gap-1.5'>
               <MaterialCommunityIcons name='clock' size={14} color={PRIMARY_COLOR.LIGHT} />
               <Text className='flex-1 text-xs text-muted-foreground pr-2' numberOfLines={1}>
-                {format(parse(branch.openingHour, 'HH:mm:ss', new Date()), 'HH:mm a')} -{' '}
-                {format(parse(branch.closingHour, 'HH:mm:ss', new Date()), 'HH:mm a')}
+                {format(parse(branch.openingHour, 'HH:mm:ss', new Date()), 'hh:mm a')} -{' '}
+                {format(parse(branch.closingHour, 'HH:mm:ss', new Date()), 'hh:mm a')}
               </Text>
             </View>
             <View className='flex-row items-center gap-1.5'>
