@@ -32,7 +32,7 @@ export default function BranchCard({ branch, onPress, isFirstBranch }: BranchCar
             <View className='flex-row items-center gap-1.5'>
               <MaterialCommunityIcons name='storefront' size={14} color={PRIMARY_COLOR.LIGHT} />
               <Text className='flex-1 text-xs text-muted-foreground pr-2' numberOfLines={1}>
-                {branch.street}, {branch.district}, {branch.province}
+                {branch.street}, {branch.ward}, {branch.district}, {branch.province}
               </Text>
             </View>
             <View className='flex-row items-center gap-1.5'>

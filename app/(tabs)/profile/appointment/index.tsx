@@ -46,8 +46,7 @@ export default function AppointmentScreen() {
     errorMsg: null,
     isLoading: true
   })
-  const [selectedBranch, setSelectedBranch] = useState<BranchWithDirection | null>(null)
-  const [currentStep, setCurrentStep] = useState(1)
+
   const { bottom } = useSafeAreaInsets()
 
   const bottomSheetRef = useRef<BottomSheet>(null)
@@ -59,7 +58,8 @@ export default function AppointmentScreen() {
   const animatedPOIDetailsIndex = useSharedValue<number>(0)
   const animatedPOIDetailsPosition = useSharedValue<number>(SCREEN_HEIGHT)
 
-  const { methods, bookAppointmentMutation } = useBookAppointment()
+  const { methods, bookAppointmentMutation, currentStep, setCurrentStep, selectedBranch, setSelectedBranch } =
+    useBookAppointment()
 
   const { setValue, handleSubmit, watch } = methods
   const bookingDate = watch('bookingDate')
@@ -110,7 +110,7 @@ export default function AppointmentScreen() {
 
   // Fit map to show both origin and destination
   const fitMapToRoute = useCallback(
-    (branch?: BranchWithDirection) => {
+    (branch: BranchWithDirection | null) => {
       const targetBranch = branch || selectedBranch
       if (userLocation.location && targetBranch && mapRef.current) {
         // Get route coordinates if available
@@ -173,14 +173,6 @@ export default function AppointmentScreen() {
     }, [])
   )
 
-  const handleGoBack = useCallback(() => {
-    if (router.canGoBack()) {
-      router.back()
-    } else {
-      router.replace('/profile')
-    }
-  }, [router])
-
   const onSubmit: SubmitHandler<BookAppointmentFormSchema> = (data) => {
     if (!user?.userId) return
 
@@ -199,7 +191,7 @@ export default function AppointmentScreen() {
     })
   }
 
-  const handleSwitchBranch = () => {
+  const handleSwitchBranch = useCallback(() => {
     setSelectedBranch(null)
     setValue('branchId', '')
     setCurrentStep(1)
@@ -208,7 +200,7 @@ export default function AppointmentScreen() {
       branchId: selectedBranch?.id
     })
     bottomSheetRef.current?.snapToIndex(2)
-  }
+  }, [selectedBranch, setSelectedBranch, setValue, setCurrentStep, methods])
 
   const handleSelectBranch = (branch: BranchWithDirection) => {
     setSelectedBranch(branch)
@@ -217,6 +209,16 @@ export default function AppointmentScreen() {
     setCurrentStep(2)
     bottomSheetRef?.current?.snapToIndex(1)
   }
+
+  const handleGoBack = useCallback(() => {
+    if (selectedBranch) {
+      handleSwitchBranch()
+    } else if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/profile')
+    }
+  }, [router, handleSwitchBranch, selectedBranch])
 
   const jumpToCurrentLocation = useCallback(() => {
     if (userLocation.location && mapRef.current) {
@@ -290,7 +292,9 @@ export default function AppointmentScreen() {
       <FloatingButton
         animatedIndex={animatedIndex}
         animatedPosition={animatedPosition}
-        onPress={jumpToCurrentLocation}
+        onPressTop={jumpToCurrentLocation}
+        onPressBottom={() => fitMapToRoute(selectedBranch)}
+        isDisplayBottom={!!selectedBranch}
       />
 
       <LinearGradient
@@ -300,17 +304,52 @@ export default function AppointmentScreen() {
         style={{
           boxShadow: '0 0 10px 0 rgba(109, 40, 217, 0.6)'
         }}
-        className='flex-row items-center p-4 absolute top-8 left-2 right-2 z-10 bg-background/50 rounded-2xl overflow-hidden border border-primary/50'
+        className='absolute top-8 left-2 right-2 z-10 bg-background/50 rounded-2xl overflow-hidden border border-primary/50'
       >
-        <View className='flex flex-row items-center gap-4 flex-1'>
-          <TouchableOpacity onPress={handleGoBack}>
-            <Feather name='arrow-left' size={24} color='white' />
+        <View className='flex-row items-center gap-4 p-4'>
+          <View className='flex-row items-center gap-4 flex-1'>
+            <TouchableOpacity onPress={handleGoBack}>
+              <Feather name='arrow-left' size={24} color='white' />
+            </TouchableOpacity>
+            <Text className='font-inter-medium text-xl text-white'>
+              {selectedBranch ? selectedBranch.name : formattedDate}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={() => router.push('/profile/appointment/history')}>
+            <Feather name='clock' size={24} color='white' />
           </TouchableOpacity>
-          <Text className='font-inter-medium text-xl text-white'>{formattedDate}</Text>
         </View>
-        <TouchableOpacity onPress={() => router.push('/profile/appointment/history')}>
-          <Feather name='clock' size={24} color='white' />
-        </TouchableOpacity>
+
+        {selectedBranch && (
+          <View className='px-2 pb-2'>
+            <View className='bg-white/20 rounded-xl p-3 backdrop-blur-sm'>
+              <View className='flex-row items-center justify-between'>
+                <View className='flex-1 mr-3'>
+                  <Text className='text-white font-inter-medium text-sm' numberOfLines={1}>
+                    {selectedBranch.street}, {selectedBranch.ward}
+                  </Text>
+                  <Text className='text-white/80 font-inter-regular text-xs' numberOfLines={1}>
+                    {selectedBranch.district}, {selectedBranch.province}
+                  </Text>
+                </View>
+                <View className='flex-row items-center gap-4'>
+                  <View className='items-center'>
+                    <Text className='text-white font-inter-semibold text-xs'>
+                      {selectedBranch.distance ? `${selectedBranch.distance.toFixed(1)}km` : 'N/A'}
+                    </Text>
+                    <Text className='text-white/70 font-inter-regular text-xs'>Distance</Text>
+                  </View>
+                  <View className='items-center'>
+                    <Text className='text-white font-inter-semibold text-xs'>
+                      {selectedBranch.duration ? `${Math.round(selectedBranch.duration)}min` : 'N/A'}
+                    </Text>
+                    <Text className='text-white/70 font-inter-regular text-xs'>Duration</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        )}
       </LinearGradient>
 
       {branches && Array.isArray(branches) && branches.length > 0 && (
@@ -370,7 +409,7 @@ export default function AppointmentScreen() {
                     <>
                       <View className='flex-row items-center justify-between px-4'>
                         <View>
-                          <Text className='font-inter-semibold text-xl'>{selectedBranch.name} </Text>
+                          <Text className='font-inter-semibold text-xl'>Appointment Details</Text>
                           <Text className='text-xs text-muted-foreground' numberOfLines={1}>
                             Working Hour: {format(parse(selectedBranch.openingHour, 'HH:mm:ss', new Date()), 'hh:mm a')}{' '}
                             - {format(parse(selectedBranch.closingHour, 'HH:mm:ss', new Date()), 'hh:mm a')}
@@ -392,21 +431,14 @@ export default function AppointmentScreen() {
                             isLoading={isLoadingAvailableSlots}
                           />
                         </KeyboardAwareScrollView>
+
                         <View className='flex-1' />
-                        <View className='flex-row items-center gap-4 flex-1'>
-                          <Button className='flex-1' variant='outline' onPress={handleSwitchBranch}>
-                            <Text className='font-inter-medium'>Switch Branch</Text>
-                          </Button>
-                          <Button
-                            className='flex-1'
-                            onPress={handleSubmit(onSubmit)}
-                            disabled={bookAppointmentMutation.isPending}
-                          >
-                            <Text className='font-inter-medium'>
-                              {bookAppointmentMutation.isPending ? 'Booking...' : 'Book Now!'}
-                            </Text>
-                          </Button>
-                        </View>
+
+                        <Button onPress={handleSubmit(onSubmit)} disabled={bookAppointmentMutation.isPending}>
+                          <Text className='font-inter-medium'>
+                            {bookAppointmentMutation.isPending ? 'Booking...' : 'Book Now!'}
+                          </Text>
+                        </Button>
                       </View>
                     </>
                   )}
