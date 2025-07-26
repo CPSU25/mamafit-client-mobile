@@ -139,16 +139,56 @@ export const formatDateStr = (isoDateString: string): DateRange => {
 
 // Helper function to create a unique key for date ranges
 export const createDateRangeKey = (dateRange: DateRange): string => {
-  return `${dateRange.date}-${dateRange.from.getTime()}-${dateRange.to.getTime()}`
+  return dateRange.date
 }
 
 // Helper function to parse date range key back to DateRange
 export const parseDateRangeKey = (key: string): DateRange => {
-  const [date, fromTime, toTime] = key.split('-')
+  const date = key
+  const now = new Date()
+
+  if (date === 'Today') {
+    const today = new Date()
+    return {
+      date: 'Today',
+      from: today,
+      to: today
+    }
+  }
+
+  if (date === 'This Week') {
+    return {
+      date: 'This Week',
+      from: startOfWeek(now, { weekStartsOn: 1 }),
+      to: endOfWeek(now, { weekStartsOn: 1 })
+    }
+  }
+
+  if (date === 'Next Week') {
+    const nextWeekStart = startOfWeek(addWeeks(now, 1), { weekStartsOn: 1 })
+    const nextWeekEnd = endOfWeek(addWeeks(now, 1), { weekStartsOn: 1 })
+    return {
+      date: 'Next Week',
+      from: nextWeekStart,
+      to: nextWeekEnd
+    }
+  }
+
+  const parsedDate = new Date(date)
+
+  if (isNaN(parsedDate.getTime())) {
+    const fallbackDate = new Date()
+    return {
+      date,
+      from: fallbackDate,
+      to: fallbackDate
+    }
+  }
+
   return {
     date,
-    from: new Date(parseInt(fromTime)),
-    to: new Date(parseInt(toTime))
+    from: parsedDate,
+    to: parsedDate
   }
 }
 

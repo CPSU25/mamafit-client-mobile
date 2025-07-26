@@ -7,7 +7,6 @@ import { useFocusEffect, useRouter } from 'expo-router'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { Dimensions, TouchableOpacity, View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE, Region } from 'react-native-maps'
 import { useDerivedValue, useSharedValue } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -24,7 +23,6 @@ import { useGetBranchesWithDirections } from '~/features/appointment/hooks/use-g
 import { createCoordinatesArray, decodePolyline } from '~/features/appointment/utils'
 import { BookAppointmentFormSchema } from '~/features/appointment/validations'
 import { useAuth } from '~/hooks/use-auth'
-import { KEYBOARD_OFFSET } from '~/lib/constants/constants'
 import { Vehicle } from '~/types/common'
 import { BranchWithDirection } from '~/types/order.type'
 
@@ -122,8 +120,23 @@ export default function AppointmentScreen() {
         const coordinates =
           routeCoords.length > 0 ? routeCoords : createCoordinatesArray(userLocation.location, targetBranch)
 
+        // Calculate dynamic edge padding based on distance
+        const distance = targetBranch.distance || 0
+        let edgePadding
+
+        if (distance <= 2) {
+          // Short distance: tighter padding for better detail
+          edgePadding = { top: 150, right: 40, bottom: 200, left: 40 }
+        } else if (distance <= 10) {
+          // Medium distance: moderate padding
+          edgePadding = { top: 200, right: 50, bottom: 250, left: 50 }
+        } else {
+          // Long distance: more padding to see full route
+          edgePadding = { top: 250, right: 80, bottom: 300, left: 80 }
+        }
+
         mapRef.current.fitToCoordinates(coordinates, {
-          edgePadding: { top: 100, right: 50, bottom: 300, left: 50 },
+          edgePadding,
           animated: true
         })
       }
@@ -207,7 +220,7 @@ export default function AppointmentScreen() {
     setValue('branchId', branch.id)
     fitMapToRoute(branch)
     setCurrentStep(2)
-    bottomSheetRef?.current?.snapToIndex(1)
+    bottomSheetRef?.current?.snapToIndex(0)
   }
 
   const handleGoBack = useCallback(() => {
@@ -424,13 +437,11 @@ export default function AppointmentScreen() {
                         </TouchableOpacity>
                       </View>
                       <View className='flex-1 gap-4 p-4'>
-                        <KeyboardAwareScrollView showsVerticalScrollIndicator={false} bottomOffset={KEYBOARD_OFFSET}>
-                          <BookAppointmentForm
-                            availableSlots={availableSlots}
-                            bookingDate={bookingDate}
-                            isLoading={isLoadingAvailableSlots}
-                          />
-                        </KeyboardAwareScrollView>
+                        <BookAppointmentForm
+                          availableSlots={availableSlots}
+                          bookingDate={bookingDate}
+                          isLoading={isLoadingAvailableSlots}
+                        />
 
                         <View className='flex-1' />
 
