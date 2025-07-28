@@ -1,4 +1,5 @@
 import { Address } from './address.type'
+import { DirectionResponse } from './common'
 import { OrderItem } from './order-item.type'
 
 export interface QRCodeResponse {
@@ -37,7 +38,8 @@ export interface Branch {
   branchManagerId: string
   name: string
   description: string
-  openingHour: string | null
+  openingHour: string
+  closingHour: string
   images: string[]
   mapId: string
   province: string
@@ -46,4 +48,10 @@ export interface Branch {
   street: string
   latitude: number
   longitude: number
+}
+
+export interface BranchWithDirection extends Branch {
+  distance?: number
+  duration?: number
+  directionData?: DirectionResponse
 }

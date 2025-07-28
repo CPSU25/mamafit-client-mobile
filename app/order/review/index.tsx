@@ -338,6 +338,7 @@ export default function ReviewOrderScreen() {
   // Place order
   const onSubmit: SubmitHandler<PlacePresetOrderFormSchema> = (data) => {
     if (!currentUserProfile?.phoneNumber) {
+      // TODO: create a custom component for toast error
       toast.error('Please add your phone number first')
       return
     }
