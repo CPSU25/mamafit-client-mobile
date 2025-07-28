@@ -243,3 +243,32 @@ export const convertAddOnOptionsToFormFormat = (addOnOptions: AddOnOptionItem[])
     value: option.value
   }))
 }
+
+export const getStatusIcon = (status: string) => {
+  switch (status) {
+    case 'CREATED':
+      return 'credit-card'
+    case 'IN_DESIGN':
+      return 'edit-3'
+    case 'CONFIRMED':
+      return 'check-circle'
+    case 'IN_PRODUCTION':
+      return 'tool'
+    case 'IN_QC':
+      return 'search'
+    case 'AWAITING_PAID_REST':
+      return 'dollar-sign'
+    case 'PACKAGING':
+      return 'package'
+    case 'SHIPPING':
+      return 'truck'
+    case 'COMPLETED':
+      return 'award'
+    case 'WARRANTY_CHECK':
+      return 'shield'
+    case 'IN_WARRANTY':
+      return 'refresh-cw'
+    default:
+      return 'circle'
+  }
+}

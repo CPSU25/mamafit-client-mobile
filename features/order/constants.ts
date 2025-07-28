@@ -42,3 +42,177 @@ export const DEFAULT_ADD_ON_IMAGE: AddOnImageConfig = {
 export const ORDERED_SIZES = ['Small', 'Medium', 'Large', 'Full Position']
 
 export const ORDERED_TYPES = ['TEXT', 'IMAGE', 'PATTERN']
+
+export const orderStatuses = [
+  {
+    id: 1,
+    label: 'To Pay',
+    value: 'CREATED',
+    urlValue: 'to-pay',
+    title: 'Waiting For Payment',
+    description:
+      'Your order has been created and is waiting for you to complete the payment so we can start processing.'
+  },
+  {
+    id: 2,
+    label: 'In Design',
+    value: 'IN_DESIGN',
+    urlValue: 'in-design',
+    title: 'Design In Progress',
+    description:
+      'Our designer is now working closely with you to finalize the design before your order goes to production.'
+  },
+  {
+    id: 3,
+    label: 'Confirmed',
+    value: 'CONFIRMED',
+    urlValue: 'to-make',
+    title: 'Order Confirmed',
+    description:
+      'Your payment was confirmed and your order has been accepted. We are preparing everything to start making it.'
+  },
+  {
+    id: 4,
+    label: 'In Production',
+    value: 'IN_PRODUCTION',
+    urlValue: 'in-production',
+    title: 'In Production',
+    description:
+      'Your order is currently being produced by our team with care and attention before it moves to the next step.'
+  },
+  {
+    id: 5,
+    label: 'In QC',
+    value: 'IN_QC',
+    urlValue: 'in-qc',
+    title: 'Quality Check',
+    description:
+      'Your order has been completed and is now undergoing a strict quality check to ensure everything is perfect.'
+  },
+  {
+    id: 6,
+    label: 'To Paid Rest',
+    value: 'AWAITING_PAID_REST',
+    urlValue: 'to-paid-rest',
+    title: 'Waiting For Remaining Payment',
+    description:
+      'Your order passed the quality check. Please pay the remaining balance so we can prepare it for delivery soon.'
+  },
+  {
+    id: 7,
+    label: 'Packaging',
+    value: 'PACKAGING',
+    urlValue: 'packaging',
+    title: 'Being Packaged',
+    description:
+      'Your order has passed all checks and is now being carefully packaged and made ready to be sent to you.'
+  },
+  {
+    id: 8,
+    label: 'To Deliver',
+    value: 'SHIPPING',
+    urlValue: 'to-deliver',
+    title: 'Out For Delivery',
+    description:
+      'Your packaged order has been handed to the delivery courier and is on its way to the address you provided.'
+  },
+  {
+    id: 9,
+    label: 'To Rate',
+    value: 'COMPLETED',
+    urlValue: 'to-rate',
+    title: 'Completed',
+    description:
+      'Your order has been successfully delivered. Please confirm that you received it and leave your feedback.'
+  },
+  {
+    id: 10,
+    label: 'Warranty Check',
+    value: 'WARRANTY_CHECK',
+    urlValue: 'warranty-check',
+    title: 'Warranty Inspection',
+    description:
+      'We are reviewing your request and checking your order to confirm if it is eligible to receive warranty service.'
+  },
+  {
+    id: 11,
+    label: 'In Warranty',
+    value: 'IN_WARRANTY',
+    urlValue: 'in-warranty',
+    title: 'Warranty Service',
+    description:
+      'Your order is being repaired or replaced under warranty and will pass checks again before being delivered.'
+  }
+]
+
+export const statusStyles: Record<
+  string,
+  { colors: string[]; textColor: string; iconColor: string; shadowColor: string }
+> = {
+  CREATED: {
+    colors: ['#fffdf5', '#fef7d8', '#fef3c0'],
+    textColor: '#7c2d12',
+    iconColor: '#ca8a04',
+    shadowColor: '#eab308'
+  },
+  IN_DESIGN: {
+    colors: ['#fcfaff', '#f4e9ff', '#ebd6ff'],
+    textColor: '#5b21b6',
+    iconColor: '#7c3aed',
+    shadowColor: '#8b5cf6'
+  },
+  CONFIRMED: {
+    colors: ['#f7fdf9', '#d9fbe3', '#baf7cc'],
+    textColor: '#166534',
+    iconColor: '#16a34a',
+    shadowColor: '#22c55e'
+  },
+  IN_PRODUCTION: {
+    colors: ['#fffaf5', '#ffe9d6', '#ffd8b4'],
+    textColor: '#9a3412',
+    iconColor: '#ea580c',
+    shadowColor: '#f97316'
+  },
+  IN_QC: {
+    colors: ['#f9fbff', '#e1edff', '#cde1ff'],
+    textColor: '#1e3a8a',
+    iconColor: '#2563eb',
+    shadowColor: '#3b82f6'
+  },
+  AWAITING_PAID_REST: {
+    colors: ['#fdfaff', '#f8ebff', '#f1d7fe'],
+    textColor: '#701a75',
+    iconColor: '#c026d3',
+    shadowColor: '#d946ef'
+  },
+  PACKAGING: {
+    colors: ['#fbfcfd', '#edf0f5', '#e2e5ea'],
+    textColor: '#334155',
+    iconColor: '#475569',
+    shadowColor: '#64748b'
+  },
+  SHIPPING: {
+    colors: ['#f7fefd', '#d8fbf4', '#b4f5ea'],
+    textColor: '#115e59',
+    iconColor: '#0d9488',
+    shadowColor: '#14b8a6'
+  },
+  COMPLETED: {
+    colors: ['#f7fdf9', '#d9fbe3', '#baf7cc'],
+    textColor: '#166534',
+    iconColor: '#16a34a',
+    shadowColor: '#22c55e'
+  },
+  WARRANTY_CHECK: {
+    colors: ['#fffafa', '#ffe2e2', '#ffc9c9'],
+    textColor: '#991b1b',
+    iconColor: '#dc2626',
+    shadowColor: '#ef4444'
+  },
+  IN_WARRANTY: {
+    colors: ['#fffef6', '#fff6cf', '#ffeea6'],
+    textColor: '#854d0e',
+    iconColor: '#ca8a04',
+    shadowColor: '#eab308'
+  }
+}
