@@ -32,13 +32,13 @@ const statuses: OrderStatus[] = [
   {
     id: 2,
     name: 'To Ship',
-    url: '/order/to-ship',
+    url: '/order/packaging',
     icon: SvgIcon.toShip({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 3,
     name: 'To Receive',
-    url: '/order/to-receive',
+    url: '/order/to-deliver',
     icon: SvgIcon.toReceive({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {

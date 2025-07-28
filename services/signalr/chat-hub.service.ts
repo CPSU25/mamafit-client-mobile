@@ -22,6 +22,8 @@ class ChatHubService extends BaseHubService {
 
   // Store handler references for proper cleanup
   private handleReceiveMessage = (message: any) => this.emit(ChatHubEvents.ReceiveMessage, message)
+
+  // TODO: refetch api get rooms after join room
   private handleInvitedToRoom = (roomId: string) => {
     this.emit(ChatHubEvents.InvitedToRoom, roomId)
     this.joinRoom(roomId)
