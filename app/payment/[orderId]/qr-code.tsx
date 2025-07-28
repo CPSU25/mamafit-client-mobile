@@ -53,8 +53,10 @@ export default function PaymentQRCode() {
     isFetched: isPaymentStatusFetched,
     isLoading: isPaymentStatusLoading
   } = useGetPaymentStatus(orderId)
+  const isPaid =
+    paymentStatus === 'PAID_FULL' || paymentStatus === 'PAID_DEPOSIT' || paymentStatus === 'PAID_DEPOSIT_COMPLETED'
 
-  const shouldFetchQRCode = isPaymentStatusFetched && !isPaymentStatusLoading && paymentStatus !== 'PAID'
+  const shouldFetchQRCode = isPaymentStatusFetched && !isPaymentStatusLoading && !isPaid
 
   const {
     data: qrCodeData,
@@ -64,7 +66,7 @@ export default function PaymentQRCode() {
 
   const { refreshControl } = useRefreshs([refetchQRCode, refetchPaymentStatus])
 
-  const isPaymentSuccess = isPaymentStatusFetched && !isPaymentStatusLoading && paymentStatus === 'PAID'
+  const isPaymentSuccess = isPaymentStatusFetched && !isPaymentStatusLoading && isPaid
 
   const isLoading = isPaymentStatusLoading || (shouldFetchQRCode && isQRCodeLoading)
 

@@ -1,5 +1,5 @@
 import { api } from '~/lib/axios/axios'
-import { Appointment, BookAppointmentRequest, Slot } from '~/types/appointment.type'
+import { Appointment, AppointmentDetail, BookAppointmentRequest, Slot } from '~/types/appointment.type'
 import { BasePaginationResponse, BaseResponse } from '~/types/common'
 
 class AppointmentService {
@@ -29,6 +29,18 @@ class AppointmentService {
         sortBy: 'UPCOMMING_AT_ASC'
       }
     })
+
+    return data.data
+  }
+
+  async getAppointment(appointmentId: string) {
+    const { data } = await api.get<BaseResponse<AppointmentDetail>>(`appointment/${appointmentId}`)
+
+    return data.data
+  }
+
+  async cancelAppointment({ appointmentId, reason }: { appointmentId: string; reason: string }) {
+    const { data } = await api.put<BaseResponse<string>>(`appointment/${appointmentId}/cancel`, reason)
 
     return data.data
   }

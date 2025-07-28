@@ -42,6 +42,7 @@ export default function HomeScreen() {
         {/* Carousel */}
         {/* <HomeCarousel /> */}
         {/* List of dresses */}
+        {/* TODO: add quick access buttons like booking appointment, create diary, ... */}
         <FlatList
           data={dresses}
           numColumns={2}

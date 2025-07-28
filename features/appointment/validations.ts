@@ -33,4 +33,12 @@ export const bookAppointmentFormSchema = z
     }
   })
 
+export const cancelAppointmentFormSchema = z.object({
+  reason: z
+    .string()
+    .min(1, { message: 'Reason is required' })
+    .max(100, { message: 'Reason must be less than 100 characters' })
+})
+
 export type BookAppointmentFormSchema = z.infer<typeof bookAppointmentFormSchema>
+export type CancelAppointmentFormSchema = z.infer<typeof cancelAppointmentFormSchema>
