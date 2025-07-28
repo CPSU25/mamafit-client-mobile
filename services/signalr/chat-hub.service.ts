@@ -7,6 +7,7 @@ export enum ChatHubEvents {
   UserOffline = 'UserOffline',
   OnlineUsersList = 'OnlineUsersList',
   JoinedRoom = 'JoinedRoom',
+  InvitedToRoom = 'InvitedToRoom',
   Error = 'Error'
 }
 
@@ -21,6 +22,10 @@ class ChatHubService extends BaseHubService {
 
   // Store handler references for proper cleanup
   private handleReceiveMessage = (message: any) => this.emit(ChatHubEvents.ReceiveMessage, message)
+  private handleInvitedToRoom = (roomId: string) => {
+    this.emit(ChatHubEvents.InvitedToRoom, roomId)
+    this.joinRoom(roomId)
+  }
   private handleUserOnline = (userId: string, userName: string) => this.emit(ChatHubEvents.UserOnline, userId, userName)
   private handleUserOffline = (userId: string, userName: string) =>
     this.emit(ChatHubEvents.UserOffline, userId, userName)
@@ -33,6 +38,7 @@ class ChatHubService extends BaseHubService {
     await this.ensureConnected()
 
     this.hubConnection!.on(ChatHubEvents.ReceiveMessage, this.handleReceiveMessage)
+    this.hubConnection!.on(ChatHubEvents.InvitedToRoom, this.handleInvitedToRoom)
     this.hubConnection!.on(ChatHubEvents.UserOnline, this.handleUserOnline)
     this.hubConnection!.on(ChatHubEvents.UserOffline, this.handleUserOffline)
     this.hubConnection!.on(ChatHubEvents.OnlineUsersList, this.handleOnlineUsersList)
@@ -60,6 +66,11 @@ class ChatHubService extends BaseHubService {
 
     const payload: MessagePayload = { ChatRoomId: roomId, Message: message, Type: type }
     await this.hubConnection!.invoke(ChatHubEvents.SendMessage, payload)
+  }
+
+  async joinRoom(roomId: string): Promise<void> {
+    await this.ensureConnected()
+    await this.hubConnection!.invoke('JoinRoom', roomId.trim())
   }
 }
 
