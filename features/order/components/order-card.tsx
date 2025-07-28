@@ -14,7 +14,7 @@ interface OrderCardProps {
 
 export default function OrderCard({ order }: OrderCardProps) {
   const orderItemTypeSet = [...new Set(order.items.map((item) => item.itemType))]
-  const totalPrice = order.items.reduce((acc, item) => acc + item.price * item.quantity, 0)
+  const totalPrice = order.subTotalAmount - (order.discountSubtotal || 0)
 
   if (orderItemTypeSet.length > 1) {
     return <Text>Invalid Order</Text>
@@ -87,7 +87,10 @@ export default function OrderCard({ order }: OrderCardProps) {
           <View className='items-end'>
             <Text className='text-xs font-inter-medium'>
               Total {order.items?.length} Item{order.items?.length > 1 ? 's' : ''}:{' '}
-              <Text className='text-sm font-inter-medium'>đ{totalPrice.toLocaleString('vi-VN')}</Text>
+              <Text className='text-sm font-inter-medium'>
+                <Text className='text-xs font-inter-medium underline'>đ</Text>
+                {totalPrice.toLocaleString('vi-VN')}
+              </Text>
             </Text>
           </View>
         </View>
@@ -116,7 +119,10 @@ const PresetOrderItem = ({ item }: { item: OrderItem }) => {
           </View>
         </View>
         <View className='items-end'>
-          <Text className='text-xs font-inter-medium'>đ{itemPrice.toLocaleString('vi-VN')}</Text>
+          <Text className='text-xs font-inter-medium'>
+            <Text className='text-xs font-inter-medium underline'>đ</Text>
+            {itemPrice.toLocaleString('vi-VN')}
+          </Text>
         </View>
       </View>
     </View>
@@ -143,7 +149,10 @@ const DesignRequestOrderItem = ({ item }: { item: OrderItem }) => {
           </View>
         </View>
         <View className='items-end'>
-          <Text className='text-xs font-inter-medium'>đ{itemPrice.toLocaleString('vi-VN')}</Text>
+          <Text className='text-xs font-inter-medium'>
+            <Text className='text-xs font-inter-medium underline'>đ</Text>
+            {itemPrice.toLocaleString('vi-VN')}
+          </Text>
         </View>
       </View>
     </View>

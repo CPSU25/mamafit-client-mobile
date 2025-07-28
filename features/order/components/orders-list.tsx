@@ -29,7 +29,9 @@ export default function OrdersList({ currentStatus }: OrdersListProps) {
 
   return (
     <FlatList
-      data={orders?.pages.flatMap((page) => page.items)}
+      data={orders?.pages
+        .flatMap((page) => page.items)
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())}
       renderItem={({ item, index }) => (
         <Animated.View entering={FadeInDown.delay(100 + index * 50)}>
           <OrderCard order={item} />

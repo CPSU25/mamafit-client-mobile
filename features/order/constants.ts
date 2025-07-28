@@ -56,21 +56,21 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
   },
   {
     id: 2,
-    label: 'In Design',
-    value: OrderStatus.InDesign,
-    urlValue: 'in-design',
-    title: 'Design In Progress',
-    description:
-      'Our designer is now working closely with you to finalize the design before your order goes to production.'
-  },
-  {
-    id: 3,
     label: 'Confirmed',
     value: OrderStatus.Confirmed,
     urlValue: 'to-make',
     title: 'Order Confirmed',
     description:
       'Your payment was confirmed and your order has been accepted. We are preparing everything to start making it.'
+  },
+  {
+    id: 3,
+    label: 'In Design',
+    value: OrderStatus.InDesign,
+    urlValue: 'in-design',
+    title: 'Design In Progress',
+    description:
+      'Our designer is now working closely with you to finalize the design before your order goes to production.'
   },
   {
     id: 4,

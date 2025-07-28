@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { useForm } from 'react-hook-form'
 import { ERROR_MESSAGES } from '~/lib/constants/constants'
@@ -8,6 +8,8 @@ import { placeDesignRequestOrderFormSchema, PlaceDesignRequestOrderFormSchema } 
 
 export const usePlaceDesignRequestOrder = () => {
   const router = useRouter()
+  const queryClient = useQueryClient()
+
   const methods = useForm<PlaceDesignRequestOrderFormSchema>({
     resolver: zodResolver(placeDesignRequestOrderFormSchema),
     defaultValues: {
@@ -20,6 +22,7 @@ export const usePlaceDesignRequestOrder = () => {
     mutationFn: orderService.placeDesignRequestOrder,
     onSuccess: (orderId) => {
       if (orderId) {
+        queryClient.invalidateQueries({ queryKey: ['orders'] })
         router.replace({
           pathname: '/payment/[orderId]/qr-code',
           params: { orderId }

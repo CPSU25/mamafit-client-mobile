@@ -288,11 +288,11 @@ export const getOrderItemTypeStyle = (type: OrderItemType): OrderItemStyleType =
   switch (type) {
     case OrderItemType.DesignRequest:
       return {
-        iconColor: '#db2777',
+        iconColor: '#9333ea',
         icon: 'design-services',
         text: 'Design Request Order',
-        textColor: 'text-pink-600',
-        tagColor: 'bg-pink-50'
+        textColor: 'text-purple-600',
+        tagColor: 'bg-purple-50'
       }
     case OrderItemType.Preset:
       return {
