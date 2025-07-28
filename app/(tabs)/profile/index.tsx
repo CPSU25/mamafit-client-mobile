@@ -26,25 +26,25 @@ const statuses: OrderStatus[] = [
   {
     id: 1,
     name: 'To Pay',
-    url: '/order/to-pay',
+    url: '/order/status/to-pay',
     icon: SvgIcon.toPay({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 2,
     name: 'To Ship',
-    url: '/order/packaging',
+    url: '/order/status/packaging',
     icon: SvgIcon.toShip({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 3,
     name: 'To Receive',
-    url: '/order/to-deliver',
+    url: '/order/status/to-deliver',
     icon: SvgIcon.toReceive({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 4,
     name: 'To Rate',
-    url: '/order/to-rate',
+    url: '/order/status/to-rate',
     icon: SvgIcon.toRate({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   }
 ]

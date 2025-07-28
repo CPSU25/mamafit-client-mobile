@@ -1,8 +1,9 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
-import { ActivityIndicator, FlatList, View } from 'react-native'
+import { useRouter } from 'expo-router'
+import { ActivityIndicator, FlatList, Pressable, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-import { CurrentStatus } from '~/app/order/[orderStatus]'
+import { CurrentStatus } from '~/app/order/status/[orderStatus]'
 import Loading from '~/components/loading'
 import { Text } from '~/components/ui/text'
 import { useRefreshs } from '~/hooks/use-refresh'
@@ -17,6 +18,8 @@ interface OrdersListProps {
 }
 
 export default function OrdersList({ currentStatus }: OrdersListProps) {
+  const router = useRouter()
+
   const {
     data: orders,
     isLoading,
@@ -34,7 +37,16 @@ export default function OrdersList({ currentStatus }: OrdersListProps) {
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())}
       renderItem={({ item, index }) => (
         <Animated.View entering={FadeInDown.delay(100 + index * 50)}>
-          <OrderCard order={item} />
+          <Pressable
+            onPress={() =>
+              router.push({
+                pathname: '/order/[orderId]',
+                params: { orderId: item.id }
+              })
+            }
+          >
+            <OrderCard order={item} />
+          </Pressable>
         </Animated.View>
       )}
       ListHeaderComponent={
