@@ -1,4 +1,5 @@
-import { AddOnImageConfig } from './types'
+import { OrderStatus } from '~/types/order.type'
+import { AddOnImageConfig, OrderStatusType } from './types'
 
 export const ADD_ON_IMAGE_CONFIG: Record<string, AddOnImageConfig> = {
   Embroidery: {
@@ -43,11 +44,11 @@ export const ORDERED_SIZES = ['Small', 'Medium', 'Large', 'Full Position']
 
 export const ORDERED_TYPES = ['TEXT', 'IMAGE', 'PATTERN']
 
-export const orderStatuses = [
+export const ORDER_STATUS_TYPES: OrderStatusType[] = [
   {
     id: 1,
     label: 'To Pay',
-    value: 'CREATED',
+    value: OrderStatus.Created,
     urlValue: 'to-pay',
     title: 'Waiting For Payment',
     description:
@@ -56,7 +57,7 @@ export const orderStatuses = [
   {
     id: 2,
     label: 'In Design',
-    value: 'IN_DESIGN',
+    value: OrderStatus.InDesign,
     urlValue: 'in-design',
     title: 'Design In Progress',
     description:
@@ -65,7 +66,7 @@ export const orderStatuses = [
   {
     id: 3,
     label: 'Confirmed',
-    value: 'CONFIRMED',
+    value: OrderStatus.Confirmed,
     urlValue: 'to-make',
     title: 'Order Confirmed',
     description:
@@ -74,7 +75,7 @@ export const orderStatuses = [
   {
     id: 4,
     label: 'In Production',
-    value: 'IN_PRODUCTION',
+    value: OrderStatus.InProduction,
     urlValue: 'in-production',
     title: 'In Production',
     description:
@@ -83,7 +84,7 @@ export const orderStatuses = [
   {
     id: 5,
     label: 'In QC',
-    value: 'IN_QC',
+    value: OrderStatus.InQC,
     urlValue: 'in-qc',
     title: 'Quality Check',
     description:
@@ -91,9 +92,9 @@ export const orderStatuses = [
   },
   {
     id: 6,
-    label: 'To Paid Rest',
-    value: 'AWAITING_PAID_REST',
-    urlValue: 'to-paid-rest',
+    label: 'To Pay Rest',
+    value: OrderStatus.AwaitingPaidRest,
+    urlValue: 'to-pay-rest',
     title: 'Waiting For Remaining Payment',
     description:
       'Your order passed the quality check. Please pay the remaining balance so we can prepare it for delivery soon.'
@@ -101,7 +102,7 @@ export const orderStatuses = [
   {
     id: 7,
     label: 'Packaging',
-    value: 'PACKAGING',
+    value: OrderStatus.Packaging,
     urlValue: 'packaging',
     title: 'Being Packaged',
     description:
@@ -110,7 +111,7 @@ export const orderStatuses = [
   {
     id: 8,
     label: 'To Deliver',
-    value: 'SHIPPING',
+    value: OrderStatus.Delevering,
     urlValue: 'to-deliver',
     title: 'Out For Delivery',
     description:
@@ -119,7 +120,7 @@ export const orderStatuses = [
   {
     id: 9,
     label: 'To Rate',
-    value: 'COMPLETED',
+    value: OrderStatus.Completed,
     urlValue: 'to-rate',
     title: 'Completed',
     description:
@@ -128,7 +129,7 @@ export const orderStatuses = [
   {
     id: 10,
     label: 'Warranty Check',
-    value: 'WARRANTY_CHECK',
+    value: OrderStatus.WarrantyCheck,
     urlValue: 'warranty-check',
     title: 'Warranty Inspection',
     description:
@@ -137,7 +138,7 @@ export const orderStatuses = [
   {
     id: 11,
     label: 'In Warranty',
-    value: 'IN_WARRANTY',
+    value: OrderStatus.InWarranty,
     urlValue: 'in-warranty',
     title: 'Warranty Service',
     description:

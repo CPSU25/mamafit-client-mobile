@@ -1,8 +1,19 @@
+import { MaterialIcons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AddOn, AddOnOption } from '~/types/add-on.type'
 import { OrderItemTemp } from '~/types/order-item.type'
+import { OrderItemType } from '~/types/order.type'
 import { ADD_ON_IMAGE_CONFIG, DEFAULT_ADD_ON_IMAGE, ORDERED_SIZES, ORDERED_TYPES } from './constants'
-import { AddOnImageConfig, AddOnMap, AddOnOptionItem, OptionMap, PositionInfo, PresetItem, SizeInfo } from './types'
+import {
+  AddOnImageConfig,
+  AddOnMap,
+  AddOnOptionItem,
+  OptionMap,
+  OrderItemStyleType,
+  PositionInfo,
+  PresetItem,
+  SizeInfo
+} from './types'
 
 export const getAddOnImage = (name: string): AddOnImageConfig => {
   return ADD_ON_IMAGE_CONFIG[name] ?? DEFAULT_ADD_ON_IMAGE
@@ -244,31 +255,68 @@ export const convertAddOnOptionsToFormFormat = (addOnOptions: AddOnOptionItem[])
   }))
 }
 
-export const getStatusIcon = (status: string) => {
+export const getStatusIcon = (status: string): keyof typeof MaterialIcons.glyphMap => {
   switch (status) {
     case 'CREATED':
       return 'credit-card'
     case 'IN_DESIGN':
-      return 'edit-3'
+      return 'design-services'
     case 'CONFIRMED':
-      return 'check-circle'
+      return 'library-add-check'
     case 'IN_PRODUCTION':
-      return 'tool'
+      return 'factory'
     case 'IN_QC':
-      return 'search'
+      return 'fact-check'
     case 'AWAITING_PAID_REST':
-      return 'dollar-sign'
+      return 'money'
     case 'PACKAGING':
-      return 'package'
-    case 'SHIPPING':
-      return 'truck'
+      return 'all-inbox'
+    case 'DELIVERING':
+      return 'local-shipping'
     case 'COMPLETED':
-      return 'award'
+      return 'stars'
     case 'WARRANTY_CHECK':
-      return 'shield'
+      return 'gpp-good'
     case 'IN_WARRANTY':
-      return 'refresh-cw'
+      return 'refresh'
     default:
       return 'circle'
+  }
+}
+
+export const getOrderItemTypeStyle = (type: OrderItemType): OrderItemStyleType => {
+  switch (type) {
+    case OrderItemType.DesignRequest:
+      return {
+        iconColor: '#db2777',
+        icon: 'design-services',
+        text: 'Design Request Order',
+        textColor: 'text-pink-600',
+        tagColor: 'bg-pink-50'
+      }
+    case OrderItemType.Preset:
+      return {
+        iconColor: '#2563eb',
+        icon: 'library-add-check',
+        text: 'Preset Order',
+        textColor: 'text-blue-600',
+        tagColor: 'bg-blue-50'
+      }
+    case OrderItemType.ReadyToBuy:
+      return {
+        iconColor: '#d97706',
+        icon: 'shopping-cart',
+        text: 'Ready to Buy Order',
+        textColor: 'text-amber-600',
+        tagColor: 'bg-amber-50'
+      }
+    default:
+      return {
+        iconColor: '#4b5563',
+        icon: 'circle',
+        text: 'Other Order',
+        textColor: 'text-gray-600',
+        tagColor: 'bg-gray-50'
+      }
   }
 }

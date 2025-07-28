@@ -1,14 +1,21 @@
 import { Feather } from '@expo/vector-icons'
-import { LinearGradient } from 'expo-linear-gradient'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import SafeView from '~/components/safe-view'
 import { Text } from '~/components/ui/text'
-import { orderStatuses, statusStyles } from '~/features/order/constants'
-import { getStatusIcon } from '~/features/order/utils'
-import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
+import OrdersList from '~/features/order/components/orders-list'
+import { ORDER_STATUS_TYPES } from '~/features/order/constants'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { cn } from '~/lib/utils'
+import { OrderStatus } from '~/types/order.type'
+
+export interface CurrentStatus {
+  title: string
+  description: string
+  value: OrderStatus
+  urlValue: string
+}
 
 export default function OrdersByStatusScreen() {
   const router = useRouter()
@@ -18,12 +25,12 @@ export default function OrdersByStatusScreen() {
 
   const [scrollViewWidth, setScrollViewWidth] = useState(0)
   const [tabLayouts, setTabLayouts] = useState<{ [key: string]: { x: number; width: number } }>({})
-  const [currentStatus, setCurrentStatus] = useState({
-    title: orderStatuses.find((status) => status.urlValue === orderStatus)?.title || 'Waiting for Payment',
+  const [currentStatus, setCurrentStatus] = useState<CurrentStatus>({
+    title: ORDER_STATUS_TYPES.find((status) => status.urlValue === orderStatus)?.title || 'Waiting for Payment',
     description:
-      orderStatuses.find((status) => status.urlValue === orderStatus)?.description ||
+      ORDER_STATUS_TYPES.find((status) => status.urlValue === orderStatus)?.description ||
       'Your order has been created. Please complete the payment to start processing.',
-    value: orderStatuses.find((status) => status.urlValue === orderStatus)?.value || 'CREATED',
+    value: ORDER_STATUS_TYPES.find((status) => status.urlValue === orderStatus)?.value || OrderStatus.Created,
     urlValue: orderStatus || 'to-pay'
   })
 
@@ -75,15 +82,15 @@ export default function OrdersByStatusScreen() {
         <Text className='font-inter-semibold text-xl'>My Purchases</Text>
       </View>
 
-      <View className='px-4'>
+      <View className='px-4 pt-2'>
         <ScrollView
           ref={scrollViewRef}
           horizontal
           showsHorizontalScrollIndicator={false}
           onLayout={handleScrollViewLayout}
         >
-          <View className='flex-row items-center gap-6'>
-            {orderStatuses.map((status) => (
+          <View className='flex-row items-center gap-4'>
+            {ORDER_STATUS_TYPES.map((status) => (
               <TouchableOpacity
                 key={status.id}
                 onPress={() =>
@@ -99,7 +106,7 @@ export default function OrdersByStatusScreen() {
               >
                 <Text
                   className={cn(
-                    'font-inter-medium',
+                    'font-inter-medium text-sm',
                     isSelected(status.urlValue) ? 'text-primary' : 'text-muted-foreground'
                   )}
                 >
@@ -111,67 +118,9 @@ export default function OrdersByStatusScreen() {
         </ScrollView>
       </View>
 
-      <View className='flex-1 p-4 bg-muted'>
-        <OrderStatusCard
-          title={currentStatus.title}
-          description={currentStatus.description}
-          value={currentStatus.value}
-        />
+      <View className='flex-1 bg-muted'>
+        <OrdersList currentStatus={currentStatus} />
       </View>
     </SafeView>
-  )
-}
-
-const OrderStatusCard = ({ title, description, value }: { title: string; description: string; value: string }) => {
-  const styleConfig = statusStyles[value] || {
-    colors: ['#ffffff', '#f8fafc', '#e2e8f0'],
-    textColor: '#1f2937',
-    iconColor: '#6b7280',
-    shadowColor: '#e2e8f0'
-  }
-
-  return (
-    <View className='relative overflow-hidden rounded-2xl' style={styles.container}>
-      <LinearGradient
-        colors={styleConfig.colors as [string, string, string]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        className='p-4 rounded-2xl overflow-hidden'
-      >
-        <View className='relative z-10'>
-          <View className='flex-row items-center gap-3 mb-2'>
-            <Feather name={getStatusIcon(value) as any} size={20} color={styleConfig.iconColor} />
-            <View className='flex-1'>
-              <Text style={{ color: styleConfig.textColor }} className='font-inter-semibold'>
-                {title}
-              </Text>
-            </View>
-          </View>
-
-          <Text
-            style={{
-              color: styleConfig.textColor,
-              opacity: 0.85
-            }}
-            className='text-xs'
-          >
-            {description}
-          </Text>
-
-          <View className='flex-row justify-end space-x-1'>
-            {[...Array(3)].map((_, i) => (
-              <View
-                key={i}
-                className='w-1 h-1 rounded-full'
-                style={{
-                  backgroundColor: styleConfig.iconColor,
-                  opacity: 0.4 + i * 0.2
-                }}
-              />
-            ))}
-          </View>
-        </View>
-      </LinearGradient>
-    </View>
   )
 }

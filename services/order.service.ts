@@ -2,7 +2,7 @@ import { PlaceDesignRequestOrderFormSchema, PlacePresetOrderFormSchema } from '~
 import { api } from '~/lib/axios/axios'
 import { AddOn } from '~/types/add-on.type'
 import { BasePaginationResponse, BaseResponse } from '~/types/common'
-import { Branch, QRCodeResponse } from '~/types/order.type'
+import { Branch, OrderStatus, QRCodeResponse } from '~/types/order.type'
 
 class OrderService {
   async placeDesignRequestOrder(designRequest: PlaceDesignRequestOrderFormSchema) {
@@ -41,6 +41,19 @@ class OrderService {
     const { data } = await api.get<BasePaginationResponse<AddOn>>('add-on')
 
     return data.data.items
+  }
+
+  async getOrders(page: number = 1, pageSize: number = 5, status: OrderStatus, search?: string) {
+    const { data } = await api.get<BasePaginationResponse<any>>('order/by-token', {
+      params: {
+        page,
+        pageSize,
+        status,
+        search
+      }
+    })
+
+    return data.data
   }
 }
 
