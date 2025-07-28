@@ -23,7 +23,7 @@ export default function NotificationToast({ notification }: { notification: Noti
         <View className='flex-1'>
           <View className='flex-row items-center gap-2'>
             <Text className='text-sm font-inter-medium'>{notificationTitle}</Text>
-            <Text className='text-xs text-muted-foreground ml-auto'>{format(createdAt, 'HH:mm a')}</Text>
+            <Text className='text-xs text-muted-foreground ml-auto'>{format(createdAt, 'hh:mm a')}</Text>
           </View>
           <Text className='text-xs text-muted-foreground mr-1' numberOfLines={1}>
             {notificationContent}
