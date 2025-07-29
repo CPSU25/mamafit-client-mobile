@@ -98,7 +98,7 @@ export default function BookAppointmentForm({ availableSlots, bookingDate, isLoa
                               value === slot.slot[0] && 'bg-primary/10 border-primary',
                               isDisabled && 'opacity-60 border-dashed'
                             )}
-                            style={{ width: '32%' }}
+                            style={{ width: '31.5%' }}
                             onPress={() => {
                               if (isDisabled) return
                               onChange(slot.slot[0])

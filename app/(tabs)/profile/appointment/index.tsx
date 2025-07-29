@@ -373,10 +373,13 @@ export default function AppointmentScreen() {
           enableDynamicSizing={false}
           animatedPosition={animatedPOIListPosition}
           animatedIndex={animatedPOIListIndex}
+          detached
+          bottomInset={8}
           style={{
-            boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.1)',
+            boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.2)',
             borderRadius: 16,
-            overflow: 'hidden'
+            overflow: 'hidden',
+            marginHorizontal: 8
           }}
         >
           <FormProvider {...methods}>
