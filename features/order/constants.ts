@@ -119,10 +119,10 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
   },
   {
     id: 9,
-    label: 'To Rate',
+    label: 'Completed',
     value: OrderStatus.Completed,
     urlValue: 'to-rate',
-    title: 'Completed',
+    title: 'Order Completed',
     description:
       'Your order has been successfully delivered. Please confirm that you received it and leave your feedback.'
   },

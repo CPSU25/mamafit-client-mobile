@@ -48,7 +48,7 @@ export const useSignalR = () => {
 
       if (isNotMe) {
         // Update rooms list
-        queryClient.setQueryData(['rooms', user?.userId], (oldData: ChatRoom[] | undefined) => {
+        queryClient.setQueryData(['rooms'], (oldData: ChatRoom[] | undefined) => {
           if (!oldData) return oldData
 
           const newRooms: ChatRoom[] = oldData.map((room) => {
@@ -125,6 +125,9 @@ export const useSignalR = () => {
               return notification.metadata?.paymentStatus
             }
           )
+
+          queryClient.invalidateQueries({ queryKey: ['orders'] })
+          queryClient.invalidateQueries({ queryKey: ['orders-count'] })
         }
         toast.custom(<NotificationToast notification={notification} />)
       }
@@ -157,7 +160,16 @@ export const useSignalR = () => {
         }
       }
 
+      const invitedToRoomHandler = () => {
+        try {
+          queryClient.invalidateQueries({ queryKey: ['rooms'] })
+        } catch (error) {
+          console.error('Error handling SignalR invite to room:', error)
+        }
+      }
+
       chatHubService.on(ChatHubEvents.ReceiveMessage, messageHandler)
+      chatHubService.on(ChatHubEvents.InvitedToRoom, invitedToRoomHandler)
       notificationHubService.on(NotificationHubEvents.ReceiveNotification, notificationHandler)
 
       return () => {
@@ -165,7 +177,7 @@ export const useSignalR = () => {
         notificationHubService.off(NotificationHubEvents.ReceiveNotification, notificationHandler)
       }
     }
-  }, [isAuthenticated, displayMessage, displayNotification])
+  }, [isAuthenticated, displayMessage, displayNotification, queryClient, user?.userId])
 
   // Handle connection based on authentication state
   useEffect(() => {

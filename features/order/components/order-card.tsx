@@ -1,11 +1,12 @@
 import { MaterialIcons } from '@expo/vector-icons'
-import { Image, View } from 'react-native'
+import { useRouter } from 'expo-router'
+import { Image, TouchableOpacity, View } from 'react-native'
 import { Card } from '~/components/ui/card'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { styles } from '~/lib/constants/constants'
 import { cn } from '~/lib/utils'
-import { Order, OrderItem, OrderItemType } from '~/types/order.type'
+import { Order, OrderItem, OrderItemType, OrderStatus } from '~/types/order.type'
 import { getOrderItemTypeStyle } from '../utils'
 
 interface OrderCardProps {
@@ -13,8 +14,13 @@ interface OrderCardProps {
 }
 
 export default function OrderCard({ order }: OrderCardProps) {
+  const router = useRouter()
+
   const orderItemTypeSet = [...new Set(order.items.map((item) => item.itemType))]
+
   const totalPrice = order.subTotalAmount - (order.discountSubtotal || 0)
+
+  const isDisplayPayButton = order.status === OrderStatus.Created || order.status === OrderStatus.AwaitingPaidRest
 
   if (orderItemTypeSet.length > 1) {
     return <Text>Invalid Order</Text>
@@ -26,9 +32,9 @@ export default function OrderCard({ order }: OrderCardProps) {
       <View className='p-2'>
         <View className='flex-row items-center gap-2 flex-wrap'>
           {order.type === 'WARRANTY' && (
-            <View className='px-3 py-1.5 bg-emerald-100 rounded-xl flex-row items-center gap-1.5'>
-              <MaterialIcons name='safety-check' size={14} color='#059669' />
-              <Text className='text-xs text-emerald-700 font-inter-semibold'>Warranty Order</Text>
+            <View className='px-3 py-1.5 bg-rose-100 rounded-xl flex-row items-center gap-1.5'>
+              <MaterialIcons name='safety-check' size={14} color='#e11d48' />
+              <Text className='text-xs text-rose-600 font-inter-medium'>Warranty Order</Text>
             </View>
           )}
           {orderItemTypeSet.map((type, index) => (
@@ -44,7 +50,7 @@ export default function OrderCard({ order }: OrderCardProps) {
                 size={14}
                 color={getOrderItemTypeStyle(type).iconColor}
               />
-              <Text className={cn('text-xs font-inter-semibold', getOrderItemTypeStyle(type).textColor)}>
+              <Text className={cn('text-xs font-inter-medium', getOrderItemTypeStyle(type).textColor)}>
                 {getOrderItemTypeStyle(type).text}
               </Text>
             </View>
@@ -80,7 +86,7 @@ export default function OrderCard({ order }: OrderCardProps) {
         })}
       </View>
 
-      <View className='p-2 bg-muted/70 rounded-xl mx-2 mb-2 mt-3'>
+      <View className='p-2 bg-muted/70 rounded-xl mx-2 my-2'>
         <View className='flex-row items-center justify-between'>
           <Text className='text-xs font-inter-medium'>#{order.code}</Text>
 
@@ -94,6 +100,37 @@ export default function OrderCard({ order }: OrderCardProps) {
             </Text>
           </View>
         </View>
+      </View>
+
+      <View className='px-2 pb-2 flex-row justify-end gap-2'>
+        <TouchableOpacity
+          className='px-6 py-2 border border-border rounded-xl items-center'
+          onPress={() =>
+            router.push({
+              pathname: '/order/[orderId]',
+              params: {
+                orderId: order.id
+              }
+            })
+          }
+        >
+          <Text className='text-sm font-inter-medium'>View Details</Text>
+        </TouchableOpacity>
+        {isDisplayPayButton && (
+          <TouchableOpacity
+            className='px-6 py-2 bg-emerald-50 rounded-xl items-center border border-emerald-50'
+            onPress={() =>
+              router.push({
+                pathname: '/payment/[orderId]/qr-code',
+                params: {
+                  orderId: order.id
+                }
+              })
+            }
+          >
+            <Text className='text-sm font-inter-medium text-emerald-600'>Pay Now</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </Card>
   )

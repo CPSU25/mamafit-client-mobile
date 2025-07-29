@@ -1,7 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
-import { useRouter } from 'expo-router'
-import { ActivityIndicator, FlatList, Pressable, View } from 'react-native'
+import { ActivityIndicator, FlatList, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { CurrentStatus } from '~/app/order/status/[orderStatus]'
 import Loading from '~/components/loading'
@@ -18,8 +17,6 @@ interface OrdersListProps {
 }
 
 export default function OrdersList({ currentStatus }: OrdersListProps) {
-  const router = useRouter()
-
   const {
     data: orders,
     isLoading,
@@ -32,21 +29,10 @@ export default function OrdersList({ currentStatus }: OrdersListProps) {
 
   return (
     <FlatList
-      data={orders?.pages
-        .flatMap((page) => page.items)
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())}
+      data={orders?.pages.flatMap((page) => page.items)}
       renderItem={({ item, index }) => (
         <Animated.View entering={FadeInDown.delay(100 + index * 50)}>
-          <Pressable
-            onPress={() =>
-              router.push({
-                pathname: '/order/[orderId]',
-                params: { orderId: item.id }
-              })
-            }
-          >
-            <OrderCard order={item} />
-          </Pressable>
+          <OrderCard order={item} />
         </Animated.View>
       )}
       ListHeaderComponent={
@@ -58,6 +44,7 @@ export default function OrdersList({ currentStatus }: OrdersListProps) {
       }
       showsVerticalScrollIndicator={false}
       contentContainerClassName='gap-4 p-4'
+      keyExtractor={(item) => item.id}
       ListEmptyComponent={
         isLoading ? (
           <Loading />

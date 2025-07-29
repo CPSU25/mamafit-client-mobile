@@ -1,7 +1,7 @@
 import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
-import { Pressable, TouchableOpacity, View } from 'react-native'
+import { Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import SignalRHealth from '~/components/signalr-health'
@@ -10,48 +10,85 @@ import { Separator } from '~/components/ui/separator'
 import { Switch } from '~/components/ui/switch'
 import { Text } from '~/components/ui/text'
 import CurrentUser from '~/features/auth/components/current-user'
+import { useGetCurrentUser } from '~/features/auth/hooks/use-get-current-user'
+import { useGetOrdersCount } from '~/features/order/hooks/use-get-orders-count'
 import { useAuth } from '~/hooks/use-auth'
 import { useColorScheme } from '~/hooks/use-color-scheme'
+import { useRefreshs } from '~/hooks/use-refresh'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
+import { cn } from '~/lib/utils'
+import { OrderStatus, OrderStatusCount } from '~/types/order.type'
 
-interface OrderStatus {
+interface OrderStatusUI {
   id: number
   name: string
   url: string
+  value: OrderStatus
   icon: React.ReactNode
 }
 
-const statuses: OrderStatus[] = [
+const statuses: OrderStatusUI[] = [
   {
     id: 1,
     name: 'To Pay',
     url: '/order/status/to-pay',
+    value: OrderStatus.Created,
     icon: SvgIcon.toPay({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 2,
     name: 'To Ship',
     url: '/order/status/packaging',
+    value: OrderStatus.Packaging,
     icon: SvgIcon.toShip({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 3,
     name: 'To Receive',
     url: '/order/status/to-deliver',
+    value: OrderStatus.Delevering,
     icon: SvgIcon.toReceive({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 4,
     name: 'To Rate',
     url: '/order/status/to-rate',
+    value: OrderStatus.Completed,
     icon: SvgIcon.toRate({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   }
 ]
 
-function OrderStage({ status }: { status: OrderStatus }) {
+const getOrderCount = (status: OrderStatusUI, ordersCount: OrderStatusCount[] | null | undefined) => {
+  if (!ordersCount) return 0
+
+  return ordersCount.find((order) => order.orderStatus === status.value)?.orderNumber
+}
+
+function OrderStage({
+  status,
+  ordersCount
+}: {
+  status: OrderStatusUI
+  ordersCount: OrderStatusCount[] | null | undefined
+}) {
+  const orderCount = getOrderCount(status, ordersCount)
+
   return (
-    <View className='flex flex-col gap-2 items-center'>
+    <View className='flex-col gap-2 items-center relative'>
+      {Boolean(orderCount) && (
+        <View
+          className={cn(
+            'w-5 h-5 rounded-full absolute bg-red-600 justify-center items-center z-10',
+            status.id === 1 && 'top-1 -right-1',
+            status.id === 2 && 'top-1 -right-1',
+            status.id === 3 && 'top-1 right-1.5',
+            status.id === 4 && 'top-1 -right-1'
+          )}
+        >
+          <Text className='text-xs text-white font-inter-medium'>{orderCount}</Text>
+        </View>
+      )}
       {status.icon}
       <Text className='text-xs'>{status.name}</Text>
     </View>
@@ -59,82 +96,93 @@ function OrderStage({ status }: { status: OrderStatus }) {
 }
 
 export default function ProfileScreen() {
-  const { isLoading, isAuthenticated } = useAuth()
   const router = useRouter()
+
   const { isDarkColorScheme, setColorScheme } = useColorScheme()
   const [checked, setChecked] = useState(isDarkColorScheme ? true : false)
+
+  const { isLoading: isLoadingAuth, isAuthenticated } = useAuth()
+  const { data: ordersCount, isLoading: isLoadingOrdersCount, refetch: refetOrdersCount } = useGetOrdersCount()
+  const { data: currentUser, isLoading: isLoadingCurrentUser, refetch: refetchCurrentUser } = useGetCurrentUser()
+
+  const { refreshControl } = useRefreshs([refetOrdersCount, refetchCurrentUser])
+
   const toggleColorScheme = () => {
     const newTheme = isDarkColorScheme ? 'light' : 'dark'
     setColorScheme(newTheme)
     setChecked((prev) => !prev)
   }
 
+  const isLoading = isLoadingAuth || isLoadingOrdersCount || isLoadingCurrentUser
+
   if (isLoading) return <Loading />
 
   return (
     <SafeView>
-      <View className='flex flex-row items-center justify-between p-4'>
-        <CurrentUser />
-        {isAuthenticated ? (
-          <View className='flex flex-row items-center gap-6 mr-2'>
-            <TouchableOpacity onPress={() => router.push('/setting')}>
-              <Feather name='settings' size={24} color={PRIMARY_COLOR.LIGHT} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push('/cart')}>
-              <Feather name='shopping-bag' size={24} color={PRIMARY_COLOR.LIGHT} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push('/chat')}>
-              <Feather name='message-circle' size={24} color={PRIMARY_COLOR.LIGHT} />
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View className='flex flex-row items-center gap-2'>
-            <Button className='w-32' variant='outline' onPress={() => router.push('/auth?focus=sign-in')} size='sm'>
-              <Text className='font-inter-medium'>Sign In</Text>
-            </Button>
-            <Button className='w-32' variant='default' onPress={() => router.push('/auth?focus=register')} size='sm'>
-              <Text className='font-inter-medium'>Register</Text>
-            </Button>
-          </View>
-        )}
-      </View>
-      <View className='bg-muted h-2' />
-      <View className='flex flex-row items-baseline justify-between p-4 mb-2'>
-        <Text className='font-inter-medium'>My Purchases</Text>
-        <TouchableOpacity className='flex flex-row items-start'>
-          <Text className='text-xs text-muted-foreground mr-0.5'>View Purchase History</Text>
-          <Feather name='chevron-right' size={18} color='lightgray' />
-        </TouchableOpacity>
-      </View>
-      <View className='flex flex-row items-center justify-around mb-6'>
-        {statuses.map((status) => (
-          <TouchableOpacity key={status.id} onPress={() => router.push(status.url as any)}>
-            <OrderStage status={status} />
+      <ScrollView className='flex-1' showsVerticalScrollIndicator={false} refreshControl={refreshControl}>
+        <View className='flex flex-row items-center justify-between p-4'>
+          <CurrentUser currentUser={currentUser} />
+          {isAuthenticated ? (
+            <View className='flex flex-row items-center gap-6 mr-2'>
+              <TouchableOpacity onPress={() => router.push('/setting')}>
+                <Feather name='settings' size={24} color={PRIMARY_COLOR.LIGHT} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => router.push('/cart')}>
+                <Feather name='shopping-bag' size={24} color={PRIMARY_COLOR.LIGHT} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => router.push('/chat')}>
+                <Feather name='message-circle' size={24} color={PRIMARY_COLOR.LIGHT} />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View className='flex flex-row items-center gap-2'>
+              <Button className='w-32' variant='outline' onPress={() => router.push('/auth?focus=sign-in')} size='sm'>
+                <Text className='font-inter-medium'>Sign In</Text>
+              </Button>
+              <Button className='w-32' variant='default' onPress={() => router.push('/auth?focus=register')} size='sm'>
+                <Text className='font-inter-medium'>Register</Text>
+              </Button>
+            </View>
+          )}
+        </View>
+        <View className='bg-muted h-2' />
+        <View className='flex flex-row items-baseline justify-between p-4 mb-2'>
+          <Text className='font-inter-medium'>My Purchases</Text>
+          <TouchableOpacity className='flex flex-row items-start' onPress={() => router.push(`/order/status/to-rate`)}>
+            <Text className='text-xs text-muted-foreground mr-0.5'>View Purchase History</Text>
+            <Feather name='chevron-right' size={18} color='lightgray' />
           </TouchableOpacity>
-        ))}
-      </View>
+        </View>
+        <View className='flex flex-row items-center justify-around mb-6'>
+          {statuses.map((status) => (
+            <TouchableOpacity key={status.id} onPress={() => router.push(status.url as any)}>
+              <OrderStage status={status} ordersCount={ordersCount} />
+            </TouchableOpacity>
+          ))}
+        </View>
 
-      <View className='bg-muted h-2' />
+        <View className='bg-muted h-2' />
 
-      <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/profile/appointment')}>
-        <Feather name='calendar' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5'>My Appointments</Text>
-        <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
-      </TouchableOpacity>
-      <Separator />
-      <TouchableOpacity className='flex-row items-center p-4'>
-        <Feather name='percent' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5'>My Vouchers</Text>
-        <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
-      </TouchableOpacity>
-      <Separator />
-      <Pressable className='flex-row items-center p-4' onPress={toggleColorScheme}>
-        <Feather name='moon' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5 flex-1'>Dark Mode</Text>
-        <Switch checked={checked} onCheckedChange={toggleColorScheme} />
-      </Pressable>
+        <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/profile/appointment')}>
+          <Feather name='calendar' size={20} color={PRIMARY_COLOR.LIGHT} />
+          <Text className='font-inter-medium ml-2.5'>My Appointments</Text>
+          <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
+        </TouchableOpacity>
+        <Separator />
+        <TouchableOpacity className='flex-row items-center p-4'>
+          <Feather name='percent' size={20} color={PRIMARY_COLOR.LIGHT} />
+          <Text className='font-inter-medium ml-2.5'>My Vouchers</Text>
+          <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
+        </TouchableOpacity>
+        <Separator />
+        <Pressable className='flex-row items-center p-4' onPress={toggleColorScheme}>
+          <Feather name='moon' size={20} color={PRIMARY_COLOR.LIGHT} />
+          <Text className='font-inter-medium ml-2.5 flex-1'>Dark Mode</Text>
+          <Switch checked={checked} onCheckedChange={toggleColorScheme} />
+        </Pressable>
 
-      <SignalRHealth />
+        <SignalRHealth />
+      </ScrollView>
     </SafeView>
   )
 }

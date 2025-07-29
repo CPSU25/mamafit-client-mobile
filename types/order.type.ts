@@ -107,6 +107,33 @@ export interface OrderItem {
   warrantyDate: string | null
 }
 
+export enum OrderType {
+  Normal = 'NORMAL',
+  Warranty = 'WARRANTY'
+}
+
+export enum PaymentStatus {
+  Pending = 'PENDING',
+  PaidFull = 'PAID_FULL',
+  PaidDeposit = 'PAID_DEPOSIT',
+  PaidDepositCompleted = 'PAID_DEPOSIT_COMPLETED'
+}
+
+export enum DeliveryMethod {
+  PickUp = 'PICK_UP',
+  Delivery = 'DELIVERY'
+}
+
+export enum PaymentMethod {
+  Cash = 'CASH',
+  OnlineBanking = 'ONLINE_BANKING'
+}
+
+export enum PaymentType {
+  Full = 'FULL',
+  Deposit = 'DEPOSIT'
+}
+
 export interface Order {
   id: string
   addressId: string | null
@@ -123,17 +150,27 @@ export interface Order {
   branchId: string | null
   userId: string
   voucherDiscountId: string | null
-  type: 'NORMAL' | 'WARRANTY'
+  type: OrderType
   status: OrderStatus
   totalAmount: number
   shippingFee: number
   serviceAmount: number | null
-  paymentStatus: 'PENDING' | 'PAID_FULL' | 'PAID_DEPOSIT' | 'PAID_DEPOSIT_COMPLETED'
-  paymentMethod: 'CASH' | 'ONLINE_BANKING'
-  deliveryMethod: 'PICK_UP' | 'DELIVERY'
-  paymentType: 'FULL' | 'DEPOSIT'
+  paymentStatus: PaymentStatus
+  paymentMethod: PaymentMethod
+  deliveryMethod: DeliveryMethod
+  paymentType: PaymentType
   canceledAt: string | null
   canceledReason: string | null
   subTotalAmount: number
   warrantyCode: string | null
+}
+
+export interface OrderDetail extends Order {
+  address: Address | null
+  branch: Branch | null
+}
+
+export interface OrderStatusCount {
+  orderStatus: OrderStatus
+  orderNumber: number
 }

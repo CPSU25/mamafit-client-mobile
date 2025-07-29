@@ -23,6 +23,8 @@ export const usePlaceDesignRequestOrder = () => {
     onSuccess: (orderId) => {
       if (orderId) {
         queryClient.invalidateQueries({ queryKey: ['orders'] })
+        queryClient.invalidateQueries({ queryKey: ['orders-count'] })
+
         router.replace({
           pathname: '/payment/[orderId]/qr-code',
           params: { orderId }
