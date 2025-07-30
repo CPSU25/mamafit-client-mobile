@@ -126,6 +126,7 @@ export const useSignalR = () => {
             }
           )
 
+          queryClient.invalidateQueries({ queryKey: ['order'] })
           queryClient.invalidateQueries({ queryKey: ['orders'] })
           queryClient.invalidateQueries({ queryKey: ['orders-count'] })
         }

@@ -22,6 +22,7 @@ export const usePlaceDesignRequestOrder = () => {
     mutationFn: orderService.placeDesignRequestOrder,
     onSuccess: (orderId) => {
       if (orderId) {
+        queryClient.invalidateQueries({ queryKey: ['order'] })
         queryClient.invalidateQueries({ queryKey: ['orders'] })
         queryClient.invalidateQueries({ queryKey: ['orders-count'] })
 

@@ -62,8 +62,8 @@ export default function OrderSummarySection({
         <Text className='text-sm font-inter-medium flex-1'>
           Total {orderItems?.items && Array.isArray(orderItems.items) ? orderItems.items.length : 0} Item(s)
         </Text>
-        <Text className='font-inter-medium'>
-          <Text className='underline font-inter-medium text-sm'>đ</Text>
+        <Text className='font-inter-medium text-sm'>
+          <Text className='underline font-inter-medium text-xs'>đ</Text>
           {preset?.price && preset?.price?.toLocaleString('vi-VN')}
         </Text>
       </View>

@@ -4,9 +4,8 @@ import { Image, TouchableOpacity, View } from 'react-native'
 import { Card } from '~/components/ui/card'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
-import { styles } from '~/lib/constants/constants'
 import { cn } from '~/lib/utils'
-import { Order, OrderItem, OrderItemType, OrderStatus } from '~/types/order.type'
+import { Order, OrderItem, OrderItemType, OrderStatus, OrderType } from '~/types/order.type'
 import { getOrderItemTypeStyle } from '../utils'
 
 interface OrderCardProps {
@@ -27,16 +26,16 @@ export default function OrderCard({ order }: OrderCardProps) {
   }
 
   return (
-    <Card className='overflow-hidden' style={styles.container}>
+    <Card className='overflow-hidden'>
       {/* Tag Section */}
       <View className='p-2'>
         <View className='flex-row items-center gap-2 flex-wrap'>
-          {order.type === 'WARRANTY' && (
-            <View className='px-3 py-1.5 bg-rose-100 rounded-xl flex-row items-center gap-1.5'>
+          {order.type === OrderType.Warranty ? (
+            <View className='px-3 py-1.5 bg-rose-50 rounded-xl flex-row items-center gap-1.5'>
               <MaterialIcons name='safety-check' size={14} color='#e11d48' />
               <Text className='text-xs text-rose-600 font-inter-medium'>Warranty Order</Text>
             </View>
-          )}
+          ) : null}
           {orderItemTypeSet.map((type, index) => (
             <View
               key={index}
@@ -86,20 +85,14 @@ export default function OrderCard({ order }: OrderCardProps) {
         })}
       </View>
 
-      <View className='p-2 bg-muted/70 rounded-xl mx-2 my-2'>
-        <View className='flex-row items-center justify-between'>
-          <Text className='text-xs font-inter-medium'>#{order.code}</Text>
-
-          <View className='items-end'>
-            <Text className='text-xs font-inter-medium'>
-              Total {order.items?.length} Item{order.items?.length > 1 ? 's' : ''}:{' '}
-              <Text className='text-sm font-inter-medium'>
-                <Text className='text-xs font-inter-medium underline'>đ</Text>
-                {totalPrice.toLocaleString('vi-VN')}
-              </Text>
-            </Text>
-          </View>
-        </View>
+      <View className='m-2 items-end'>
+        <Text className='text-xs'>
+          Total {order.items?.length} Item{order.items?.length > 1 ? 's' : ''}:{' '}
+          <Text className='text-sm font-inter-semibold'>
+            <Text className='text-xs font-inter-semibold underline'>đ</Text>
+            {totalPrice.toLocaleString('vi-VN')}
+          </Text>
+        </Text>
       </View>
 
       <View className='px-2 pb-2 flex-row justify-end gap-2'>
@@ -116,7 +109,7 @@ export default function OrderCard({ order }: OrderCardProps) {
         >
           <Text className='text-sm font-inter-medium'>View Details</Text>
         </TouchableOpacity>
-        {isDisplayPayButton && (
+        {isDisplayPayButton ? (
           <TouchableOpacity
             className='px-6 py-2 bg-emerald-50 rounded-xl items-center border border-emerald-50'
             onPress={() =>
@@ -130,7 +123,7 @@ export default function OrderCard({ order }: OrderCardProps) {
           >
             <Text className='text-sm font-inter-medium text-emerald-600'>Pay Now</Text>
           </TouchableOpacity>
-        )}
+        ) : null}
       </View>
     </Card>
   )
@@ -142,7 +135,7 @@ const PresetOrderItem = ({ item }: { item: OrderItem }) => {
 
   return (
     <View className='flex-row items-start gap-3'>
-      <View className='w-20 h-20 rounded-xl overflow-hidden bg-gray-100'>
+      <View className='w-20 h-20 rounded-xl overflow-hidden bg-gray-50'>
         <Image source={{ uri: preset?.images[0] }} className='w-full h-full' resizeMode='contain' />
       </View>
       <View className='flex-1 h-20 justify-between'>
@@ -150,14 +143,14 @@ const PresetOrderItem = ({ item }: { item: OrderItem }) => {
           <Text className='text-sm font-inter-medium'>{preset?.styleName} Dress</Text>
           <View className='flex-row items-center justify-between'>
             <Text className='text-xs text-muted-foreground flex-1' numberOfLines={2}>
-              Press to view details
+              Custom Made-to-Order
             </Text>
             <Text className='text-xs text-muted-foreground'>x{quantity}</Text>
           </View>
         </View>
         <View className='items-end'>
-          <Text className='text-xs font-inter-medium'>
-            <Text className='text-xs font-inter-medium underline'>đ</Text>
+          <Text className='text-xs'>
+            <Text className='text-xs underline'>đ</Text>
             {itemPrice.toLocaleString('vi-VN')}
           </Text>
         </View>
@@ -172,7 +165,7 @@ const DesignRequestOrderItem = ({ item }: { item: OrderItem }) => {
 
   return (
     <View className='flex-row items-start gap-3'>
-      <View className='w-20 h-20 rounded-xl overflow-hidden bg-gray-100'>
+      <View className='w-20 h-20 rounded-xl overflow-hidden bg-gray-50'>
         <Image source={{ uri: designRequest?.images[0] }} className='w-full h-full' resizeMode='cover' />
       </View>
       <View className='flex-1 h-20 justify-between'>
@@ -186,8 +179,8 @@ const DesignRequestOrderItem = ({ item }: { item: OrderItem }) => {
           </View>
         </View>
         <View className='items-end'>
-          <Text className='text-xs font-inter-medium'>
-            <Text className='text-xs font-inter-medium underline'>đ</Text>
+          <Text className='text-xs'>
+            <Text className='text-xs underline'>đ</Text>
             {itemPrice.toLocaleString('vi-VN')}
           </Text>
         </View>

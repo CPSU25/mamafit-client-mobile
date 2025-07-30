@@ -1,4 +1,4 @@
-import { OrderStatus } from '~/types/order.type'
+import { OrderItemMilestone, OrderStatus } from '~/types/order.type'
 import { AddOnImageConfig, OrderStatusType } from './types'
 
 export const ADD_ON_IMAGE_CONFIG: Record<string, AddOnImageConfig> = {
@@ -143,77 +143,115 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
     title: 'Warranty Service',
     description:
       'Your order is being repaired or replaced under warranty and will pass checks again before being delivered.'
+  },
+  {
+    id: 12,
+    label: 'Cancelled',
+    value: OrderStatus.Cancelled,
+    urlValue: 'cancelled',
+    title: 'Order Cancelled',
+    description:
+      'Your order has been cancelled. Please contact us if you have any questions or need further assistance.'
   }
 ]
 
 export const statusStyles: Record<
-  string,
+  OrderStatus,
   { colors: string[]; textColor: string; iconColor: string; shadowColor: string }
 > = {
   CREATED: {
-    colors: ['#fffdf5', '#fef7d8', '#fef3c0'],
+    colors: ['#fff9e3', '#fef7d8', '#fbbf24'],
     textColor: '#7c2d12',
     iconColor: '#ca8a04',
     shadowColor: '#eab308'
   },
   IN_DESIGN: {
-    colors: ['#fcfaff', '#f4e9ff', '#ebd6ff'],
+    colors: ['#f6f0ff', '#e9d6fd', '#7c3aed'],
     textColor: '#5b21b6',
     iconColor: '#7c3aed',
     shadowColor: '#8b5cf6'
   },
   CONFIRMED: {
-    colors: ['#f7fdf9', '#d9fbe3', '#baf7cc'],
+    colors: ['#f3fbf6', '#d1fae5', '#059669'],
     textColor: '#166534',
     iconColor: '#16a34a',
     shadowColor: '#22c55e'
   },
   IN_PRODUCTION: {
-    colors: ['#fffaf5', '#ffe9d6', '#ffd8b4'],
+    colors: ['#fff6ea', '#ffe9d6', '#ea580c'],
     textColor: '#9a3412',
     iconColor: '#ea580c',
     shadowColor: '#f97316'
   },
   IN_QC: {
-    colors: ['#f9fbff', '#e1edff', '#cde1ff'],
+    colors: ['#f4f7fd', '#e0e7ff', '#2563eb'],
     textColor: '#1e3a8a',
     iconColor: '#2563eb',
     shadowColor: '#3b82f6'
   },
   AWAITING_PAID_REST: {
-    colors: ['#fdfaff', '#f8ebff', '#f1d7fe'],
+    colors: ['#faf4ff', '#f3e8ff', '#a21caf'],
     textColor: '#701a75',
     iconColor: '#c026d3',
     shadowColor: '#d946ef'
   },
   PACKAGING: {
-    colors: ['#fbfcfd', '#edf0f5', '#e2e5ea'],
+    colors: ['#f6f8fa', '#e2e8f0', '#334155'],
     textColor: '#334155',
     iconColor: '#475569',
     shadowColor: '#64748b'
   },
-  SHIPPING: {
-    colors: ['#f7fefd', '#d8fbf4', '#b4f5ea'],
+  DELIVERING: {
+    colors: ['#f2fdfa', '#ccfbf1', '#0e7490'],
     textColor: '#115e59',
     iconColor: '#0d9488',
     shadowColor: '#14b8a6'
   },
   COMPLETED: {
-    colors: ['#f7fdf9', '#d9fbe3', '#baf7cc'],
+    colors: ['#f3fbf6', '#d1fae5', '#059669'],
     textColor: '#166534',
     iconColor: '#16a34a',
     shadowColor: '#22c55e'
   },
   WARRANTY_CHECK: {
-    colors: ['#fffafa', '#ffe2e2', '#ffc9c9'],
+    colors: ['#fff5f5', '#ffe4e6', '#dc2626'],
     textColor: '#991b1b',
     iconColor: '#dc2626',
     shadowColor: '#ef4444'
   },
   IN_WARRANTY: {
-    colors: ['#fffef6', '#fff6cf', '#ffeea6'],
+    colors: ['#fffaeb', '#fef9c3', '#b45309'],
     textColor: '#854d0e',
     iconColor: '#ca8a04',
     shadowColor: '#eab308'
+  },
+  CANCELLED: {
+    colors: ['#fff5f5', '#ffe4e6', '#dc2626'],
+    textColor: '#991b1b',
+    iconColor: '#dc2626',
+    shadowColor: '#ef4444'
   }
 }
+
+export const defaultCompletedMilestones: OrderItemMilestone[] = [
+  {
+    milestoneId: '1',
+    milestoneName: 'Order Created',
+    progress: 100,
+    isDone: true,
+    currentTask: {
+      id: '1',
+      name: 'Order Created'
+    }
+  },
+  {
+    milestoneId: '2',
+    milestoneName: 'Order Confirmed',
+    progress: 100,
+    isDone: true,
+    currentTask: {
+      id: '2',
+      name: 'Order Confirmed'
+    }
+  }
+]

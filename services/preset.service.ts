@@ -8,12 +8,19 @@ class PresetService {
 
     return data.data
   }
+
   async getPreset(componentOptionIds: string[]) {
     const { data } = await api.post<BaseResponse<PresetWithComponentOptions[]>>(`preset/component-option`, [
       ...componentOptionIds
     ])
 
     return data.data?.[0] ?? null
+  }
+
+  async getPresetDetail(presetId: string) {
+    const { data } = await api.get<BaseResponse<PresetWithComponentOptions>>(`preset/${presetId}`)
+
+    return data.data
   }
 }
 

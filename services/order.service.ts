@@ -2,7 +2,15 @@ import { PlaceDesignRequestOrderFormSchema, PlacePresetOrderFormSchema } from '~
 import { api } from '~/lib/axios/axios'
 import { AddOn } from '~/types/add-on.type'
 import { BasePaginationResponse, BaseResponse } from '~/types/common'
-import { Branch, Order, OrderDetail, OrderStatus, OrderStatusCount, QRCodeResponse } from '~/types/order.type'
+import {
+  Branch,
+  Order,
+  OrderDetail,
+  OrderItemMilestone,
+  OrderStatus,
+  OrderStatusCount,
+  QRCodeResponse
+} from '~/types/order.type'
 
 class OrderService {
   async placeDesignRequestOrder(designRequest: PlaceDesignRequestOrderFormSchema) {
@@ -64,6 +72,12 @@ class OrderService {
 
   async getOrdersCount() {
     const { data } = await api.get<BaseResponse<OrderStatusCount[]>>('order/my-order-status-counts')
+
+    return data.data
+  }
+
+  async getOrderItemMilestones(orderItemId: string) {
+    const { data } = await api.get<BaseResponse<OrderItemMilestone[]>>(`milestone/order-item/${orderItemId}`)
 
     return data.data
   }

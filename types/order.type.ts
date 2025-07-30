@@ -12,19 +12,19 @@ export interface QRCodeResponse {
     userId: string
     addressId: string
     voucherDiscountId: string | null
-    type: string
-    status: string
+    type: OrderType
+    status: OrderStatus
     totalAmount: number
     shippingFee: number
-    paymentStatus: string
-    paymentMethod: string
-    deliveryMethod: string
-    paymentType: string
+    paymentStatus: PaymentStatus
+    paymentMethod: PaymentMethod
+    deliveryMethod: DeliveryMethod
+    paymentType: PaymentType
     canceledAt: string | null
     canceledReason: string | null
     subTotalAmount: number
     warrantyCode: string | null
-    address: Address
+    address: Address | null
     createdBy: string
     updatedBy: string | null
     createdAt: string
@@ -173,4 +173,15 @@ export interface OrderDetail extends Order {
 export interface OrderStatusCount {
   orderStatus: OrderStatus
   orderNumber: number
+}
+
+export interface OrderItemMilestone {
+  milestoneId: string
+  milestoneName: string
+  progress: number // 0 -> 100
+  isDone: boolean
+  currentTask: {
+    id: string
+    name: string
+  }
 }

@@ -2,7 +2,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AddOn, AddOnOption } from '~/types/add-on.type'
 import { OrderItemTemp } from '~/types/order-item.type'
-import { OrderItemType } from '~/types/order.type'
+import { OrderItemType, OrderStatus } from '~/types/order.type'
 import { ADD_ON_IMAGE_CONFIG, DEFAULT_ADD_ON_IMAGE, ORDERED_SIZES, ORDERED_TYPES } from './constants'
 import {
   AddOnImageConfig,
@@ -55,8 +55,21 @@ export const transformAddOns = (addOns: AddOn[]): AddOnMap[] => {
   }
 
   return addOns.map((addOn): AddOnMap => {
-    if (!addOn.id || !addOn.name || !Array.isArray(addOn.addOnOptions)) {
-      throw new Error(`Invalid add-on structure: missing required fields for ${addOn.name || 'unknown'}`)
+    if (
+      !addOn.id ||
+      !addOn.name ||
+      !addOn.addOnOptions ||
+      !Array.isArray(addOn.addOnOptions) ||
+      addOn.addOnOptions.length === 0
+    ) {
+      return {
+        id: addOn.id,
+        name: addOn.name,
+        description: addOn.description || '',
+        groupOptions: [],
+        minPrice: 0,
+        maxPrice: 0
+      }
     }
 
     const prices = addOn.addOnOptions
@@ -255,30 +268,32 @@ export const convertAddOnOptionsToFormFormat = (addOnOptions: AddOnOptionItem[])
   }))
 }
 
-export const getStatusIcon = (status: string): keyof typeof MaterialIcons.glyphMap => {
+export const getStatusIcon = (status: OrderStatus): keyof typeof MaterialIcons.glyphMap => {
   switch (status) {
-    case 'CREATED':
+    case OrderStatus.Created:
       return 'credit-card'
-    case 'IN_DESIGN':
+    case OrderStatus.InDesign:
       return 'design-services'
-    case 'CONFIRMED':
+    case OrderStatus.Confirmed:
       return 'library-add-check'
-    case 'IN_PRODUCTION':
+    case OrderStatus.InProduction:
       return 'factory'
-    case 'IN_QC':
+    case OrderStatus.InQC:
       return 'fact-check'
-    case 'AWAITING_PAID_REST':
+    case OrderStatus.AwaitingPaidRest:
       return 'money'
-    case 'PACKAGING':
+    case OrderStatus.Packaging:
       return 'all-inbox'
-    case 'DELIVERING':
+    case OrderStatus.Delevering:
       return 'local-shipping'
-    case 'COMPLETED':
+    case OrderStatus.Completed:
       return 'stars'
-    case 'WARRANTY_CHECK':
+    case OrderStatus.WarrantyCheck:
       return 'gpp-good'
-    case 'IN_WARRANTY':
+    case OrderStatus.InWarranty:
       return 'refresh'
+    case OrderStatus.Cancelled:
+      return 'cancel'
     default:
       return 'circle'
   }
