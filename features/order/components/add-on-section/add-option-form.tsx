@@ -166,7 +166,7 @@ export default function AddOptionForm({ optionDetail }: AddOptionFormProps) {
           )}
         />
 
-        {types.length > 1 && (
+        {types.length > 1 ? (
           <Controller
             control={control}
             name='type'
@@ -191,20 +191,20 @@ export default function AddOptionForm({ optionDetail }: AddOptionFormProps) {
                         field.value === type && 'bg-primary/10 border-primary'
                       )}
                     >
-                      {type === 'TEXT' && (
+                      {type === 'TEXT' ? (
                         <MaterialCommunityIcons
                           name='text'
                           size={20}
                           color={field.value === type ? PRIMARY_COLOR.LIGHT : 'black'}
                         />
-                      )}
-                      {type === 'IMAGE' && (
+                      ) : null}
+                      {type === 'IMAGE' ? (
                         <MaterialCommunityIcons
                           name='image'
                           size={20}
                           color={field.value === type ? PRIMARY_COLOR.LIGHT : 'black'}
                         />
-                      )}
+                      ) : null}
                       <Text className={cn('text-sm font-inter-medium', field.value === type && 'text-primary')}>
                         {capitalizeText(type)}
                       </Text>
@@ -214,9 +214,9 @@ export default function AddOptionForm({ optionDetail }: AddOptionFormProps) {
               </View>
             )}
           />
-        )}
+        ) : null}
 
-        {type && type !== 'PATTERN' && (
+        {type && type !== 'PATTERN' ? (
           <Controller
             control={control}
             name='value'
@@ -229,7 +229,7 @@ export default function AddOptionForm({ optionDetail }: AddOptionFormProps) {
                   </Text>
                 </Animated.View>
                 <Animated.View entering={FadeInDown.delay(200)}>
-                  {type === 'TEXT' && (
+                  {type === 'TEXT' ? (
                     <Input
                       {...field}
                       value={value}
@@ -238,8 +238,8 @@ export default function AddOptionForm({ optionDetail }: AddOptionFormProps) {
                       spellCheck={false}
                       className={cn(isFormError(errors, 'value') ? 'border-rose-500' : '')}
                     />
-                  )}
-                  {type === 'IMAGE' && (
+                  ) : null}
+                  {type === 'IMAGE' ? (
                     <TouchableOpacity onPress={handleUploadImage} disabled={isUploading}>
                       <View className='flex-1 flex-col gap-2 p-1 border border-dashed border-input bg-muted/20 rounded-2xl'>
                         <View className='justify-center items-center gap-2 pt-2'>
@@ -255,12 +255,12 @@ export default function AddOptionForm({ optionDetail }: AddOptionFormProps) {
                         <ImageGrid images={value ? [value] : []} onRemoveImage={handleRemoveImage} />
                       </View>
                     </TouchableOpacity>
-                  )}
+                  ) : null}
                 </Animated.View>
               </View>
             )}
           />
-        )}
+        ) : null}
       </View>
     </KeyboardAwareScrollView>
   )

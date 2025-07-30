@@ -164,20 +164,20 @@ export default function ChooseAddOnScreen() {
 
       <View className='h-2 bg-muted' />
 
-      {currentStep === 1 && (
+      {currentStep === 1 ? (
         <AddOnsList addOns={transformedAddOns} onPress={onPressAddOn} refreshControl={refreshControl} />
-      )}
+      ) : null}
 
-      {currentStep === 2 && <OptionsList options={transformedOptions} onPress={onPressOption} />}
+      {currentStep === 2 ? <OptionsList options={transformedOptions} onPress={onPressOption} /> : null}
 
-      {currentStep === 3 && optionDetail && (
+      {currentStep === 3 && optionDetail ? (
         <FormProvider {...methods}>
           <AddOptionForm optionDetail={optionDetail} />
           <Button className='mx-4 mt-4' onPress={methods.handleSubmit(onSubmit)}>
             <Text className='font-inter-medium'>Apply Changes</Text>
           </Button>
         </FormProvider>
-      )}
+      ) : null}
     </SafeView>
   )
 }

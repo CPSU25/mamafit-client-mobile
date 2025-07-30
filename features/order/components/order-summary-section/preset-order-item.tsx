@@ -38,14 +38,13 @@ export default function PresetOrderItem({
           <Text className='text-xs text-muted-foreground'>Custom Made-to-Order</Text>
 
           <View className='bg-muted/70 rounded-2xl p-3 gap-2 mt-2'>
-            {getOrderedComponentOptions(componentOptions).map(
-              (option) =>
-                option && (
-                  <View className='flex-row items-center justify-between' key={option.componentName}>
-                    <Text className='text-xs text-muted-foreground'>{option.componentName}</Text>
-                    <Text className='text-xs font-inter-medium text-foreground'>{option.name}</Text>
-                  </View>
-                )
+            {getOrderedComponentOptions(componentOptions).map((option) =>
+              option ? (
+                <View className='flex-row items-center justify-between' key={option.componentName}>
+                  <Text className='text-xs text-muted-foreground'>{option.componentName}</Text>
+                  <Text className='text-xs font-inter-medium text-foreground'>{option.name}</Text>
+                </View>
+              ) : null
             )}
           </View>
         </View>
@@ -64,7 +63,7 @@ export default function PresetOrderItem({
           </View>
         </TouchableOpacity>
 
-        {hasOptions && (
+        {hasOptions ? (
           <>
             <Card className='p-1 rounded-xl gap-2'>
               {preset.addOnOptions.map((option) => (
@@ -85,7 +84,7 @@ export default function PresetOrderItem({
               <Text className='text-sm text-blue-600 font-inter-medium'>Add More ({preset.addOnOptions.length})</Text>
             </TouchableOpacity>
           </>
-        )}
+        ) : null}
       </View>
     </View>
   )

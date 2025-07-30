@@ -33,11 +33,11 @@ export default function DiaryCard({ isSelected, diary }: DiaryCardProps) {
             </Text>
           </View>
         </View>
-        {diary.isActive && (
+        {diary.isActive ? (
           <Badge variant='default' className={cn('border-0', isSelected ? 'bg-white/20' : 'bg-emerald-500')}>
             <Text className={cn('font-inter-medium', isSelected && 'text-white')}>Active</Text>
           </Badge>
-        )}
+        ) : null}
       </View>
 
       <View className='px-4 py-2 rounded-xl bg-black/5'>

@@ -41,11 +41,11 @@ const Input = React.forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
           className
         )}
       >
-        {StartIcon && (
+        {StartIcon ? (
           <TouchableOpacity onPress={onStartIconPress} className='pl-3'>
             {StartIcon}
           </TouchableOpacity>
-        )}
+        ) : null}
         <TextInput
           ref={ref}
           className={cn(

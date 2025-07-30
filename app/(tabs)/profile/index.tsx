@@ -76,7 +76,7 @@ function OrderStage({
 
   return (
     <View className='flex-col gap-2 items-center relative'>
-      {Boolean(orderCount) && (
+      {Boolean(orderCount) ? (
         <View
           className={cn(
             'w-5 h-5 rounded-full absolute bg-red-600 justify-center items-center z-10',
@@ -88,7 +88,7 @@ function OrderStage({
         >
           <Text className='text-xs text-white font-inter-medium'>{orderCount}</Text>
         </View>
-      )}
+      ) : null}
       {status.icon}
       <Text className='text-xs'>{status.name}</Text>
     </View>

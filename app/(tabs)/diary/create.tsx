@@ -276,7 +276,7 @@ export default function CreateDiaryScreen() {
         </View>
       </View>
 
-      {currentStep === 0 && (
+      {currentStep === 0 ? (
         <View className='flex-1 mt-6 px-4'>
           <FormProvider {...stepOneMethods}>
             <PersonalInfoForm />
@@ -295,9 +295,9 @@ export default function CreateDiaryScreen() {
             </Button>
           </Animated.View>
         </View>
-      )}
+      ) : null}
 
-      {currentStep === 1 && (
+      {currentStep === 1 ? (
         <View className='flex-1 mt-4'>
           <FormProvider {...stepTwoMethods}>
             <PregnancyInfoForm />
@@ -325,9 +325,9 @@ export default function CreateDiaryScreen() {
             </View>
           </Animated.View>
         </View>
-      )}
+      ) : null}
 
-      {currentStep === 2 && (
+      {currentStep === 2 ? (
         <View className='flex-1'>
           <FormProvider {...measurementsMethods}>
             <ReviewMeasurementsForm />
@@ -353,7 +353,7 @@ export default function CreateDiaryScreen() {
             </View>
           </Animated.View>
         </View>
-      )}
+      ) : null}
     </SafeView>
   )
 }

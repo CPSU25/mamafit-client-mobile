@@ -22,11 +22,11 @@ export default function BranchCard({ branch, onPress, isFirstBranch }: BranchCar
             <Text className='font-inter-medium flex-1' numberOfLines={1}>
               {branch.name}
             </Text>
-            {isFirstBranch && (
+            {isFirstBranch ? (
               <View className='bg-emerald-500 px-3 py-1 rounded-xl'>
                 <Text className='text-xs font-inter-semibold text-white'>Nearest</Text>
               </View>
-            )}
+            ) : null}
           </View>
           <View className='gap-1'>
             <View className='flex-row items-center gap-1.5'>

@@ -66,11 +66,11 @@ export default function AutoHeightImage({ uri, source, width, style, ...props }:
         onLoadEnd={() => setIsLoading(false)}
         {...props}
       />
-      {isLoading && (
+      {isLoading ? (
         <View style={StyleSheet.absoluteFillObject} pointerEvents='none'>
           <ActivityIndicator color={PRIMARY_COLOR.LIGHT} style={{ flex: 1 }} />
         </View>
-      )}
+      ) : null}
     </View>
   )
 }

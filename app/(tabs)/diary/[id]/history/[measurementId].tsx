@@ -243,7 +243,7 @@ export default function DiaryHistoryDetailScreen() {
               </Animated.View>
             ))}
 
-            {isEditable && (
+            {isEditable ? (
               <Button
                 onPress={methods.handleSubmit(onSubmit)}
                 disabled={!methods.formState.isDirty || editMeasurementDetailMutation.isPending}
@@ -252,7 +252,7 @@ export default function DiaryHistoryDetailScreen() {
                   {editMeasurementDetailMutation.isPending ? 'Saving...' : 'Save'}
                 </Text>
               </Button>
-            )}
+            ) : null}
           </View>
         </FormProvider>
       </ScrollView>

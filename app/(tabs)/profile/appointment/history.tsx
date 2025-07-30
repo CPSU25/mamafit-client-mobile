@@ -21,11 +21,11 @@ const SectionHeader = ({ dateRange }: { dateRange: DateRange }) => {
   return (
     <View className='px-4 pt-4 pb-2 bg-background'>
       <Text className='text-lg font-inter-semibold text-foreground'>{dateRange.date}</Text>
-      {isRangeDisplay && (
+      {isRangeDisplay ? (
         <Text className='text-sm font-inter-regular text-muted-foreground'>
           {format(dateRange.from, 'MMM d, yyyy')} - {format(dateRange.to, 'MMM d, yyyy')}
         </Text>
-      )}
+      ) : null}
     </View>
   )
 }

@@ -515,7 +515,7 @@ export default function ReviewOrderScreen() {
   return (
     <SafeView>
       <View className='flex-1 relative'>
-        {isLoading && (
+        {isLoading ? (
           <>
             <BlurView
               experimentalBlurMethod='dimezisBlurView'
@@ -529,7 +529,7 @@ export default function ReviewOrderScreen() {
               color={PRIMARY_COLOR.LIGHT}
             />
           </>
-        )}
+        ) : null}
 
         <View className='flex-row items-center gap-4 p-4'>
           <TouchableOpacity onPress={handleGoBack}>
@@ -649,34 +649,34 @@ export default function ReviewOrderScreen() {
             </View>
 
             {/* Modals */}
-            {addresses && Array.isArray(addresses) && (
+            {addresses && Array.isArray(addresses) ? (
               <AddressSelectionModal
                 ref={addressSelectionModalRef}
                 addresses={addresses}
                 selectedAddressId={addressId || undefined}
                 onSelectAddress={handleSelectAddress}
               />
-            )}
+            ) : null}
 
-            {diaries && diaries.items && Array.isArray(diaries.items) && (
+            {diaries && diaries.items && Array.isArray(diaries.items) ? (
               <DiarySelectionModal
                 ref={diarySelectionModalRef}
                 diaries={diaries.items}
                 selectedDiaryId={diaryId || undefined}
                 onSelectDiary={handleSelectDiary}
               />
-            )}
+            ) : null}
 
-            {branches && Array.isArray(branches) && deliveryMethod === DeliveryMethod.PICK_UP && (
+            {branches && Array.isArray(branches) && deliveryMethod === DeliveryMethod.PICK_UP ? (
               <BranchSelectionModal
                 ref={branchSelectionModalRef}
                 branches={branches}
                 selectedBranchId={branchId || undefined}
                 onSelectBranch={handleSelectBranch}
               />
-            )}
+            ) : null}
 
-            {vouchers && Array.isArray(vouchers) && (
+            {vouchers && Array.isArray(vouchers) ? (
               <VouchersSelectionModal
                 ref={voucherSelectionModalRef}
                 vouchers={getFlattenedVouchers(vouchers)}
@@ -684,7 +684,7 @@ export default function ReviewOrderScreen() {
                 onSelectVoucher={handleSelectVoucher}
                 fullMerchandiseTotal={fullMerchandiseTotal}
               />
-            )}
+            ) : null}
           </FormProvider>
         </BottomSheetModalProvider>
       </View>

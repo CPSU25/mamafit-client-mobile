@@ -66,7 +66,7 @@ export default function PaymentDetailsSection({
           </View>
         ) : null}
 
-        {addOnsSubtotal > 0 && addOnsCount > 0 && (
+        {addOnsSubtotal > 0 && addOnsCount > 0 ? (
           <View className='flex-row items-baseline'>
             <Text className='text-xs text-muted-foreground flex-1'>Add-ons Subtotal ({addOnsCount})</Text>
             <Text className='text-xs text-muted-foreground'>
@@ -74,7 +74,7 @@ export default function PaymentDetailsSection({
               {addOnsSubtotal.toLocaleString('vi-VN')}
             </Text>
           </View>
-        )}
+        ) : null}
 
         <View className='flex-row items-baseline'>
           <Text className='text-xs text-muted-foreground flex-1'>Shipping Subtotal</Text>
