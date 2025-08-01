@@ -63,12 +63,12 @@ export default function DatePicker<T extends FieldValues>({
       name={name}
       render={({ field: { onChange, value } }) => (
         <View className={className}>
-          {label && (
+          {label ? (
             <Text className='mb-2'>
               {label}
               {required && <Text className={classname}> *</Text>}
             </Text>
-          )}
+          ) : null}
           <TouchableOpacity onPress={() => !disabled && showDatepicker(onChange, value)} disabled={disabled}>
             <Input
               value={value ? format(new Date(value), 'dd/MM/yyyy') : ''}

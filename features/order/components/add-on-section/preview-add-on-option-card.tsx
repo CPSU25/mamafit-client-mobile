@@ -12,11 +12,11 @@ interface PreviewAddOnOptionCardProps {
 export default function PreviewAddOnOptionCard({ option, onRemove, iconSize }: PreviewAddOnOptionCardProps) {
   return (
     <View className='flex-row items-center gap-2 px-2 py-0.5 rounded-lg'>
-      {onRemove && (
+      {onRemove ? (
         <TouchableOpacity onPress={onRemove} className='pr-1'>
           <Feather name='x-circle' color='lightgray' size={iconSize} />
         </TouchableOpacity>
-      )}
+      ) : null}
       {option.type === 'IMAGE' && <Image source={{ uri: option.value }} className='w-8 h-8 rounded-lg' />}
       {option.type === 'TEXT' && <Image source={require('~/assets/icons/font.png')} className='w-8 h-8' />}
       {option.type === 'PATTERN' && <Image source={require('~/assets/icons/pattern.png')} className='w-8 h-8' />}

@@ -28,14 +28,14 @@ export default function AddOnCard({ addOn, getAddOnImage }: AddOnCardProps) {
           <Text className='text-xs font-inter-medium' style={{ color: getAddOnImage(addOn.name).textColor }}>
             ₫{addOn.minPrice.toLocaleString('vi-VN')}
           </Text>
-          {addOn.minPrice !== addOn.maxPrice && (
+          {addOn.minPrice !== addOn.maxPrice ? (
             <>
               <Text className='text-xs text-muted-foreground'>to</Text>
               <Text className='text-xs font-inter-medium' style={{ color: getAddOnImage(addOn.name).textColor }}>
                 ₫{addOn.maxPrice.toLocaleString('vi-VN')}
               </Text>
             </>
-          )}
+          ) : null}
         </View>
       </View>
       <Feather name='chevron-right' size={18} color='lightgray' />

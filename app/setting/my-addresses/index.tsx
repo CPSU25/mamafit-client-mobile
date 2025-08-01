@@ -40,11 +40,11 @@ export default function MyAddressesScreen() {
             {item.ward}, {item.district}, {item.province}
           </Text>
         </View>
-        {item.isDefault && (
+        {item.isDefault ? (
           <Badge variant='default' className='mr-auto'>
             <Text className='font-inter-medium'>Default</Text>
           </Badge>
-        )}
+        ) : null}
       </Card>
     </TouchableOpacity>
   )

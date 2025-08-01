@@ -33,7 +33,7 @@ export default function ChatRoom({ room }: ChatRoomProps) {
           {room.lastMessage}
         </Text>
       </View>
-      <Text className='self-start text-xs text-muted-foreground'>{format(room.lastTimestamp, 'HH:mm a')}</Text>
+      <Text className='self-start text-xs text-muted-foreground'>{format(room.lastTimestamp, 'hh:mm a')}</Text>
     </View>
   )
 }

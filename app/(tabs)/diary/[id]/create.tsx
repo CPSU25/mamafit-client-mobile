@@ -181,7 +181,7 @@ export default function CreateMeasurementScreen() {
         </View>
       </View>
 
-      {currentStep === 0 && (
+      {currentStep === 0 ? (
         <View className='flex-1 mt-6 px-4'>
           <FormProvider {...previewMeasurementMethods}>
             <PreviewMeasurementForm />
@@ -198,9 +198,9 @@ export default function CreateMeasurementScreen() {
             </Button>
           </Animated.View>
         </View>
-      )}
+      ) : null}
 
-      {currentStep === 1 && (
+      {currentStep === 1 ? (
         <View className='flex-1'>
           <FormProvider {...measurementsMethods}>
             <ReviewMeasurementsForm />
@@ -228,7 +228,7 @@ export default function CreateMeasurementScreen() {
             </View>
           </Animated.View>
         </View>
-      )}
+      ) : null}
     </SafeView>
   )
 }

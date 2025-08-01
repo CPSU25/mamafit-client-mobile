@@ -8,6 +8,7 @@ import { ComponentOptionWithComponent } from '~/types/preset.type'
 import { ORDERED_COMPONENTS_OPTIONS } from './constants/constants'
 import { clear, setTokens } from './redux-toolkit/slices/auth.slice'
 import { store } from './redux-toolkit/store'
+import { Alert, Linking, Platform } from 'react-native'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -124,4 +125,21 @@ export const formatVnPhone = (phone: string) => {
   }
 
   return digits
+}
+
+export const openInMaps = async (latitude: number, longitude: number) => {
+  const url = Platform.select({
+    ios: `maps:0,0?q=${latitude},${longitude}`,
+    android: `geo:0,0?q=${latitude},${longitude}`
+  })
+
+  if (!url) return
+
+  const supported = await Linking.canOpenURL(url)
+
+  if (supported) {
+    await Linking.openURL(url)
+  } else {
+    Alert.alert('Error', 'Unable to open maps on this device.')
+  }
 }

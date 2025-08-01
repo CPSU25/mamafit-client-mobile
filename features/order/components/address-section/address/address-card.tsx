@@ -24,11 +24,11 @@ export default function AddressCard({ isSelected, address }: AddressCardProps) {
           {address.ward}, {address.district}, {address.province}
         </Text>
       </View>
-      {address.isDefault && (
+      {address.isDefault ? (
         <Badge variant='default' className='mr-auto mt-1'>
           <Text className='font-inter-medium'>Default</Text>
         </Badge>
-      )}
+      ) : null}
     </Card>
   )
 }

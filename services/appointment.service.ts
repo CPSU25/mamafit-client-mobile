@@ -23,7 +23,7 @@ class AppointmentService {
   async getAppointments(page: number = 1, pageSize: number = 5, search?: string) {
     const { data } = await api.get<BasePaginationResponse<Appointment>>(`appointment/user`, {
       params: {
-        page,
+        index: page,
         pageSize,
         search,
         sortBy: 'UPCOMMING_AT_ASC'

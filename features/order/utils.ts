@@ -1,8 +1,19 @@
+import { MaterialIcons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AddOn, AddOnOption } from '~/types/add-on.type'
 import { OrderItemTemp } from '~/types/order-item.type'
+import { OrderItemType, OrderStatus } from '~/types/order.type'
 import { ADD_ON_IMAGE_CONFIG, DEFAULT_ADD_ON_IMAGE, ORDERED_SIZES, ORDERED_TYPES } from './constants'
-import { AddOnImageConfig, AddOnMap, AddOnOptionItem, OptionMap, PositionInfo, PresetItem, SizeInfo } from './types'
+import {
+  AddOnImageConfig,
+  AddOnMap,
+  AddOnOptionItem,
+  OptionMap,
+  OrderItemStyleType,
+  PositionInfo,
+  PresetItem,
+  SizeInfo
+} from './types'
 
 export const getAddOnImage = (name: string): AddOnImageConfig => {
   return ADD_ON_IMAGE_CONFIG[name] ?? DEFAULT_ADD_ON_IMAGE
@@ -44,8 +55,21 @@ export const transformAddOns = (addOns: AddOn[]): AddOnMap[] => {
   }
 
   return addOns.map((addOn): AddOnMap => {
-    if (!addOn.id || !addOn.name || !Array.isArray(addOn.addOnOptions)) {
-      throw new Error(`Invalid add-on structure: missing required fields for ${addOn.name || 'unknown'}`)
+    if (
+      !addOn.id ||
+      !addOn.name ||
+      !addOn.addOnOptions ||
+      !Array.isArray(addOn.addOnOptions) ||
+      addOn.addOnOptions.length === 0
+    ) {
+      return {
+        id: addOn.id,
+        name: addOn.name,
+        description: addOn.description || '',
+        groupOptions: [],
+        minPrice: 0,
+        maxPrice: 0
+      }
     }
 
     const prices = addOn.addOnOptions
@@ -242,4 +266,72 @@ export const convertAddOnOptionsToFormFormat = (addOnOptions: AddOnOptionItem[])
     addOnOptionId: option.addOnOptionId,
     value: option.value
   }))
+}
+
+export const getStatusIcon = (status: OrderStatus): keyof typeof MaterialIcons.glyphMap => {
+  switch (status) {
+    case OrderStatus.Created:
+      return 'credit-card'
+    case OrderStatus.InDesign:
+      return 'design-services'
+    case OrderStatus.Confirmed:
+      return 'library-add-check'
+    case OrderStatus.InProduction:
+      return 'factory'
+    case OrderStatus.InQC:
+      return 'fact-check'
+    case OrderStatus.AwaitingPaidRest:
+      return 'money'
+    case OrderStatus.Packaging:
+      return 'all-inbox'
+    case OrderStatus.Delevering:
+      return 'local-shipping'
+    case OrderStatus.Completed:
+      return 'stars'
+    case OrderStatus.WarrantyCheck:
+      return 'gpp-good'
+    case OrderStatus.InWarranty:
+      return 'refresh'
+    case OrderStatus.Cancelled:
+      return 'cancel'
+    default:
+      return 'circle'
+  }
+}
+
+export const getOrderItemTypeStyle = (type: OrderItemType): OrderItemStyleType => {
+  switch (type) {
+    case OrderItemType.DesignRequest:
+      return {
+        iconColor: '#9333ea',
+        icon: 'design-services',
+        text: 'Design Request Order',
+        textColor: 'text-purple-600',
+        tagColor: 'bg-purple-50'
+      }
+    case OrderItemType.Preset:
+      return {
+        iconColor: '#2563eb',
+        icon: 'library-add-check',
+        text: 'Preset Order',
+        textColor: 'text-blue-600',
+        tagColor: 'bg-blue-50'
+      }
+    case OrderItemType.ReadyToBuy:
+      return {
+        iconColor: '#d97706',
+        icon: 'shopping-cart',
+        text: 'Ready to Buy Order',
+        textColor: 'text-amber-600',
+        tagColor: 'bg-amber-50'
+      }
+    default:
+      return {
+        iconColor: '#4b5563',
+        icon: 'circle',
+        text: 'Other Order',
+        textColor: 'text-gray-600',
+        tagColor: 'bg-gray-50'
+      }
+  }
 }

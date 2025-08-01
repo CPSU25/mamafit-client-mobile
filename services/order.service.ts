@@ -2,7 +2,17 @@ import { PlaceDesignRequestOrderFormSchema, PlacePresetOrderFormSchema } from '~
 import { api } from '~/lib/axios/axios'
 import { AddOn } from '~/types/add-on.type'
 import { BasePaginationResponse, BaseResponse } from '~/types/common'
-import { Branch, QRCodeResponse } from '~/types/order.type'
+import {
+  Branch,
+  DesignerInfo,
+  Order,
+  OrderDetail,
+  OrderItemMilestone,
+  OrderStatus,
+  OrderStatusCount,
+  QRCodeResponse
+} from '~/types/order.type'
+import { PresetWithComponentOptions } from '~/types/preset.type'
 
 class OrderService {
   async placeDesignRequestOrder(designRequest: PlaceDesignRequestOrderFormSchema) {
@@ -41,6 +51,51 @@ class OrderService {
     const { data } = await api.get<BasePaginationResponse<AddOn>>('add-on')
 
     return data.data.items
+  }
+
+  async getOrders(page: number = 1, pageSize: number = 5, status: OrderStatus, search?: string) {
+    const { data } = await api.get<BasePaginationResponse<Order>>('order/by-token', {
+      params: {
+        index: page,
+        pageSize,
+        status,
+        search
+      }
+    })
+
+    return data.data
+  }
+
+  async getOrder(orderId: string) {
+    const { data } = await api.get<BaseResponse<OrderDetail>>(`order/${orderId}`)
+
+    return data.data
+  }
+
+  async getOrdersCount() {
+    const { data } = await api.get<BaseResponse<OrderStatusCount[]>>('order/my-order-status-counts')
+
+    return data.data
+  }
+
+  async getOrderItemMilestones(orderItemId: string) {
+    const { data } = await api.get<BaseResponse<OrderItemMilestone[]>>(`milestone/order-item/${orderItemId}`)
+
+    return data.data
+  }
+
+  async getDesignerInfo(orderItemId: string) {
+    const { data } = await api.get<BaseResponse<DesignerInfo>>(`order-items/designer-info/${orderItemId}`)
+
+    return data.data
+  }
+
+  async getDesignRequestDetail(designRequestId: string) {
+    const { data } = await api.get<BaseResponse<PresetWithComponentOptions[]>>(
+      `preset/design-request/${designRequestId}`
+    )
+
+    return data.data
   }
 }
 

@@ -135,28 +135,27 @@ export default function CreateCanvasScreen() {
                 </TouchableOpacity>
 
                 {/* Customization Options */}
-                {preset?.componentOptions && preset.componentOptions.length > 0 && (
+                {preset?.componentOptions && preset.componentOptions.length > 0 ? (
                   <Card className='p-2 gap-3'>
-                    {getOrderedComponentOptions(preset?.componentOptions ?? []).map(
-                      (option) =>
-                        option && (
-                          <View
-                            className='flex-row items-center justify-between py-2 px-3 bg-muted/50 rounded-xl border border-border/50'
-                            key={option.componentName}
-                          >
-                            <View className='flex-1'>
-                              <Text className='text-sm font-inter-medium text-muted-foreground'>
-                                {option.componentName}
-                              </Text>
-                            </View>
-                            <Badge variant='secondary' className='ml-2'>
-                              <Text className='text-xs font-inter-medium'>{option.name}</Text>
-                            </Badge>
+                    {getOrderedComponentOptions(preset?.componentOptions ?? []).map((option) =>
+                      option ? (
+                        <View
+                          className='flex-row items-center justify-between py-2 px-3 bg-muted/50 rounded-xl border border-border/50'
+                          key={option.componentName}
+                        >
+                          <View className='flex-1'>
+                            <Text className='text-sm font-inter-medium text-muted-foreground'>
+                              {option.componentName}
+                            </Text>
                           </View>
-                        )
+                          <Badge variant='secondary' className='ml-2'>
+                            <Text className='text-xs font-inter-medium'>{option.name}</Text>
+                          </Badge>
+                        </View>
+                      ) : null
                     )}
                   </Card>
-                )}
+                ) : null}
               </View>
             </ScrollView>
             <View

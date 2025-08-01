@@ -5,7 +5,7 @@ import { format, parse } from 'date-fns'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useMemo, useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
-import { Alert, Image, Linking, Platform, ScrollView, TouchableOpacity, useWindowDimensions, View } from 'react-native'
+import { Alert, Image, Linking, ScrollView, TouchableOpacity, useWindowDimensions, View } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import { toast } from 'sonner-native'
 import Loading from '~/components/loading'
@@ -23,7 +23,7 @@ import { CancelAppointmentFormSchema } from '~/features/appointment/validations'
 import { useKeyboardOffset } from '~/hooks/use-keyboard-offset'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { ERROR_MESSAGES, PRIMARY_COLOR, styles } from '~/lib/constants/constants'
-import { cn } from '~/lib/utils'
+import { cn, openInMaps } from '~/lib/utils'
 import { ErrorResponse } from '~/types/common'
 
 const isBranchOpen = (openingHour: string, closingHour: string) => {
@@ -95,23 +95,6 @@ export default function AppointmentDetailScreen() {
       await Linking.openURL(url)
     } else {
       Alert.alert('Error', 'This device cannot make phone calls.')
-    }
-  }
-
-  const openInMaps = async (latitude: number, longitude: number) => {
-    const url = Platform.select({
-      ios: `maps:0,0?q=${latitude},${longitude}`,
-      android: `geo:0,0?q=${latitude},${longitude}`
-    })
-
-    if (!url) return
-
-    const supported = await Linking.canOpenURL(url)
-
-    if (supported) {
-      await Linking.openURL(url)
-    } else {
-      Alert.alert('Error', 'Unable to open maps on this device.')
     }
   }
 
@@ -188,12 +171,12 @@ export default function AppointmentDetailScreen() {
                 <View className='flex-row items-center gap-1'>
                   <Feather name='clock' size={16} color={PRIMARY_COLOR.LIGHT} />
                   <Text className='text-xs text-muted-foreground'>
-                    {appointment?.branch.openingHour && appointment?.branch.closingHour && (
+                    {appointment?.branch.openingHour && appointment?.branch.closingHour ? (
                       <>
                         {format(parse(appointment.branch.openingHour, 'HH:mm:ss', new Date()), 'hh:mm a')} -{' '}
                         {format(parse(appointment.branch.closingHour, 'HH:mm:ss', new Date()), 'hh:mm a')}
                       </>
-                    )}
+                    ) : null}
                   </Text>
                 </View>
               </View>
@@ -209,7 +192,7 @@ export default function AppointmentDetailScreen() {
             <Card className='gap-1 border-transparent p-2' style={styles.container}>
               <Text className='font-inter-medium mb-2'>Location</Text>
               <View className='overflow-hidden rounded-xl'>
-                {initialRegion && (
+                {initialRegion ? (
                   <MapView provider={PROVIDER_GOOGLE} style={{ width: '100%', height: 120 }} region={initialRegion}>
                     <Marker
                       coordinate={{
@@ -219,7 +202,7 @@ export default function AppointmentDetailScreen() {
                       title={appointment?.branch.name}
                     />
                   </MapView>
-                )}
+                ) : null}
               </View>
               <TouchableOpacity
                 className='px-4 py-2 rounded-xl flex-row items-center justify-center gap-2 bg-blue-50 mt-1'
@@ -309,7 +292,7 @@ export default function AppointmentDetailScreen() {
             </Card>
 
             {/* Action */}
-            {appointment?.status === 'UP_COMING' && (
+            {appointment?.status === 'UP_COMING' ? (
               <Card className='gap-1 border-transparent p-2' style={styles.container}>
                 <Text className='font-inter-medium'>Action</Text>
                 <Text className='text-sm text-muted-foreground mb-2'>
@@ -352,8 +335,8 @@ export default function AppointmentDetailScreen() {
                   </DialogContent>
                 </Dialog>
               </Card>
-            )}
-            {isCanceled && (
+            ) : null}
+            {isCanceled ? (
               <Card className='gap-1 border-transparent p-2' style={styles.container}>
                 <Text className='font-inter-medium mb-2'>Cancellation Summary</Text>
 
@@ -381,7 +364,7 @@ export default function AppointmentDetailScreen() {
                   </Text>
                 </View>
               </Card>
-            )}
+            ) : null}
           </View>
         </ScrollView>
       </View>

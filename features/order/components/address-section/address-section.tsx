@@ -47,7 +47,7 @@ export default function AddressSection({
     if (address) {
       return (
         <View className='gap-2'>
-          {!currentUserProfile?.phoneNumber && (
+          {!currentUserProfile?.phoneNumber ? (
             <TouchableOpacity onPress={() => router.push('/setting/account')}>
               <WarningCard
                 title='Oops! No phone number found'
@@ -55,7 +55,7 @@ export default function AddressSection({
                 hasAnimation={false}
               />
             </TouchableOpacity>
-          )}
+          ) : null}
           <PreviewAddressCard
             address={address}
             fullName={currentUserProfile?.fullName || undefined}
@@ -84,7 +84,7 @@ export default function AddressSection({
     if (branch) {
       return (
         <View className='gap-2'>
-          {!currentUserProfile?.phoneNumber && (
+          {!currentUserProfile?.phoneNumber ? (
             <TouchableOpacity onPress={() => router.push('/setting/account')}>
               <WarningCard
                 title='Oops! No phone number found'
@@ -92,7 +92,7 @@ export default function AddressSection({
                 hasAnimation={false}
               />
             </TouchableOpacity>
-          )}
+          ) : null}
           <PreviewBranchCard branch={branch} onPress={handlePresentBranchModal} />
         </View>
       )

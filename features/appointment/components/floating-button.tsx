@@ -68,7 +68,7 @@ export default function FloatingButton({
         <MaterialIcons name='my-location' size={24} color={PRIMARY_COLOR.LIGHT} />
       </TouchableOpacity>
 
-      {isDisplayBottom && (
+      {isDisplayBottom ? (
         <TouchableOpacity onPress={onPressBottom}>
           <LinearGradient
             colors={['#5b21b6', '#7c3aed', '#8b5cf6']}
@@ -82,7 +82,7 @@ export default function FloatingButton({
             <MaterialIcons name='directions' size={24} color='white' />
           </LinearGradient>
         </TouchableOpacity>
-      )}
+      ) : null}
     </Animated.View>
   )
 }

@@ -51,9 +51,9 @@ export default function PregnancyInfoForm() {
               required
               errors={errors}
             />
-            {isFormError(errors, 'firstDateOfLastPeriod') && (
+            {isFormError(errors, 'firstDateOfLastPeriod') ? (
               <FieldError message={errors.firstDateOfLastPeriod?.message || ''} />
-            )}
+            ) : null}
 
             {/* Number of pregnancy */}
             <Controller
@@ -74,9 +74,9 @@ export default function PregnancyInfoForm() {
                 />
               )}
             />
-            {isFormError(errors, 'numberOfPregnancy') && (
+            {isFormError(errors, 'numberOfPregnancy') ? (
               <FieldError message={errors.numberOfPregnancy?.message || ''} />
-            )}
+            ) : null}
           </View>
         </Animated.View>
         <Animated.View entering={FadeInDown.delay(300)} className='flex flex-col gap-1 px-4'>
@@ -184,9 +184,9 @@ export default function PregnancyInfoForm() {
                       />
                     )}
                   />
-                  {isFormError(errors, 'averageMenstrualCycle') && (
+                  {isFormError(errors, 'averageMenstrualCycle') ? (
                     <FieldError message={errors.averageMenstrualCycle?.message || ''} />
-                  )}
+                  ) : null}
                 </View>
               </AccordionContent>
             </AccordionItem>
@@ -216,9 +216,9 @@ export default function PregnancyInfoForm() {
                       />
                     )}
                   />
-                  {isFormError(errors, 'weeksFromUltrasound') && (
+                  {isFormError(errors, 'weeksFromUltrasound') ? (
                     <FieldError message={errors.weeksFromUltrasound?.message || ''} />
-                  )}
+                  ) : null}
 
                   {/* Ultrasound date */}
                   <DatePicker
@@ -228,9 +228,9 @@ export default function PregnancyInfoForm() {
                     required
                     errors={errors}
                   />
-                  {isFormError(errors, 'ultrasoundDate') && (
+                  {isFormError(errors, 'ultrasoundDate') ? (
                     <FieldError message={errors.ultrasoundDate?.message || ''} />
-                  )}
+                  ) : null}
 
                   {/* Due date from ultrasound */}
                   {/* <DatePicker
@@ -240,7 +240,7 @@ export default function PregnancyInfoForm() {
                     required
                     errors={errors}
                   />
-                  {isFormError(errors, 'dueDateFromUltrasound') && (
+                  {isFormError(errors, 'dueDateFromUltrasound') ? (
                     <FieldError message={errors.dueDateFromUltrasound?.message || ''} />
                   )} */}
                 </View>

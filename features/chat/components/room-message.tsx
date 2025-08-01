@@ -22,7 +22,7 @@ export default function RoomMessage({ message }: RoomMessageProps) {
         <Text className={cn('text-base', isMe ? 'text-white' : 'text-foreground')}>{message.message}</Text>
 
         <Text className={cn('text-xs mt-1', isMe ? 'text-white/50 text-right' : 'text-foreground/50 text-left')}>
-          {format(message.messageTimestamp, 'HH:mm a')}
+          {format(message.messageTimestamp, 'hh:mm a')}
         </Text>
       </View>
     </View>

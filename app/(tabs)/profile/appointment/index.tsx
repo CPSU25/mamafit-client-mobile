@@ -280,7 +280,7 @@ export default function AppointmentScreen() {
         >
           <Marker coordinate={userLocation.location.coords} title='Your Location' pinColor='red' />
 
-          {selectedBranch && (
+          {selectedBranch ? (
             <Marker
               coordinate={{
                 longitude: selectedBranch.longitude,
@@ -290,11 +290,11 @@ export default function AppointmentScreen() {
               description={`${selectedBranch.street}, ${selectedBranch.ward}, ${selectedBranch.district}, ${selectedBranch.province}`}
               pinColor='green'
             />
-          )}
+          ) : null}
 
-          {routeCoordinates.length > 0 && (
+          {routeCoordinates.length > 0 ? (
             <Polyline coordinates={routeCoordinates} strokeColor='#8b5cf6' strokeWidth={5} lineCap='round' />
-          )}
+          ) : null}
         </MapView>
       ) : (
         <View className='flex-1 justify-center items-center'>
@@ -333,7 +333,7 @@ export default function AppointmentScreen() {
           </TouchableOpacity>
         </View>
 
-        {selectedBranch && (
+        {selectedBranch ? (
           <View className='px-2 pb-2'>
             <View className='bg-white/20 rounded-xl p-3 backdrop-blur-sm'>
               <View className='flex-row items-center justify-between'>
@@ -362,10 +362,10 @@ export default function AppointmentScreen() {
               </View>
             </View>
           </View>
-        )}
+        ) : null}
       </LinearGradient>
 
-      {branches && Array.isArray(branches) && branches.length > 0 && (
+      {branches && Array.isArray(branches) && branches.length > 0 ? (
         <BottomSheet
           ref={bottomSheetRef}
           snapPoints={snapPoints}
@@ -373,10 +373,13 @@ export default function AppointmentScreen() {
           enableDynamicSizing={false}
           animatedPosition={animatedPOIListPosition}
           animatedIndex={animatedPOIListIndex}
+          detached
+          bottomInset={8}
           style={{
-            boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.1)',
+            boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.2)',
             borderRadius: 16,
-            overflow: 'hidden'
+            overflow: 'hidden',
+            marginHorizontal: 8
           }}
         >
           <FormProvider {...methods}>
@@ -385,7 +388,7 @@ export default function AppointmentScreen() {
                 <Text className='font-inter-semibold text-lg mb-4'>Appointment Details</Text>
               ) : (
                 <>
-                  {currentStep === 1 && (
+                  {currentStep === 1 ? (
                     <>
                       <View className='flex-row items-center justify-between px-4'>
                         <View>
@@ -416,9 +419,9 @@ export default function AppointmentScreen() {
                         showsVerticalScrollIndicator={false}
                       />
                     </>
-                  )}
+                  ) : null}
 
-                  {currentStep === 2 && selectedBranch && (
+                  {currentStep === 2 && selectedBranch ? (
                     <>
                       <View className='flex-row items-center justify-between px-4'>
                         <View>
@@ -452,13 +455,13 @@ export default function AppointmentScreen() {
                         </Button>
                       </View>
                     </>
-                  )}
+                  ) : null}
                 </>
               )}
             </View>
           </FormProvider>
         </BottomSheet>
-      )}
+      ) : null}
     </View>
   )
 }

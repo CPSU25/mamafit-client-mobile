@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { SvgIcon } from './svg-icon'
 
 export const NAV_THEME = {
   light: {
@@ -54,3 +55,55 @@ export const ERROR_MESSAGES = {
 }
 
 export const ORDERED_COMPONENTS_OPTIONS = ['Neckline', 'Sleeves', 'Waist', 'Hem', 'Color', 'Fabric']
+
+export const measurementCategories = [
+  {
+    title: 'Pregnancy Status',
+    description: 'Something wrong? Go back to edit',
+    icon: SvgIcon.calendarOne({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
+    measurements: [
+      { name: 'weekOfPregnancy' as const, label: 'Gestational age', unit: 'weeks', editable: false },
+      { name: 'bust' as const, label: 'Bust', unit: 'cm', editable: false },
+      { name: 'waist' as const, label: 'Waist', unit: 'cm', editable: false },
+      { name: 'hip' as const, label: 'Hip', unit: 'cm', editable: false }
+    ]
+  },
+  {
+    title: 'Upper Body',
+    description: 'Tap any measurement to edit',
+    icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
+    measurements: [
+      { name: 'neck' as const, label: 'Neck', unit: 'cm', editable: true },
+      { name: 'coat' as const, label: 'Coat', unit: 'cm', editable: true },
+      { name: 'chestAround' as const, label: 'Chest around', unit: 'cm', editable: true },
+      { name: 'shoulderWidth' as const, label: 'Shoulder width', unit: 'cm', editable: true }
+    ]
+  },
+  {
+    title: 'Core & Waist',
+    description: 'Tap any measurement to edit',
+    icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
+    measurements: [
+      { name: 'stomach' as const, label: 'Stomach', unit: 'cm', editable: true },
+      { name: 'pantsWaist' as const, label: 'Pants waist', unit: 'cm', editable: true }
+    ]
+  },
+  {
+    title: 'Lower Body',
+    description: 'Tap any measurement to edit',
+    icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
+    measurements: [
+      { name: 'thigh' as const, label: 'Thigh', unit: 'cm', editable: true },
+      { name: 'legLength' as const, label: 'Leg length', unit: 'cm', editable: true }
+    ]
+  },
+  {
+    title: 'Garment Specific',
+    description: 'Tap any measurement to edit',
+    icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
+    measurements: [
+      { name: 'dressLength' as const, label: 'Dress length', unit: 'cm', editable: true },
+      { name: 'sleeveLength' as const, label: 'Sleeve length', unit: 'cm', editable: true }
+    ]
+  }
+]

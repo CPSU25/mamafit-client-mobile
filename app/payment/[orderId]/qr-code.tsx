@@ -1,4 +1,5 @@
 import { Feather } from '@expo/vector-icons'
+import { useQueryClient } from '@tanstack/react-query'
 import * as FileSystem from 'expo-file-system'
 import * as MediaLibrary from 'expo-media-library'
 import { Redirect, useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
@@ -21,6 +22,7 @@ import { useRefreshs } from '~/hooks/use-refresh'
 import { ICON_SIZE, PRIMARY_COLOR, styles } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { cn } from '~/lib/utils'
+import { PaymentStatus } from '~/types/order.type'
 
 const getQRCodeParams = (url: string | undefined) => {
   if (!url)
@@ -43,6 +45,7 @@ const getQRCodeParams = (url: string | undefined) => {
 }
 
 export default function PaymentQRCode() {
+  const queryClient = useQueryClient()
   const { isDarkColorScheme } = useColorScheme()
   const { orderId } = useLocalSearchParams() as { orderId: string }
   const [downloading, setDownloading] = useState(false)
@@ -54,7 +57,9 @@ export default function PaymentQRCode() {
     isLoading: isPaymentStatusLoading
   } = useGetPaymentStatus(orderId)
   const isPaid =
-    paymentStatus === 'PAID_FULL' || paymentStatus === 'PAID_DEPOSIT' || paymentStatus === 'PAID_DEPOSIT_COMPLETED'
+    paymentStatus === PaymentStatus.PaidFull ||
+    paymentStatus === PaymentStatus.PaidDeposit ||
+    paymentStatus === PaymentStatus.PaidDepositCompleted
 
   const shouldFetchQRCode = isPaymentStatusFetched && !isPaymentStatusLoading && !isPaid
 
@@ -78,7 +83,15 @@ export default function PaymentQRCode() {
   useFocusEffect(
     useCallback(() => {
       refetchPaymentStatus()
-    }, [refetchPaymentStatus])
+      if (
+        paymentStatus === PaymentStatus.PaidFull ||
+        paymentStatus === PaymentStatus.PaidDeposit ||
+        paymentStatus === PaymentStatus.PaidDepositCompleted
+      ) {
+        queryClient.invalidateQueries({ queryKey: ['orders'] })
+        queryClient.invalidateQueries({ queryKey: ['orders-count'] })
+      }
+    }, [refetchPaymentStatus, queryClient, paymentStatus])
   )
 
   if (isLoading) return <Loading />
@@ -129,7 +142,15 @@ export default function PaymentQRCode() {
           </View>
 
           <View className='flex flex-col gap-2 w-full'>
-            <Button className='w-full'>
+            <Button
+              className='w-full'
+              onPress={() =>
+                router.replace({
+                  pathname: '/order/[orderId]',
+                  params: { orderId }
+                })
+              }
+            >
               <Text className='font-inter-medium'>View Order</Text>
             </Button>
             <Button className='w-full' variant='outline' onPress={handleGoHome}>

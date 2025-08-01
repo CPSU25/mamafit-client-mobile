@@ -125,6 +125,12 @@ export const useSignalR = () => {
               return notification.metadata?.paymentStatus
             }
           )
+
+          queryClient.invalidateQueries({ queryKey: ['order'] })
+          queryClient.invalidateQueries({ queryKey: ['orders'] })
+          queryClient.invalidateQueries({ queryKey: ['orders-count'] })
+          queryClient.invalidateQueries({ queryKey: ['order-item-milestones'] })
+          queryClient.invalidateQueries({ queryKey: ['designer-info'] })
         }
         toast.custom(<NotificationToast notification={notification} />)
       }
@@ -157,7 +163,16 @@ export const useSignalR = () => {
         }
       }
 
+      const invitedToRoomHandler = () => {
+        try {
+          queryClient.invalidateQueries({ queryKey: ['rooms'] })
+        } catch (error) {
+          console.error('Error handling SignalR invite to room:', error)
+        }
+      }
+
       chatHubService.on(ChatHubEvents.ReceiveMessage, messageHandler)
+      chatHubService.on(ChatHubEvents.InvitedToRoom, invitedToRoomHandler)
       notificationHubService.on(NotificationHubEvents.ReceiveNotification, notificationHandler)
 
       return () => {
@@ -165,7 +180,7 @@ export const useSignalR = () => {
         notificationHubService.off(NotificationHubEvents.ReceiveNotification, notificationHandler)
       }
     }
-  }, [isAuthenticated, displayMessage, displayNotification])
+  }, [isAuthenticated, displayMessage, displayNotification, queryClient, user?.userId])
 
   // Handle connection based on authentication state
   useEffect(() => {

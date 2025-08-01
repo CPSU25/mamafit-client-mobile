@@ -83,7 +83,7 @@ function DialogContent({
           {...props}
         >
           {children}
-          {displayCloseButton && (
+          {displayCloseButton ? (
             <DialogPrimitive.Close
               className={
                 'absolute right-4 top-4 p-0.5 web:group rounded-sm opacity-70 web:ring-offset-background web:transition-opacity web:hover:opacity-100 web:focus:outline-none web:focus:ring-2 web:focus:ring-ring web:focus:ring-offset-2 web:disabled:pointer-events-none'
@@ -91,7 +91,7 @@ function DialogContent({
             >
               <Feather name='x' size={Platform.OS === 'web' ? 16 : 18} color='black' />
             </DialogPrimitive.Close>
-          )}
+          ) : null}
         </DialogPrimitive.Content>
       </DialogOverlay>
     </DialogPortal>

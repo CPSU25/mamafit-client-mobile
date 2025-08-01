@@ -1,4 +1,6 @@
+import { MaterialIcons } from '@expo/vector-icons'
 import { AddOnOption } from '~/types/add-on.type'
+import { OrderStatus } from '~/types/order.type'
 import { PresetWithComponentOptions } from '~/types/preset.type'
 
 export interface AddOnMap {
@@ -60,4 +62,21 @@ export interface AddOnOptionItem {
   positionName: string
   positionId: string
   price: number
+}
+
+export interface OrderStatusType {
+  id: number
+  label: string
+  value: OrderStatus
+  urlValue: string
+  title: string
+  description: string
+}
+
+export interface OrderItemStyleType {
+  iconColor: string
+  icon: keyof typeof MaterialIcons.glyphMap
+  text: string
+  textColor: string
+  tagColor: string
 }
