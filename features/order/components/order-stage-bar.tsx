@@ -1,4 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { format } from 'date-fns'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Animated, Easing, ScrollView, View } from 'react-native'
@@ -9,9 +10,10 @@ import { OrderItemMilestone } from '~/types/order.type'
 const STAGE_WIDTH = 50
 
 interface OrderStageBarProps {
-  milestones: OrderItemMilestone[] | null | undefined
+  milestones: OrderItemMilestone[]
   currentMilestone: OrderItemMilestone | null
   completedMilestones: OrderItemMilestone[] | null
+  orderPlacedAt: string | undefined
 }
 
 const getIconForMilestone = (milestoneName: string): keyof typeof MaterialCommunityIcons.glyphMap => {
@@ -26,7 +28,12 @@ const getIconForMilestone = (milestoneName: string): keyof typeof MaterialCommun
   return 'circle-outline'
 }
 
-export default function OrderStageBar({ milestones, currentMilestone, completedMilestones }: OrderStageBarProps) {
+export default function OrderStageBar({
+  milestones,
+  currentMilestone,
+  completedMilestones,
+  orderPlacedAt
+}: OrderStageBarProps) {
   const orderItemMilestones = useMemo(() => (milestones && Array.isArray(milestones) ? milestones : []), [milestones])
   const scrollViewRef = useRef<ScrollView>(null)
   const scaleAnims = useRef(orderItemMilestones.map(() => new Animated.Value(1))).current
@@ -82,7 +89,7 @@ export default function OrderStageBar({ milestones, currentMilestone, completedM
 
   // Auto-scroll to center the selected milestone
   useEffect(() => {
-    const selectedMilestoneLayout = currentMilestone ? stageLayouts[currentMilestone.milestoneId] : null
+    const selectedMilestoneLayout = currentMilestone ? stageLayouts[currentMilestone.milestone.milestoneId] : null
     if (selectedMilestoneLayout && scrollViewRef.current && scrollViewWidth > 0) {
       const stageCenterX = selectedMilestoneLayout.x + STAGE_WIDTH / 2
       const centerPosition = stageCenterX - scrollViewWidth / 2
@@ -113,7 +120,7 @@ export default function OrderStageBar({ milestones, currentMilestone, completedM
   const renderMilestoneIcon = (milestone: OrderItemMilestone, index: number) => {
     const isCompleted = milestone.progress === 100
     const isInProgress = milestone.progress > 0 && milestone.progress < 100
-    const isCurrent = milestone.milestoneId === currentMilestone?.milestoneId
+    const isCurrent = milestone.milestone.milestoneId === currentMilestone?.milestone.milestoneId
     const isNotStarted = milestone.progress === 0
 
     return (
@@ -137,7 +144,11 @@ export default function OrderStageBar({ milestones, currentMilestone, completedM
                 boxShadow: '0 0 6px 0 rgba(16, 185, 129, 0.8)'
               }}
             >
-              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestoneName)} color='white' size={16} />
+              <MaterialCommunityIcons
+                name={getIconForMilestone(milestone.milestone.milestoneName)}
+                color='white'
+                size={16}
+              />
             </LinearGradient>
           ) : isInProgress || isCurrent ? (
             <LinearGradient
@@ -149,23 +160,22 @@ export default function OrderStageBar({ milestones, currentMilestone, completedM
                 boxShadow: '0 0 6px 0 rgba(249, 115, 22, 0.8)'
               }}
             >
-              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestoneName)} color='white' size={16} />
+              <MaterialCommunityIcons
+                name={getIconForMilestone(milestone.milestone.milestoneName)}
+                color='white'
+                size={16}
+              />
             </LinearGradient>
           ) : (
             <View className='w-10 h-10 rounded-full overflow-hidden items-center justify-center bg-muted'>
-              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestoneName)} color='gray' size={16} />
+              <MaterialCommunityIcons
+                name={getIconForMilestone(milestone.milestone.milestoneName)}
+                color='gray'
+                size={16}
+              />
             </View>
           )}
         </Animated.View>
-      </View>
-    )
-  }
-
-  // Handle empty milestones case
-  if (!milestones || milestones.length === 0) {
-    return (
-      <View className='flex-1 items-center justify-center p-4'>
-        <Text className='text-gray-500 text-center'>No milestones available</Text>
       </View>
     )
   }
@@ -178,13 +188,14 @@ export default function OrderStageBar({ milestones, currentMilestone, completedM
         horizontal
         showsHorizontalScrollIndicator={false}
         onLayout={handleScrollViewLayout}
+        contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
       >
         <View className='flex-row items-center p-3'>
           {milestones.map((milestone, index) => (
             <View
-              key={milestone.milestoneId}
+              key={milestone.milestone.milestoneId}
               className='flex-row'
-              onLayout={(event) => handleStageLayout(milestone.milestoneId, event)}
+              onLayout={(event) => handleStageLayout(milestone.milestone.milestoneId, event)}
             >
               <View className='items-center gap-2' style={{ width: STAGE_WIDTH }}>
                 {renderMilestoneIcon(milestone, index)}
@@ -202,7 +213,7 @@ export default function OrderStageBar({ milestones, currentMilestone, completedM
                           : 'bg-muted-foreground'
                     )}
                     style={{
-                      width: progressAnims[index].interpolate({
+                      width: progressAnims[index]?.interpolate({
                         inputRange: [0, 1],
                         outputRange: ['0%', '100%']
                       })
@@ -217,23 +228,29 @@ export default function OrderStageBar({ milestones, currentMilestone, completedM
       <View className='mt-2 gap-1.5 p-3'>
         {completedMilestones && Array.isArray(completedMilestones)
           ? completedMilestones.map((milestone) => (
-              <View key={milestone.milestoneId} className='flex-row items-baseline gap-2'>
+              <View key={milestone.milestone.milestoneId} className='flex-row items-center gap-2'>
                 <View className='flex-row items-center gap-2 flex-1'>
-                  <View className='w-3 h-3 rounded-full bg-emerald-300' />
+                  <View className='w-3 h-3 rounded-full bg-emerald-400' />
                   <Text className='text-sm font-inter-medium flex-1' numberOfLines={1}>
-                    {milestone.milestoneName}
+                    {milestone.milestone.milestoneName}
                   </Text>
                 </View>
-                <Text className='text-xs text-muted-foreground/80 w-20 text-right'>Completed</Text>
+                <Text className='text-xs text-muted-foreground/50 text-right'>
+                  {milestone?.milestone.milestoneName === 'Order Placed'
+                    ? orderPlacedAt
+                      ? format(new Date(orderPlacedAt), "MMM dd, yyyy 'at' hh:mm a")
+                      : null
+                    : 'Completed'}
+                </Text>
               </View>
             ))
           : null}
         {currentMilestone ? (
-          <View className='flex-row items-baseline gap-2'>
+          <View className='flex-row items-center gap-2'>
             <View className='flex-row items-center gap-2 flex-1'>
-              <View className='w-3 h-3 rounded-full' style={{ backgroundColor: '#fdba74' }} />
+              <View className='w-3 h-3 rounded-full' style={{ backgroundColor: '#fb923c' }} />
               <Text className='text-sm font-inter-medium flex-1' numberOfLines={1}>
-                {currentMilestone.milestoneName}
+                {currentMilestone.milestone.milestoneName}
               </Text>
             </View>
             <Text className='text-xs text-muted-foreground'>{currentMilestone.currentTask?.name || ''}</Text>

@@ -129,6 +129,8 @@ export const useSignalR = () => {
           queryClient.invalidateQueries({ queryKey: ['order'] })
           queryClient.invalidateQueries({ queryKey: ['orders'] })
           queryClient.invalidateQueries({ queryKey: ['orders-count'] })
+          queryClient.invalidateQueries({ queryKey: ['order-item-milestones'] })
+          queryClient.invalidateQueries({ queryKey: ['designer-info'] })
         }
         toast.custom(<NotificationToast notification={notification} />)
       }

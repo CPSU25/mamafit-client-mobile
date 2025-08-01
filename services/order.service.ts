@@ -4,6 +4,7 @@ import { AddOn } from '~/types/add-on.type'
 import { BasePaginationResponse, BaseResponse } from '~/types/common'
 import {
   Branch,
+  DesignerInfo,
   Order,
   OrderDetail,
   OrderItemMilestone,
@@ -11,6 +12,7 @@ import {
   OrderStatusCount,
   QRCodeResponse
 } from '~/types/order.type'
+import { PresetWithComponentOptions } from '~/types/preset.type'
 
 class OrderService {
   async placeDesignRequestOrder(designRequest: PlaceDesignRequestOrderFormSchema) {
@@ -78,6 +80,20 @@ class OrderService {
 
   async getOrderItemMilestones(orderItemId: string) {
     const { data } = await api.get<BaseResponse<OrderItemMilestone[]>>(`milestone/order-item/${orderItemId}`)
+
+    return data.data
+  }
+
+  async getDesignerInfo(orderItemId: string) {
+    const { data } = await api.get<BaseResponse<DesignerInfo>>(`order-items/designer-info/${orderItemId}`)
+
+    return data.data
+  }
+
+  async getDesignRequestDetail(designRequestId: string) {
+    const { data } = await api.get<BaseResponse<PresetWithComponentOptions[]>>(
+      `preset/design-request/${designRequestId}`
+    )
 
     return data.data
   }

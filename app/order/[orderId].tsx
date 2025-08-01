@@ -2,15 +2,18 @@ import { Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-ico
 import { format } from 'date-fns'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
+import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Card } from '~/components/ui/card'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import OrderStageBar from '~/features/order/components/order-stage-bar'
 import { ORDER_STATUS_TYPES, statusStyles } from '~/features/order/constants'
+import { useGetDesignRequestDetail } from '~/features/order/hooks/use-get-design-request-detail'
+import { useGetDesignerInfo } from '~/features/order/hooks/use-get-designer-info'
 import { useGetOrder } from '~/features/order/hooks/use-get-order'
 import { useGetOrderItemMilestones } from '~/features/order/hooks/use-get-order-item-milestones'
 import { getOrderItemTypeStyle, getStatusIcon } from '~/features/order/utils'
@@ -18,9 +21,10 @@ import { useGetPresetDetail } from '~/features/preset/hooks/use-get-preset-detai
 import { useGetProfile } from '~/features/user/hooks/use-get-profile'
 import { useAuth } from '~/hooks/use-auth'
 import { useColorScheme } from '~/hooks/use-color-scheme'
+import { useGetConfig } from '~/hooks/use-get-config'
 import { useRefreshs } from '~/hooks/use-refresh'
-import { styles } from '~/lib/constants/constants'
-import { cn, formatVnPhone, getOrderedComponentOptions } from '~/lib/utils'
+import { placeholderImage, PRIMARY_COLOR, styles } from '~/lib/constants/constants'
+import { cn, formatVnPhone, getOrderedComponentOptions, isValidUrl, openInMaps } from '~/lib/utils'
 import {
   DeliveryMethod,
   OrderItemMilestone,
@@ -30,23 +34,25 @@ import {
   PaymentType
 } from '~/types/order.type'
 
-interface Config {
-  styleConfig: {
-    colors: string[]
-    textColor: string
-    iconColor: string
-    shadowColor: string
-  }
+interface StyleConfig {
+  colors: [string, string, string]
+  textColor: string
+  iconColor: string
+  shadowColor: string
+}
+
+interface OrderConfig {
+  styleConfig: StyleConfig
   title: string
   description: string
   icon: keyof typeof MaterialIcons.glyphMap
 }
 
-const getConfig = (orderStatus: OrderStatus | undefined): Config => {
+const getConfig = (orderStatus: OrderStatus | undefined): OrderConfig => {
   if (!orderStatus) {
     return {
       styleConfig: {
-        colors: ['#ffffff', '#f8fafc', '#e2e8f0'],
+        colors: ['#ffffff', '#f8fafc', '#e2e8f0'] as [string, string, string],
         textColor: '#1f2937',
         iconColor: '#6b7280',
         shadowColor: '#e2e8f0'
@@ -59,7 +65,7 @@ const getConfig = (orderStatus: OrderStatus | undefined): Config => {
 
   return {
     styleConfig: statusStyles[orderStatus] || {
-      colors: ['#ffffff', '#f8fafc', '#e2e8f0'],
+      colors: ['#ffffff', '#f8fafc', '#e2e8f0'] as [string, string, string],
       textColor: '#1f2937',
       iconColor: '#6b7280',
       shadowColor: '#e2e8f0'
@@ -73,10 +79,13 @@ const getConfig = (orderStatus: OrderStatus | undefined): Config => {
 export default function ViewOrderDetailScreen() {
   const router = useRouter()
   const { top, bottom } = useSafeAreaInsets()
+  const scrollViewRef = useRef<ScrollView>(null)
 
   const { user } = useAuth()
   const { orderId } = useLocalSearchParams() as { orderId: string }
   const { isDarkColorScheme } = useColorScheme()
+
+  const { data: config, isLoading: isLoadingConfig, refetch: refetchConfig } = useGetConfig()
 
   const {
     data: order,
@@ -84,19 +93,41 @@ export default function ViewOrderDetailScreen() {
     refetch: refetchOrder,
     isFetched: isFetchedOrder
   } = useGetOrder(orderId)
+
+  const orderItemTypeSet = useMemo(() => [...new Set(order?.items?.map((item) => item.itemType) || [])], [order?.items])
+
+  const isPresetOrder = useMemo(
+    () => orderItemTypeSet[0] === OrderItemType.Preset && order?.items?.[0]?.preset != null,
+    [orderItemTypeSet, order?.items]
+  )
+
+  const isDesignRequestOrder = useMemo(
+    () => orderItemTypeSet[0] === OrderItemType.DesignRequest && order?.items?.[0]?.designRequest != null,
+    [orderItemTypeSet, order?.items]
+  )
+
   const {
     data: currentUser,
     isLoading: isLoadingCurrentUser,
     refetch: refetchCurrentUser
-  } = useGetProfile(user?.userId)
+  } = useGetProfile(user?.userId, !Boolean(isDesignRequestOrder))
 
   const {
     data: milestones,
     isLoading: isLoadingMilestones,
     refetch: refetchMilestones
-  } = useGetOrderItemMilestones(order?.items[0]?.id || '')
+  } = useGetOrderItemMilestones(
+    order?.items[0]?.id || '',
+    Boolean(isPresetOrder) && order?.status === OrderStatus.InProduction
+  )
 
-  const { styleConfig, title, description, icon } = getConfig(order?.status)
+  const {
+    data: designRequestDetail,
+    isLoading: isLoadingDesignRequestDetail,
+    refetch: refetchDesignRequestDetail
+  } = useGetDesignRequestDetail(order?.items[0]?.designRequest?.id || '', Boolean(isDesignRequestOrder))
+
+  const { styleConfig, title, description, icon } = useMemo(() => getConfig(order?.status), [order?.status])
   const [isViewMoreOrderDetails, setIsViewMoreOrderDetails] = useState(false)
   const [isViewMoreOrderProgress, setIsViewMoreOrderProgress] = useState(false)
   const [completedMilestones, setCompletedMilestones] = useState<OrderItemMilestone[] | null>(null)
@@ -107,22 +138,55 @@ export default function ViewOrderDetailScreen() {
     data: presetDetail,
     isLoading: isLoadingPresetDetail,
     refetch: refetchPresetDetail
-  } = useGetPresetDetail(order?.items[0]?.preset?.id)
+  } = useGetPresetDetail(order?.items[0]?.preset?.id, Boolean(isPresetOrder))
 
-  const isLoading = isLoadingOrder || isLoadingCurrentUser || isLoadingPresetDetail || isLoadingMilestones
-  const isDisplayOrderProgress = order?.status !== OrderStatus.Cancelled && order?.status !== OrderStatus.Created
-  const orderItemTypeSet = [...new Set(order?.items.map((item) => item.itemType))]
+  const isDisplayOrderProgress = useMemo(() => orderItemTypeSet[0] === OrderItemType.Preset, [orderItemTypeSet])
 
-  const { refreshControl } = useRefreshs([refetchOrder, refetchCurrentUser, refetchPresetDetail, refetchMilestones])
+  const {
+    data: designerInfo,
+    isLoading: isLoadingDesignerInfo,
+    refetch: refetchDesignerInfo
+  } = useGetDesignerInfo(order?.items[0]?.id || '', Boolean(isDesignRequestOrder))
+
+  const isLoading =
+    isLoadingOrder ||
+    isLoadingCurrentUser ||
+    isLoadingPresetDetail ||
+    isLoadingMilestones ||
+    isLoadingDesignerInfo ||
+    isLoadingConfig ||
+    isLoadingDesignRequestDetail
+
+  const { refreshControl } = useRefreshs([
+    refetchOrder,
+    refetchCurrentUser,
+    refetchPresetDetail,
+    refetchMilestones,
+    refetchDesignerInfo,
+    refetchConfig,
+    refetchDesignRequestDetail
+  ])
 
   useEffect(() => {
-    if (milestones && Array.isArray(milestones)) {
-      setCurrentMilestone(milestones.filter((m) => m.progress !== 100 || !m.isDone)[0] || milestones[0])
-      const completed = milestones.filter((m) => m.progress === 100 || m.isDone)
-      setAllCompletedMilestones(completed)
-      // Show only the most recent 2 completed milestones by default
-      setCompletedMilestones(completed.slice(-2))
+    if (!milestones?.length) return
+
+    const currentMilestone = milestones.find((m) => m.progress !== 100 && !m.isDone) || milestones[0]
+    setCurrentMilestone(currentMilestone || null)
+
+    const placedProgress: OrderItemMilestone = {
+      milestone: { milestoneId: '1', milestoneName: 'Order Placed' },
+      progress: 100,
+      isDone: true,
+      currentTask: {
+        id: '1',
+        name: 'Order Placed'
+      }
     }
+
+    const completedMilestones = [placedProgress, ...milestones.filter((m) => m.progress === 100 || m.isDone)]
+
+    setAllCompletedMilestones(completedMilestones)
+    setCompletedMilestones(completedMilestones.slice(-2))
   }, [milestones])
 
   const handleGoBack = () => {
@@ -134,7 +198,18 @@ export default function ViewOrderDetailScreen() {
   }
 
   const toggleViewMore = () => {
-    setIsViewMoreOrderDetails((prev) => !prev)
+    setIsViewMoreOrderDetails((prev) => {
+      const newState = !prev
+
+      // Auto-scroll to bottom when expanding to show the extended content
+      if (newState) {
+        setTimeout(() => {
+          scrollViewRef.current?.scrollToEnd({ animated: true })
+        }, 300) // Delay to allow content to render
+      }
+
+      return newState
+    })
   }
 
   const toggleViewMoreOrderProgress = (value: boolean) => {
@@ -158,7 +233,7 @@ export default function ViewOrderDetailScreen() {
 
   return (
     <LinearGradient
-      colors={styleConfig.colors as [string, string, string]}
+      colors={styleConfig.colors}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       className='overflow-hidden flex-1'
@@ -208,10 +283,18 @@ export default function ViewOrderDetailScreen() {
           paddingBottom: bottom
         }}
       >
-        <ScrollView className='flex-1' showsVerticalScrollIndicator={false} refreshControl={refreshControl}>
-          <View className='gap-2 p-2'>
+        <ScrollView
+          ref={scrollViewRef}
+          className='flex-1'
+          showsVerticalScrollIndicator={false}
+          refreshControl={refreshControl}
+          removeClippedSubviews={false}
+          keyboardShouldPersistTaps='handled'
+          scrollEventThrottle={16}
+        >
+          <View key={`order-content-${isViewMoreOrderDetails ? 'expanded' : 'collapsed'}`} className='gap-3 p-2'>
             {/* Shipping Information */}
-            {orderItemTypeSet[0] !== OrderItemType.DesignRequest ? (
+            {!isDesignRequestOrder ? (
               <Card className='bg-muted/5' style={styles.container}>
                 {order?.status === OrderStatus.Delevering ? (
                   <>
@@ -223,14 +306,18 @@ export default function ViewOrderDetailScreen() {
                 ) : null}
 
                 {/* Delivery Information */}
-                <View className='p-3'>
-                  <Text className='font-inter-medium text-sm mb-2'>Delivery Information</Text>
+                <>
+                  <View className='px-3 py-2 flex-row items-center gap-2'>
+                    <MaterialCommunityIcons name='truck-fast' size={16} color='#059669' />
+                    <Text className='font-inter-medium text-sm'>Delivery Information</Text>
+                  </View>
 
-                  <View className='flex-row items-start gap-1'>
-                    <MaterialCommunityIcons name='map-marker' color={isDarkColorScheme ? 'white' : 'black'} size={20} />
-                    <View className='flex-1'>
-                      {order?.deliveryMethod === DeliveryMethod.Delivery && order.address ? (
-                        <>
+                  <Separator />
+
+                  <View className='flex-1 p-3'>
+                    {order?.deliveryMethod === DeliveryMethod.Delivery && order.address ? (
+                      <>
+                        <View className='flex-row items-center gap-2 mb-0.5'>
                           <Text className='text-sm font-inter-medium' numberOfLines={1}>
                             {currentUser?.fullName}{' '}
                             <Text className='text-muted-foreground text-xs'>
@@ -239,22 +326,71 @@ export default function ViewOrderDetailScreen() {
                                 : '(missing phone number)'}
                             </Text>
                           </Text>
-                          <Text className='text-xs text-muted-foreground' numberOfLines={2}>
-                            {order?.address?.street}, {order?.address?.ward}, {order?.address?.district},{' '}
-                            {order?.address?.province}
-                          </Text>
-                        </>
-                      ) : null}
-                      {order?.deliveryMethod === DeliveryMethod.PickUp && order.branch ? (
-                        <>
+                          <View className='bg-emerald-50 rounded-lg px-2 py-0.5'>
+                            <Text className='text-xs font-inter-medium text-emerald-600 text-center'>Ship</Text>
+                          </View>
+                        </View>
+                        <Text className='text-xs text-muted-foreground' numberOfLines={2}>
+                          {order?.address?.street}, {order?.address?.ward}, {order?.address?.district},{' '}
+                          {order?.address?.province}
+                        </Text>
+                      </>
+                    ) : null}
+                    {order?.deliveryMethod === DeliveryMethod.PickUp && order.branch ? (
+                      <>
+                        <View className='flex-row items-center gap-2 mb-0.5'>
                           <Text className='text-sm font-inter-medium'>{order.branch?.name}</Text>
-                          <Text className='text-xs text-muted-foreground' numberOfLines={1}>
-                            {order?.branch?.street}, {order?.branch?.ward}, {order?.branch?.district},{' '}
-                            {order?.branch?.province}
-                          </Text>
-                        </>
-                      ) : null}
-                    </View>
+                          <View className='bg-emerald-50 rounded-lg px-2 py-0.5'>
+                            <Text className='text-xs font-inter-medium text-emerald-600 text-center'>Pickup</Text>
+                          </View>
+                        </View>
+                        <Text className='text-xs text-muted-foreground' numberOfLines={2}>
+                          {order?.branch?.street}, {order?.branch?.ward}, {order?.branch?.district},{' '}
+                          {order?.branch?.province}
+                        </Text>
+                        <TouchableOpacity
+                          className='px-4 py-2 rounded-xl flex-row items-center justify-center gap-2 bg-emerald-50 mt-2'
+                          onPress={() => openInMaps(order?.branch?.latitude ?? 0, order?.branch?.longitude ?? 0)}
+                        >
+                          <Feather name='map' size={16} color='#059669' />
+                          <Text className='text-sm text-emerald-600 font-inter-medium'>Open in Maps</Text>
+                        </TouchableOpacity>
+                      </>
+                    ) : null}
+                  </View>
+                </>
+              </Card>
+            ) : null}
+
+            {isPresetOrder ? (
+              <Card style={styles.container}>
+                <View className='flex-row items-center gap-2 px-3 py-2'>
+                  <MaterialCommunityIcons name='book-multiple' size={16} color={PRIMARY_COLOR.LIGHT} />
+                  <Text className='font-inter-medium text-sm'>Diary Information</Text>
+                </View>
+
+                <Separator />
+
+                <View className='flex-1 gap-1 p-3'>
+                  <Text className='font-inter-medium' numberOfLines={1}>
+                    {order?.measurementDiary?.name}{' '}
+                    <Text className='text-xs text-muted-foreground'>({order?.measurementDiary?.age} years old)</Text>
+                  </Text>
+                  <View className='flex-row items-center gap-2'>
+                    <Text className='text-xs text-muted-foreground'>Weight: {order?.measurementDiary?.weight}kg</Text>
+                    <Separator orientation='vertical' className='h-4' />
+                    <Text className='text-xs text-muted-foreground'>Height: {order?.measurementDiary?.height}cm</Text>
+                    <Separator orientation='vertical' className='h-4' />
+                    <Text className='text-xs text-muted-foreground'>
+                      Pregnancy: {order?.measurementDiary?.numberOfPregnancy}
+                      {order?.measurementDiary?.numberOfPregnancy === 1
+                        ? 'st'
+                        : order?.measurementDiary?.numberOfPregnancy === 2
+                          ? 'nd'
+                          : order?.measurementDiary?.numberOfPregnancy === 3
+                            ? 'rd'
+                            : 'th'}
+                    </Text>
                   </View>
                 </View>
               </Card>
@@ -294,16 +430,11 @@ export default function ViewOrderDetailScreen() {
               {/* Order Items */}
               <View className='p-3'>
                 {/* Design Request */}
-                {orderItemTypeSet[0] === OrderItemType.DesignRequest &&
-                order?.items &&
-                Array.isArray(order.items) &&
-                order.items.length > 0 &&
-                order.items[0] &&
-                order.items[0].designRequest ? (
+                {isDesignRequestOrder ? (
                   <View className='flex-row items-start gap-2'>
-                    <View className='w-20 h-20 rounded-xl overflow-hidden bg-gray-100'>
+                    <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/10'>
                       <Image
-                        source={{ uri: order.items[0].designRequest?.images[0] }}
+                        source={{ uri: order?.items?.[0]?.designRequest?.images?.[0] }}
                         className='w-full h-full'
                         resizeMode='cover'
                       />
@@ -313,54 +444,51 @@ export default function ViewOrderDetailScreen() {
                         <Text className='text-sm font-inter-medium'>Design Request</Text>
                         <View className='flex-row items-center justify-between'>
                           <Text className='text-xs text-muted-foreground flex-1' numberOfLines={2}>
-                            {order.items[0].designRequest?.description}
+                            {order?.items?.[0]?.designRequest?.description}
                           </Text>
-                          <Text className='text-xs text-muted-foreground'>x{order.items[0].quantity}</Text>
+                          <Text className='text-xs text-muted-foreground'>x{order?.items?.[0]?.quantity || 1}</Text>
                         </View>
                       </View>
                       <View className='items-end'>
                         <Text className='text-xs'>
                           <Text className='text-xs underline'>đ</Text>
-                          {order.items[0].price.toLocaleString('vi-VN')}
+                          {order?.items?.[0]?.price?.toLocaleString('vi-VN') || '0'}
                         </Text>
                       </View>
                     </View>
                   </View>
                 ) : null}
 
-                {orderItemTypeSet[0] === OrderItemType.Preset &&
-                order?.items &&
-                Array.isArray(order.items) &&
-                order.items.length > 0 &&
-                order.items[0] &&
-                order.items[0].preset ? (
+                {isPresetOrder ? (
                   <>
                     <View className='flex-row items-start gap-2'>
-                      <View className='w-20 h-20 rounded-xl overflow-hidden bg-gray-100'>
+                      <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
                         <Image
-                          source={{ uri: order.items[0].preset?.images[0] }}
+                          source={{ uri: order?.items?.[0]?.preset?.images?.[0] }}
                           className='w-full h-full'
                           resizeMode='contain'
                         />
                       </View>
                       <View className='flex-1 h-20 justify-between'>
                         <View>
-                          <Text className='text-sm font-inter-medium'>{order.items[0].preset?.styleName} Dress</Text>
+                          <Text className='text-sm font-inter-medium'>
+                            {order?.items?.[0]?.preset?.styleName || 'Custom'} Dress
+                          </Text>
                           <View className='flex-row items-center justify-between'>
                             <Text className='text-xs text-muted-foreground'>Custom Made-to-Order</Text>
-                            <Text className='text-xs text-muted-foreground'>x{order.items[0].quantity}</Text>
+                            <Text className='text-xs text-muted-foreground'>x{order?.items?.[0]?.quantity || 1}</Text>
                           </View>
                         </View>
                         <View className='items-end'>
                           <Text className='text-xs'>
                             <Text className='text-xs underline'>đ</Text>
-                            {order.items[0].price.toLocaleString('vi-VN')}
+                            {order?.items?.[0]?.price?.toLocaleString('vi-VN') || '0'}
                           </Text>
                         </View>
                       </View>
                     </View>
 
-                    <View className='bg-gray-100 rounded-xl p-3 gap-2 mt-2'>
+                    <View className='bg-muted/50 rounded-xl p-3 gap-2 mt-2'>
                       {getOrderedComponentOptions(presetDetail?.componentOptions || []).map((option) =>
                         option ? (
                           <View className='flex-row items-center justify-between' key={option.componentName}>
@@ -376,29 +504,36 @@ export default function ViewOrderDetailScreen() {
 
               <Separator />
 
-              <View className='p-3 flex-row'>
-                <Text className='text-sm font-inter-medium flex-1'>
-                  Total {order?.items && Array.isArray(order.items) ? order.items.length : 0} Item(s)
-                </Text>
+              <View className='px-3 py-2 flex-row'>
+                <Text className='text-sm font-inter-medium flex-1'>Total {order?.items?.length || 0} Item(s)</Text>
                 <Text className='font-inter-medium text-sm'>
                   <Text className='underline font-inter-medium text-xs'>đ</Text>
-                  {order?.items[0].price && order.items[0].price?.toLocaleString('vi-VN')}
+                  {order?.items?.[0]?.price?.toLocaleString('vi-VN') || '0'}
                 </Text>
               </View>
             </Card>
 
             {isDisplayOrderProgress ? (
               <Card className='bg-muted/5' style={styles.container}>
-                <Text className='font-inter-medium text-sm px-3 pt-3 pb-1'>Order Progress</Text>
-                <OrderStageBar
-                  milestones={milestones}
-                  currentMilestone={currentMilestone}
-                  completedMilestones={completedMilestones}
-                />
+                <View className='px-3 py-2 flex-row items-center gap-2'>
+                  <MaterialCommunityIcons name='clipboard-text-clock' size={16} color={PRIMARY_COLOR.LIGHT} />
+                  <Text className='font-inter-medium text-sm'>Order Progress</Text>
+                </View>
 
-                {allCompletedMilestones &&
-                Array.isArray(allCompletedMilestones) &&
-                allCompletedMilestones.length > 2 ? (
+                {milestones && Array.isArray(milestones) && milestones.length > 0 ? (
+                  <OrderStageBar
+                    milestones={milestones}
+                    currentMilestone={currentMilestone}
+                    completedMilestones={completedMilestones}
+                    orderPlacedAt={order?.createdAt}
+                  />
+                ) : (
+                  <View className='flex-row items-center justify-center my-4'>
+                    <Text className='text-muted-foreground text-xs'>No order progress available</Text>
+                  </View>
+                )}
+
+                {(allCompletedMilestones?.length || 0) > 2 ? (
                   <View className='mb-2'>
                     {isViewMoreOrderProgress ? (
                       <TouchableOpacity
@@ -422,10 +557,126 @@ export default function ViewOrderDetailScreen() {
               </Card>
             ) : null}
 
+            {isDesignRequestOrder ? (
+              <Card className='p-3' style={styles.container}>
+                {designerInfo && designerInfo.designer && designerInfo.chatRoomId ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (designerInfo.chatRoomId) {
+                        router.push({
+                          pathname: '/chat/[roomId]',
+                          params: { roomId: designerInfo.chatRoomId }
+                        })
+                      }
+                    }}
+                  >
+                    <View className='flex-row items-center gap-3'>
+                      <Avatar
+                        alt={designerInfo.designer.fullName || 'designer-avatar'}
+                        className='border-2 border-emerald-500'
+                      >
+                        <AvatarImage
+                          source={{
+                            uri:
+                              designerInfo.designer.profilePicture && isValidUrl(designerInfo.designer.profilePicture)
+                                ? designerInfo.designer.profilePicture
+                                : placeholderImage
+                          }}
+                        />
+                        <AvatarFallback>
+                          <Text>{designerInfo.designer.fullName?.charAt(0)}</Text>
+                        </AvatarFallback>
+                      </Avatar>
+                      <View>
+                        <Text className='text-sm font-inter-medium' numberOfLines={1}>
+                          {designerInfo.designer.fullName}
+                        </Text>
+                        <Text className='text-xs text-muted-foreground'>Press to chat now</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <View className='flex-row items-center gap-3'>
+                    <Avatar alt='designer-avatar'>
+                      <AvatarImage
+                        source={{
+                          uri: placeholderImage
+                        }}
+                      />
+                      <AvatarFallback>
+                        <Text>N/A</Text>
+                      </AvatarFallback>
+                    </Avatar>
+                    <View>
+                      <Text className='text-sm font-inter-medium'>
+                        Your Designer <Text className='text-xs text-muted-foreground/80'>(not assigned yet)</Text>
+                      </Text>
+                      <Text className='text-xs text-muted-foreground' numberOfLines={1}>
+                        Please wait for the designer to be assigned to you
+                      </Text>
+                    </View>
+                  </View>
+                )}
+              </Card>
+            ) : null}
+
+            {isDesignRequestOrder && designRequestDetail ? (
+              <Card style={styles.container}>
+                <View className='px-3 py-2 flex-row items-center gap-2'>
+                  <MaterialCommunityIcons name='file-multiple' size={16} color={PRIMARY_COLOR.LIGHT} />
+                  <Text className='font-inter-medium text-sm'>
+                    Your Designed Presets{' '}
+                    <Text className='text-xs text-muted-foreground'>({designRequestDetail?.length || 0})</Text>
+                  </Text>
+                </View>
+
+                <Separator />
+
+                <View className='p-3 gap-3'>
+                  {designRequestDetail?.length > 0 ? (
+                    designRequestDetail?.map((preset, index) => (
+                      <View key={preset.id} className='flex-row items-start gap-2'>
+                        <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
+                          <Image source={{ uri: preset.images?.[0] }} className='w-full h-full' resizeMode='contain' />
+                        </View>
+                        <View className='flex-1 h-20 justify-between'>
+                          <View>
+                            <Text className='text-sm font-inter-medium'>
+                              {preset.name ? preset.name : 'Untitled Preset'}
+                            </Text>
+                            <View className='flex-row items-center justify-between'>
+                              <Text className='text-xs text-muted-foreground'>Version {index + 1}</Text>
+                              <Text className='text-xs text-muted-foreground'>x1</Text>
+                            </View>
+                          </View>
+                          <View className='items-end'>
+                            <Text className='text-xs'>
+                              <Text className='text-xs underline'>đ</Text>
+                              {preset.price?.toLocaleString('vi-VN') || '0'}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    ))
+                  ) : (
+                    <View className='flex-row items-center justify-center my-4'>
+                      <Text className='text-muted-foreground text-xs'>No preset designed yet</Text>
+                    </View>
+                  )}
+                </View>
+              </Card>
+            ) : null}
+
             {/* Order Details */}
-            <Card className='bg-muted/5 px-3 pt-3 pb-2' style={styles.container}>
-              <Text className='font-inter-medium text-sm mb-2'>Order Details</Text>
-              <View className='gap-1'>
+            <Card className='bg-muted/5' style={styles.container}>
+              <View className='px-3 py-2 flex-row items-center gap-2'>
+                <MaterialCommunityIcons name='receipt' size={16} color={PRIMARY_COLOR.LIGHT} />
+                <Text className='font-inter-medium text-sm'>Order Details</Text>
+              </View>
+
+              <Separator />
+
+              <View className='gap-1 p-3'>
                 <View className='flex-row items-center gap-2'>
                   <Text className='flex-1 text-xs text-muted-foreground/80'>Order Number</Text>
                   <Text className='text-foreground/80 text-xs'>#{order?.code}</Text>
@@ -438,54 +689,87 @@ export default function ViewOrderDetailScreen() {
                   </Text>
                 </View>
 
-                {isViewMoreOrderDetails && order?.subTotalAmount ? (
-                  <View className='flex-row items-center gap-2'>
-                    <Text className='flex-1 text-xs text-muted-foreground/80'>Merchandise Subtotal</Text>
-                    <Text className='text-foreground/80 text-xs'>
-                      đ{order?.subTotalAmount > 0 ? order.subTotalAmount.toLocaleString('vi-VN') : '0'}
-                    </Text>
+                {isViewMoreOrderDetails ? (
+                  <View className='gap-1'>
+                    {order?.subTotalAmount ? (
+                      <View className='flex-row items-center gap-2'>
+                        <Text className='flex-1 text-xs text-muted-foreground/80'>Merchandise Subtotal</Text>
+                        <Text className='text-foreground/80 text-xs'>
+                          đ{order?.subTotalAmount > 0 ? order.subTotalAmount.toLocaleString('vi-VN') : '0'}
+                        </Text>
+                      </View>
+                    ) : null}
+
+                    {order?.serviceAmount ? (
+                      <View className='flex-row items-center gap-2'>
+                        <Text className='flex-1 text-xs text-muted-foreground/80'>Add-Ons Fee</Text>
+                        <Text className='text-foreground/80 text-xs'>
+                          đ{order?.serviceAmount > 0 ? order.serviceAmount.toLocaleString('vi-VN') : '0'}
+                        </Text>
+                      </View>
+                    ) : null}
+
+                    {order?.voucherDiscountId && order?.discountSubtotal ? (
+                      <View className='flex-row items-center gap-2'>
+                        <Text className='flex-1 text-xs text-muted-foreground/80'>Voucher Discount</Text>
+                        <Text className='text-foreground/80 text-xs'>
+                          đ{order?.discountSubtotal > 0 ? order.discountSubtotal.toLocaleString('vi-VN') : '0'}
+                        </Text>
+                      </View>
+                    ) : null}
+
+                    {order?.paymentType === PaymentType.Deposit && order?.depositSubtotal ? (
+                      <View className='flex-row items-center gap-2'>
+                        <Text className='flex-1 text-xs text-muted-foreground/80'>
+                          Deposit Subtotal (
+                          {config?.depositRate && !isNaN(config.depositRate) ? `${config.depositRate * 100}%` : '0%'})
+                        </Text>
+                        <Text className='text-foreground/80 text-xs'>
+                          đ{order?.depositSubtotal > 0 ? order.depositSubtotal.toLocaleString('vi-VN') : '0'}
+                        </Text>
+                      </View>
+                    ) : null}
+
+                    {order?.paymentType === PaymentType.Deposit && order?.remainingBalance ? (
+                      <View className='flex-row items-center gap-2'>
+                        <Text className='flex-1 text-xs text-primary font-inter-medium'>
+                          Remaining Balance (
+                          {config?.depositRate && !isNaN(config.depositRate)
+                            ? `${100 - config.depositRate * 100}%`
+                            : '0%'}
+                          )
+                        </Text>
+                        <Text className='text-primary font-inter-medium text-xs'>
+                          đ{order?.remainingBalance > 0 ? order.remainingBalance.toLocaleString('vi-VN') : '0'}
+                        </Text>
+                      </View>
+                    ) : null}
+
+                    {order?.shippingFee ? (
+                      <View className='flex-row items-center gap-2'>
+                        <Text className='flex-1 text-xs text-muted-foreground/80'>Shipping Fee</Text>
+                        <Text className='text-foreground/80 text-xs'>
+                          đ{order?.shippingFee > 0 ? order.shippingFee.toLocaleString('vi-VN') : '0'}
+                        </Text>
+                      </View>
+                    ) : null}
                   </View>
                 ) : null}
 
-                {isViewMoreOrderDetails && order?.voucherDiscountId && order?.discountSubtotal ? (
-                  <View className='flex-row items-center gap-2'>
-                    <Text className='flex-1 text-xs text-muted-foreground/80'>Voucher Discount</Text>
-                    <Text className='text-foreground/80 text-xs'>
-                      đ{order?.discountSubtotal > 0 ? order.discountSubtotal.toLocaleString('vi-VN') : '0'}
-                    </Text>
-                  </View>
-                ) : null}
-
-                {isViewMoreOrderDetails && order?.paymentType === PaymentType.Deposit && order?.depositSubtotal ? (
-                  <View className='flex-row items-center gap-2'>
-                    <Text className='flex-1 text-xs text-muted-foreground/80'>Deposit Subtotal</Text>
-                    <Text className='text-foreground/80 text-xs'>
-                      đ{order?.depositSubtotal > 0 ? order.depositSubtotal.toLocaleString('vi-VN') : '0'}
-                    </Text>
-                  </View>
-                ) : null}
-
-                {isViewMoreOrderDetails && order?.paymentType === PaymentType.Deposit && order?.remainingBalance ? (
-                  <View className='flex-row items-center gap-2'>
-                    <Text className='flex-1 text-xs text-primary font-inter-medium'>Remaining Balance</Text>
-                    <Text className='text-primary font-inter-medium text-xs'>
-                      đ{order?.remainingBalance > 0 ? order.remainingBalance.toLocaleString('vi-VN') : '0'}
-                    </Text>
-                  </View>
-                ) : null}
-
-                {isViewMoreOrderDetails && order?.shippingFee ? (
-                  <View className='flex-row items-center gap-2'>
-                    <Text className='flex-1 text-xs text-muted-foreground/80'>Shipping Fee</Text>
-                    <Text className='text-foreground/80 text-xs'>
-                      đ{order?.shippingFee > 0 ? order.shippingFee.toLocaleString('vi-VN') : '0'}
-                    </Text>
-                  </View>
-                ) : null}
+                {isViewMoreOrderDetails ? <Separator className='mt-1 mb-2' /> : null}
 
                 <View className='flex-row items-center gap-2'>
-                  <Text className='flex-1 text-xs text-muted-foreground/80'>Total</Text>
-                  <Text className='text-foreground/80 text-xs'>
+                  <Text
+                    className={cn(
+                      'flex-1 text-xs text-muted-foreground/80',
+                      isViewMoreOrderDetails && 'font-inter-medium text-foreground text-sm'
+                    )}
+                  >
+                    Total Amount
+                  </Text>
+                  <Text
+                    className={cn('text-foreground/80 text-xs', isViewMoreOrderDetails && 'font-inter-medium text-sm')}
+                  >
                     đ{order?.totalAmount ? order.totalAmount.toLocaleString('vi-VN') : '0'}
                   </Text>
                 </View>

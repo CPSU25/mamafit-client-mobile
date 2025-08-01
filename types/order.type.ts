@@ -1,5 +1,6 @@
 import { Address } from './address.type'
-import { DirectionResponse } from './common'
+import { DirectionResponse, User } from './common'
+import { DiaryDetail } from './diary.type'
 import { Preset } from './preset.type'
 
 export interface QRCodeResponse {
@@ -168,6 +169,7 @@ export interface Order {
 export interface OrderDetail extends Order {
   address: Address | null
   branch: Branch | null
+  measurementDiary: DiaryDetail | null
 }
 
 export interface OrderStatusCount {
@@ -175,13 +177,22 @@ export interface OrderStatusCount {
   orderNumber: number
 }
 
-export interface OrderItemMilestone {
+export interface Milestone {
   milestoneId: string
   milestoneName: string
+}
+
+export interface OrderItemMilestone {
+  milestone: Milestone
   progress: number // 0 -> 100
   isDone: boolean
   currentTask: {
     id: string
     name: string
   }
+}
+
+export interface DesignerInfo {
+  designer: User | null
+  chatRoomId: string | null
 }

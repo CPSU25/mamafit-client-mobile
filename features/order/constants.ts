@@ -1,4 +1,4 @@
-import { OrderItemMilestone, OrderStatus } from '~/types/order.type'
+import { OrderStatus } from '~/types/order.type'
 import { AddOnImageConfig, OrderStatusType } from './types'
 
 export const ADD_ON_IMAGE_CONFIG: Record<string, AddOnImageConfig> = {
@@ -157,7 +157,7 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
 
 export const statusStyles: Record<
   OrderStatus,
-  { colors: string[]; textColor: string; iconColor: string; shadowColor: string }
+  { colors: [string, string, string]; textColor: string; iconColor: string; shadowColor: string }
 > = {
   CREATED: {
     colors: ['#fff9e3', '#fef7d8', '#fbbf24'],
@@ -232,26 +232,3 @@ export const statusStyles: Record<
     shadowColor: '#ef4444'
   }
 }
-
-export const defaultCompletedMilestones: OrderItemMilestone[] = [
-  {
-    milestoneId: '1',
-    milestoneName: 'Order Created',
-    progress: 100,
-    isDone: true,
-    currentTask: {
-      id: '1',
-      name: 'Order Created'
-    }
-  },
-  {
-    milestoneId: '2',
-    milestoneName: 'Order Confirmed',
-    progress: 100,
-    isDone: true,
-    currentTask: {
-      id: '2',
-      name: 'Order Confirmed'
-    }
-  }
-]

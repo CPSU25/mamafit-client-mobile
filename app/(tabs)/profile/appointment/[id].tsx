@@ -5,7 +5,7 @@ import { format, parse } from 'date-fns'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useMemo, useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
-import { Alert, Image, Linking, Platform, ScrollView, TouchableOpacity, useWindowDimensions, View } from 'react-native'
+import { Alert, Image, Linking, ScrollView, TouchableOpacity, useWindowDimensions, View } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import { toast } from 'sonner-native'
 import Loading from '~/components/loading'
@@ -23,7 +23,7 @@ import { CancelAppointmentFormSchema } from '~/features/appointment/validations'
 import { useKeyboardOffset } from '~/hooks/use-keyboard-offset'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { ERROR_MESSAGES, PRIMARY_COLOR, styles } from '~/lib/constants/constants'
-import { cn } from '~/lib/utils'
+import { cn, openInMaps } from '~/lib/utils'
 import { ErrorResponse } from '~/types/common'
 
 const isBranchOpen = (openingHour: string, closingHour: string) => {
@@ -95,23 +95,6 @@ export default function AppointmentDetailScreen() {
       await Linking.openURL(url)
     } else {
       Alert.alert('Error', 'This device cannot make phone calls.')
-    }
-  }
-
-  const openInMaps = async (latitude: number, longitude: number) => {
-    const url = Platform.select({
-      ios: `maps:0,0?q=${latitude},${longitude}`,
-      android: `geo:0,0?q=${latitude},${longitude}`
-    })
-
-    if (!url) return
-
-    const supported = await Linking.canOpenURL(url)
-
-    if (supported) {
-      await Linking.openURL(url)
-    } else {
-      Alert.alert('Error', 'Unable to open maps on this device.')
     }
   }
 

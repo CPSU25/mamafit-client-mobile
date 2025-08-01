@@ -7,6 +7,7 @@ export interface ComponentOptionWithComponent extends ComponentOption {
 
 export interface Preset {
   id: string
+  name: string
   styleId: string
   styleName: string
   createdAt: string
