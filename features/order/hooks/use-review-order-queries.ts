@@ -6,7 +6,7 @@ import orderService from '~/services/order.service'
 import userService from '~/services/user.service'
 import voucherService from '~/services/voucher.service'
 
-export const useReviewOrderQueries = (userId: string | undefined) => {
+export const useReviewOrderQueries = (userId: string | undefined, diaryId: string) => {
   const { user, isAuthenticated } = useAuth()
 
   return useQueries({
@@ -40,6 +40,11 @@ export const useReviewOrderQueries = (userId: string | undefined) => {
         queryKey: ['config-queries', user?.userId],
         queryFn: contentfulService.getConfig,
         enabled: isAuthenticated
+      },
+      {
+        queryKey: ['latest-measurement-queries', diaryId, user?.userId],
+        queryFn: () => orderService.getLatestMeasurement(diaryId),
+        enabled: isAuthenticated && !!diaryId
       }
     ]
   })

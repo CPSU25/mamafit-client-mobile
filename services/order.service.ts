@@ -2,6 +2,7 @@ import { PlaceDesignRequestOrderFormSchema, PlacePresetOrderFormSchema } from '~
 import { api } from '~/lib/axios/axios'
 import { AddOn } from '~/types/add-on.type'
 import { BasePaginationResponse, BaseResponse } from '~/types/common'
+import { Measurement } from '~/types/diary.type'
 import {
   Branch,
   DesignerInfo,
@@ -21,7 +22,7 @@ class OrderService {
     return data.data
   }
 
-  async placePresetOrder(presetOrder: PlacePresetOrderFormSchema) {
+  async placePresetOrder(presetOrder: Omit<PlacePresetOrderFormSchema, 'measurementDiaryId'>) {
     const { data } = await api.post<BaseResponse<string>>('order/preset', presetOrder)
 
     return data.data
@@ -94,6 +95,12 @@ class OrderService {
     const { data } = await api.get<BaseResponse<PresetWithComponentOptions[]>>(
       `preset/design-request/${designRequestId}`
     )
+
+    return data.data
+  }
+
+  async getLatestMeasurement(diaryId: string) {
+    const { data } = await api.get<BaseResponse<Measurement>>(`measurement/lasted/measurement-diary/${diaryId}`)
 
     return data.data
   }
