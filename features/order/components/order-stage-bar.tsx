@@ -89,7 +89,7 @@ export default function OrderStageBar({
 
   // Auto-scroll to center the selected milestone
   useEffect(() => {
-    const selectedMilestoneLayout = currentMilestone ? stageLayouts[currentMilestone.milestone.milestoneId] : null
+    const selectedMilestoneLayout = currentMilestone ? stageLayouts[currentMilestone.milestone.id] : null
     if (selectedMilestoneLayout && scrollViewRef.current && scrollViewWidth > 0) {
       const stageCenterX = selectedMilestoneLayout.x + STAGE_WIDTH / 2
       const centerPosition = stageCenterX - scrollViewWidth / 2
@@ -104,11 +104,11 @@ export default function OrderStageBar({
     }
   }, [currentMilestone, stageLayouts, scrollViewWidth])
 
-  const handleStageLayout = (milestoneId: string, event: any) => {
+  const handleStageLayout = (id: string, event: any) => {
     const { x, width } = event.nativeEvent.layout
     setStageLayouts((prev) => ({
       ...prev,
-      [milestoneId]: { x, width }
+      [id]: { x, width }
     }))
   }
 
@@ -120,7 +120,7 @@ export default function OrderStageBar({
   const renderMilestoneIcon = (milestone: OrderItemMilestone, index: number) => {
     const isCompleted = milestone.progress === 100
     const isInProgress = milestone.progress > 0 && milestone.progress < 100
-    const isCurrent = milestone.milestone.milestoneId === currentMilestone?.milestone.milestoneId
+    const isCurrent = milestone.milestone.id === currentMilestone?.milestone.id
     const isNotStarted = milestone.progress === 0
 
     return (
@@ -144,11 +144,7 @@ export default function OrderStageBar({
                 boxShadow: '0 0 6px 0 rgba(16, 185, 129, 0.8)'
               }}
             >
-              <MaterialCommunityIcons
-                name={getIconForMilestone(milestone.milestone.milestoneName)}
-                color='white'
-                size={16}
-              />
+              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='white' size={16} />
             </LinearGradient>
           ) : isInProgress || isCurrent ? (
             <LinearGradient
@@ -160,19 +156,11 @@ export default function OrderStageBar({
                 boxShadow: '0 0 6px 0 rgba(249, 115, 22, 0.8)'
               }}
             >
-              <MaterialCommunityIcons
-                name={getIconForMilestone(milestone.milestone.milestoneName)}
-                color='white'
-                size={16}
-              />
+              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='white' size={16} />
             </LinearGradient>
           ) : (
             <View className='w-10 h-10 rounded-full overflow-hidden items-center justify-center bg-muted'>
-              <MaterialCommunityIcons
-                name={getIconForMilestone(milestone.milestone.milestoneName)}
-                color='gray'
-                size={16}
-              />
+              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='gray' size={16} />
             </View>
           )}
         </Animated.View>
@@ -181,7 +169,7 @@ export default function OrderStageBar({
   }
 
   return (
-    <View className='flex-1'>
+    <View className='flex-1 mt-4'>
       <ScrollView
         ref={scrollViewRef}
         className='flex-1'
@@ -193,9 +181,9 @@ export default function OrderStageBar({
         <View className='flex-row items-center p-3'>
           {milestones.map((milestone, index) => (
             <View
-              key={milestone.milestone.milestoneId}
+              key={milestone.milestone.id}
               className='flex-row'
-              onLayout={(event) => handleStageLayout(milestone.milestone.milestoneId, event)}
+              onLayout={(event) => handleStageLayout(milestone.milestone.id, event)}
             >
               <View className='items-center gap-2' style={{ width: STAGE_WIDTH }}>
                 {renderMilestoneIcon(milestone, index)}
@@ -228,15 +216,15 @@ export default function OrderStageBar({
       <View className='mt-2 gap-1.5 p-3'>
         {completedMilestones && Array.isArray(completedMilestones)
           ? completedMilestones.map((milestone) => (
-              <View key={milestone.milestone.milestoneId} className='flex-row items-center gap-2'>
+              <View key={milestone.milestone.id} className='flex-row items-center gap-2'>
                 <View className='flex-row items-center gap-2 flex-1'>
                   <View className='w-3 h-3 rounded-full bg-emerald-400' />
                   <Text className='text-sm font-inter-medium flex-1' numberOfLines={1}>
-                    {milestone.milestone.milestoneName}
+                    {milestone.milestone.name}
                   </Text>
                 </View>
                 <Text className='text-xs text-muted-foreground/50 text-right'>
-                  {milestone?.milestone.milestoneName === 'Order Placed'
+                  {milestone?.milestone.name === 'Order Placed'
                     ? orderPlacedAt
                       ? format(new Date(orderPlacedAt), "MMM dd, yyyy 'at' hh:mm a")
                       : null
@@ -250,7 +238,7 @@ export default function OrderStageBar({
             <View className='flex-row items-center gap-2 flex-1'>
               <View className='w-3 h-3 rounded-full' style={{ backgroundColor: '#fb923c' }} />
               <Text className='text-sm font-inter-medium flex-1' numberOfLines={1}>
-                {currentMilestone.milestone.milestoneName}
+                {currentMilestone.milestone.name}
               </Text>
             </View>
             <Text className='text-xs text-muted-foreground'>{currentMilestone.currentTask?.name || ''}</Text>

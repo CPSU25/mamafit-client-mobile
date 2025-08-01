@@ -3,14 +3,17 @@ import { format } from 'date-fns'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
+import { Image, ScrollView, TouchableOpacity, useWindowDimensions, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
+import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
+import { Dialog, DialogContent, DialogTrigger } from '~/components/ui/dialog'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import OrderStageBar from '~/features/order/components/order-stage-bar'
+import PreviewLatestMeasurement from '~/features/order/components/preview-latest-measurement'
 import { ORDER_STATUS_TYPES, statusStyles } from '~/features/order/constants'
 import { useGetDesignRequestDetail } from '~/features/order/hooks/use-get-design-request-detail'
 import { useGetDesignerInfo } from '~/features/order/hooks/use-get-designer-info'
@@ -84,6 +87,7 @@ export default function ViewOrderDetailScreen() {
   const { user } = useAuth()
   const { orderId } = useLocalSearchParams() as { orderId: string }
   const { isDarkColorScheme } = useColorScheme()
+  const { width } = useWindowDimensions()
 
   const { data: config, isLoading: isLoadingConfig, refetch: refetchConfig } = useGetConfig()
 
@@ -133,6 +137,7 @@ export default function ViewOrderDetailScreen() {
   const [completedMilestones, setCompletedMilestones] = useState<OrderItemMilestone[] | null>(null)
   const [allCompletedMilestones, setAllCompletedMilestones] = useState<OrderItemMilestone[] | null>(null)
   const [currentMilestone, setCurrentMilestone] = useState<OrderItemMilestone | null>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   const {
     data: presetDetail,
@@ -140,7 +145,14 @@ export default function ViewOrderDetailScreen() {
     refetch: refetchPresetDetail
   } = useGetPresetDetail(order?.items[0]?.preset?.id, Boolean(isPresetOrder))
 
-  const isDisplayOrderProgress = useMemo(() => orderItemTypeSet[0] === OrderItemType.Preset, [orderItemTypeSet])
+  const isDisplayOrderProgress = useMemo(
+    () =>
+      (order?.status === OrderStatus.InProduction ||
+        order?.status === OrderStatus.Packaging ||
+        order?.status === OrderStatus.InQC) &&
+      orderItemTypeSet[0] === OrderItemType.Preset,
+    [orderItemTypeSet, order?.status]
+  )
 
   const {
     data: designerInfo,
@@ -170,11 +182,11 @@ export default function ViewOrderDetailScreen() {
   useEffect(() => {
     if (!milestones?.length) return
 
-    const currentMilestone = milestones.find((m) => m.progress !== 100 && !m.isDone) || milestones[0]
+    const currentMilestone = milestones.find((m) => m.progress !== 100 && !m.isDone)
     setCurrentMilestone(currentMilestone || null)
 
     const placedProgress: OrderItemMilestone = {
-      milestone: { milestoneId: '1', milestoneName: 'Order Placed' },
+      milestone: { id: '1', name: 'Order Placed' },
       progress: 100,
       isDone: true,
       currentTask: {
@@ -371,28 +383,50 @@ export default function ViewOrderDetailScreen() {
 
                 <Separator />
 
-                <View className='flex-1 gap-1 p-3'>
-                  <Text className='font-inter-medium' numberOfLines={1}>
-                    {order?.measurementDiary?.name}{' '}
-                    <Text className='text-xs text-muted-foreground'>({order?.measurementDiary?.age} years old)</Text>
-                  </Text>
-                  <View className='flex-row items-center gap-2'>
-                    <Text className='text-xs text-muted-foreground'>Weight: {order?.measurementDiary?.weight}kg</Text>
-                    <Separator orientation='vertical' className='h-4' />
-                    <Text className='text-xs text-muted-foreground'>Height: {order?.measurementDiary?.height}cm</Text>
-                    <Separator orientation='vertical' className='h-4' />
-                    <Text className='text-xs text-muted-foreground'>
-                      Pregnancy: {order?.measurementDiary?.numberOfPregnancy}
-                      {order?.measurementDiary?.numberOfPregnancy === 1
-                        ? 'st'
-                        : order?.measurementDiary?.numberOfPregnancy === 2
-                          ? 'nd'
-                          : order?.measurementDiary?.numberOfPregnancy === 3
-                            ? 'rd'
-                            : 'th'}
-                    </Text>
-                  </View>
-                </View>
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                  <DialogTrigger asChild>
+                    <TouchableOpacity className='flex-1 gap-1 p-3'>
+                      <Text className='font-inter-medium' numberOfLines={1}>
+                        {order?.measurementDiary?.name}{' '}
+                        <Text className='text-xs text-muted-foreground'>
+                          ({order?.measurementDiary?.age} years old)
+                        </Text>
+                      </Text>
+                      <View className='flex-row items-center gap-2'>
+                        <Text className='text-xs text-muted-foreground'>
+                          Weight: {order?.measurementDiary?.weight}kg
+                        </Text>
+                        <Separator orientation='vertical' className='h-4' />
+                        <Text className='text-xs text-muted-foreground'>
+                          Height: {order?.measurementDiary?.height}cm
+                        </Text>
+                        <Separator orientation='vertical' className='h-4' />
+                        <Text className='text-xs text-muted-foreground'>
+                          Pregnancy: {order?.measurementDiary?.numberOfPregnancy}
+                          {order?.measurementDiary?.numberOfPregnancy === 1
+                            ? 'st'
+                            : order?.measurementDiary?.numberOfPregnancy === 2
+                              ? 'nd'
+                              : order?.measurementDiary?.numberOfPregnancy === 3
+                                ? 'rd'
+                                : 'th'}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </DialogTrigger>
+                  <DialogContent
+                    displayCloseButton={false}
+                    style={{
+                      padding: 16,
+                      width: width - 30
+                    }}
+                  >
+                    <PreviewLatestMeasurement measurement={order?.measurementDiary?.measurements?.[0]} />
+                    <Button variant='outline' onPress={() => setDialogOpen(false)}>
+                      <Text className='font-inter-medium'>Close</Text>
+                    </Button>
+                  </DialogContent>
+                </Dialog>
               </Card>
             ) : null}
 
@@ -520,6 +554,8 @@ export default function ViewOrderDetailScreen() {
                   <Text className='font-inter-medium text-sm'>Order Progress</Text>
                 </View>
 
+                <Separator />
+
                 {milestones && Array.isArray(milestones) && milestones.length > 0 ? (
                   <OrderStageBar
                     milestones={milestones}
@@ -528,7 +564,7 @@ export default function ViewOrderDetailScreen() {
                     orderPlacedAt={order?.createdAt}
                   />
                 ) : (
-                  <View className='flex-row items-center justify-center my-4'>
+                  <View className='flex-row items-center justify-center my-10'>
                     <Text className='text-muted-foreground text-xs'>No order progress available</Text>
                   </View>
                 )}

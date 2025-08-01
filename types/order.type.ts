@@ -178,8 +178,8 @@ export interface OrderStatusCount {
 }
 
 export interface Milestone {
-  milestoneId: string
-  milestoneName: string
+  id: string
+  name: string
 }
 
 export interface OrderItemMilestone {

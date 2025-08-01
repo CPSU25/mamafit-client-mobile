@@ -48,7 +48,7 @@ export const useSignalR = () => {
 
       if (isNotMe) {
         // Update rooms list
-        queryClient.setQueryData(['rooms'], (oldData: ChatRoom[] | undefined) => {
+        queryClient.setQueryData(['rooms', user?.userId], (oldData: ChatRoom[] | undefined) => {
           if (!oldData) return oldData
 
           const newRooms: ChatRoom[] = oldData.map((room) => {
