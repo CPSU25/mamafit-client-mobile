@@ -181,6 +181,13 @@ export default function ReviewOrderScreen() {
   const [orderItems, setOrderItems] = useState<OrderItemTemp<unknown> | null>(null)
   const [preset, setPreset] = useState<PresetItem | null>(null)
 
+  // Get form values
+  const addressId = methods.watch('addressId')
+  const diaryId = methods.watch('measurementDiaryId')
+  const branchId = methods.watch('branchId')
+  const voucherId = methods.watch('voucherDiscountId')
+  const paymentType = methods.watch('paymentType')
+
   // Queries to get user addresses, profile and diaries
   const {
     '0': { data: addresses, refetch: refetchAddresses, isLoading: isLoadingAddresses, isFetched: isFetchedAddresses },
@@ -188,20 +195,19 @@ export default function ReviewOrderScreen() {
     '2': { data: diaries, refetch: refetchDiaries, isLoading: isLoadingDiaries, isFetched: isFetchedDiaries },
     '3': { data: branches, refetch: refetchBranches, isLoading: isLoadingBranches, isFetched: isFetchedBranches },
     '4': { data: vouchers, refetch: refetchVouchers, isLoading: isLoadingVouchers },
-    '5': { data: config, refetch: refetchConfig, isLoading: isLoadingConfig }
-  } = useReviewOrderQueries(user?.userId)
+    '5': { data: config, refetch: refetchConfig, isLoading: isLoadingConfig },
+    '6': {
+      data: latestMeasurement,
+      refetch: refetchLatestMeasurement,
+      isLoading: isLoadingLatestMeasurement,
+      isFetched: isFetchedLatestMeasurement
+    }
+  } = useReviewOrderQueries(user?.userId, diaryId)
 
   // Get default address + active diary for auto selecting
   const defaultAddress = getDefaultAddress(addresses)
   const activeDiary = getActiveDiary(diaries?.items)
   const defaultBranch = getDefaultBranch(branches)
-
-  // Get form values
-  const addressId = methods.watch('addressId')
-  const diaryId = methods.watch('measurementDiaryId')
-  const branchId = methods.watch('branchId')
-  const voucherId = methods.watch('voucherDiscountId')
-  const paymentType = methods.watch('paymentType')
 
   // Get current address + diary base on form values (if present)
   const currentAddress =
@@ -236,7 +242,8 @@ export default function ReviewOrderScreen() {
     isLoadingBranches ||
     isLoadingShippingFee ||
     isLoadingVouchers ||
-    isLoadingConfig
+    isLoadingConfig ||
+    isLoadingLatestMeasurement
   const orderType = orderItems?.type || null
 
   const { fullMerchandiseTotal, savedAmount, payableMerchandisePortion, totalPaymentNow, addOnsSubtotal } =
@@ -257,6 +264,7 @@ export default function ReviewOrderScreen() {
     refetchDiaries,
     refetchBranches,
     refetchVouchers,
+    refetchLatestMeasurement,
     refetchConfig
   ])
 
@@ -352,8 +360,10 @@ export default function ReviewOrderScreen() {
       addOnsSubtotal
     })
 
+    const { measurementDiaryId, ...rest } = data
+
     if (orderType === 'preset') {
-      placePresetOrderMutation.mutate(data)
+      placePresetOrderMutation.mutate(rest)
     } else {
       console.log('Not implemented')
     }
@@ -456,6 +466,13 @@ export default function ReviewOrderScreen() {
       getPreset()
     }, [syncPresetWithForm, router])
   )
+
+  // Set latest measurement to form
+  useEffect(() => {
+    if (isFetchedLatestMeasurement && latestMeasurement && setValue && diaryId) {
+      setValue('measurementId', latestMeasurement.id)
+    }
+  }, [isFetchedLatestMeasurement, latestMeasurement, setValue, diaryId])
 
   // Set default address to form if delivery method is delivery
   useEffect(() => {
@@ -568,6 +585,8 @@ export default function ReviewOrderScreen() {
                     isLoading={isLoadingDiaries}
                     diary={currentDiary}
                     handlePresentDiaryModal={handlePresentDiaryModal}
+                    latestMeasurement={latestMeasurement}
+                    iconSize={SMALL_ICON_SIZE}
                   />
                 </Animated.View>
 

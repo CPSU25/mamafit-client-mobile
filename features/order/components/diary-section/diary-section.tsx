@@ -1,25 +1,40 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
-import { TouchableOpacity, View } from 'react-native'
+import { useState } from 'react'
+import { TouchableOpacity, useWindowDimensions, View } from 'react-native'
 import { WarningCard } from '~/components/ui/alert-card'
+import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
+import { Dialog, DialogContent, DialogTrigger } from '~/components/ui/dialog'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
-import { ICON_SIZE, styles } from '~/lib/constants/constants'
+import { ICON_SIZE, PRIMARY_COLOR, styles } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { cn } from '~/lib/utils'
-import { Diary } from '~/types/diary.type'
+import { Diary, Measurement } from '~/types/diary.type'
+import PreviewLatestMeasurement from '../preview-latest-measurement'
 import PreviewDiaryCard from './preview-diary-card'
 
 interface DiarySectionProps {
   isLoading: boolean
   diary: Diary | null
+  latestMeasurement: Measurement | null | undefined
   handlePresentDiaryModal: () => void
+  iconSize: number
 }
 
-export default function DiarySection({ isLoading, diary, handlePresentDiaryModal }: DiarySectionProps) {
+export default function DiarySection({
+  isLoading,
+  diary,
+  latestMeasurement,
+  handlePresentDiaryModal,
+  iconSize
+}: DiarySectionProps) {
   const router = useRouter()
   const { isDarkColorScheme } = useColorScheme()
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const { width } = useWindowDimensions()
 
   if (isLoading) {
     return <Skeleton className='rounded-2xl h-32' />
@@ -50,6 +65,26 @@ export default function DiarySection({ isLoading, diary, handlePresentDiaryModal
           </View>
         </View>
         <PreviewDiaryCard diary={diary} isLoading={isLoading} onPress={handlePresentDiaryModal} />
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger asChild>
+            <TouchableOpacity className='flex-1 gap-2 px-2 pb-2 flex-row items-center justify-center'>
+              <MaterialCommunityIcons name='eye' size={iconSize} color={PRIMARY_COLOR.LIGHT} />
+              <Text className='text-sm font-inter-medium text-primary'>Preview Latest Measurement</Text>
+            </TouchableOpacity>
+          </DialogTrigger>
+          <DialogContent
+            displayCloseButton={false}
+            style={{
+              padding: 16,
+              width: width - 30
+            }}
+          >
+            <PreviewLatestMeasurement measurement={latestMeasurement ?? undefined} />
+            <Button variant='outline' onPress={() => setDialogOpen(false)}>
+              <Text className='font-inter-medium'>Close</Text>
+            </Button>
+          </DialogContent>
+        </Dialog>
       </Card>
     )
   }

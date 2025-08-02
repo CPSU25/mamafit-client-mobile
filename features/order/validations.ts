@@ -30,6 +30,7 @@ export const placePresetOrderFormSchema = z
     shippingFee: z.number().min(0, { message: 'Shipping fee is required' }),
     voucherDiscountId: z.string().nullable(),
     measurementDiaryId: z.string().min(1, { message: 'Measurement diary is required' }),
+    measurementId: z.string().min(1, { message: 'Measurement is required' }),
     options: z.array(addOnOptionFormSchema),
     isOnline: z.boolean(),
     paymentMethod: z.nativeEnum(PaymentMethod),
