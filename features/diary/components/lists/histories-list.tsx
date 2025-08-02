@@ -14,6 +14,8 @@ export default function HistoriesList() {
 
   const { refreshControl } = useRefreshs([refetch])
 
+  console.log(measurementsHistory)
+
   return (
     <FlatList
       data={measurementsHistory?.measurements.sort((a, b) => b.weekOfPregnancy - a.weekOfPregnancy)}
