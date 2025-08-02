@@ -46,7 +46,8 @@ export default function DiaryHistoryDetailScreen() {
     }
   }, [measurementDetail, initForm])
 
-  const isEditable = currentWeekData?.weekOfPregnancy === measurementDetail?.weekOfPregnancy
+  const isEditable =
+    currentWeekData?.weekOfPregnancy === measurementDetail?.weekOfPregnancy && !Boolean(measurementDetail?.isLocked)
 
   const mainData = [
     {
@@ -128,6 +129,8 @@ export default function DiaryHistoryDetailScreen() {
     return <Loading />
   }
 
+  console.log(measurementDetail)
+
   return (
     <SafeView>
       <ScrollView showsVerticalScrollIndicator={false} className='flex-1' refreshControl={refreshControl}>
@@ -152,9 +155,13 @@ export default function DiaryHistoryDetailScreen() {
               />
             ) : (
               <InfoCard
-                title='Read-only Information'
+                title={Boolean(measurementDetail?.isLocked) ? 'Locked Information' : 'Read-only Information'}
                 delay={100}
-                description='This information is read-only and cannot be edited since it is not the current week of pregnancy.'
+                description={
+                  Boolean(measurementDetail?.isLocked)
+                    ? 'This information is locked and cannot be edited since it is currently being used for an order.'
+                    : 'This information is read-only and cannot be edited since it is not the current week of pregnancy.'
+                }
               />
             )}
 

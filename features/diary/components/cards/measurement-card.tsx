@@ -17,18 +17,35 @@ export default function MeasurementCard({ measurement, diaryId }: MeasurementCar
   const { data: currentWeekData } = useGetWeekOfPregnancy(diaryId)
 
   const isActive = currentWeekData?.weekOfPregnancy === measurement?.weekOfPregnancy
+  const isLocked = Boolean(measurement?.isLocked)
 
   return (
     <Card className='p-2 flex flex-row items-center gap-4'>
-      <View
-        className={cn(
-          'w-16 h-16 rounded-xl items-center justify-center border ',
-          isActive ? 'bg-emerald-500/10 border-emerald-500' : 'bg-muted-foreground/10 border-muted-foreground/30'
+      <View className='relative'>
+        <View
+          className={cn(
+            'w-16 h-16 rounded-xl items-center justify-center border ',
+            isLocked
+              ? 'bg-rose-500/10 border-rose-500'
+              : isActive
+                ? 'bg-emerald-500/10 border-emerald-500'
+                : 'bg-muted-foreground/10 border-muted-foreground/30'
+          )}
+        >
+          <Text
+            className={cn(
+              'font-inter-semibold text-xl',
+              isLocked ? 'text-rose-500' : isActive ? 'text-emerald-500' : 'text-muted-foreground'
+            )}
+          >
+            W{measurement?.weekOfPregnancy || 'N/A'}
+          </Text>
+        </View>
+        {isLocked && (
+          <View className='absolute -top-1.5 -right-1.5 bg-rose-100 rounded-full p-0.5'>
+            <Feather name='lock' size={12} color='#e11d48' />
+          </View>
         )}
-      >
-        <Text className={cn('font-inter-semibold text-xl', isActive ? 'text-emerald-500' : 'text-muted-foreground')}>
-          W{measurement?.weekOfPregnancy || 'N/A'}
-        </Text>
       </View>
       <View className='flex-1 gap-0.5'>
         <Text className='text-sm'>

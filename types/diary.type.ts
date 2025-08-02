@@ -43,6 +43,7 @@ export interface Measurement {
   thigh: number
   waist: number
   weekOfPregnancy: number
+  isLocked: boolean
   weight: number
   createdAt: string
   createdBy: string
