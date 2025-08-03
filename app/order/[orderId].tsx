@@ -48,7 +48,7 @@ interface OrderConfig {
   styleConfig: StyleConfig
   title: string
   description: string
-  icon: keyof typeof MaterialIcons.glyphMap
+  icon: keyof typeof MaterialCommunityIcons.glyphMap
 }
 
 const getConfig = (orderStatus: OrderStatus | undefined): OrderConfig => {
@@ -110,6 +110,17 @@ export default function ViewOrderDetailScreen() {
     [orderItemTypeSet, order?.items]
   )
 
+  const isDisplayOrderProgress = useMemo(
+    () =>
+      orderItemTypeSet[0] === OrderItemType.Preset &&
+      order?.status !== OrderStatus.Created &&
+      order?.status !== OrderStatus.Confirmed &&
+      order?.status !== OrderStatus.InDesign &&
+      order?.status !== OrderStatus.Cancelled &&
+      order?.status !== OrderStatus.Completed,
+    [orderItemTypeSet, order?.status]
+  )
+
   const {
     data: currentUser,
     isLoading: isLoadingCurrentUser,
@@ -120,10 +131,7 @@ export default function ViewOrderDetailScreen() {
     data: milestones,
     isLoading: isLoadingMilestones,
     refetch: refetchMilestones
-  } = useGetOrderItemMilestones(
-    order?.items[0]?.id || '',
-    Boolean(isPresetOrder) && order?.status === OrderStatus.InProduction
-  )
+  } = useGetOrderItemMilestones(order?.items[0]?.id || '', Boolean(isPresetOrder) && isDisplayOrderProgress)
 
   const {
     data: designRequestDetail,
@@ -144,15 +152,6 @@ export default function ViewOrderDetailScreen() {
     isLoading: isLoadingPresetDetail,
     refetch: refetchPresetDetail
   } = useGetPresetDetail(order?.items[0]?.preset?.id, Boolean(isPresetOrder))
-
-  const isDisplayOrderProgress = useMemo(
-    () =>
-      (order?.status === OrderStatus.InProduction ||
-        order?.status === OrderStatus.Packaging ||
-        order?.status === OrderStatus.InQC) &&
-      orderItemTypeSet[0] === OrderItemType.Preset,
-    [orderItemTypeSet, order?.status]
-  )
 
   const {
     data: designerInfo,
@@ -252,16 +251,15 @@ export default function ViewOrderDetailScreen() {
       style={styles.container}
     >
       <View className='relative z-10 px-4' style={{ paddingTop: Math.max(top + 20, 40) }}>
-        <View className='flex-row items-center gap-2 mb-2'>
-          <MaterialIcons name={icon} size={20} color={styleConfig.iconColor} />
+        <TouchableOpacity onPress={handleGoBack} className='mb-6 mr-auto'>
+          <Feather name='arrow-left' size={24} color={styleConfig.textColor} />
+        </TouchableOpacity>
 
+        <View className='flex-row items-center gap-2 mb-1'>
+          <MaterialCommunityIcons name={icon} size={20} color={styleConfig.iconColor} />
           <Text style={{ color: styleConfig.textColor }} className='font-inter-semibold flex-1'>
             {title}
           </Text>
-
-          <TouchableOpacity onPress={handleGoBack}>
-            <Feather name='arrow-left' size={20} color={styleConfig.textColor} />
-          </TouchableOpacity>
         </View>
 
         <Text
@@ -289,7 +287,7 @@ export default function ViewOrderDetailScreen() {
       </View>
 
       <Card
-        className='flex-1 mx-2 mt-4 rounded-t-3xl rounded-b-none border-transparent'
+        className='flex-1 mx-2 mt-3.5 rounded-t-3xl rounded-b-none border-transparent'
         style={{
           boxShadow: '0 0px 10px 0px rgba(0, 0, 0, 0.15)',
           paddingBottom: bottom

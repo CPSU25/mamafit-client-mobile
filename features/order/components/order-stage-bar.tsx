@@ -24,8 +24,9 @@ const getIconForMilestone = (milestoneName: string): keyof typeof MaterialCommun
   if (name.includes('warranty') && name.includes('check')) return 'shield-check'
   if (name.includes('warranty')) return 'shield'
   if (name.includes('quality')) return 'clock-check'
-  if (name.includes('packing') || name.includes('delivery')) return 'truck-fast'
-  return 'circle-outline'
+  if (name.includes('packing')) return 'package-variant'
+  if (name.includes('waiting') && name.includes('delivery')) return 'truck-fast'
+  return 'progress-question'
 }
 
 export default function OrderStageBar({
@@ -58,7 +59,7 @@ export default function OrderStageBar({
 
       Animated.timing(progressAnims[index], {
         toValue: targetProgress,
-        duration: 2000,
+        duration: 1800,
         easing: Easing.out(Easing.cubic),
         useNativeDriver: false
       }).start()
@@ -141,26 +142,26 @@ export default function OrderStageBar({
               end={{ x: 1, y: 1 }}
               className='w-10 h-10 rounded-full overflow-hidden items-center justify-center'
               style={{
-                boxShadow: '0 0 6px 0 rgba(16, 185, 129, 0.8)'
+                boxShadow: '0 0 6px 0 rgba(18, 185, 129, 0.6)'
               }}
             >
-              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='white' size={16} />
+              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='white' size={18} />
             </LinearGradient>
           ) : isInProgress || isCurrent ? (
             <LinearGradient
-              colors={['#fb923c', '#f97316', '#ea580c']}
+              colors={['#fb923c', '#f97318', '#ea580c']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               className='w-10 h-10 rounded-full overflow-hidden items-center justify-center'
               style={{
-                boxShadow: '0 0 6px 0 rgba(249, 115, 22, 0.8)'
+                boxShadow: '0 0 6px 0 rgba(249, 115, 22, 0.6)'
               }}
             >
-              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='white' size={16} />
+              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='white' size={18} />
             </LinearGradient>
           ) : (
             <View className='w-10 h-10 rounded-full overflow-hidden items-center justify-center bg-muted'>
-              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='gray' size={16} />
+              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='gray' size={18} />
             </View>
           )}
         </Animated.View>
@@ -190,7 +191,7 @@ export default function OrderStageBar({
               </View>
 
               {index !== milestones.length - 1 ? (
-                <View className='h-1.5 w-14 mt-[16px] rounded-full bg-muted overflow-hidden'>
+                <View className='h-1.5 w-14 mt-[18px] rounded-full bg-muted overflow-hidden'>
                   <Animated.View
                     className={cn(
                       'h-full rounded-full',
@@ -223,13 +224,13 @@ export default function OrderStageBar({
                     {milestone.milestone.name}
                   </Text>
                 </View>
-                <Text className='text-xs text-muted-foreground/50 text-right'>
-                  {milestone?.milestone.name === 'Order Placed'
-                    ? orderPlacedAt
-                      ? format(new Date(orderPlacedAt), "MMM dd, yyyy 'at' hh:mm a")
-                      : null
-                    : 'Completed'}
-                </Text>
+                {milestone?.milestone.name === 'Order Placed' ? (
+                  <Text className='text-xs text-muted-foreground/50 text-right'>
+                    {orderPlacedAt ? format(new Date(orderPlacedAt), "MMM dd, yyyy 'at' hh:mm a") : null}
+                  </Text>
+                ) : (
+                  <MaterialCommunityIcons name='check' size={18} color='lightgray' />
+                )}
               </View>
             ))
           : null}

@@ -129,8 +129,6 @@ export default function DiaryHistoryDetailScreen() {
     return <Loading />
   }
 
-  console.log(measurementDetail)
-
   return (
     <SafeView>
       <ScrollView showsVerticalScrollIndicator={false} className='flex-1' refreshControl={refreshControl}>

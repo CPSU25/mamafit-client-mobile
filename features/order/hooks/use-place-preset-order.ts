@@ -45,6 +45,8 @@ export const usePlacePresetOrder = (onSuccess: () => void) => {
         queryClient.invalidateQueries({ queryKey: ['orders'] })
         queryClient.invalidateQueries({ queryKey: ['order'] })
         queryClient.invalidateQueries({ queryKey: ['orders-count'] })
+        queryClient.invalidateQueries({ queryKey: ['diary-detail'] })
+        queryClient.invalidateQueries({ queryKey: ['measurement-detail'] })
 
         router.replace({ pathname: '/payment/[orderId]/qr-code', params: { orderId } })
         setTimeout(() => {
