@@ -1,17 +1,25 @@
-export enum MessageType {
+export enum MessageTypeRealTime {
   Text,
   Image,
-  File
+  File,
+  DesignRequest
 }
 
-export interface Message {
+export enum MessageTypeDB {
+  Text = 'Text',
+  Image = 'Image',
+  File = 'File',
+  DesignRequest = 'Design_Request'
+}
+
+export interface Message<T> {
   id: string
   message: string
   senderId: string
   senderName: string
   chatRoomId: string
   senderAvatar?: string
-  type: MessageType
+  type: T
   messageTimestamp: string
   isRead: boolean | null
 }

@@ -6,6 +6,7 @@ import { Measurement } from '~/types/diary.type'
 import {
   Branch,
   DesignerInfo,
+  DesignRequest,
   Order,
   OrderDetail,
   OrderItemMilestone,
@@ -91,10 +92,16 @@ class OrderService {
     return data.data
   }
 
-  async getDesignRequestDetail(designRequestId: string) {
+  async getDesignRequestPreset(designRequestId: string) {
     const { data } = await api.get<BaseResponse<PresetWithComponentOptions[]>>(
       `preset/design-request/${designRequestId}`
     )
+
+    return data.data
+  }
+
+  async getDesignRequest(designRequestId: string) {
+    const { data } = await api.get<BaseResponse<DesignRequest>>(`design-request/${designRequestId}`)
 
     return data.data
   }

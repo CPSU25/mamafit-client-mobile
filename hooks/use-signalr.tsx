@@ -6,9 +6,10 @@ import { AppState, AppStateStatus } from 'react-native'
 import { toast } from 'sonner-native'
 import MessageToast from '~/components/toast/message-toast'
 import NotificationToast from '~/components/toast/notification-toast'
+import { formatRealtimeMessageType } from '~/lib/utils'
 import chatHubService, { ChatHubEvents } from '~/services/signalr/chat-hub.service'
 import notificationHubService, { NotificationHubEvents } from '~/services/signalr/notification-hub.service'
-import { ChatRoom, Message } from '~/types/chat.type'
+import { ChatRoom, Message, MessageTypeDB, MessageTypeRealTime } from '~/types/chat.type'
 import { Notification } from '~/types/notification.type'
 import { useAuth } from './use-auth'
 
@@ -28,7 +29,7 @@ export const useSignalR = () => {
 
   // Function to display incoming messages from other users across the app
   const displayMessage = useCallback(
-    (message: Message) => {
+    (message: Message<MessageTypeRealTime>) => {
       const messageId = `${message.id}-${message.messageTimestamp}`
 
       if (currentMessages.current.has(messageId)) return
@@ -67,24 +68,41 @@ export const useSignalR = () => {
           return newRooms
         })
 
-        // Update room messages
-        queryClient.setQueryData(['room-messages', chatRoomId, user?.userId], (oldData: Message[] | undefined) => {
-          if (!oldData) return oldData
+        // Update room messages for infinite query
+        queryClient.setQueryData(
+          ['room-messages', chatRoomId, user?.userId],
+          (oldData: { pages: Message<MessageTypeDB>[][]; pageParams: number[] } | undefined) => {
+            if (!oldData) return oldData
 
-          const newMessage: Message = {
-            id,
-            senderAvatar,
-            senderName,
-            message: message.message,
-            senderId,
-            chatRoomId,
-            type,
-            messageTimestamp,
-            isRead
+            const newMessage: Message<MessageTypeDB> = {
+              id,
+              senderAvatar,
+              senderName,
+              message: message.message,
+              senderId,
+              chatRoomId,
+              type: formatRealtimeMessageType(type),
+              messageTimestamp,
+              isRead
+            }
+
+            // Add new message to the END of the first page (newest messages page)
+            // Since pages are reversed in the component, first page contains newest messages
+            const updatedPages = [...oldData.pages]
+            if (updatedPages.length > 0) {
+              // Add to the end of the first page since it contains the newest messages
+              updatedPages[0] = [...updatedPages[0], newMessage]
+            } else {
+              // If no pages exist, create first page with the new message
+              updatedPages.push([newMessage])
+            }
+
+            return {
+              ...oldData,
+              pages: updatedPages
+            }
           }
-
-          return [...oldData, newMessage]
-        })
+        )
 
         const isOnChatScreen = segments.length > 0 && segments.some((segment) => segment === 'chat')
 
@@ -143,7 +161,7 @@ export const useSignalR = () => {
     if (isAuthenticated) {
       const messageHandler = (...args: unknown[]) => {
         try {
-          const message = args[0] as Message
+          const message = args[0] as Message<MessageTypeRealTime>
           if (message) {
             displayMessage(message)
           }

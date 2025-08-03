@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native'
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
 import SafeView from '~/components/safe-view'
@@ -17,7 +17,7 @@ import { useRefreshs } from '~/hooks/use-refresh'
 import { ICON_SIZE, placeholderImage, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { isValidUrl } from '~/lib/utils'
-import { MessageType } from '~/types/chat.type'
+import { MessageTypeRealTime } from '~/types/chat.type'
 
 export default function ChatRoomScreen() {
   const router = useRouter()
@@ -26,8 +26,19 @@ export default function ChatRoomScreen() {
   const { sendMessage } = useChat()
   const [message, setMessage] = useState('')
   const [isSendingMessage, setIsSendingMessage] = useState(false)
+  const flatListRef = useRef<FlatList>(null)
 
-  const { data: messages, isLoading: isLoadingMessages, refetch: refetchMessages } = useGetRoomMessages(roomId)
+  const {
+    data: messagesData,
+    isLoading: isLoadingMessages,
+    refetch: refetchMessages,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useGetRoomMessages(roomId)
+
+  const messages = messagesData?.pages?.flat() || []
+
   const { data: room, isLoading: isLoadingRoom, refetch: refetchRoom } = useGetRoom(roomId)
 
   const { refreshControl } = useRefreshs([refetchMessages, refetchRoom])
@@ -37,13 +48,25 @@ export default function ChatRoomScreen() {
   const sender = room?.members?.find((member) => member.memberId !== user?.userId) ?? room?.members?.[0]
   const imageSource = sender?.memberAvatar && isValidUrl(sender?.memberAvatar) ? sender?.memberAvatar : placeholderImage
 
+  useEffect(() => {
+    if (messages.length > 0 && flatListRef.current) {
+      setTimeout(() => {
+        flatListRef.current?.scrollToOffset({ offset: 0, animated: true })
+      }, 100)
+    }
+  }, [messages.length])
+
   const handleSendMessage = async () => {
     if (!message.trim()) return
 
     try {
       setIsSendingMessage(true)
-      await sendMessage(roomId, message.trim(), MessageType.Text)
+      await sendMessage(roomId, message.trim(), MessageTypeRealTime.Text)
       setMessage('')
+
+      setTimeout(() => {
+        flatListRef.current?.scrollToOffset({ offset: 0, animated: true })
+      }, 100)
     } catch (error) {
       console.error('Failed to send message:', error)
     } finally {
@@ -54,7 +77,11 @@ export default function ChatRoomScreen() {
   const handleSendImage = async () => {
     const urls = await pickImages()
     if (urls.length > 0) {
-      await sendMessage(roomId, urls[0], MessageType.Image)
+      await sendMessage(roomId, urls[0], MessageTypeRealTime.Image)
+
+      setTimeout(() => {
+        flatListRef.current?.scrollToOffset({ offset: 0, animated: true })
+      }, 100)
     }
   }
 
@@ -100,23 +127,40 @@ export default function ChatRoomScreen() {
           {isLoadingMessages ? (
             <View className='flex-1 items-center justify-center'>
               <ActivityIndicator size='large' color={PRIMARY_COLOR.LIGHT} />
-              <Text className='mt-2 text-gray-500'>Loading messages...</Text>
+              <Text className='mt-2 text-sm text-muted-foreground'>Loading messages...</Text>
             </View>
           ) : !messages || messages.length === 0 ? (
             <View className='flex-1 items-center justify-center p-4'>
-              <Text className='text-center text-gray-500 mb-2'>No messages yet</Text>
-              <Text className='text-center text-gray-400 text-sm'>Start a conversation by sending a message</Text>
+              <Text className='text-center text-muted-foreground mb-2'>No messages yet</Text>
+              <Text className='text-center text-muted-foreground text-sm'>
+                Start a conversation by sending a message
+              </Text>
             </View>
           ) : (
             <FlatList
+              ref={flatListRef}
               inverted
               data={messages}
               renderItem={({ item }) => <RoomMessage message={item} />}
               refreshControl={refreshControl}
-              contentContainerClassName='gap-4 p-4'
+              contentContainerClassName='gap-2 p-4'
               contentContainerStyle={{ flexDirection: 'column-reverse' }}
               showsVerticalScrollIndicator={false}
-              keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+              keyExtractor={(item, index) => `${item.id}-${item.messageTimestamp}-${index}`}
+              onEndReached={() => {
+                if (hasNextPage && !isFetchingNextPage) {
+                  fetchNextPage()
+                }
+              }}
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={
+                isFetchingNextPage ? (
+                  <View className='py-4 items-center'>
+                    <ActivityIndicator size='small' color={PRIMARY_COLOR.LIGHT} />
+                    <Text className='mt-2 text-muted-foreground text-sm'>Loading more messages...</Text>
+                  </View>
+                ) : null
+              }
             />
           )}
 
@@ -126,7 +170,7 @@ export default function ChatRoomScreen() {
                 isUploading ? (
                   <ActivityIndicator size='small' color={PRIMARY_COLOR.LIGHT} />
                 ) : (
-                  SvgIcon.galleryAdd({ size: ICON_SIZE.SMALL, color: 'GRAY' })
+                  <Feather name='image' size={20} color={PRIMARY_COLOR.LIGHT} />
                 )
               }
               onStartIconPress={handleSendImage}
