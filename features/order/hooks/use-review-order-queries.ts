@@ -19,7 +19,7 @@ export const useReviewOrderQueries = (userId: string | undefined, diaryId: strin
       {
         queryKey: ['profile-queries', userId, user?.userId],
         queryFn: () => userService.getProfile(userId),
-        enabled: !!userId && isAuthenticated
+        enabled: isAuthenticated
       },
       {
         queryKey: ['all-diaries-queries', user?.userId],
@@ -44,7 +44,7 @@ export const useReviewOrderQueries = (userId: string | undefined, diaryId: strin
       {
         queryKey: ['latest-measurement-queries', diaryId, user?.userId],
         queryFn: () => orderService.getLatestMeasurement(diaryId),
-        enabled: isAuthenticated && !!diaryId
+        enabled: isAuthenticated && Boolean(diaryId)
       }
     ]
   })

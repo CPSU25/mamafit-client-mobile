@@ -67,6 +67,7 @@ export enum OrderStatus {
   InWarranty = 'IN_WARRANTY',
   Packaging = 'PACKAGING',
   Delevering = 'DELIVERING',
+  AwaitingDelivery = 'AWAITING_DELIVERY',
   Completed = 'COMPLETED',
   WarrantyCheck = 'WARRANTY_CHECK',
   Cancelled = 'CANCELLED'

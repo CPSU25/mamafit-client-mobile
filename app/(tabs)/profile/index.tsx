@@ -39,8 +39,8 @@ const statuses: OrderStatusUI[] = [
   {
     id: 2,
     name: 'To Ship',
-    url: '/order/status/packaging',
-    value: OrderStatus.Packaging,
+    url: '/order/status/to-ship',
+    value: OrderStatus.AwaitingDelivery,
     icon: SvgIcon.toShip({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {

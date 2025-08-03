@@ -104,12 +104,20 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
     label: 'Packaging',
     value: OrderStatus.Packaging,
     urlValue: 'packaging',
-    title: 'Being Packaged',
+    title: 'Packaging',
     description:
       'Your order has passed all checks and is now being carefully packaged and made ready to be sent to you.'
   },
   {
     id: 8,
+    label: 'To Ship',
+    value: OrderStatus.AwaitingDelivery,
+    urlValue: 'to-ship',
+    title: 'Waiting For Delivery',
+    description: 'Your packaged order is waiting for the delivery courier to pick it up and deliver it to you.'
+  },
+  {
+    id: 9,
     label: 'To Deliver',
     value: OrderStatus.Delevering,
     urlValue: 'to-deliver',
@@ -118,7 +126,7 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
       'Your packaged order has been handed to the delivery courier and is on its way to the address you provided.'
   },
   {
-    id: 9,
+    id: 10,
     label: 'Completed',
     value: OrderStatus.Completed,
     urlValue: 'to-rate',
@@ -127,7 +135,7 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
       'Your order has been successfully delivered. Please confirm that you received it and leave your feedback.'
   },
   {
-    id: 10,
+    id: 11,
     label: 'Warranty Check',
     value: OrderStatus.WarrantyCheck,
     urlValue: 'warranty-check',
@@ -136,16 +144,16 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
       'We are reviewing your request and checking your order to confirm if it is eligible to receive warranty service.'
   },
   {
-    id: 11,
+    id: 12,
     label: 'In Warranty',
     value: OrderStatus.InWarranty,
     urlValue: 'in-warranty',
-    title: 'Warranty Service',
+    title: 'Under Warranty Process',
     description:
       'Your order is being repaired or replaced under warranty and will pass checks again before being delivered.'
   },
   {
-    id: 12,
+    id: 13,
     label: 'Cancelled',
     value: OrderStatus.Cancelled,
     urlValue: 'cancelled',
@@ -200,6 +208,12 @@ export const statusStyles: Record<
     textColor: '#334155',
     iconColor: '#475569',
     shadowColor: '#64748b'
+  },
+  AWAITING_DELIVERY: {
+    colors: ['#fff7ed', '#fed7aa', '#f97316'],
+    textColor: '#b45309',
+    iconColor: '#f59e42',
+    shadowColor: '#fb923c'
   },
   DELIVERING: {
     colors: ['#f2fdfa', '#ccfbf1', '#0e7490'],

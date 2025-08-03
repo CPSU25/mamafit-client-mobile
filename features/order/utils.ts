@@ -1,4 +1,4 @@
-import { MaterialIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AddOn, AddOnOption } from '~/types/add-on.type'
 import { OrderItemTemp } from '~/types/order-item.type'
@@ -268,34 +268,36 @@ export const convertAddOnOptionsToFormFormat = (addOnOptions: AddOnOptionItem[])
   }))
 }
 
-export const getStatusIcon = (status: OrderStatus): keyof typeof MaterialIcons.glyphMap => {
+export const getStatusIcon = (status: OrderStatus): keyof typeof MaterialCommunityIcons.glyphMap => {
   switch (status) {
     case OrderStatus.Created:
-      return 'credit-card'
+      return 'credit-card-clock'
     case OrderStatus.InDesign:
-      return 'design-services'
+      return 'palette'
     case OrderStatus.Confirmed:
-      return 'library-add-check'
+      return 'credit-card-check'
     case OrderStatus.InProduction:
       return 'factory'
     case OrderStatus.InQC:
-      return 'fact-check'
+      return 'timeline-check'
     case OrderStatus.AwaitingPaidRest:
-      return 'money'
+      return 'credit-card-refresh'
     case OrderStatus.Packaging:
-      return 'all-inbox'
+      return 'package-variant'
+    case OrderStatus.AwaitingDelivery:
+      return 'mailbox'
     case OrderStatus.Delevering:
-      return 'local-shipping'
+      return 'truck-fast'
     case OrderStatus.Completed:
-      return 'stars'
+      return 'star-circle'
     case OrderStatus.WarrantyCheck:
-      return 'gpp-good'
+      return 'shield-search'
     case OrderStatus.InWarranty:
-      return 'refresh'
+      return 'shield-sync'
     case OrderStatus.Cancelled:
-      return 'cancel'
+      return 'archive-cancel'
     default:
-      return 'circle'
+      return 'progress-question'
   }
 }
 
