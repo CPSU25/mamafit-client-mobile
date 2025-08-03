@@ -15,7 +15,7 @@ import { Text } from '~/components/ui/text'
 import OrderStageBar from '~/features/order/components/order-stage-bar'
 import PreviewLatestMeasurement from '~/features/order/components/preview-latest-measurement'
 import { ORDER_STATUS_TYPES, statusStyles } from '~/features/order/constants'
-import { useGetDesignRequestDetail } from '~/features/order/hooks/use-get-design-request-detail'
+import { useGetDesignRequestPreset } from '~/features/order/hooks/use-get-design-request-preset'
 import { useGetDesignerInfo } from '~/features/order/hooks/use-get-designer-info'
 import { useGetOrder } from '~/features/order/hooks/use-get-order'
 import { useGetOrderItemMilestones } from '~/features/order/hooks/use-get-order-item-milestones'
@@ -137,7 +137,7 @@ export default function ViewOrderDetailScreen() {
     data: designRequestDetail,
     isLoading: isLoadingDesignRequestDetail,
     refetch: refetchDesignRequestDetail
-  } = useGetDesignRequestDetail(order?.items[0]?.designRequest?.id || '', Boolean(isDesignRequestOrder))
+  } = useGetDesignRequestPreset(order?.items[0]?.designRequest?.id || '', Boolean(isDesignRequestOrder))
 
   const { styleConfig, title, description, icon } = useMemo(() => getConfig(order?.status), [order?.status])
   const [isViewMoreOrderDetails, setIsViewMoreOrderDetails] = useState(false)

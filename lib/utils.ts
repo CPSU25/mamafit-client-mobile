@@ -2,13 +2,14 @@ import { clsx, type ClassValue } from 'clsx'
 import { router } from 'expo-router'
 import * as SecureStore from 'expo-secure-store'
 import { FieldErrors } from 'react-hook-form'
+import { Alert, Linking, Platform } from 'react-native'
 import { twMerge } from 'tailwind-merge'
+import { MessageTypeDB, MessageTypeRealTime } from '~/types/chat.type'
 import { AuthTokens } from '~/types/common'
 import { ComponentOptionWithComponent } from '~/types/preset.type'
 import { ORDERED_COMPONENTS_OPTIONS } from './constants/constants'
 import { clear, setTokens } from './redux-toolkit/slices/auth.slice'
 import { store } from './redux-toolkit/store'
-import { Alert, Linking, Platform } from 'react-native'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -141,5 +142,20 @@ export const openInMaps = async (latitude: number, longitude: number) => {
     await Linking.openURL(url)
   } else {
     Alert.alert('Error', 'Unable to open maps on this device.')
+  }
+}
+
+export const formatRealtimeMessageType = (type: MessageTypeRealTime) => {
+  switch (type) {
+    case MessageTypeRealTime.Text:
+      return MessageTypeDB.Text
+    case MessageTypeRealTime.Image:
+      return MessageTypeDB.Image
+    case MessageTypeRealTime.File:
+      return MessageTypeDB.File
+    case MessageTypeRealTime.DesignRequest:
+      return MessageTypeDB.DesignRequest
+    default:
+      return MessageTypeDB.Text
   }
 }

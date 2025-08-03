@@ -1,15 +1,16 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { useAuth } from '~/hooks/use-auth'
+import { formatRealtimeMessageType } from '~/lib/utils'
 import chatHubService from '~/services/signalr/chat-hub.service'
-import { ChatRoom, Message, MessageType } from '~/types/chat.type'
+import { ChatRoom, Message, MessageTypeDB, MessageTypeRealTime } from '~/types/chat.type'
 
 export const useChat = () => {
   const queryClient = useQueryClient()
   const { user } = useAuth()
 
   const sendMessage = useCallback(
-    async (roomId: string, message: string, type: MessageType) => {
+    async (roomId: string, message: string, type: MessageTypeRealTime) => {
       try {
         await chatHubService.sendMessage(roomId, message, type)
 
@@ -32,22 +33,41 @@ export const useChat = () => {
           return newRooms
         })
 
-        queryClient.setQueryData(['room-messages', roomId, user?.userId], (oldData: Message[]) => {
-          const newMessage: Partial<Message> = {
-            message,
-            senderId: user?.userId ?? '',
-            chatRoomId: roomId,
-            type,
-            messageTimestamp: new Date().toISOString()
-          }
+        queryClient.setQueryData(
+          ['room-messages', roomId, user?.userId],
+          (oldData: { pages: Message<MessageTypeDB>[][]; pageParams: number[] } | undefined) => {
+            if (!oldData) return oldData
 
-          return [...oldData, newMessage]
-        })
+            const newMessage: Message<MessageTypeDB> = {
+              id: `temp-${Date.now()}`,
+              message,
+              senderId: user?.userId ?? '',
+              chatRoomId: roomId,
+              type: formatRealtimeMessageType(type),
+              messageTimestamp: new Date().toISOString(),
+              senderName: user?.username ?? 'You',
+              senderAvatar: '',
+              isRead: false
+            }
+
+            const updatedPages = [...oldData.pages]
+            if (updatedPages.length > 0) {
+              updatedPages[0] = [...updatedPages[0], newMessage]
+            } else {
+              updatedPages.push([newMessage])
+            }
+
+            return {
+              ...oldData,
+              pages: updatedPages
+            }
+          }
+        )
       } catch (error) {
         console.error(error)
       }
     },
-    [queryClient, user?.userId]
+    [queryClient, user?.userId, user?.username]
   )
 
   return { sendMessage }

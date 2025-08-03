@@ -1,5 +1,5 @@
 import { api } from '~/lib/axios/axios'
-import { ChatRoom, Message } from '~/types/chat.type'
+import { ChatRoom, Message, MessageTypeDB } from '~/types/chat.type'
 import { BaseResponse } from '~/types/common'
 
 class ChatService {
@@ -17,9 +17,8 @@ class ChatService {
     return data.data
   }
 
-  // TODO: Add pagination
-  async getRoomMessages(roomId: string, index: number = 1, pageSize: number = 20) {
-    const { data } = await api.get<BaseResponse<Message[]>>(
+  async getRoomMessages(roomId: string, index: number = 1, pageSize: number = 30) {
+    const { data } = await api.get<BaseResponse<Message<MessageTypeDB>[]>>(
       `Chat/rooms/${roomId}/messages?index=${index}&pageSize=${pageSize}`
     )
 
