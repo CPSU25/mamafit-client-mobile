@@ -1,10 +1,9 @@
 import { useEffect } from 'react'
 import { Control, Controller, FieldValues, Path, UseFormSetValue } from 'react-hook-form'
-import { View } from 'react-native'
-import RadioWrapper from '~/components/radio-wrapper'
+import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
 import { Text } from '~/components/ui/text'
 import { useGetCategoryDetail } from '~/features/category/hooks/use-get-category-detail'
-import StyleCard from './style-card'
+import { cn } from '~/lib/utils'
 
 interface StyleSectionProps<T extends FieldValues> {
   categoryId: string
@@ -28,27 +27,25 @@ export default function StyleSection<T extends FieldValues>({
   }, [stylesByCategory, setValue, name])
 
   return (
-    <View className='gap-2 px-4 py-2'>
-      <Text className='font-inter-semibold text-xl'>Choose Style</Text>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <Controller
         control={control}
         name={name}
         render={({ field: { value, onChange } }) => (
-          <View className='flex-row gap-2 flex-wrap'>
+          <View className='flex-row gap-6 px-4 pb-8 pt-2'>
             {stylesByCategory?.styles?.map((style) => (
-              <RadioWrapper
+              <TouchableOpacity
                 key={style.id}
-                currentItem={style}
-                selectedValue={value}
-                onChange={() => onChange(style.id)}
-                name='id'
+                className={cn('gap-2 w-20', value === style.id ? 'opacity-100' : 'opacity-40')}
+                onPress={() => onChange(style.id)}
               >
-                <StyleCard style={style} />
-              </RadioWrapper>
+                <Image source={{ uri: style.images[0] }} className='w-full h-40' />
+                <Text className={cn('text-center text-sm font-inter-medium')}>{style.name}</Text>
+              </TouchableOpacity>
             ))}
           </View>
         )}
       />
-    </View>
+    </ScrollView>
   )
 }

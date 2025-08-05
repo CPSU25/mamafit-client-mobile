@@ -10,15 +10,12 @@ export default function DressBuilderForm() {
 
   return (
     <View className='flex-1 bg-background'>
-      <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>
-        <View className='gap-2'>
+      <ScrollView showsVerticalScrollIndicator={false} className='flex-1' nestedScrollEnabled>
+        <View className='flex-1'>
           {/* Category */}
           <CategorySection control={control} watch={watch} setValue={setValue} name='categoryId' />
-          <View className='h-2 bg-muted' />
-
           {/* Style */}
           <StyleSection categoryId={watch('categoryId')} control={control} setValue={setValue} name='styleId' />
-          <View className='h-2 bg-muted' />
 
           {/* Component */}
           <ComponentSection control={control} setValue={setValue} styleId={watch('styleId')} />

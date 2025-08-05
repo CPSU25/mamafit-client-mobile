@@ -8,6 +8,6 @@ export const useGetPresetDetail = (presetId: string | undefined, enabled: boolea
   return useQuery({
     queryKey: ['preset-detail', user?.userId],
     queryFn: () => presetService.getPresetDetail(presetId || ''),
-    enabled: isAuthenticated && !!presetId && enabled
+    enabled: isAuthenticated && Boolean(presetId) && enabled
   })
 }

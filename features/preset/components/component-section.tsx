@@ -1,11 +1,13 @@
+import { Feather } from '@expo/vector-icons'
 import { useEffect } from 'react'
 import { Control, Controller, FieldValues, Path, UseFormSetValue } from 'react-hook-form'
-import { View } from 'react-native'
-import RadioWrapper from '~/components/radio-wrapper'
+import { Image, TouchableOpacity, View } from 'react-native'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '~/components/ui/accordion'
 import { Text } from '~/components/ui/text'
 import { useGetComponentsByStyleId } from '~/features/component/hooks/use-get-components'
+import { cn, getOrderedComponentsWithOptions } from '~/lib/utils'
 import { useGetDefaultPreset } from '../hooks/use-get-default-preset'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 interface ComponentSectionProps<T extends FieldValues> {
   control: Control<T>
@@ -31,9 +33,10 @@ export default function ComponentSection<T extends FieldValues>({
 
   const defaultValues = componentsByStyle?.map((component) => `item-${component.id}`) || []
 
+  const orderedComponents = getOrderedComponentsWithOptions(componentsByStyle ?? [])
+
   return (
-    <View className='gap-2 px-4 py-2'>
-      <Text className='font-inter-semibold text-xl'>Choose Component</Text>
+    <View className='px-4'>
       <Accordion
         type='multiple'
         collapsible
@@ -41,27 +44,44 @@ export default function ComponentSection<T extends FieldValues>({
         key={defaultValues.join('-')}
         defaultValue={defaultValues}
       >
-        {componentsByStyle?.map((component) => (
-          <AccordionItem key={component.id} value={`item-${component.id}`}>
+        {orderedComponents.map((component, index) => (
+          <AccordionItem
+            key={component.id}
+            value={`item-${component.id}`}
+            className={cn(
+              index !== orderedComponents.length - 1 ? 'border-b border-border' : '',
+              index === 0 ? 'border-t border-border' : ''
+            )}
+          >
             <AccordionTrigger>
-              <Text>{component.name}</Text>
+              <Text>
+                {component.name}{' '}
+                <Text className='text-muted-foreground native:text-sm'>({component?.options?.length} variants)</Text>
+              </Text>
             </AccordionTrigger>
             <AccordionContent>
               <Controller
                 control={control}
                 name={component.name.toLowerCase() as Path<T>}
                 render={({ field: { value, onChange } }) => (
-                  <View className='flex-row gap-2 flex-wrap'>
+                  <View className='flex-row gap-4 flex-wrap'>
                     {component.options.map((option) => (
-                      <RadioWrapper
+                      <TouchableOpacity
                         key={option.id}
-                        currentItem={option}
-                        selectedValue={value}
-                        onChange={() => onChange(option.id)}
-                        name='id'
+                        className={cn('w-24 py-4 justify-center items-center gap-2 relative')}
+                        onPress={() => onChange(option.id)}
                       >
-                        <Text>{option.name}</Text>
-                      </RadioWrapper>
+                        <Image source={{ uri: option.images[0] }} className='w-16 h-16 rounded-xl' />
+                        <Text className='native:text-xs text-center'>{option.name}</Text>
+                        {option.id === value && (
+                          <Feather
+                            name='check-circle'
+                            size={16}
+                            color={PRIMARY_COLOR.LIGHT}
+                            className='absolute top-2 left-2'
+                          />
+                        )}
+                      </TouchableOpacity>
                     ))}
                   </View>
                 )}
