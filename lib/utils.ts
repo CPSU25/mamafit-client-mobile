@@ -6,6 +6,7 @@ import { Alert, Linking, Platform } from 'react-native'
 import { twMerge } from 'tailwind-merge'
 import { MessageTypeDB, MessageTypeRealTime } from '~/types/chat.type'
 import { AuthTokens } from '~/types/common'
+import { ComponentWithOptions } from '~/types/component.type'
 import { ComponentOptionWithComponent } from '~/types/preset.type'
 import { ORDERED_COMPONENTS_OPTIONS } from './constants/constants'
 import { clear, setTokens } from './redux-toolkit/slices/auth.slice'
@@ -114,6 +115,15 @@ export const getOrderedComponentOptions = (options: ComponentOptionWithComponent
   }).filter(Boolean)
 }
 
+export const getOrderedComponentsWithOptions = (components: ComponentWithOptions[]) => {
+  if (!Array.isArray(components)) return []
+
+  return ORDERED_COMPONENTS_OPTIONS.map((key) => {
+    const component = components.find((comp) => comp?.name === key)
+    return component || null
+  }).filter(Boolean) as ComponentWithOptions[]
+}
+
 export const formatVnPhone = (phone: string) => {
   const digits = phone.replace(/\D/g, '')
 
@@ -155,6 +165,8 @@ export const formatRealtimeMessageType = (type: MessageTypeRealTime) => {
       return MessageTypeDB.File
     case MessageTypeRealTime.DesignRequest:
       return MessageTypeDB.DesignRequest
+    case MessageTypeRealTime.Preset:
+      return MessageTypeDB.Preset
     default:
       return MessageTypeDB.Text
   }

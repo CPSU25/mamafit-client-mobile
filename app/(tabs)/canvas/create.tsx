@@ -72,6 +72,7 @@ export default function CreateCanvasScreen() {
         open={open}
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
+        swipeEnabled={false}
         renderDrawerContent={() => {
           return (
             <FormProvider {...methods}>
