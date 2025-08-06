@@ -2,14 +2,16 @@ export enum MessageTypeRealTime {
   Text,
   Image,
   File,
-  DesignRequest
+  DesignRequest,
+  Preset
 }
 
 export enum MessageTypeDB {
   Text = 'Text',
   Image = 'Image',
   File = 'File',
-  DesignRequest = 'Design_Request'
+  DesignRequest = 'Design_Request',
+  Preset = 'Preset'
 }
 
 export interface Message<T> {

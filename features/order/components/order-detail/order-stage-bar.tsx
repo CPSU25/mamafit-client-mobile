@@ -18,12 +18,16 @@ interface OrderStageBarProps {
 
 const getIconForMilestone = (milestoneName: string): keyof typeof MaterialCommunityIcons.glyphMap => {
   const name = milestoneName.toLowerCase()
+
   if (name.includes('production')) return 'factory'
   if (name.includes('design')) return 'palette'
   if (name.includes('add on')) return 'plus-box-multiple'
+  if (name.includes('warranty') && name.includes('in')) return 'shield-refresh'
   if (name.includes('warranty') && name.includes('check')) return 'shield-check'
-  if (name.includes('warranty')) return 'shield'
-  if (name.includes('quality')) return 'clock-check'
+  if (name.includes('quality') && name.includes('check') && name.includes('warranty')) return 'check'
+  if (name.includes('warranty') && name.includes('validation')) return 'shield'
+  if (name.includes('quality') && name.includes('failed')) return 'clock-check'
+  if (name.includes('quality')) return 'list-status'
   if (name.includes('packing')) return 'package-variant'
   if (name.includes('waiting') && name.includes('delivery')) return 'truck-fast'
   return 'progress-question'
@@ -119,7 +123,8 @@ export default function OrderStageBar({
   }
 
   const renderMilestoneIcon = (milestone: OrderItemMilestone, index: number) => {
-    const isCompleted = milestone.progress === 100
+    const isCompleted = milestone.progress === 100 && milestone.isDone
+    const isCompletedButFail = milestone.progress === 100 && !milestone.isDone
     const isInProgress = milestone.progress > 0 && milestone.progress < 100
     const isCurrent = milestone.milestone.id === currentMilestone?.milestone.id
     const isNotStarted = milestone.progress === 0
@@ -135,7 +140,19 @@ export default function OrderStageBar({
             ]
           }}
         >
-          {isCompleted ? (
+          {isCompletedButFail ? (
+            <LinearGradient
+              colors={['#f87171', '#dc2626', '#991b1b']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              className='w-10 h-10 rounded-full overflow-hidden items-center justify-center'
+              style={{
+                boxShadow: '0 0 6px 0 rgba(153, 27, 27, 0.6)'
+              }}
+            >
+              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='white' size={18} />
+            </LinearGradient>
+          ) : isCompleted ? (
             <LinearGradient
               colors={['#6ee7b7', '#34d399', '#10b981']}
               start={{ x: 0, y: 0 }}
@@ -170,7 +187,7 @@ export default function OrderStageBar({
   }
 
   return (
-    <View className='flex-1 mt-4'>
+    <View className='flex-1 mt-2'>
       <ScrollView
         ref={scrollViewRef}
         className='flex-1'
@@ -219,7 +236,12 @@ export default function OrderStageBar({
           ? completedMilestones.map((milestone) => (
               <View key={milestone.milestone.id} className='flex-row items-center gap-2'>
                 <View className='flex-row items-center gap-2 flex-1'>
-                  <View className='w-3 h-3 rounded-full bg-emerald-400' />
+                  {milestone.progress === 100 && milestone.isDone ? (
+                    <View className='w-3 h-3 rounded-full bg-emerald-400' />
+                  ) : null}
+                  {milestone.progress === 100 && !milestone.isDone ? (
+                    <View className='w-3 h-3 rounded-full bg-rose-400' />
+                  ) : null}
                   <Text className='text-sm font-inter-medium flex-1' numberOfLines={1}>
                     {milestone.milestone.name}
                   </Text>
@@ -228,9 +250,11 @@ export default function OrderStageBar({
                   <Text className='text-xs text-muted-foreground/50 text-right'>
                     {orderPlacedAt ? format(new Date(orderPlacedAt), "MMM dd, yyyy 'at' hh:mm a") : null}
                   </Text>
-                ) : (
+                ) : milestone.progress === 100 && milestone.isDone ? (
                   <MaterialCommunityIcons name='check' size={18} color='lightgray' />
-                )}
+                ) : milestone.progress === 100 && !milestone.isDone ? (
+                  <MaterialCommunityIcons name='cancel' size={18} color='lightgray' />
+                ) : null}
               </View>
             ))
           : null}

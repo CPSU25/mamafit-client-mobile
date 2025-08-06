@@ -13,7 +13,7 @@ import { ICON_SIZE, PRIMARY_COLOR, styles } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { cn } from '~/lib/utils'
 import { Diary, Measurement } from '~/types/diary.type'
-import PreviewLatestMeasurement from '../preview-latest-measurement'
+import PreviewLatestMeasurement from '../order-detail/preview-latest-measurement'
 import PreviewDiaryCard from './preview-diary-card'
 
 interface DiarySectionProps {

@@ -131,37 +131,39 @@ export default function PaymentQRCode() {
   if (isPaymentSuccess) {
     return (
       <SafeView>
-        <View className='flex-1 p-4'>
-          <View className='flex-1 items-center justify-center'>
-            <LottieView
-              source={require('~/assets/lottie/payment-success.json')}
-              autoPlay
-              loop={false}
-              style={{ width: 300, height: 300 }}
-            />
-            <Text className='text-2xl font-inter-semibold mt-10'>Payment successful!</Text>
-            <Text className='text-sm text-muted-foreground mt-2 mx-10 text-center'>
-              Your transaction has been completed. Thank you for your purchase!
-            </Text>
-          </View>
+        <ScrollView className='flex-1' refreshControl={refreshControl} showsVerticalScrollIndicator={false}>
+          <View className='flex-1 p-4'>
+            <View className='flex-1 items-center justify-center mt-40'>
+              <LottieView
+                source={require('~/assets/lottie/payment-success.json')}
+                autoPlay
+                loop={false}
+                style={{ width: 300, height: 300 }}
+              />
+              <Text className='text-2xl font-inter-semibold mt-10'>Payment successful!</Text>
+              <Text className='text-sm text-muted-foreground mt-2 mx-10 text-center'>
+                Your transaction has been completed. Thank you for your purchase!
+              </Text>
+            </View>
 
-          <View className='flex flex-col gap-2 w-full'>
-            <Button
-              className='w-full'
-              onPress={() =>
-                router.replace({
-                  pathname: '/order/[orderId]',
-                  params: { orderId }
-                })
-              }
-            >
-              <Text className='font-inter-medium'>View Order</Text>
-            </Button>
-            <Button className='w-full' variant='outline' onPress={handleGoHome}>
-              <Text className='font-inter-medium'>Back To Home</Text>
-            </Button>
+            <View className='flex flex-col gap-2 w-full mt-32'>
+              <Button
+                className='w-full'
+                onPress={() =>
+                  router.replace({
+                    pathname: '/order/[orderId]',
+                    params: { orderId }
+                  })
+                }
+              >
+                <Text className='font-inter-medium'>View Order</Text>
+              </Button>
+              <Button className='w-full' variant='outline' onPress={handleGoHome}>
+                <Text className='font-inter-medium'>Back To Home</Text>
+              </Button>
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </SafeView>
     )
   }

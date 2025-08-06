@@ -12,15 +12,9 @@ interface PresetOrderItemProps {
   preset: PresetItem
   iconSize: number
   onRemoveAddOnOption?: (optionId: string) => void
-  addOnsSubtotal: number
 }
 
-export default function PresetOrderItem({
-  preset,
-  iconSize,
-  addOnsSubtotal,
-  onRemoveAddOnOption
-}: PresetOrderItemProps) {
+export default function PresetOrderItem({ preset, iconSize, onRemoveAddOnOption }: PresetOrderItemProps) {
   const router = useRouter()
   const presetImage = preset.images && Array.isArray(preset.images) && preset.images.length > 0 ? preset.images[0] : ''
   const componentOptions =
@@ -31,22 +25,26 @@ export default function PresetOrderItem({
   return (
     <View className='p-3 gap-4'>
       <View className='flex flex-row gap-4 items-center'>
-        {presetImage && <AutoHeightImage uri={presetImage} width={120} />}
+        {presetImage && <AutoHeightImage uri={presetImage} width={120} className='rounded-xl' />}
 
         <View className='flex-1'>
-          <Text className='font-inter-semibold'>{preset.styleName || 'Unknown'} Dress</Text>
-          <Text className='text-xs text-muted-foreground'>Custom Made-to-Order</Text>
+          <Text className='font-inter-semibold'>{preset.styleName || 'MamaFit Custom'} Dress</Text>
+          <Text className='text-xs text-muted-foreground'>
+            {preset.styleName ? 'Made-to-Order Custom Style' : 'Tailored Just for You'}
+          </Text>
 
-          <View className='bg-muted/70 rounded-2xl p-3 gap-2 mt-2'>
-            {getOrderedComponentOptions(componentOptions).map((option) =>
-              option ? (
-                <View className='flex-row items-center justify-between' key={option.componentName}>
-                  <Text className='text-xs text-muted-foreground'>{option.componentName}</Text>
-                  <Text className='text-xs font-inter-medium text-foreground'>{option.name}</Text>
-                </View>
-              ) : null
-            )}
-          </View>
+          {componentOptions && componentOptions.length > 0 ? (
+            <View className='bg-muted/70 rounded-2xl p-3 gap-2 mt-2'>
+              {getOrderedComponentOptions(componentOptions).map((option) =>
+                option ? (
+                  <View className='flex-row items-center justify-between' key={option.componentName}>
+                    <Text className='text-xs text-muted-foreground'>{option.componentName}</Text>
+                    <Text className='text-xs font-inter-medium text-foreground'>{option.name}</Text>
+                  </View>
+                ) : null
+              )}
+            </View>
+          ) : null}
         </View>
       </View>
 

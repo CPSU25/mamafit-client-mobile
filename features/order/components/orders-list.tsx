@@ -6,7 +6,7 @@ import { Text } from '~/components/ui/text'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { useGetOrders } from '../hooks/use-get-orders'
-import OrderCard from './order-card'
+import OrderCard from './order-detail/order-card'
 
 interface OrdersListProps {
   currentStatus: CurrentStatus

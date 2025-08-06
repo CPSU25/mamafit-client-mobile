@@ -312,6 +312,7 @@ export const getOrderItemTypeStyle = (type: OrderItemType): OrderItemStyleType =
         tagColor: 'bg-purple-50'
       }
     case OrderItemType.Preset:
+    case OrderItemType.Warranty:
       return {
         iconColor: '#2563eb',
         icon: 'library-add-check',

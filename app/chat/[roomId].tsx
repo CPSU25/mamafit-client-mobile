@@ -131,8 +131,8 @@ export default function ChatRoomScreen() {
             </View>
           ) : !messages || messages.length === 0 ? (
             <View className='flex-1 items-center justify-center p-4'>
-              <Text className='text-center text-muted-foreground mb-2'>No messages yet</Text>
-              <Text className='text-center text-muted-foreground text-sm'>
+              <Text className='text-center text-muted-foreground mb-1'>No messages yet</Text>
+              <Text className='text-center text-muted-foreground text-xs'>
                 Start a conversation by sending a message
               </Text>
             </View>
