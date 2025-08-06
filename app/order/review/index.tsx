@@ -511,12 +511,7 @@ export default function ReviewOrderScreen() {
 
     if (orderType === 'preset' && preset) {
       return (
-        <PresetOrderItem
-          preset={preset}
-          iconSize={SMALL_ICON_SIZE}
-          onRemoveAddOnOption={handleRemoveAddOnOption}
-          addOnsSubtotal={addOnsSubtotal}
-        />
+        <PresetOrderItem preset={preset} iconSize={SMALL_ICON_SIZE} onRemoveAddOnOption={handleRemoveAddOnOption} />
       )
     }
 

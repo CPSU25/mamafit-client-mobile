@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
-import SignalRHealth from '~/components/signalr-health'
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
 import { Switch } from '~/components/ui/switch'
@@ -169,19 +168,11 @@ export default function ProfileScreen() {
           <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
         </TouchableOpacity>
         <Separator />
-        <TouchableOpacity className='flex-row items-center p-4'>
-          <Feather name='percent' size={20} color={PRIMARY_COLOR.LIGHT} />
-          <Text className='font-inter-medium ml-2.5'>My Vouchers</Text>
-          <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
-        </TouchableOpacity>
-        <Separator />
         <Pressable className='flex-row items-center p-4' onPress={toggleColorScheme}>
           <Feather name='moon' size={20} color={PRIMARY_COLOR.LIGHT} />
           <Text className='font-inter-medium ml-2.5 flex-1'>Dark Mode</Text>
           <Switch checked={checked} onCheckedChange={toggleColorScheme} />
         </Pressable>
-
-        <SignalRHealth />
       </ScrollView>
     </SafeView>
   )

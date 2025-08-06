@@ -1,22 +1,29 @@
 import { Feather } from '@expo/vector-icons'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useEffect } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
-import { TouchableOpacity, View } from 'react-native'
+import { Image, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
+import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import { InfoCard, TipCard } from '~/components/ui/alert-card'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
 import { Text } from '~/components/ui/text'
+import { useGetOrderItem } from '~/features/order/hooks/use-get-order-item'
 import CreateWarrantyRequestForm from '~/features/warranty-request/components/create-warranty-request-form'
 import { useCreateWarrantyRequest } from '~/features/warranty-request/hooks/use-create-warranty-request'
 import { CreateWarrantyRequestSchema } from '~/features/warranty-request/validations'
 import { useImagePicker } from '~/hooks/use-image-picker'
 import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
+import { OrderItemType } from '~/types/order.type'
 
 export default function CreateWarrantyRequestScreen() {
   const router = useRouter()
-  const { methods } = useCreateWarrantyRequest()
+  const { methods, createWarrantyMutation } = useCreateWarrantyRequest()
+  const { orderItemId } = useLocalSearchParams<{ orderItemId: string }>()
+
+  const { data: orderItem, isLoading: isLoadingOrderItem } = useGetOrderItem(orderItemId)
 
   const currentImages = methods.watch('images')
 
@@ -25,6 +32,12 @@ export default function CreateWarrantyRequestScreen() {
     maxSizeInMB: 5,
     initialImages: currentImages
   })
+
+  useEffect(() => {
+    if (orderItemId) {
+      methods.setValue('warrantyOrderItemId', orderItemId)
+    }
+  }, [orderItemId, methods])
 
   const handleGoBack = () => {
     if (router.canGoBack()) {
@@ -36,6 +49,12 @@ export default function CreateWarrantyRequestScreen() {
 
   const onSubmit: SubmitHandler<CreateWarrantyRequestSchema> = (data) => {
     console.log(data)
+
+    createWarrantyMutation.mutate(data)
+  }
+
+  if (isLoadingOrderItem) {
+    return <Loading />
   }
 
   return (
@@ -50,11 +69,19 @@ export default function CreateWarrantyRequestScreen() {
       <View className='bg-muted h-2' />
 
       <View className='flex-1 gap-4 p-4'>
-        <Animated.View entering={FadeInDown.delay(100)}>
-          <Card className='p-3' style={styles.container}>
-            <Text>Order item detail goes here</Text>
-          </Card>
-        </Animated.View>
+        {orderItem?.itemType === OrderItemType.Preset ? (
+          <Animated.View entering={FadeInDown.delay(100)}>
+            <Card className='p-2 flex-row items-center gap-3' style={styles.container}>
+              <Image source={{ uri: orderItem?.preset?.images?.[0] }} className='w-20 h-20 rounded-xl' />
+              <View className='flex-1'>
+                <Text className='text-sm font-inter-medium'>{orderItem?.preset?.styleName || 'Custom'} Dress</Text>
+                <Text className='text-xs text-muted-foreground'>
+                  {orderItem?.preset?.styleName ? 'Made-to-Order Custom Style' : 'Tailored Just for You'}
+                </Text>
+              </View>
+            </Card>
+          </Animated.View>
+        ) : null}
 
         <FormProvider {...methods}>
           <CreateWarrantyRequestForm
@@ -91,8 +118,10 @@ export default function CreateWarrantyRequestScreen() {
 
           <View className='flex-1' />
 
-          <Button onPress={methods.handleSubmit(onSubmit)} disabled={isUploading}>
-            <Text className='font-inter-medium'>Submit Warranty</Text>
+          <Button onPress={methods.handleSubmit(onSubmit)} disabled={isUploading || createWarrantyMutation.isPending}>
+            <Text className='font-inter-medium'>
+              {createWarrantyMutation.isPending ? 'Submitting...' : 'Submit Warranty'}
+            </Text>
           </Button>
         </FormProvider>
       </View>

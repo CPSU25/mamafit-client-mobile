@@ -94,7 +94,12 @@ export const selectAddOnOptionFormSchema = z
     }
   })
 
+export const cancelOrderFormSchema = z.object({
+  canceledReason: z.string().min(1, { message: 'Reason is required' }).max(100, { message: 'Reason is too long' })
+})
+
 export type AddOnOptionFormSchema = z.infer<typeof addOnOptionFormSchema>
 export type PlacePresetOrderFormSchema = z.infer<typeof placePresetOrderFormSchema>
 export type PlaceDesignRequestOrderFormSchema = z.infer<typeof placeDesignRequestOrderFormSchema>
 export type SelectAddOnOptionFormSchema = z.infer<typeof selectAddOnOptionFormSchema>
+export type CancelOrderFormSchema = z.infer<typeof cancelOrderFormSchema>

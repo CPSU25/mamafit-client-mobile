@@ -76,7 +76,8 @@ export enum OrderStatus {
 export enum OrderItemType {
   DesignRequest = 'DESIGN_REQUEST',
   Preset = 'PRESET',
-  ReadyToBuy = 'READY_TO_BUY'
+  ReadyToBuy = 'READY_TO_BUY',
+  Warranty = 'WARRANTY'
 }
 
 export interface DesignRequest {
@@ -98,6 +99,7 @@ export interface OrderItem {
   createdAt: string
   updatedAt: string
   maternityDressDetail: any | null
+  parentOrderItemId: string | null
   preset: Preset | null
   designRequest: DesignRequest | null
   orderId: string
@@ -152,6 +154,7 @@ export interface Order {
   branchId: string | null
   userId: string
   voucherDiscountId: string | null
+  trackingOrderCode: string | null
   type: OrderType
   status: OrderStatus
   totalAmount: number
@@ -163,6 +166,7 @@ export interface Order {
   paymentType: PaymentType
   canceledAt: string | null
   canceledReason: string | null
+  receivedAt: string | null
   subTotalAmount: number
   warrantyCode: string | null
 }
@@ -196,4 +200,23 @@ export interface OrderItemMilestone {
 export interface DesignerInfo {
   designer: User | null
   chatRoomId: string | null
+}
+
+export interface WarrantyRequest {
+  id: string
+  warrantyOrderItemId: string
+  orderId: string
+  orderCode: string
+  images: string[]
+  description: string
+  isFactoryError: boolean | null
+  rejectedReason: string | null
+  fee: number | null
+  status: string
+  warrantyRound: number
+  createdBy: string
+  updatedBy: null
+  createdAt: string
+  updatedAt: string
+  isDeleted: boolean
 }

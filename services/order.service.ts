@@ -9,6 +9,7 @@ import {
   DesignRequest,
   Order,
   OrderDetail,
+  OrderItem,
   OrderItemMilestone,
   OrderStatus,
   OrderStatusCount,
@@ -108,6 +109,24 @@ class OrderService {
 
   async getLatestMeasurement(diaryId: string) {
     const { data } = await api.get<BaseResponse<Measurement>>(`measurement/lasted/measurement-diary/${diaryId}`)
+
+    return data.data
+  }
+
+  async cancelOrder({ orderId, canceledReason }: { orderId: string; canceledReason: string }) {
+    const { data } = await api.put<BaseResponse<null>>(`order/${orderId}/cancelled?cancelReason=${canceledReason}`)
+
+    return data.data
+  }
+
+  async receiveOrder(orderId: string) {
+    const { data } = await api.put<BaseResponse<null>>(`order/${orderId}/received`)
+
+    return data.data
+  }
+
+  async getOrderItem(orderItemId: string) {
+    const { data } = await api.get<BaseResponse<OrderItem>>(`order-items/${orderItemId}`)
 
     return data.data
   }
