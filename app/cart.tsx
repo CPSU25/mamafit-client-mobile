@@ -72,12 +72,6 @@ export default function CartScreen() {
           </Text>
         </View>
         <Separator />
-        <TouchableOpacity className='flex flex-row items-center gap-4 p-4'>
-          <Feather name='shopping-bag' size={20} color={PRIMARY_COLOR.LIGHT} />
-          <Text className='text-sm font-inter-medium'>MamaFit Vouchers</Text>
-          <Feather name='chevron-right' size={20} color={PRIMARY_COLOR.LIGHT} className='ml-auto' />
-        </TouchableOpacity>
-        <Separator />
         <View className='flex flex-row justify-between items-center p-4'>
           <View className='flex flex-row items-center gap-4'>
             <Checkbox checked={checkAll} onCheckedChange={setCheckAll} />

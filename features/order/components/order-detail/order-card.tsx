@@ -68,9 +68,9 @@ export default function OrderCard({ order }: OrderCardProps) {
         <View className='p-2'>
           <View className='flex-row items-center gap-2 flex-wrap'>
             {order.type === OrderType.Warranty ? (
-              <View className='px-3 py-1.5 bg-pink-50 rounded-xl flex-row items-center gap-1.5'>
-                <MaterialIcons name='safety-check' size={14} color='#db2777' />
-                <Text className='text-xs text-pink-600 font-inter-medium'>Warranty Order</Text>
+              <View className='px-3 py-1.5 bg-blue-50 rounded-lg flex-row items-center gap-1.5'>
+                <MaterialIcons name='safety-check' size={14} color='#2563eb' />
+                <Text className='text-xs text-blue-600 font-inter-medium'>Warranty Order</Text>
               </View>
             ) : null}
 
@@ -222,7 +222,7 @@ export default function OrderCard({ order }: OrderCardProps) {
             <TouchableOpacity
               onPress={() =>
                 router.push({
-                  pathname: '/order/warranty/[orderItemId]',
+                  pathname: '/order/warranty/[orderItemId]/create',
                   params: { orderItemId: order?.items[0]?.parentOrderItemId ?? order?.items[0]?.id }
                 })
               }
