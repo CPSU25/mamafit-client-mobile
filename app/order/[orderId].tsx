@@ -8,6 +8,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
 import { Card } from '~/components/ui/card'
 import { Text } from '~/components/ui/text'
+import { useGetDesignRequestPreset } from '~/features/design-request/hooks/use-get-design-request-preset'
+import { useGetDesignerInfo } from '~/features/design-request/hooks/use-get-designer-info'
 import DeliveryInformation from '~/features/order/components/order-detail/delivery-information'
 import DesignRequestInformation from '~/features/order/components/order-detail/design-request-information'
 import DesignRequestOrderItem from '~/features/order/components/order-detail/design-request-order-item'
@@ -19,15 +21,13 @@ import OrderProgress from '~/features/order/components/order-detail/order-progre
 import PresetOrderItem from '~/features/order/components/order-detail/preset-order-item'
 import WarrantyInfoCard from '~/features/order/components/order-detail/warranty-info-card'
 import { ORDER_STATUS_TYPES, statusStyles } from '~/features/order/constants'
-import { useGetDesignRequestPreset } from '~/features/design-request/hooks/use-get-design-request-preset'
-import { useGetDesignerInfo } from '~/features/design-request/hooks/use-get-designer-info'
 import { useGetOrder } from '~/features/order/hooks/use-get-order'
 import { useGetOrderItemMilestones } from '~/features/order/hooks/use-get-order-item-milestones'
-import { useGetWarrantyRequest } from '~/features/warranty-request/hooks/use-get-warranty-request'
 import { PresetItem } from '~/features/order/types'
 import { getOrderItemTypeStyle, getStatusIcon } from '~/features/order/utils'
 import { useGetPresetDetail } from '~/features/preset/hooks/use-get-preset-detail'
 import { useGetProfile } from '~/features/user/hooks/use-get-profile'
+import { useGetWarrantyRequest } from '~/features/warranty-request/hooks/use-get-warranty-request'
 import { useAuth } from '~/hooks/use-auth'
 import { useGetConfig } from '~/hooks/use-get-config'
 import { useRefreshs } from '~/hooks/use-refresh'
@@ -344,9 +344,9 @@ export default function ViewOrderDetailScreen() {
             <Card className='bg-muted/5' style={styles.container}>
               <View className='flex-row items-center gap-2 flex-wrap p-3'>
                 {order?.type === OrderType.Warranty ? (
-                  <View className='px-3 py-1.5 bg-pink-50 rounded-lg flex-row items-center gap-1.5'>
-                    <MaterialIcons name='safety-check' size={14} color='#db2777' />
-                    <Text className='text-xs text-pink-600 font-inter-medium'>Warranty Order</Text>
+                  <View className='px-3 py-1.5 bg-blue-50 rounded-lg flex-row items-center gap-1.5'>
+                    <MaterialIcons name='safety-check' size={14} color='#2563eb' />
+                    <Text className='text-xs text-blue-600 font-inter-medium'>Warranty Order</Text>
                   </View>
                 ) : null}
 
