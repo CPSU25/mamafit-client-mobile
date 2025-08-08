@@ -4,16 +4,7 @@ import { AddOn, AddOnOption } from '~/types/add-on.type'
 import { OrderItemTemp } from '~/types/order-item.type'
 import { OrderItemType, OrderStatus } from '~/types/order.type'
 import { ADD_ON_IMAGE_CONFIG, DEFAULT_ADD_ON_IMAGE, ORDERED_SIZES, ORDERED_TYPES } from './constants'
-import {
-  AddOnImageConfig,
-  AddOnMap,
-  AddOnOptionItem,
-  OptionMap,
-  OrderItemStyleType,
-  PositionInfo,
-  PresetItem,
-  SizeInfo
-} from './types'
+import { AddOnImageConfig, AddOnMap, OptionMap, OrderItemStyleType, PositionInfo, SizeInfo } from './types'
 
 export const getAddOnImage = (name: string): AddOnImageConfig => {
   return ADD_ON_IMAGE_CONFIG[name] ?? DEFAULT_ADD_ON_IMAGE
@@ -211,11 +202,12 @@ export const getOrderItems = async () => {
     if (!orderItems) return null
 
     const parsedOrderItems = JSON.parse(orderItems) as OrderItemTemp<unknown>
+
     if (
       parsedOrderItems &&
       typeof parsedOrderItems === 'object' &&
-      'type' in parsedOrderItems &&
-      'items' in parsedOrderItems
+      'items' in parsedOrderItems &&
+      'type' in parsedOrderItems
     ) {
       return parsedOrderItems
     }
@@ -225,47 +217,6 @@ export const getOrderItems = async () => {
     console.error('Error getting order items:', error)
     return null
   }
-}
-
-export const savePresetToAsyncStorage = async (preset: PresetItem) => {
-  try {
-    await AsyncStorage.setItem(
-      'order-items',
-      JSON.stringify({
-        type: 'preset',
-        items: [preset]
-      })
-    )
-    return true
-  } catch (error) {
-    console.error('Error saving preset to AsyncStorage:', error)
-    return false
-  }
-}
-
-export const removeAddOnOptionFromPreset = (preset: PresetItem, optionId: string): PresetItem => {
-  const updatedAddOnOptions = preset.addOnOptions?.filter((option) => option.addOnOptionId !== optionId) || []
-  return { ...preset, addOnOptions: updatedAddOnOptions }
-}
-
-export const addAddOnOptionToPreset = (preset: PresetItem, newOption: AddOnOptionItem): PresetItem => {
-  const existingOptions = preset.addOnOptions || []
-  // Remove duplicates by id and position
-  const filteredOptions = existingOptions.filter(
-    (option) => option.addOnOptionId !== newOption.addOnOptionId && option.positionId !== newOption.positionId
-  )
-
-  return {
-    ...preset,
-    addOnOptions: [...filteredOptions, newOption]
-  }
-}
-
-export const convertAddOnOptionsToFormFormat = (addOnOptions: AddOnOptionItem[]) => {
-  return addOnOptions.map((option) => ({
-    addOnOptionId: option.addOnOptionId,
-    value: option.value
-  }))
 }
 
 export const getStatusIcon = (status: OrderStatus): keyof typeof MaterialCommunityIcons.glyphMap => {
@@ -314,11 +265,11 @@ export const getOrderItemTypeStyle = (type: OrderItemType): OrderItemStyleType =
     case OrderItemType.Preset:
     case OrderItemType.Warranty:
       return {
-        iconColor: '#db2777',
+        iconColor: '#0d9488',
         icon: 'library-add-check',
         text: 'Preset Order',
-        textColor: 'text-pink-600',
-        tagColor: 'bg-pink-50'
+        textColor: 'text-teal-600',
+        tagColor: 'bg-teal-50'
       }
     case OrderItemType.ReadyToBuy:
       return {

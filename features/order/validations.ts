@@ -21,17 +21,22 @@ export const addOnOptionFormSchema = z.object({
   value: z.string()
 })
 
+export const presetFormSchema = z.object({
+  id: z.string().min(1, { message: 'Preset ID is required' }),
+  quantity: z.number().min(1, { message: 'Quantity is required' }),
+  options: z.array(addOnOptionFormSchema)
+})
+
 // Schema for preset order placement
 export const placePresetOrderFormSchema = z
   .object({
-    presetId: z.string().min(1, { message: 'Preset is required' }),
+    presets: z.array(presetFormSchema),
     addressId: z.string().nullable(),
     branchId: z.string().nullable(),
     shippingFee: z.number().min(0, { message: 'Shipping fee is required' }),
     voucherDiscountId: z.string().nullable(),
     measurementDiaryId: z.string().min(1, { message: 'Measurement diary is required' }),
     measurementId: z.string().min(1, { message: 'Measurement is required' }),
-    options: z.array(addOnOptionFormSchema),
     isOnline: z.boolean(),
     paymentMethod: z.nativeEnum(PaymentMethod),
     paymentType: z.nativeEnum(PaymentType),

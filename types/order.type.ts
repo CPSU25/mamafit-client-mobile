@@ -1,3 +1,4 @@
+import { AddOnOption } from './add-on.type'
 import { Address } from './address.type'
 import { DirectionResponse, User } from './common'
 import { DiaryDetail } from './diary.type'
@@ -109,6 +110,7 @@ export interface OrderItem {
   price: number
   quantity: number
   warrantyDate: string | null
+  addOnOptions: AddOnOption[]
 }
 
 export enum OrderType {

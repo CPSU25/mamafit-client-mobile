@@ -48,10 +48,6 @@ export interface AddOnImageConfig {
   textColor: string
 }
 
-export interface PresetItem extends PresetWithComponentOptions {
-  addOnOptions: AddOnOptionItem[]
-}
-
 export interface AddOnOptionItem {
   addOnOptionId: string
   name: string

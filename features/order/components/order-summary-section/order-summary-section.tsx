@@ -5,7 +5,6 @@ import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
 import { OrderItemTemp } from '~/types/order-item.type'
-import { PresetWithComponentOptions } from '~/types/preset.type'
 
 interface OrderSummarySectionProps {
   isLoadingShippingFee: boolean
@@ -13,7 +12,7 @@ interface OrderSummarySectionProps {
   renderOrderSummaryContent: () => React.JSX.Element
   iconSize: number
   orderItems: OrderItemTemp<unknown> | null
-  preset: PresetWithComponentOptions | null
+  fullMerchandiseTotal: number
 }
 
 export default function OrderSummarySection({
@@ -22,7 +21,7 @@ export default function OrderSummarySection({
   renderOrderSummaryContent,
   iconSize,
   orderItems,
-  preset
+  fullMerchandiseTotal
 }: OrderSummarySectionProps) {
   return (
     <Card style={[styles.container]}>
@@ -60,11 +59,11 @@ export default function OrderSummarySection({
       <Separator />
       <View className='p-3 flex flex-row'>
         <Text className='text-sm font-inter-medium flex-1'>
-          Total {orderItems?.items && Array.isArray(orderItems.items) ? orderItems.items.length : 0} Item(s)
+          Total {Object.keys(orderItems?.items || {}).length} Item(s)
         </Text>
         <Text className='font-inter-medium text-sm'>
           <Text className='underline font-inter-medium text-xs'>đ</Text>
-          {preset?.price && preset?.price?.toLocaleString('vi-VN')}
+          {fullMerchandiseTotal.toLocaleString('vi-VN')}
         </Text>
       </View>
     </Card>

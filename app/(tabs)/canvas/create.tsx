@@ -1,65 +1,46 @@
-import { Feather, FontAwesome, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useRouter } from 'expo-router'
+import { FontAwesome } from '@expo/vector-icons'
 import { useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
-import { Dimensions, ImageBackground, ScrollView, TouchableOpacity, View } from 'react-native'
-
+import { ImageBackground, TouchableOpacity, View } from 'react-native'
 import { Drawer } from 'react-native-drawer-layout'
-import AutoHeightImage from '~/components/auto-height-image'
 import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
-import { PresetItem } from '~/features/order/types'
+import { useAddToCart } from '~/features/cart/hooks/use-add-to-cart'
+import { AddToCartFormSchema } from '~/features/cart/validations'
 import DressBuilderForm from '~/features/preset/components/dress-builder-form'
 import { useGetPreset } from '~/features/preset/hooks/use-get-preset'
 import { DressBuilderFormSchema, keysToExtract } from '~/features/preset/validations'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
+import { OrderItemType } from '~/types/order.type'
 import { PresetWithComponentOptions } from '~/types/preset.type'
 
 export default function CreateCanvasScreen() {
-  const router = useRouter()
   const [preset, setPreset] = useState<PresetWithComponentOptions | null>(null)
-  const [isSaving, setIsSaving] = useState(false)
   const [open, setOpen] = useState(false)
 
   const { methods, getPresetMutation } = useGetPreset()
+  const { methods: addToCartMethods, addToCartMutation } = useAddToCart()
 
   const handleSubmit: SubmitHandler<DressBuilderFormSchema> = async (data) => {
     const filteredData = keysToExtract.map((key) => data[key])
     const preset = await getPresetMutation.mutateAsync(filteredData)
-    setPreset(preset)
-    setOpen(false)
+    if (preset) {
+      addToCartMethods.setValue('itemId', preset.id)
+      addToCartMethods.setValue('type', OrderItemType.Preset)
+      setPreset(preset)
+      setOpen(false)
+    }
+  }
+
+  const handleAddToCart: SubmitHandler<AddToCartFormSchema> = async (data) => {
+    console.log(data)
+
+    addToCartMutation.mutate(data)
   }
 
   const toggleDrawer = () => {
     setOpen((prevOpen) => !prevOpen)
-  }
-
-  const handleCheckOut = async () => {
-    if (!preset) return
-
-    try {
-      setIsSaving(true)
-
-      const newPreset: PresetItem = {
-        ...preset,
-        addOnOptions: []
-      }
-
-      await AsyncStorage.setItem(
-        'order-items',
-        JSON.stringify({
-          type: 'preset',
-          items: [newPreset]
-        })
-      )
-      router.push('/order/review')
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setIsSaving(false)
-    }
   }
 
   return (
@@ -106,8 +87,8 @@ export default function CreateCanvasScreen() {
               >
                 <FontAwesome name='paint-brush' size={24} color={PRIMARY_COLOR.LIGHT} />
               </TouchableOpacity>
-              <Button onPress={handleCheckOut} disabled={isSaving}>
-                <Text className='font-inter-medium'>{isSaving ? 'Checking Out...' : 'Check Out Now!'}</Text>
+              <Button onPress={addToCartMethods.handleSubmit(handleAddToCart)} disabled={addToCartMutation.isPending}>
+                <Text className='font-inter-medium'>{addToCartMutation.isPending ? 'Adding...' : 'Add to Cart'}</Text>
               </Button>
             </View>
           </View>
