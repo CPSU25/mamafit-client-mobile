@@ -1,5 +1,6 @@
 import { Feather } from '@expo/vector-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
@@ -12,18 +13,13 @@ import AddOnsList from '~/features/order/components/add-on-section/add-ons-list'
 import AddOptionForm from '~/features/order/components/add-on-section/add-option-form'
 import OptionsList from '~/features/order/components/add-on-section/options-list'
 import { useGetAddOns } from '~/features/order/hooks/use-get-add-ons'
-import { AddOnMap, AddOnOptionItem, OptionMap, PresetItem } from '~/features/order/types'
-import {
-  addAddOnOptionToPreset,
-  getOrderItems,
-  getValidPair,
-  savePresetToAsyncStorage,
-  transformAddOns,
-  transformOptions
-} from '~/features/order/utils'
+import { AddOnMap, AddOnOptionItem, OptionMap } from '~/features/order/types'
+import { getOrderItems, getValidPair, transformAddOns, transformOptions } from '~/features/order/utils'
 import { selectAddOnOptionFormSchema, SelectAddOnOptionFormSchema } from '~/features/order/validations'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
+import { OrderItemTemp, PresetInStorage } from '~/types/order-item.type'
+import { OrderItemType } from '~/types/order.type'
 
 export default function ChooseAddOnScreen() {
   const router = useRouter()
@@ -60,9 +56,12 @@ export default function ChooseAddOnScreen() {
 
     if (!orderItems) return
 
-    if (orderItems.type === 'preset' && type === 'preset') {
-      const preset = orderItems.items[0] as PresetItem
-      if (preset.id === itemId) {
+    if (orderItems.type === OrderItemType.Preset && type === OrderItemType.Preset) {
+      let presetOrderItem = orderItems as OrderItemTemp<PresetInStorage>
+
+      const preset = presetOrderItem.items[itemId as string]
+
+      if (preset.presetId === itemId) {
         const validPair = getValidPair(optionDetail, data.positionId, data.sizeId, data.type)
 
         if (!validPair) {
@@ -81,12 +80,19 @@ export default function ChooseAddOnScreen() {
           sizeId: data.sizeId
         }
 
-        const updatedPreset = addAddOnOptionToPreset(preset, addOnOption)
-        const success = await savePresetToAsyncStorage(updatedPreset)
+        // Prevent duplicated options on the same position
+        const filteredOptions = preset.options.filter(
+          (option) => option.addOnOptionId !== addOnOption.addOnOptionId && option.positionId !== addOnOption.positionId
+        )
 
-        if (success) {
-          router.back()
+        const updatedPreset = {
+          ...preset,
+          options: [...filteredOptions, addOnOption]
         }
+        presetOrderItem.items[itemId as string] = updatedPreset
+
+        await AsyncStorage.setItem('order-items', JSON.stringify(presetOrderItem))
+        router.back()
       }
     }
   }

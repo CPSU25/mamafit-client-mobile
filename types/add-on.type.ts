@@ -30,6 +30,7 @@ export interface AddOnOption {
   updatedBy: string | null
   createdAt: string
   updatedAt: string
+  value: string | null
   position: Position
   size: Size
 }

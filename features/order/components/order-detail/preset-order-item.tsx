@@ -1,20 +1,25 @@
 import { useMemo } from 'react'
 import { Image, View } from 'react-native'
+import { Card } from '~/components/ui/card'
 import { Text } from '~/components/ui/text'
 import { getOrderedComponentOptions } from '~/lib/utils'
+import { AddOnOption } from '~/types/add-on.type'
 import { Preset, PresetWithComponentOptions } from '~/types/preset.type'
 
 interface PresetOrderItemProps {
   preset: Preset | null | undefined
   presetDetail: PresetWithComponentOptions | null | undefined
+  presetOptions: AddOnOption[]
   quantity: number | undefined
 }
 
-export default function PresetOrderItem({ preset, presetDetail, quantity }: PresetOrderItemProps) {
+export default function PresetOrderItem({ preset, presetDetail, presetOptions, quantity }: PresetOrderItemProps) {
   const orderedComponents = useMemo(
     () => getOrderedComponentOptions(presetDetail?.componentOptions || []),
     [presetDetail?.componentOptions]
   )
+
+  const hasOptions = presetOptions && Array.isArray(presetOptions) && presetOptions.length > 0
 
   return (
     <View className='gap-2 p-3'>
@@ -49,6 +54,40 @@ export default function PresetOrderItem({ preset, presetDetail, quantity }: Pres
             </View>
           ))}
         </View>
+      ) : null}
+      {hasOptions ? (
+        <>
+          <Card className='p-1 rounded-xl gap-2'>
+            {presetOptions.map((option) => (
+              <View key={option.id} className='flex-row items-center px-2 py-0.5 gap-2'>
+                {option.itemServiceType === 'IMAGE' && (
+                  <Image source={{ uri: option.value || '' }} className='w-8 h-8 rounded-lg' />
+                )}
+                {option.itemServiceType === 'TEXT' && (
+                  <Image source={require('~/assets/icons/font.png')} className='w-8 h-8' />
+                )}
+                {option.itemServiceType === 'PATTERN' && (
+                  <Image source={require('~/assets/icons/pattern.png')} className='w-8 h-8' />
+                )}
+                <View className='flex-1'>
+                  <Text className='native:text-sm font-inter-medium' numberOfLines={1}>
+                    {option.name}{' '}
+                    {option.itemServiceType === 'TEXT' && (
+                      <Text className='native:text-xs text-muted-foreground'>({option.value})</Text>
+                    )}
+                  </Text>
+                  <Text className='native:text-xs text-muted-foreground'>Position: {option.position.name}</Text>
+                </View>
+
+                <Text className='native:text-sm font-inter-medium text-blue-600'>
+                  <Text className='underline font-inter-medium native:text-xs text-blue-600'>đ</Text>
+                  {(quantity ? option.price * quantity : option.price).toLocaleString('vi-VN')}
+                  {quantity && quantity > 1 ? ` (x${quantity})` : ''}
+                </Text>
+              </View>
+            ))}
+          </Card>
+        </>
       ) : null}
     </View>
   )

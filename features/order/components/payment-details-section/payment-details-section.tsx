@@ -68,7 +68,7 @@ export default function PaymentDetailsSection({
 
         {addOnsSubtotal > 0 && addOnsCount > 0 ? (
           <View className='flex-row items-baseline'>
-            <Text className='text-xs text-muted-foreground flex-1'>Add-ons Subtotal ({addOnsCount})</Text>
+            <Text className='text-xs text-muted-foreground flex-1'>Add-Ons Subtotal ({addOnsCount})</Text>
             <Text className='text-xs text-muted-foreground'>
               <Text className='underline text-xs text-muted-foreground'>đ</Text>
               {addOnsSubtotal.toLocaleString('vi-VN')}

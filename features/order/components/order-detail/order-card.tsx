@@ -98,8 +98,8 @@ export default function OrderCard({ order }: OrderCardProps) {
         <Separator />
 
         {/* Items Section */}
-        <View className='p-2 gap-3'>
-          {order.items.map((item, index) => {
+        <View>
+          {order.items.map((item) => {
             let component = null
             if ((item.itemType === OrderItemType.Preset || item.itemType === OrderItemType.Warranty) && item.preset) {
               component = <PresetOrderItem key={item.id} item={item} />
@@ -113,9 +113,8 @@ export default function OrderCard({ order }: OrderCardProps) {
 
             if (component) {
               return (
-                <View key={item.id}>
+                <View className='pt-2' key={item.id}>
                   {component}
-                  {index < order.items.length - 1 && <View className='h-px bg-gray-100 mt-3' />}
                 </View>
               )
             }
@@ -123,7 +122,7 @@ export default function OrderCard({ order }: OrderCardProps) {
           })}
         </View>
 
-        <View className='m-2 items-end'>
+        <View className='mx-2 mt-3 mb-2 items-end'>
           <Text className='text-xs'>
             Total {order.items?.length} Item{order.items?.length > 1 ? 's' : ''}:{' '}
             <Text className='text-sm font-inter-semibold'>
@@ -133,7 +132,7 @@ export default function OrderCard({ order }: OrderCardProps) {
           </Text>
         </View>
 
-        <View className='px-2 pb-2 flex-row justify-end gap-2'>
+        <View className='px-2 pb-2 flex-row justify-end gap-2 mt-2'>
           {!isHiddenViewDetailsButton ? (
             <TouchableOpacity
               className='px-4 py-2 border border-border rounded-xl items-center'
@@ -152,18 +151,18 @@ export default function OrderCard({ order }: OrderCardProps) {
 
           {isDisplayReceiveButton ? (
             <TouchableOpacity
-              className='px-4 py-2 border border-indigo-50 rounded-xl items-center bg-indigo-100'
+              className='px-4 py-2 border border-border rounded-xl items-center'
               onPress={() => mutate(order?.id)}
               disabled={isPending}
             >
-              <Text className='text-sm font-inter-medium text-indigo-600'>{isPending ? 'Loading...' : 'Receive'}</Text>
+              <Text className='text-sm font-inter-medium'>{isPending ? 'Loading...' : 'Receive'}</Text>
             </TouchableOpacity>
           ) : null}
 
           {isDisplayCancelButton ? (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <TouchableOpacity className='px-4 py-2 bg-rose-50 rounded-xl items-center border border-rose-100'>
+                <TouchableOpacity className='px-4 py-2 rounded-xl items-center border border-border'>
                   <Text className='text-sm font-inter-medium text-rose-600'>
                     {cancelOrderMutation.isPending ? 'Canceling...' : 'Cancel Order'}
                   </Text>
@@ -204,7 +203,7 @@ export default function OrderCard({ order }: OrderCardProps) {
 
           {isDisplayPayButton ? (
             <TouchableOpacity
-              className='px-4 py-2 bg-emerald-50 rounded-xl items-center border border-emerald-100'
+              className='px-4 py-2 rounded-xl items-center border border-border'
               onPress={() =>
                 router.push({
                   pathname: '/payment/[orderId]/qr-code',
@@ -214,7 +213,7 @@ export default function OrderCard({ order }: OrderCardProps) {
                 })
               }
             >
-              <Text className='text-sm font-inter-medium text-emerald-600'>Pay Now</Text>
+              <Text className='text-sm font-inter-medium'>Pay Now</Text>
             </TouchableOpacity>
           ) : null}
 
@@ -226,15 +225,15 @@ export default function OrderCard({ order }: OrderCardProps) {
                   params: { orderItemId: order?.items[0]?.parentOrderItemId ?? order?.items[0]?.id }
                 })
               }
-              className='px-4 py-2 bg-amber-50 rounded-xl items-center border border-amber-100'
+              className='px-4 py-2 rounded-xl items-center border border-border'
             >
-              <Text className='text-sm font-inter-medium text-amber-600'>Demand Warranty</Text>
+              <Text className='text-sm font-inter-medium'>Demand Warranty</Text>
             </TouchableOpacity>
           ) : null}
 
           {isDisplayRateButton ? (
-            <TouchableOpacity className='px-4 py-2 bg-indigo-50 rounded-xl items-center border border-indigo-100'>
-              <Text className='text-sm font-inter-medium text-indigo-600'>Rate</Text>
+            <TouchableOpacity className='px-4 py-2 rounded-xl items-center'>
+              <Text className='text-sm font-inter-medium'>Rate</Text>
             </TouchableOpacity>
           ) : null}
         </View>
@@ -248,7 +247,7 @@ const PresetOrderItem = ({ item }: { item: OrderItem }) => {
   const itemPrice = price * quantity
 
   return (
-    <View className='flex-row items-start gap-3'>
+    <View className='flex-row items-start gap-3 px-2'>
       <View className='w-20 h-20 rounded-xl overflow-hidden bg-gray-50'>
         <Image source={{ uri: preset?.images[0] }} className='w-full h-full' resizeMode='contain' />
       </View>
@@ -278,7 +277,7 @@ const DesignRequestOrderItem = ({ item }: { item: OrderItem }) => {
   const itemPrice = price * quantity
 
   return (
-    <View className='flex-row items-start gap-3'>
+    <View className='flex-row items-start gap-3 px-2'>
       <View className='w-20 h-20 rounded-xl overflow-hidden bg-gray-50'>
         <Image source={{ uri: designRequest?.images[0] }} className='w-full h-full' resizeMode='cover' />
       </View>

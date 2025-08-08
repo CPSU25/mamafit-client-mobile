@@ -1,4 +1,6 @@
 import { JWTPayload } from 'jose'
+import { OrderItemType } from './order.type'
+import { Preset } from './preset.type'
 
 export interface BaseResponse<T> {
   data: T | null
@@ -167,4 +169,12 @@ export interface Polyline {
 
 export interface AppConfig {
   fields: { depositRate: number; designRequestServiceFee: number; name: string; presetVersions: number }
+}
+
+export interface CartItem {
+  preset: Preset | null
+  maternityDressDetail: any | null
+  quantity: number
+  type: OrderItemType
+  itemId: string
 }

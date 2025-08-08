@@ -1,4 +1,13 @@
+import { AddOnOptionItem } from '~/features/order/types'
+import { OrderItemType } from './order.type'
+
 export interface OrderItemTemp<T> {
-  type: string
-  items: T[]
+  type: OrderItemType
+  items: Record<string, T>
+}
+
+export interface PresetInStorage {
+  presetId: string
+  quantity: number
+  options: AddOnOptionItem[]
 }

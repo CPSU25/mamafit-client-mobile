@@ -23,7 +23,6 @@ import WarrantyInfoCard from '~/features/order/components/order-detail/warranty-
 import { ORDER_STATUS_TYPES, statusStyles } from '~/features/order/constants'
 import { useGetOrder } from '~/features/order/hooks/use-get-order'
 import { useGetOrderItemMilestones } from '~/features/order/hooks/use-get-order-item-milestones'
-import { PresetItem } from '~/features/order/types'
 import { getOrderItemTypeStyle, getStatusIcon } from '~/features/order/utils'
 import { useGetPresetDetail } from '~/features/preset/hooks/use-get-preset-detail'
 import { useGetProfile } from '~/features/user/hooks/use-get-profile'
@@ -152,8 +151,12 @@ export default function ViewOrderDetailScreen() {
   const [currentMilestone, setCurrentMilestone] = useState<OrderItemMilestone | null>(null)
 
   const merchandiseTotal = useMemo(() => {
-    return order?.items?.reduce((acc, item) => acc + (item.preset?.price || 0), 0)
-  }, [order?.items])
+    if (isDesignRequestOrder) {
+      return order?.items[0]?.price
+    }
+
+    return order?.items?.reduce((acc, item) => acc + (item.preset?.price || 0) * (item.quantity || 1), 0)
+  }, [order?.items, isDesignRequestOrder])
 
   const {
     data: presetDetail,
@@ -222,19 +225,19 @@ export default function ViewOrderDetailScreen() {
     if (!preset) return
 
     try {
-      const newPreset: PresetItem = {
-        ...preset,
-        addOnOptions: []
-      }
-
       await AsyncStorage.setItem(
         'order-items',
         JSON.stringify({
-          type: 'preset',
-          items: [newPreset]
+          type: OrderItemType.Preset,
+          items: {
+            [preset.id]: {
+              presetId: preset.id,
+              quantity: 1,
+              options: []
+            }
+          }
         })
       )
-      router.push('/order/review')
     } catch (error) {
       console.log(error)
     }
@@ -387,7 +390,8 @@ export default function ViewOrderDetailScreen() {
                       <PresetOrderItem
                         preset={preset.preset}
                         presetDetail={presetDetail}
-                        quantity={order?.items?.[0]?.quantity}
+                        presetOptions={preset.addOnOptions}
+                        quantity={preset.quantity}
                       />
                       <View
                         className={

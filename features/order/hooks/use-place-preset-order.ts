@@ -14,14 +14,13 @@ import {
 } from '../validations'
 
 const defaultValues: PlacePresetOrderFormSchema = {
-  presetId: '',
+  presets: [],
   addressId: null,
   branchId: null,
   shippingFee: 0,
   voucherDiscountId: null,
   measurementDiaryId: '',
   measurementId: '',
-  options: [],
   isOnline: true,
   paymentMethod: PaymentMethod.ONLINE_BANKING,
   paymentType: PaymentType.FULL,
@@ -47,6 +46,7 @@ export const usePlacePresetOrder = (onSuccess: () => void) => {
         queryClient.invalidateQueries({ queryKey: ['orders-count'] })
         queryClient.invalidateQueries({ queryKey: ['diary-detail'] })
         queryClient.invalidateQueries({ queryKey: ['measurement-detail'] })
+        queryClient.invalidateQueries({ queryKey: ['cart'] })
 
         router.replace({ pathname: '/payment/[orderId]/qr-code', params: { orderId } })
         setTimeout(() => {
