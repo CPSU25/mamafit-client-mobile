@@ -5,7 +5,8 @@ import { Card } from '~/components/ui/card'
 import { Label } from '~/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
 import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
-import { PaymentType, PlacePresetOrderFormSchema } from '../../validations'
+import { PaymentType } from '~/types/order.type'
+import { PlacePresetOrderFormSchema } from '../../validations'
 
 interface PaymentMethodsSectionProps {
   iconSize: number

@@ -28,7 +28,7 @@ import { usePlacePresetOrder } from '~/features/order/hooks/use-place-preset-ord
 import { useReviewOrderQueries } from '~/features/order/hooks/use-review-order-queries'
 import { AddOnOptionItem } from '~/features/order/types'
 import { getOrderItems } from '~/features/order/utils'
-import { DeliveryMethod, PaymentType, PlacePresetOrderFormSchema } from '~/features/order/validations'
+import { PlacePresetOrderFormSchema } from '~/features/order/validations'
 import { useGetPresetDetails } from '~/features/preset/hooks/use-get-preset-details'
 import { useAuth } from '~/hooks/use-auth'
 import { useRefreshs } from '~/hooks/use-refresh'
@@ -36,7 +36,7 @@ import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { Address } from '~/types/address.type'
 import { Diary } from '~/types/diary.type'
 import { OrderItemTemp, PresetInStorage } from '~/types/order-item.type'
-import { Branch, OrderItemType } from '~/types/order.type'
+import { Branch, DeliveryMethod, OrderItemType, PaymentType } from '~/types/order.type'
 import { FlattenedVoucher, VoucherBatchWithVouchers } from '~/types/voucher.type'
 
 const SMALL_ICON_SIZE = 18
@@ -249,9 +249,9 @@ export default function ReviewOrderScreen() {
     isFetched: isFetchedShippingFee
   } = useGetShippingFee({
     province:
-      deliveryMethod === DeliveryMethod.DELIVERY ? currentAddress?.province || '' : currentBranch?.province || '',
+      deliveryMethod === DeliveryMethod.Delivery ? currentAddress?.province || '' : currentBranch?.province || '',
     district:
-      deliveryMethod === DeliveryMethod.DELIVERY ? currentAddress?.district || '' : currentBranch?.district || '',
+      deliveryMethod === DeliveryMethod.Delivery ? currentAddress?.district || '' : currentBranch?.district || '',
     weight: 500
   })
 
@@ -462,7 +462,7 @@ export default function ReviewOrderScreen() {
 
   // Set default address to form if delivery method is delivery
   useEffect(() => {
-    if (isFetchedAddresses && defaultAddress?.id && setValue && deliveryMethod === DeliveryMethod.DELIVERY) {
+    if (isFetchedAddresses && defaultAddress?.id && setValue && deliveryMethod === DeliveryMethod.Delivery) {
       setValue('addressId', defaultAddress.id)
       setValue('branchId', null)
     }
@@ -470,7 +470,7 @@ export default function ReviewOrderScreen() {
 
   // Set default branch to form if delivery method is pick up
   useEffect(() => {
-    if (isFetchedBranches && defaultBranch?.id && setValue && deliveryMethod === DeliveryMethod.PICK_UP) {
+    if (isFetchedBranches && defaultBranch?.id && setValue && deliveryMethod === DeliveryMethod.PickUp) {
       setValue('branchId', defaultBranch.id)
       setValue('addressId', null)
     }
@@ -690,7 +690,7 @@ export default function ReviewOrderScreen() {
               />
             ) : null}
 
-            {branches && Array.isArray(branches) && deliveryMethod === DeliveryMethod.PICK_UP ? (
+            {branches && Array.isArray(branches) && deliveryMethod === DeliveryMethod.PickUp ? (
               <BranchSelectionModal
                 ref={branchSelectionModalRef}
                 branches={branches}

@@ -35,7 +35,6 @@ export default function OrderCard({ order }: OrderCardProps) {
 
   const isDisplayPayButton = order.status === OrderStatus.Created || order.status === OrderStatus.AwaitingPaidRest
   const isDisplayRateButton = order.status === OrderStatus.Completed
-  const isDisplayWarrantyButton = order.status === OrderStatus.Completed
   const isDisplayCancelButton = order.status === OrderStatus.Created
   const isHiddenViewDetailsButton = order.status === OrderStatus.Created || order.status === OrderStatus.Completed
   const isDisplayReceiveButton = order.status === OrderStatus.Delevering
@@ -217,23 +216,9 @@ export default function OrderCard({ order }: OrderCardProps) {
             </TouchableOpacity>
           ) : null}
 
-          {isDisplayWarrantyButton ? (
-            <TouchableOpacity
-              onPress={() =>
-                router.push({
-                  pathname: '/order/warranty/[orderItemId]/create',
-                  params: { orderItemId: order?.items[0]?.parentOrderItemId ?? order?.items[0]?.id }
-                })
-              }
-              className='px-4 py-2 rounded-xl items-center border border-border'
-            >
-              <Text className='text-sm font-inter-medium'>Demand Warranty</Text>
-            </TouchableOpacity>
-          ) : null}
-
           {isDisplayRateButton ? (
-            <TouchableOpacity className='px-4 py-2 rounded-xl items-center'>
-              <Text className='text-sm font-inter-medium'>Rate</Text>
+            <TouchableOpacity className='px-4 py-2 rounded-xl items-center border border-border'>
+              <Text className='text-sm font-inter-medium'>Rate Order</Text>
             </TouchableOpacity>
           ) : null}
         </View>

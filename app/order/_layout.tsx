@@ -13,8 +13,7 @@ export default function OrderLayout() {
       <Stack.Screen name='review' options={{ title: 'Review Order' }} />
       <Stack.Screen name='status/[orderStatus]' options={{ title: 'Orders By Status' }} />
       <Stack.Screen name='[orderId]' options={{ title: 'Order Detail' }} />
-      <Stack.Screen name='warranty/[orderItemId]' options={{ title: 'Create Warranty Request' }} />
-      <Stack.Screen name='warranty/policy' options={{ title: 'Warranty Policy' }} />
+      <Stack.Screen name='warranty' options={{ title: 'Warranty' }} />
     </Stack>
   )
 }

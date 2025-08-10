@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
+import { InfoCard } from '~/components/ui/alert-card'
 import { Card } from '~/components/ui/card'
 import { Text } from '~/components/ui/text'
 import { useGetDesignRequestPreset } from '~/features/design-request/hooks/use-get-design-request-preset'
@@ -20,13 +21,14 @@ import OrderDetailsActions from '~/features/order/components/order-detail/order-
 import OrderProgress from '~/features/order/components/order-detail/order-progress'
 import PresetOrderItem from '~/features/order/components/order-detail/preset-order-item'
 import WarrantyInfoCard from '~/features/order/components/order-detail/warranty-info-card'
+import WarrantyPresetOrderItem from '~/features/order/components/order-detail/warranty-preset-order-item'
 import { ORDER_STATUS_TYPES, statusStyles } from '~/features/order/constants'
 import { useGetOrder } from '~/features/order/hooks/use-get-order'
 import { useGetOrderItemMilestones } from '~/features/order/hooks/use-get-order-item-milestones'
 import { getOrderItemTypeStyle, getStatusIcon } from '~/features/order/utils'
 import { useGetPresetDetail } from '~/features/preset/hooks/use-get-preset-detail'
 import { useGetProfile } from '~/features/user/hooks/use-get-profile'
-import { useGetWarrantyRequest } from '~/features/warranty-request/hooks/use-get-warranty-request'
+import { useGetWarrantyRequestDetail } from '~/features/warranty-request/hooks/use-get-warranty-request-detail'
 import { useAuth } from '~/hooks/use-auth'
 import { useGetConfig } from '~/hooks/use-get-config'
 import { useRefreshs } from '~/hooks/use-refresh'
@@ -111,8 +113,7 @@ export default function ViewOrderDetailScreen() {
     () =>
       isPresetAndWarrantyOrder &&
       order?.status !== OrderStatus.Created &&
-      // order?.status !== OrderStatus.Confirmed &&
-      order?.status !== OrderStatus.InDesign &&
+      order?.status !== OrderStatus.Confirmed &&
       order?.status !== OrderStatus.Cancelled &&
       order?.status !== OrderStatus.Completed,
     [isPresetAndWarrantyOrder, order?.status]
@@ -120,10 +121,10 @@ export default function ViewOrderDetailScreen() {
   const isWarrantyOrder = useMemo(() => order?.type === OrderType.Warranty, [order?.type])
 
   const {
-    data: warrantyRequest,
-    isLoading: isLoadingWarrantyRequest,
-    refetch: refetchWarrantyRequest
-  } = useGetWarrantyRequest(order?.items[0]?.parentOrderItemId || '', Boolean(isWarrantyOrder) && isFetchedOrder)
+    data: warrantyRequestDetail,
+    isLoading: isLoadingWarrantyDetail,
+    refetch: refetchWarrantyRequestDetail
+  } = useGetWarrantyRequestDetail(order?.id ?? '', Boolean(isWarrantyOrder) && isFetchedOrder)
 
   const {
     data: currentUser,
@@ -178,7 +179,7 @@ export default function ViewOrderDetailScreen() {
     isLoadingDesignerInfo ||
     isLoadingConfig ||
     isLoadingDesignRequestDetail ||
-    isLoadingWarrantyRequest
+    isLoadingWarrantyDetail
 
   const { refreshControl } = useRefreshs([
     refetchOrder,
@@ -188,7 +189,7 @@ export default function ViewOrderDetailScreen() {
     refetchDesignerInfo,
     refetchConfig,
     refetchDesignRequestDetail,
-    refetchWarrantyRequest
+    refetchWarrantyRequestDetail
   ])
 
   useEffect(() => {
@@ -327,9 +328,20 @@ export default function ViewOrderDetailScreen() {
           scrollEventThrottle={16}
         >
           <View key={`order-content-${isViewMoreOrderDetails ? 'expanded' : 'collapsed'}`} className='gap-3 p-2'>
-            {/* Warranty Information */}
-            {isWarrantyOrder && warrantyRequest ? <WarrantyInfoCard warrantyRequest={warrantyRequest} /> : null}
+            {!isWarrantyOrder && !warrantyRequestDetail && order?.status === OrderStatus.Completed ? (
+              <InfoCard
+                title={`${config?.warrantyPeriod}-Day, ${config?.warrantyTime}-Claim Free Warranty`}
+                description={`Get ${config?.warrantyTime} free claims within ${config?.warrantyPeriod} days of delivery. After that, fees apply based on item condition.`}
+                delay={0}
+              />
+            ) : null}
 
+            {/* Warranty Information */}
+            {isWarrantyOrder && warrantyRequestDetail ? (
+              <WarrantyInfoCard warrantyRequestDetail={warrantyRequestDetail} />
+            ) : null}
+
+            {/* Delivery Information */}
             {!isDesignRequestOrder ? (
               <DeliveryInformation
                 status={order?.status}
@@ -342,8 +354,10 @@ export default function ViewOrderDetailScreen() {
               />
             ) : null}
 
-            {isPresetOrder ? <DiaryInformation diary={order?.measurementDiary} /> : null}
+            {/* Diary Information */}
+            {isPresetOrder && order?.measurementDiary ? <DiaryInformation diary={order?.measurementDiary} /> : null}
 
+            {/* Order Summary */}
             <Card className='bg-muted/5' style={styles.container}>
               <View className='flex-row items-center gap-2 flex-wrap p-3'>
                 {order?.type === OrderType.Warranty ? (
@@ -385,23 +399,36 @@ export default function ViewOrderDetailScreen() {
 
               {isPresetOrder ? (
                 <View className='gap-2'>
-                  {order?.items?.map((preset, index) => (
-                    <View key={preset.id}>
-                      <PresetOrderItem
-                        preset={preset.preset}
-                        presetDetail={presetDetail}
-                        presetOptions={preset.addOnOptions}
-                        quantity={preset.quantity}
-                      />
-                      <View
-                        className={
-                          index !== order?.items?.length - 1
-                            ? 'border-b border-muted-foreground/30 border-dashed mt-2'
-                            : ''
-                        }
-                      />
-                    </View>
-                  ))}
+                  {isWarrantyOrder
+                    ? order?.items?.map((preset, index) => (
+                        <View key={preset.id}>
+                          <WarrantyPresetOrderItem />
+                          <View
+                            className={
+                              index !== order?.items?.length - 1
+                                ? 'border-b border-muted-foreground/30 border-dashed'
+                                : ''
+                            }
+                          />
+                        </View>
+                      ))
+                    : order?.items?.map((preset, index) => (
+                        <View key={preset.id}>
+                          <PresetOrderItem
+                            preset={preset.preset}
+                            presetDetail={presetDetail}
+                            presetOptions={preset.addOnOptions}
+                            quantity={preset.quantity}
+                          />
+                          <View
+                            className={
+                              index !== order?.items?.length - 1
+                                ? 'border-b border-muted-foreground/30 border-dashed'
+                                : ''
+                            }
+                          />
+                        </View>
+                      ))}
                 </View>
               ) : null}
 
@@ -416,6 +443,7 @@ export default function ViewOrderDetailScreen() {
               </View>
             </Card>
 
+            {/* Order Progress */}
             {isDisplayOrderProgress ? (
               <OrderProgress
                 allCompletedMilestones={allCompletedMilestones}
@@ -429,8 +457,10 @@ export default function ViewOrderDetailScreen() {
               />
             ) : null}
 
+            {/* Designer Information */}
             {isDesignRequestOrder ? <DesignerInformation designerInfo={designerInfo} /> : null}
 
+            {/* Design Request Information */}
             {isDesignRequestOrder && designRequestDetail ? (
               <DesignRequestInformation designRequestDetail={designRequestDetail} handleCheckOut={handleCheckOut} />
             ) : null}

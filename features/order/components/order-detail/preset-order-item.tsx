@@ -45,50 +45,53 @@ export default function PresetOrderItem({ preset, presetDetail, presetOptions, q
           </View>
         </View>
       </View>
-      {orderedComponents.length > 0 ? (
-        <View className='bg-muted/50 rounded-xl p-3 gap-2'>
-          {orderedComponents.map((option) => (
-            <View className='flex-row items-center justify-between' key={option?.componentName}>
-              <Text className='text-xs text-muted-foreground'>{option?.componentName}</Text>
-              <Text className='text-xs font-inter-medium text-foreground'>{option?.name}</Text>
-            </View>
-          ))}
-        </View>
-      ) : null}
-      {hasOptions ? (
-        <>
-          <Card className='p-1 rounded-xl gap-2'>
-            {presetOptions.map((option) => (
-              <View key={option.id} className='flex-row items-center px-2 py-0.5 gap-2'>
-                {option.itemServiceType === 'IMAGE' && (
-                  <Image source={{ uri: option.value || '' }} className='w-8 h-8 rounded-lg' />
-                )}
-                {option.itemServiceType === 'TEXT' && (
-                  <Image source={require('~/assets/icons/font.png')} className='w-8 h-8' />
-                )}
-                {option.itemServiceType === 'PATTERN' && (
-                  <Image source={require('~/assets/icons/pattern.png')} className='w-8 h-8' />
-                )}
-                <View className='flex-1'>
-                  <Text className='native:text-sm font-inter-medium' numberOfLines={1}>
-                    {option.name}{' '}
-                    {option.itemServiceType === 'TEXT' && (
-                      <Text className='native:text-xs text-muted-foreground'>({option.value})</Text>
-                    )}
-                  </Text>
-                  <Text className='native:text-xs text-muted-foreground'>Position: {option.position.name}</Text>
-                </View>
-
-                <Text className='native:text-sm font-inter-medium text-blue-600'>
-                  <Text className='underline font-inter-medium native:text-xs text-blue-600'>đ</Text>
-                  {(quantity ? option.price * quantity : option.price).toLocaleString('vi-VN')}
-                  {quantity && quantity > 1 ? ` (x${quantity})` : ''}
-                </Text>
+      <View className='gap-2'>
+        {orderedComponents.length > 0 ? (
+          <View className='bg-muted/50 rounded-xl p-3 gap-2'>
+            {orderedComponents.map((option) => (
+              <View className='flex-row items-center justify-between' key={option?.componentName}>
+                <Text className='text-xs text-muted-foreground'>{option?.componentName}</Text>
+                <Text className='text-xs font-inter-medium text-foreground'>{option?.name}</Text>
               </View>
             ))}
-          </Card>
-        </>
-      ) : null}
+          </View>
+        ) : null}
+
+        {hasOptions ? (
+          <>
+            <Card className='p-1 rounded-xl gap-2'>
+              {presetOptions.map((option) => (
+                <View key={option.id} className='flex-row items-center px-2 py-0.5 gap-2'>
+                  {option.itemServiceType === 'IMAGE' && (
+                    <Image source={{ uri: option.value || '' }} className='w-8 h-8 rounded-lg' />
+                  )}
+                  {option.itemServiceType === 'TEXT' && (
+                    <Image source={require('~/assets/icons/font.png')} className='w-8 h-8' />
+                  )}
+                  {option.itemServiceType === 'PATTERN' && (
+                    <Image source={require('~/assets/icons/pattern.png')} className='w-8 h-8' />
+                  )}
+                  <View className='flex-1'>
+                    <Text className='native:text-sm font-inter-medium' numberOfLines={1}>
+                      {option.name}{' '}
+                      {option.itemServiceType === 'TEXT' && (
+                        <Text className='native:text-xs text-muted-foreground'>({option.value})</Text>
+                      )}
+                    </Text>
+                    <Text className='native:text-xs text-muted-foreground'>Position: {option.position.name}</Text>
+                  </View>
+
+                  <Text className='native:text-sm font-inter-medium text-blue-600'>
+                    <Text className='underline font-inter-medium native:text-xs text-blue-600'>đ</Text>
+                    {(quantity ? option.price * quantity : option.price).toLocaleString('vi-VN')}
+                    {quantity && quantity > 1 ? ` (x${quantity})` : ''}
+                  </Text>
+                </View>
+              ))}
+            </Card>
+          </>
+        ) : null}
+      </View>
     </View>
   )
 }

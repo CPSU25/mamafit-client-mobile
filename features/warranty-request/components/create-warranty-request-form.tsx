@@ -1,93 +1,84 @@
 import { Controller, useFormContext } from 'react-hook-form'
-import { View } from 'react-native'
-import Animated, { FadeInDown } from 'react-native-reanimated'
+import { Image, View } from 'react-native'
 import FieldError from '~/components/field-error'
-import { ImageGrid, ImagePickerTrigger, ImageResetButton } from '~/components/ui/image-picker'
+import { Card } from '~/components/ui/card'
+import { ImagePickerComponent } from '~/components/ui/image-picker'
+import { Text } from '~/components/ui/text'
 import { Textarea } from '~/components/ui/textarea'
 import { useFieldError } from '~/hooks/use-field-error'
-import { cn, isFormError } from '~/lib/utils'
+import { styles } from '~/lib/constants/constants'
+import { cn } from '~/lib/utils'
+import { OrderItem } from '~/types/order.type'
 import { CreateWarrantyRequestSchema } from '../validations'
 
-interface CreateDesignRequestFormProps {
-  pickImages: (path?: string) => Promise<string[]>
-  resetImages: () => void
-  isUploading: boolean
-  isMaxReached: boolean
-  currentImages: string[]
+interface CreateWarrantyRequestFormProps {
+  index: number
+  orderItem?: OrderItem
 }
 
-export default function CreateWarrantyRequestForm({
-  pickImages,
-  resetImages,
-  isUploading,
-  isMaxReached,
-  currentImages
-}: CreateDesignRequestFormProps) {
+export default function CreateWarrantyRequestForm({ index, orderItem }: CreateWarrantyRequestFormProps) {
   const {
     control,
     formState: { errors },
-    setValue
+    setValue,
+    watch
   } = useFormContext<CreateWarrantyRequestSchema>()
   const className = useFieldError()
+  const imagesPath = `items.${index}.images` as const
+  const descriptionPath = `items.${index}.description` as const
 
-  const handlePickImages = async () => {
-    const newUrls = await pickImages('warranty-requests')
-    if (newUrls.length > 0) {
-      setValue('images', [...currentImages, ...newUrls])
-    }
-  }
-
-  const handleRemoveImage = (index: number) => {
-    const updatedImages = currentImages.filter((_, i) => i !== index)
-    setValue('images', updatedImages)
-  }
-
-  const handleResetImages = () => {
-    resetImages()
-    setValue('images', [])
-  }
+  const currentImages = (watch(imagesPath) as string[]) || []
+  const itemErrors = (errors.items?.[index] as any) || {}
 
   return (
-    <View className='gap-4'>
-      <Animated.View entering={FadeInDown.delay(200)} className='gap-2'>
-        <View
-          className={cn(
-            'flex flex-col gap-4 p-2 border border-dashed rounded-2xl',
-            isMaxReached || isFormError(errors, 'images') ? 'border-rose-200 bg-rose-50/50' : 'border-input bg-muted/20'
-          )}
-        >
-          <ImagePickerTrigger
-            onPress={handlePickImages}
-            isUploading={isUploading}
-            isMaxReached={isMaxReached}
-            currentCount={currentImages.length}
-            maxImages={5}
-            placeholder='Choose images from your gallery'
-          />
-
-          <ImageGrid images={currentImages} onRemoveImage={handleRemoveImage} />
-
-          {isMaxReached && <ImageResetButton onReset={handleResetImages} />}
+    <Card className='p-2 gap-2' style={styles.container}>
+      <View className='flex-1 flex-row items-start gap-2'>
+        <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
+          <Image source={{ uri: orderItem?.preset?.images?.[0] }} className='w-full h-full' resizeMode='contain' />
         </View>
-        {isFormError(errors, 'images') && <FieldError message={errors.images?.message || ''} />}
-      </Animated.View>
+        <View className='flex-1 h-20 justify-between pr-2'>
+          <View>
+            <Text className='native:text-sm font-inter-medium'>{orderItem?.preset?.styleName || 'Custom'} Dress</Text>
+            <View className='flex-row items-center justify-between'>
+              <Text className='native:text-xs text-muted-foreground'>
+                {orderItem?.preset?.styleName ? 'Made-to-Order Custom Style' : 'Tailored Just for You'}
+              </Text>
+              <Text className='native:text-xs text-muted-foreground'>x{orderItem?.quantity || 1}</Text>
+            </View>
+          </View>
+          <View className='items-end'>
+            <Text className='native:text-xs'>SKU: {orderItem?.preset?.sku ?? 'N/A'}</Text>
+          </View>
+        </View>
+      </View>
 
-      <Animated.View entering={FadeInDown.delay(300)} className='flex flex-col gap-2'>
+      <View className='gap-1'>
+        <ImagePickerComponent
+          images={currentImages}
+          onImagesChange={(imgs) => setValue(imagesPath, imgs, { shouldDirty: true, shouldValidate: true })}
+          maxImages={5}
+          placeholder='Add images for this item'
+          containerClassName='rounded-xl'
+        />
+        {!!itemErrors?.images?.message && <FieldError message={String(itemErrors.images.message)} />}
+      </View>
+
+      <View className='gap-1'>
         <Controller
           control={control}
-          name='description'
-          render={({ field: { onChange, value } }) => (
+          name={descriptionPath}
+          render={({ field: { value, onChange, onBlur } }) => (
             <Textarea
-              placeholder='Describe the issue with your item'
               value={value}
               onChangeText={onChange}
-              aria-labelledby='textareaLabel'
-              className={cn('bg-background border-input', isFormError(errors, 'description') ? className : '')}
+              onBlur={onBlur}
+              placeholder='Describe the defect and where it appears'
+              className={cn('rounded-xl native:text-base', itemErrors?.description && className)}
             />
           )}
         />
-        {isFormError(errors, 'description') && <FieldError message={errors.description?.message || ''} />}
-      </Animated.View>
-    </View>
+        {!!itemErrors?.description?.message && <FieldError message={String(itemErrors.description.message)} />}
+      </View>
+    </Card>
   )
 }

@@ -61,17 +61,13 @@ export interface BranchWithDirection extends Branch {
 export enum OrderStatus {
   Created = 'CREATED',
   Confirmed = 'CONFIRMED',
-  InProduction = 'IN_PRODUCTION',
-  InDesign = 'IN_DESIGN',
+  InProgress = 'IN_PROGRESS',
   AwaitingPaidRest = 'AWAITING_PAID_REST',
-  InQC = 'IN_QC',
-  InWarranty = 'IN_WARRANTY',
   Packaging = 'PACKAGING',
   Delevering = 'DELIVERING',
-  AwaitingDelivery = 'AWAITING_DELIVERY',
   Completed = 'COMPLETED',
-  WarrantyCheck = 'WARRANTY_CHECK',
-  Cancelled = 'CANCELLED'
+  Cancelled = 'CANCELLED',
+  Returned = 'RETURNED'
 }
 
 export enum OrderItemType {
@@ -206,19 +202,27 @@ export interface DesignerInfo {
 
 export interface WarrantyRequest {
   id: string
-  warrantyOrderItemId: string
-  orderId: string
-  orderCode: string
-  images: string[]
-  description: string
-  isFactoryError: boolean | null
+  sku: string
+  noteInternal: string | null
+  requestType: 'FREE' | 'FEE'
   rejectedReason: string | null
-  fee: number | null
-  status: string
-  warrantyRound: number
-  createdBy: string
-  updatedBy: null
+  totalFee: number | null
+  status: string | null
+  customer: string | null
+  countItem: number
+  createdBy: string | null
+  updatedBy: string | null
   createdAt: string
   updatedAt: string
   isDeleted: boolean
+}
+
+export interface WarrantyRequestDetail {
+  warrantyRequest: WarrantyRequest
+  originalOrders: {
+    id: string
+    code: string
+    receivedAt: string | null
+    orderItems: OrderItem[]
+  }[]
 }

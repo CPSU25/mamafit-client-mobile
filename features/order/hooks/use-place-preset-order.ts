@@ -5,13 +5,8 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner-native'
 import { ERROR_MESSAGES } from '~/lib/constants/constants'
 import orderService from '~/services/order.service'
-import {
-  DeliveryMethod,
-  PaymentMethod,
-  PaymentType,
-  placePresetOrderFormSchema,
-  PlacePresetOrderFormSchema
-} from '../validations'
+import { DeliveryMethod, PaymentMethod, PaymentType } from '~/types/order.type'
+import { placePresetOrderFormSchema, PlacePresetOrderFormSchema } from '../validations'
 
 const defaultValues: PlacePresetOrderFormSchema = {
   presets: [],
@@ -22,9 +17,9 @@ const defaultValues: PlacePresetOrderFormSchema = {
   measurementDiaryId: '',
   measurementId: '',
   isOnline: true,
-  paymentMethod: PaymentMethod.ONLINE_BANKING,
-  paymentType: PaymentType.FULL,
-  deliveryMethod: DeliveryMethod.DELIVERY
+  paymentMethod: PaymentMethod.OnlineBanking,
+  paymentType: PaymentType.Full,
+  deliveryMethod: DeliveryMethod.Delivery
 }
 
 export const usePlacePresetOrder = (onSuccess: () => void) => {

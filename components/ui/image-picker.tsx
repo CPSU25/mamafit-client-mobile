@@ -156,6 +156,7 @@ interface ImagePickerComponentProps {
   maxImages?: number
   maxSizeInMB?: number
   placeholder?: string
+  containerClassName?: string
 }
 
 export function ImagePickerComponent({
@@ -163,7 +164,8 @@ export function ImagePickerComponent({
   onImagesChange,
   maxImages = 5,
   maxSizeInMB = 5,
-  placeholder = 'Add images'
+  placeholder = 'Add images',
+  containerClassName = ''
 }: ImagePickerComponentProps) {
   const { pickImages, removeImage, resetImages, isUploading, isMaxReached } = useImagePicker({
     maxImages,
@@ -192,7 +194,7 @@ export function ImagePickerComponent({
   return (
     <View className='flex flex-col gap-4'>
       <View
-        className={`flex flex-col gap-4 p-2 border border-dashed rounded-2xl ${
+        className={`flex flex-col gap-4 p-2 border border-dashed rounded-2xl ${containerClassName} ${
           isMaxReached ? 'border-rose-200 bg-rose-50/50' : 'border-input bg-muted/20'
         }`}
       >
