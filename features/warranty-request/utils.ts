@@ -1,5 +1,6 @@
 import { addDays, differenceInDays, parseISO } from 'date-fns'
-import { Order, OrderItem } from '~/types/order.type'
+import { Order, OrderItem, WarrantyRequestStatus } from '~/types/order.type'
+import { requestStatusMap } from './constants'
 
 export const calculateWarrantyStatus = (receivedAt: string, period: number) => {
   const difference = differenceInDays(addDays(parseISO(receivedAt), period), new Date())
@@ -42,4 +43,8 @@ export const canSelectOrderItem = (
   const currentItemType = isFree ? 'free' : 'expired'
 
   return selectedWarrantyType === currentItemType
+}
+
+export const getWarrantyRequestStatus = (status: WarrantyRequestStatus | undefined) => {
+  return status ? requestStatusMap[status] : requestStatusMap[WarrantyRequestStatus.Pending]
 }

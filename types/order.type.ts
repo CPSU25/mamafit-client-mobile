@@ -200,6 +200,23 @@ export interface DesignerInfo {
   chatRoomId: string | null
 }
 
+export enum WarrantyRequestStatus {
+  Pending = 'PENDING',
+  Repairing = 'REPAIRING',
+  Completed = 'COMPLETED',
+  Rejected = 'REJECTED',
+  Approved = 'APPROVED',
+  PartiallyRejected = 'PARTIALLY_REJECTED',
+  Cancelled = 'CANCELLED'
+}
+
+export enum WarrantyRequestItemStatus {
+  Pending = 'PENDING',
+  Approved = 'APPROVED',
+  Rejected = 'REJECTED',
+  InTransit = 'IN_TRANSIT'
+}
+
 export interface WarrantyRequest {
   id: string
   sku: string
@@ -207,7 +224,7 @@ export interface WarrantyRequest {
   requestType: 'FREE' | 'FEE'
   rejectedReason: string | null
   totalFee: number | null
-  status: string | null
+  status: WarrantyRequestStatus
   customer: string | null
   countItem: number
   createdBy: string | null
@@ -238,7 +255,7 @@ export interface WarrantyItem {
     rejectedReason: string | null
     description: string
     images: string[]
-    status: string
+    status: WarrantyRequestItemStatus
     estimateTime: string | null
     destinationType: string
     warrantyRound: number

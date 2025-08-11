@@ -1,7 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { AddOnOption } from '~/types/add-on.type'
 import { OrderStatus } from '~/types/order.type'
-import { PresetWithComponentOptions } from '~/types/preset.type'
 
 export interface AddOnMap {
   id: string

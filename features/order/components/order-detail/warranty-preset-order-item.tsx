@@ -1,14 +1,12 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
-import { format } from 'date-fns'
+import { Feather } from '@expo/vector-icons'
+import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useRouter } from 'expo-router'
-import { useMemo } from 'react'
-import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
+import { useCallback, useMemo, useRef } from 'react'
+import { Image, TouchableOpacity, View } from 'react-native'
 import { Card } from '~/components/ui/card'
-import { Separator } from '~/components/ui/separator'
-import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
+import WarrantyItemModal from '~/features/warranty-request/components/warranty-item-modal'
 import { useGetWarrantyItem } from '~/features/warranty-request/hooks/use-get-warranty-item'
-import { styles } from '~/lib/constants/constants'
 import { getOrderedComponentOptions } from '~/lib/utils'
 import { AddOnOption } from '~/types/add-on.type'
 import { OrderItem } from '~/types/order.type'
@@ -36,6 +34,7 @@ export default function WarrantyPresetOrderItem({
   onToggleViewMore
 }: WarrantyPresetOrderItemProps) {
   const router = useRouter()
+  const warrantyDetailModalRef = useRef<BottomSheetModal>(null)
 
   const { data: warrantyItem, isLoading: isLoadingWarrantyItem } = useGetWarrantyItem(orderItem.id)
 
@@ -52,6 +51,10 @@ export default function WarrantyPresetOrderItem({
       params: { orderId }
     })
   }
+
+  const handlePresentModal = useCallback(() => {
+    warrantyDetailModalRef.current?.present()
+  }, [])
 
   return (
     <View className='gap-2 p-3'>
@@ -131,87 +134,24 @@ export default function WarrantyPresetOrderItem({
                 </Card>
               </>
             ) : null}
+            <TouchableOpacity
+              onPress={handlePresentModal}
+              className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-3 bg-blue-50 border border-blue-100'
+            >
+              <Feather name='file-text' size={16} color='#2563eb' />
+              <Text className='text-sm text-blue-600 font-inter-medium'>View Request Details</Text>
+            </TouchableOpacity>
           </View>
-
-          {isLoadingWarrantyItem ? (
-            <Skeleton className='w-full h-20 rounded-xl' />
-          ) : (
-            <View className='gap-3'>
-              <Card style={styles.container}>
-                <View className='flex-row items-center gap-2 px-3 py-2'>
-                  <MaterialCommunityIcons name='card-text' size={16} color='#2563eb' />
-                  <Text className='font-inter-medium text-sm'>Warranty Details</Text>
-                </View>
-
-                <Separator />
-
-                <View className='p-2 gap-1'>
-                  <View className='flex-row items-center gap-2'>
-                    <Text className='flex-1 text-xs text-muted-foreground/80'>Original Order Number</Text>
-                    <Text className='text-foreground/80 text-xs'>#{warrantyItem?.parentOrder?.code}</Text>
-                  </View>
-
-                  <View className='flex-row items-center gap-2'>
-                    <Text className='flex-1 text-xs text-muted-foreground/80'>Estimation Time</Text>
-                    <Text className='text-foreground/80 text-xs'>
-                      {warrantyItem?.warrantyRequestItems?.estimateTime
-                        ? format(new Date(warrantyItem?.warrantyRequestItems?.estimateTime), 'MMM dd, yyyy')
-                        : 'Not Yet'}
-                    </Text>
-                  </View>
-
-                  <View className='flex-row items-center gap-2'>
-                    <Text className='flex-1 text-xs text-muted-foreground/80'>Warranty Round</Text>
-                    <Text className='text-foreground/80 text-xs'>
-                      {warrantyItem?.warrantyRequestItems?.warrantyRound}
-                    </Text>
-                  </View>
-
-                  <View className='flex-row items-center gap-2'>
-                    <Text className='flex-1 text-xs text-muted-foreground/80'>Warranty Fee</Text>
-                    <Text className='text-foreground/80 text-xs'>
-                      đ
-                      {warrantyItem?.warrantyRequestItems?.fee
-                        ? warrantyItem?.warrantyRequestItems?.fee.toLocaleString('vi-VN')
-                        : '0'}
-                    </Text>
-                  </View>
-
-                  <Separator className='my-2' />
-
-                  <View>
-                    <Text className='text-xs text-muted-foreground/80'>Description</Text>
-                    <Text className='text-xs text-foreground/80' numberOfLines={2}>
-                      {warrantyItem?.warrantyRequestItems?.description}
-                    </Text>
-                  </View>
-
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                    <View className='flex-row items-center gap-2 mt-2'>
-                      {warrantyItem?.warrantyRequestItems?.images?.map((img, index) => (
-                        <Image key={index} source={{ uri: img }} className='w-20 h-20 rounded-lg bg-muted/30' />
-                      ))}
-                    </View>
-                  </ScrollView>
-                </View>
-
-                {!isSameOrder ? (
-                  <>
-                    <View className='flex-row items-center gap-3 px-2 pb-2'>
-                      <TouchableOpacity
-                        onPress={() => handleGoToOrder(warrantyItem?.parentOrder?.id ?? '')}
-                        className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-3 bg-blue-600'
-                      >
-                        <Feather name='link' size={16} color='white' />
-                        <Text className='text-sm text-white font-inter-medium'>Go To Order</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                ) : null}
-              </Card>
-            </View>
-          )}
         </>
+      ) : null}
+
+      {warrantyItem ? (
+        <WarrantyItemModal
+          ref={warrantyDetailModalRef}
+          warrantyItem={warrantyItem}
+          isSameOrder={isSameOrder}
+          handleGoToOrder={handleGoToOrder}
+        />
       ) : null}
     </View>
   )
