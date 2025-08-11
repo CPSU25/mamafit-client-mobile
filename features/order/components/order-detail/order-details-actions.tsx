@@ -47,7 +47,7 @@ export default function OrderDetailsActions({
 
   return (
     <View
-      className='absolute bottom-0 bg-background left-0 right-0 px-2 pt-2'
+      className='absolute bottom-0 bg-background left-0 right-0 px-2 pt-3'
       style={{ paddingBottom: bottom, boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
     >
       {status === OrderStatus.Completed ? (

@@ -32,13 +32,6 @@ export default function OrderProgress({
 
   const toggleViewMoreOrderProgress = (value: boolean) => {
     setIsViewMoreOrderProgress(value)
-    if (value) {
-      // Show all completed milestones
-      setCompletedMilestones(allCompletedMilestones)
-    } else {
-      // Show only the most recent 2 completed milestones
-      setCompletedMilestones(allCompletedMilestones ? allCompletedMilestones.slice(-2) : null)
-    }
   }
 
   return (

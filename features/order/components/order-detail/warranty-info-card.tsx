@@ -11,11 +11,11 @@ import { WarrantyRequestDetail } from '~/types/order.type'
 
 interface WarrantyInfoCardProps {
   warrantyRequestDetail: WarrantyRequestDetail | null | undefined
+  isSameOrder: boolean
 }
 
-export default function WarrantyInfoCard({ warrantyRequestDetail }: WarrantyInfoCardProps) {
+export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }: WarrantyInfoCardProps) {
   const router = useRouter()
-  const isSameOrder = warrantyRequestDetail?.originalOrders?.length === 1
 
   const handleGoToOrder = () => {
     if (isSameOrder) {

@@ -145,8 +145,25 @@ export default function ViewOrderDetailScreen() {
   } = useGetDesignRequestPreset(order?.items[0]?.designRequest?.id || '', Boolean(isDesignRequestOrder))
 
   const { styleConfig, title, description, icon } = useMemo(() => getConfig(order?.status), [order?.status])
-  const [isViewMoreOrderDetails, setIsViewMoreOrderDetails] = useState(false)
-  const [isViewMoreOrderProgress, setIsViewMoreOrderProgress] = useState(false)
+  const isSameOrder = useMemo(() => warrantyRequestDetail?.originalOrders?.length === 1, [warrantyRequestDetail])
+
+  // Global toggle view more state - includes orderDetails, orderProgress, and item-{orderItemId}
+  const [toggleViewMoreStates, setToggleViewMoreStates] = useState<Record<string, boolean>>(() => {
+    const initialState: Record<string, boolean> = {
+      orderDetails: false,
+      orderProgress: false
+    }
+
+    // Initialize toggle states for each order item
+    if (order?.items) {
+      order.items.forEach((item) => {
+        initialState[`item-${item.id}`] = false
+      })
+    }
+
+    return initialState
+  })
+
   const [completedMilestones, setCompletedMilestones] = useState<OrderItemMilestone[] | null>(null)
   const [allCompletedMilestones, setAllCompletedMilestones] = useState<OrderItemMilestone[] | null>(null)
   const [currentMilestone, setCurrentMilestone] = useState<OrderItemMilestone | null>(null)
@@ -156,7 +173,7 @@ export default function ViewOrderDetailScreen() {
       return order?.items[0]?.price
     }
 
-    return order?.items?.reduce((acc, item) => acc + (item.preset?.price || 0) * (item.quantity || 1), 0)
+    return order?.items?.reduce((acc, item) => acc + (item?.price || 0) * (item.quantity || 1), 0)
   }, [order?.items, isDesignRequestOrder])
 
   const {
@@ -191,6 +208,21 @@ export default function ViewOrderDetailScreen() {
     refetchDesignRequestDetail,
     refetchWarrantyRequestDetail
   ])
+
+  // Initialize item toggle states when order data becomes available
+  useEffect(() => {
+    if (order?.items) {
+      setToggleViewMoreStates((prev) => {
+        const newState = { ...prev }
+        order.items.forEach((item) => {
+          if (!(`item-${item.id}` in newState)) {
+            newState[`item-${item.id}`] = false
+          }
+        })
+        return newState
+      })
+    }
+  }, [order?.items])
 
   useEffect(() => {
     if (!milestones?.length) return
@@ -245,11 +277,11 @@ export default function ViewOrderDetailScreen() {
   }
 
   const toggleViewMore = () => {
-    setIsViewMoreOrderDetails((prev) => {
-      const newState = !prev
+    setToggleViewMoreStates((prev) => {
+      const newState = { ...prev, orderDetails: !prev.orderDetails }
 
       // Auto-scroll to bottom when expanding to show the extended content
-      if (newState) {
+      if (newState.orderDetails) {
         setTimeout(() => {
           scrollViewRef.current?.scrollToEnd({ animated: true })
         }, 300) // Delay to allow content to render
@@ -257,6 +289,24 @@ export default function ViewOrderDetailScreen() {
 
       return newState
     })
+  }
+
+  const toggleViewMoreOrderProgress = (value: boolean) => {
+    setToggleViewMoreStates((prev) => ({ ...prev, orderProgress: value }))
+    if (value) {
+      // Show all completed milestones
+      setCompletedMilestones(allCompletedMilestones)
+    } else {
+      // Show only the most recent 2 completed milestones
+      setCompletedMilestones(allCompletedMilestones ? allCompletedMilestones.slice(-2) : null)
+    }
+  }
+
+  const toggleViewMoreItem = (itemId: string) => {
+    setToggleViewMoreStates((prev) => ({
+      ...prev,
+      [`item-${itemId}`]: !prev[`item-${itemId}`]
+    }))
   }
 
   if (isLoading) {
@@ -327,7 +377,7 @@ export default function ViewOrderDetailScreen() {
           keyboardShouldPersistTaps='handled'
           scrollEventThrottle={16}
         >
-          <View key={`order-content-${isViewMoreOrderDetails ? 'expanded' : 'collapsed'}`} className='gap-3 p-2'>
+          <View key={`order-content-${JSON.stringify(toggleViewMoreStates)}`} className='gap-3 p-2'>
             {!isWarrantyOrder && !warrantyRequestDetail && order?.status === OrderStatus.Completed ? (
               <InfoCard
                 title={`${config?.warrantyPeriod}-Day, ${config?.warrantyTime}-Claim Free Warranty`}
@@ -338,7 +388,7 @@ export default function ViewOrderDetailScreen() {
 
             {/* Warranty Information */}
             {isWarrantyOrder && warrantyRequestDetail ? (
-              <WarrantyInfoCard warrantyRequestDetail={warrantyRequestDetail} />
+              <WarrantyInfoCard warrantyRequestDetail={warrantyRequestDetail} isSameOrder={isSameOrder} />
             ) : null}
 
             {/* Delivery Information */}
@@ -400,9 +450,18 @@ export default function ViewOrderDetailScreen() {
               {isPresetOrder ? (
                 <View className='gap-2'>
                   {isWarrantyOrder
-                    ? order?.items?.map((preset, index) => (
-                        <View key={preset.id}>
-                          <WarrantyPresetOrderItem />
+                    ? order?.items?.map((orderItem, index) => (
+                        <View key={orderItem.id}>
+                          <WarrantyPresetOrderItem
+                            orderItem={orderItem}
+                            preset={orderItem.preset}
+                            presetDetail={presetDetail}
+                            presetOptions={orderItem.addOnOptions}
+                            quantity={orderItem.quantity}
+                            isViewMore={toggleViewMoreStates[`item-${orderItem.id}`] || false}
+                            onToggleViewMore={() => toggleViewMoreItem(orderItem.id)}
+                            isSameOrder={isSameOrder}
+                          />
                           <View
                             className={
                               index !== order?.items?.length - 1
@@ -412,13 +471,16 @@ export default function ViewOrderDetailScreen() {
                           />
                         </View>
                       ))
-                    : order?.items?.map((preset, index) => (
-                        <View key={preset.id}>
+                    : order?.items?.map((orderItem, index) => (
+                        <View key={orderItem.id}>
                           <PresetOrderItem
-                            preset={preset.preset}
+                            orderItem={orderItem}
+                            preset={orderItem.preset}
                             presetDetail={presetDetail}
-                            presetOptions={preset.addOnOptions}
-                            quantity={preset.quantity}
+                            presetOptions={orderItem.addOnOptions}
+                            quantity={orderItem.quantity}
+                            isViewMore={toggleViewMoreStates[`item-${orderItem.id}`] || false}
+                            onToggleViewMore={() => toggleViewMoreItem(orderItem.id)}
                           />
                           <View
                             className={
@@ -449,8 +511,8 @@ export default function ViewOrderDetailScreen() {
                 allCompletedMilestones={allCompletedMilestones}
                 completedMilestones={completedMilestones}
                 currentMilestone={currentMilestone}
-                isViewMoreOrderProgress={isViewMoreOrderProgress}
-                setIsViewMoreOrderProgress={setIsViewMoreOrderProgress}
+                isViewMoreOrderProgress={toggleViewMoreStates.orderProgress}
+                setIsViewMoreOrderProgress={toggleViewMoreOrderProgress}
                 setCompletedMilestones={setCompletedMilestones}
                 milestones={milestones}
                 createdAt={order?.createdAt}
@@ -476,7 +538,7 @@ export default function ViewOrderDetailScreen() {
               serviceAmount={order?.serviceAmount}
               voucherDiscountId={order?.voucherDiscountId}
               discountSubtotal={order?.discountSubtotal}
-              isViewMoreOrderDetails={isViewMoreOrderDetails}
+              isViewMoreOrderDetails={toggleViewMoreStates.orderDetails}
               orderCode={order?.code}
               orderPlacedAt={order?.createdAt}
               toggleViewMore={toggleViewMore}

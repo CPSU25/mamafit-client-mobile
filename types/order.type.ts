@@ -226,3 +226,23 @@ export interface WarrantyRequestDetail {
     orderItems: OrderItem[]
   }[]
 }
+
+export interface WarrantyItem {
+  warrantyRequestItems: {
+    warrantyRequestId: string
+    orderItemId: string
+    destinationBranchId: string | null
+    destinationBranch: Branch | null
+    trackingCode: string | null
+    fee: number | null
+    rejectedReason: string | null
+    description: string
+    images: string[]
+    status: string
+    estimateTime: string | null
+    destinationType: string
+    warrantyRound: number
+    warrantyRequest: WarrantyRequest
+  }
+  parentOrder: Order
+}

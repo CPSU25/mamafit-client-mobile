@@ -1,7 +1,7 @@
 import { CreateWarrantyRequestSchema } from '~/features/warranty-request/validations'
 import { api } from '~/lib/axios/axios'
 import { BaseResponse } from '~/types/common'
-import { Order, WarrantyRequestDetail } from '~/types/order.type'
+import { Order, WarrantyItem, WarrantyRequestDetail } from '~/types/order.type'
 
 class WarrantyService {
   async createWarrantyRequest(warrantyRequest: CreateWarrantyRequestSchema) {
@@ -18,6 +18,12 @@ class WarrantyService {
 
   async getOrderRequests() {
     const { data } = await api.get<BaseResponse<Order[]>>('order/for-warranty')
+
+    return data.data
+  }
+
+  async getWarrantyItemByOrderItem(orderItemId: string) {
+    const { data } = await api.get<BaseResponse<WarrantyItem>>(`warranty-request-item/order-item/${orderItemId}`)
 
     return data.data
   }
