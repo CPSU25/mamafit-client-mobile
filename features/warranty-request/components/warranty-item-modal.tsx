@@ -1,9 +1,9 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { format } from 'date-fns'
 import { BlurView } from 'expo-blur'
 import { forwardRef, useMemo } from 'react'
-import { Image, TouchableOpacity, View } from 'react-native'
+import { Image, View } from 'react-native'
 import { Text } from '~/components/ui/text'
 import { WarrantyItem } from '~/types/order.type'
 
@@ -58,16 +58,6 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                 </View>
                 <Text className='text-sm font-inter-medium'>#{warrantyItem.parentOrder?.code}</Text>
               </View>
-
-              {!isSameOrder && !!warrantyItem.parentOrder?.id ? (
-                <TouchableOpacity
-                  onPress={() => handleGoToOrder(warrantyItem.parentOrder?.id)}
-                  className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-3 bg-blue-50 border border-blue-100'
-                >
-                  <Feather name='link' size={16} color='#2563eb' />
-                  <Text className='text-sm text-blue-600 font-inter-medium'>Go To Order</Text>
-                </TouchableOpacity>
-              ) : null}
             </View>
 
             <View className='gap-2'>

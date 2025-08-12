@@ -33,7 +33,7 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
   return (
     <Card style={styles.container}>
       <View className='flex-row items-center gap-2 px-3 py-2'>
-        <MaterialCommunityIcons name='shield' size={16} color='#1e40af' />
+        <MaterialCommunityIcons name='shield' size={16} color='#2563eb' />
         <Text className='font-inter-medium text-sm'>Warranty Information</Text>
       </View>
 
@@ -62,15 +62,17 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
 
       {isSameOrder ? (
         <>
-          <View className='border-b border-dashed border-blue-300 my-3' />
+          <View className='border-b border-dashed border-muted-foreground/30 my-3' />
 
           <View className='flex-row items-center gap-3 px-3 pb-3'>
             <TouchableOpacity
               onPress={handleGoToOrder}
-              className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-3 bg-blue-800'
+              className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-3 bg-blue-600'
             >
               <Feather name='link' size={16} color='white' />
-              <Text className='text-sm text-white font-inter-medium'>Go To Order</Text>
+              <Text className='text-sm text-white font-inter-medium'>
+                Go To #{warrantyRequestDetail?.originalOrders[0]?.code}
+              </Text>
             </TouchableOpacity>
           </View>
         </>

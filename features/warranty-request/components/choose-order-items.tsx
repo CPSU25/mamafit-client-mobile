@@ -143,14 +143,17 @@ export default function ChooseOrderItems({
         data={orderRequests}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
-          <TouchableOpacity onPress={() => router.push('/order/warranty/policy')}>
-            <InfoCard delay={100} title='Warranty Request Policy'>
-              <Text className='text-xs text-sky-600 dark:text-sky-500'>
-                Each order item includes {warrantyCount} free warranty requests. Additional requests may incur a service
-                fee <Text className='text-xs text-sky-600 font-inter-medium underline'>(press for more)</Text>.
-              </Text>
-            </InfoCard>
-          </TouchableOpacity>
+          orderRequests && Array.isArray(orderRequests) && orderRequests.length > 0 ? (
+            <TouchableOpacity onPress={() => router.push('/order/warranty/policy')}>
+              <InfoCard delay={100} title='Warranty Request Policy'>
+                <Text className='text-xs text-sky-600 dark:text-sky-500'>
+                  Each order item includes {warrantyCount} free warranty requests. Additional requests may incur a
+                  service fee <Text className='text-xs text-sky-600 font-inter-medium underline'>(press for more)</Text>
+                  .
+                </Text>
+              </InfoCard>
+            </TouchableOpacity>
+          ) : null
         }
         renderItem={({ item, index }) => (
           <Animated.View entering={FadeInDown.delay(200 + index * 50)}>
@@ -167,7 +170,7 @@ export default function ChooseOrderItems({
           isLoading ? (
             <ActivityIndicator size='small' color={PRIMARY_COLOR.LIGHT} />
           ) : (
-            <View className='flex-1 items-center justify-center mt-20'>
+            <View className='flex-1 items-center justify-center mt-12'>
               <Text className='text-sm text-muted-foreground'>No valid orders found</Text>
             </View>
           )

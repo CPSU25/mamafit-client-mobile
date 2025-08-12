@@ -150,7 +150,7 @@ export default function OrderStageBar({
                 boxShadow: '0 0 6px 0 rgba(153, 27, 27, 0.6)'
               }}
             >
-              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='white' size={18} />
+              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='white' size={16} />
             </LinearGradient>
           ) : isCompleted ? (
             <LinearGradient
@@ -162,7 +162,7 @@ export default function OrderStageBar({
                 boxShadow: '0 0 6px 0 rgba(18, 185, 129, 0.6)'
               }}
             >
-              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='white' size={18} />
+              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='white' size={16} />
             </LinearGradient>
           ) : isInProgress || isCurrent ? (
             <LinearGradient
@@ -174,11 +174,11 @@ export default function OrderStageBar({
                 boxShadow: '0 0 6px 0 rgba(249, 115, 22, 0.6)'
               }}
             >
-              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='white' size={18} />
+              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='white' size={16} />
             </LinearGradient>
           ) : (
             <View className='w-10 h-10 rounded-full overflow-hidden items-center justify-center bg-muted'>
-              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='gray' size={18} />
+              <MaterialCommunityIcons name={getIconForMilestone(milestone.milestone.name)} color='gray' size={16} />
             </View>
           )}
         </Animated.View>
@@ -187,16 +187,16 @@ export default function OrderStageBar({
   }
 
   return (
-    <View className='flex-1 mt-2'>
+    <View className='pt-2'>
       <ScrollView
         ref={scrollViewRef}
         className='flex-1'
         horizontal
         showsHorizontalScrollIndicator={false}
         onLayout={handleScrollViewLayout}
-        contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+        contentContainerStyle={{ justifyContent: 'center' }}
       >
-        <View className='flex-row items-center p-3'>
+        <View className='flex-row items-center py-2'>
           {milestones.map((milestone, index) => (
             <View
               key={milestone.milestone.id}
@@ -208,7 +208,7 @@ export default function OrderStageBar({
               </View>
 
               {index !== milestones.length - 1 ? (
-                <View className='h-1.5 w-14 mt-[18px] rounded-full bg-muted overflow-hidden'>
+                <View className='h-1.5 w-12 mt-[16px] rounded-full bg-muted overflow-hidden'>
                   <Animated.View
                     className={cn(
                       'h-full rounded-full',
@@ -231,42 +231,42 @@ export default function OrderStageBar({
           ))}
         </View>
       </ScrollView>
-      <View className='mt-2 gap-1.5 p-3'>
+      <View className='mt-2 gap-0.5 pt-2'>
         {completedMilestones && Array.isArray(completedMilestones)
           ? completedMilestones.map((milestone) => (
               <View key={milestone.milestone.id} className='flex-row items-center gap-2'>
-                <View className='flex-row items-center gap-2 flex-1'>
+                <View className='flex-row items-center gap-1.5 flex-1'>
                   {milestone.progress === 100 && milestone.isDone ? (
-                    <View className='w-3 h-3 rounded-full bg-emerald-400' />
+                    <View className='w-2 h-2 rounded-full bg-emerald-400' />
                   ) : null}
                   {milestone.progress === 100 && !milestone.isDone ? (
-                    <View className='w-3 h-3 rounded-full bg-rose-400' />
+                    <View className='w-2 h-2 rounded-full bg-rose-400' />
                   ) : null}
-                  <Text className='text-sm font-inter-medium flex-1' numberOfLines={1}>
+                  <Text className='text-[12px] font-inter-medium flex-1' numberOfLines={1}>
                     {milestone.milestone.name}
                   </Text>
                 </View>
                 {milestone?.milestone.name === 'Order Placed' ? (
-                  <Text className='text-xs text-muted-foreground/50 text-right'>
+                  <Text className='text-[10px] text-muted-foreground/50 text-right'>
                     {orderPlacedAt ? format(new Date(orderPlacedAt), "MMM dd, yyyy 'at' hh:mm a") : null}
                   </Text>
                 ) : milestone.progress === 100 && milestone.isDone ? (
-                  <MaterialCommunityIcons name='check' size={18} color='lightgray' />
+                  <MaterialCommunityIcons name='check' size={16} color='lightgray' />
                 ) : milestone.progress === 100 && !milestone.isDone ? (
-                  <MaterialCommunityIcons name='cancel' size={18} color='lightgray' />
+                  <MaterialCommunityIcons name='cancel' size={16} color='lightgray' />
                 ) : null}
               </View>
             ))
           : null}
         {currentMilestone ? (
           <View className='flex-row items-center gap-2'>
-            <View className='flex-row items-center gap-2 flex-1'>
-              <View className='w-3 h-3 rounded-full' style={{ backgroundColor: '#fb923c' }} />
-              <Text className='text-sm font-inter-medium flex-1' numberOfLines={1}>
+            <View className='flex-row items-center gap-1.5 flex-1'>
+              <View className='w-2 h-2 rounded-full' style={{ backgroundColor: '#fb923c' }} />
+              <Text className='text-[12px] font-inter-medium flex-1' numberOfLines={1}>
                 {currentMilestone.milestone.name}
               </Text>
             </View>
-            <Text className='text-xs text-muted-foreground'>{currentMilestone.currentTask?.name || ''}</Text>
+            <Text className='text-[10px] text-muted-foreground'>{currentMilestone.currentTask?.name || ''}</Text>
           </View>
         ) : null}
       </View>

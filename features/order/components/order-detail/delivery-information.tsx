@@ -26,9 +26,13 @@ export default function DeliveryInformation({
   fullName,
   phoneNumber
 }: DeliveryInformationProps) {
+  const showShippingInfo = status === OrderStatus.Delevering || status === OrderStatus.Completed
+  const isDelivery = deliveryMethod === DeliveryMethod.Delivery && address
+  const isPickup = deliveryMethod === DeliveryMethod.PickUp && branch
+
   return (
     <Card className='bg-muted/5' style={styles.container}>
-      {status === OrderStatus.Delevering || status === OrderStatus.Completed ? (
+      {showShippingInfo ? (
         <>
           <View className='px-3 py-2 flex-row items-center gap-2'>
             <MaterialCommunityIcons name='truck-fast' size={16} color='#059669' />
@@ -49,10 +53,10 @@ export default function DeliveryInformation({
       </View>
 
       <View className='flex-1 px-3 pb-3'>
-        {deliveryMethod === DeliveryMethod.Delivery && address ? (
+        {isDelivery ? (
           <>
             <View className='flex-row items-center gap-1.5 mb-0.5'>
-              <Text className='text-sm font-inter-medium' numberOfLines={1}>
+              <Text className='text-sm font-inter-medium'>
                 {fullName}{' '}
                 <Text className='text-muted-foreground text-xs'>
                   {phoneNumber ? formatVnPhone(phoneNumber) : '(missing phone number)'}
@@ -62,13 +66,13 @@ export default function DeliveryInformation({
                 <Text className='text-xs font-inter-medium text-emerald-600 text-center'>Ship</Text>
               </View>
             </View>
-            <Text className='text-xs text-muted-foreground' numberOfLines={2}>
+            <Text className='text-xs text-muted-foreground'>
               {address.street}, {address.ward}, {address.district}, {address.province}
             </Text>
           </>
         ) : null}
 
-        {deliveryMethod === DeliveryMethod.PickUp && branch ? (
+        {isPickup ? (
           <>
             <View className='flex-row items-center gap-2 mb-0.5'>
               <Text className='text-sm font-inter-medium'>{branch.name}</Text>
@@ -76,7 +80,7 @@ export default function DeliveryInformation({
                 <Text className='text-xs font-inter-medium text-emerald-600 text-center'>Pickup</Text>
               </View>
             </View>
-            <Text className='text-xs text-muted-foreground' numberOfLines={2}>
+            <Text className='text-xs text-muted-foreground'>
               {branch.street}, {branch.ward}, {branch.district}, {branch.province}
             </Text>
             <TouchableOpacity
