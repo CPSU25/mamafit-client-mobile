@@ -3,24 +3,85 @@ import { ImagePickerAsset } from 'expo-image-picker'
 import { Platform } from 'react-native'
 import { generateImageFileName } from '~/lib/utils'
 
-const FILE_PATH = 'design-requests'
-const UPLOAD_TIMEOUT = 30000
-
 class FirebaseService {
-  private filePath: string
+  async uploadImages(
+    assets: ImagePickerAsset[],
+    path: string,
+    onProgress?: (progress: number, assetIndex: number) => void
+  ) {
+    if (!assets || assets.length === 0) {
+      throw new Error('No assets provided for upload')
+    }
 
-  constructor(filePath: string = FILE_PATH) {
-    this.filePath = filePath
+    const successfulUploads: string[] = []
+    const errors: string[] = []
+
+    for (let i = 0; i < assets.length; i++) {
+      try {
+        const url = await this.uploadSingleImage(assets[i], path, (progress) => {
+          if (onProgress) onProgress(progress, i)
+        })
+        successfulUploads.push(url)
+      } catch (err: any) {
+        console.error(`Failed to upload image ${i + 1}:`, err)
+        errors.push(`Image ${i + 1}: ${err.message || 'Upload failed'}`)
+      }
+    }
+
+    if (successfulUploads.length === 0) {
+      throw new Error(`All uploads failed: ${errors.join(', ')}`)
+    }
+    if (errors.length > 0) {
+      console.warn(`Some uploads failed: ${errors.join(', ')}`)
+    }
+
+    return successfulUploads
   }
 
-  async uploadImages(assets: ImagePickerAsset[], path?: string) {
+  async uploadSingleImage(asset: ImagePickerAsset, path: string, onProgress?: (progress: number) => void) {
+    if (!asset.uri) {
+      throw new Error('Asset URI is required for upload')
+    }
+
+    const extension = this.getFileExtension(asset.uri, asset.mimeType)
+    const filename = asset.fileName || generateImageFileName(extension.replace('.', ''))
+    const uploadPath = `${path}/${filename}`
+
+    const uploadUri = Platform.OS === 'ios' ? asset.uri.replace('file://', '') : asset.uri
+
+    const storage = getStorage()
+    const storageRef = ref(storage, uploadPath)
+
+    return new Promise<string>((resolve, reject) => {
+      const task = putFile(storageRef, uploadUri)
+
+      // Listen to progress
+      task.on(
+        'state_changed',
+        (snapshot: any) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          if (onProgress) onProgress(progress)
+        },
+        (error: any) => reject(error),
+        async () => {
+          try {
+            const downloadUrl = await getDownloadURL(storageRef)
+            resolve(downloadUrl)
+          } catch (err) {
+            reject(err)
+          }
+        }
+      )
+    })
+  }
+
+  async uploadVideos(assets: ImagePickerAsset[], path: string) {
     if (!assets || assets.length === 0) {
       throw new Error('No assets provided for upload')
     }
 
     try {
-      const uploadPromises = assets.map((asset) => this.uploadSingleImage(asset, path))
-
+      const uploadPromises = assets.map((asset) => this.uploadSingleVideo(asset, path))
       const results = await Promise.allSettled(uploadPromises)
 
       const successfulUploads: string[] = []
@@ -30,8 +91,8 @@ class FirebaseService {
         if (result.status === 'fulfilled') {
           successfulUploads.push(result.value)
         } else {
-          console.error(`Failed to upload image ${index + 1}:`, result.reason)
-          errors.push(`Image ${index + 1}: ${result.reason.message || 'Upload failed'}`)
+          console.error(`Failed to upload video ${index + 1}:`, result.reason)
+          errors.push(`Video ${index + 1}: ${result.reason.message || 'Upload failed'}`)
         }
       })
 
@@ -45,47 +106,49 @@ class FirebaseService {
 
       return successfulUploads
     } catch (error) {
-      console.error('Error in uploadImages:', error)
-      throw new Error(`Failed to upload images: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      console.error('Error in uploadVideos:', error)
+      throw new Error(`Failed to upload videos: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
-  async uploadSingleImage(asset: ImagePickerAsset, path?: string) {
+  async uploadSingleVideo(asset: ImagePickerAsset, path: string, onProgress?: (progress: number) => void) {
     if (!asset.uri) {
       throw new Error('Asset URI is required for upload')
     }
 
+    const extension = this.getVideoExtension(asset.uri, asset.mimeType)
+    const filename = asset.fileName || generateImageFileName(extension.replace('.', ''))
+    const uploadPath = `${path}/${filename}`
+
+    const uploadUri = Platform.OS === 'ios' ? asset.uri.replace('file://', '') : asset.uri
+
+    const storage = getStorage()
+    const storageRef = ref(storage, uploadPath)
+
     try {
-      // Generate unique filename and path
-      const extension = this.getFileExtension(asset.uri, asset.mimeType)
-      const filename = asset.fileName || generateImageFileName(extension.replace('.', ''))
-      const uploadPath = `${path ? path : this.filePath}/${filename}`
+      return new Promise<string>((resolve, reject) => {
+        const task = putFile(storageRef, uploadUri)
 
-      // Prepare URI for different platforms
-      const uploadUri = Platform.OS === 'ios' ? asset.uri.replace('file://', '') : asset.uri
-
-      // Get Firebase storage reference
-      const storage = getStorage()
-      const storageRef = ref(storage, uploadPath)
-
-      // Upload with timeout protection
-      const uploadPromise = putFile(storageRef, uploadUri)
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Upload timeout')), UPLOAD_TIMEOUT)
+        // Listen to progress
+        task.on(
+          'state_changed',
+          (snapshot: any) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            if (onProgress) onProgress(progress)
+          },
+          (error: any) => reject(error),
+          async () => {
+            try {
+              const downloadUrl = await getDownloadURL(storageRef)
+              resolve(downloadUrl)
+            } catch (err) {
+              reject(err)
+            }
+          }
+        )
       })
-
-      await Promise.race([uploadPromise, timeoutPromise])
-
-      // Get download URL
-      const downloadUrl = await getDownloadURL(storageRef)
-
-      if (!downloadUrl) {
-        throw new Error('Failed to get download URL')
-      }
-
-      return downloadUrl
     } catch (error) {
-      console.error('Error uploading single image:', error)
+      console.error('Error uploading single video:', error)
 
       if (error instanceof Error) {
         if (error.message.includes('network')) {
@@ -120,6 +183,28 @@ class FirebaseService {
     }
 
     return '.jpg'
+  }
+
+  private getVideoExtension(uri: string, mimeType?: string): string {
+    const uriExtension = uri.split('.').pop()?.toLowerCase()
+    if (uriExtension && ['mp4', 'mov', 'm4v', '3gp', 'avi', 'mkv', 'webm'].includes(uriExtension)) {
+      return `.${uriExtension}`
+    }
+
+    if (mimeType) {
+      const mimeToExt: { [key: string]: string } = {
+        'video/mp4': '.mp4',
+        'video/quicktime': '.mov',
+        'video/x-m4v': '.m4v',
+        'video/3gpp': '.3gp',
+        'video/x-msvideo': '.avi',
+        'video/x-matroska': '.mkv',
+        'video/webm': '.webm'
+      }
+      return mimeToExt[mimeType] || '.mp4'
+    }
+
+    return '.mp4'
   }
 }
 

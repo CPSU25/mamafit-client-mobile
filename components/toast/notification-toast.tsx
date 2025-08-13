@@ -2,17 +2,17 @@ import { format } from 'date-fns'
 import { View } from 'react-native'
 import { styles } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
-import { Notification } from '~/types/notification.type'
+import { Notification, NotificationTypeDB } from '~/types/notification.type'
 import { Card } from '../ui/card'
 import { Separator } from '../ui/separator'
 import { Text } from '../ui/text'
 
 // TODO: add more types of notifications
-export default function NotificationToast({ notification }: { notification: Notification }) {
+export default function NotificationToast({ notification }: { notification: Notification<NotificationTypeDB> }) {
   const { createdAt, notificationContent, notificationTitle } = notification
 
   return (
-    <Card className='mx-4' style={[styles.container]}>
+    <Card className='mx-2' style={[styles.container]}>
       <View className='flex-row items-center gap-2 px-3 py-1'>
         <View className='size-2 rounded-full bg-amber-500' />
         <Text className='text-xs font-inter-medium'>New notification</Text>

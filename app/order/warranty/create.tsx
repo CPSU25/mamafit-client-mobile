@@ -163,12 +163,10 @@ export default function CreateWarrantyRequestScreen() {
     }
   }, [router, currentStep])
 
-  const onSubmit: SubmitHandler<CreateWarrantyRequestSchema> = useCallback(
-    (data) => {
-      createWarrantyMutation.mutate(data)
-    },
-    [createWarrantyMutation]
-  )
+  const onSubmit: SubmitHandler<CreateWarrantyRequestSchema> = (data) => {
+    console.log(data)
+    createWarrantyMutation.mutate(data)
+  }
 
   const renderAddressContent = () => {
     if (isLoadingAddresses) {

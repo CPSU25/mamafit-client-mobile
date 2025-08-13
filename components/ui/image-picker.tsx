@@ -49,6 +49,7 @@ import { Image, Pressable, ScrollView, TouchableOpacity, View } from 'react-nati
 import { useImagePicker } from '~/hooks/use-image-picker'
 import { ICON_SIZE } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
+import { cn } from '~/lib/utils'
 import { Text } from './text'
 
 // UI Component for the image picker trigger
@@ -111,24 +112,32 @@ export function ImageGrid({ images, onRemoveImage }: ImageGridProps) {
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <View className='flex flex-row gap-2'>
         {images.map((imageUri, index) => (
-          <View key={`${imageUri}-${index}`} className='relative'>
-            <View className='p-1'>
-              <Image
-                source={{ uri: imageUri }}
-                className='w-24 h-24 rounded-xl border border-border'
-                resizeMode='cover'
-              />
-              <Pressable
-                onPress={() => onRemoveImage(index)}
-                className='absolute top-0 right-0 w-6 h-6 bg-rose-500 rounded-full flex items-center justify-center shadow-lg border border-white'
-              >
-                <Feather name='x' size={12} color='white' />
-              </Pressable>
-            </View>
-          </View>
+          <ImageThumbnail key={`${imageUri}-${index}`} uri={imageUri} onRemove={() => onRemoveImage(index)} />
         ))}
       </View>
     </ScrollView>
+  )
+}
+
+interface ImageThumbnailProps {
+  uri: string
+  onRemove: () => void
+  className?: string
+}
+
+export function ImageThumbnail({ uri, onRemove, className }: ImageThumbnailProps) {
+  return (
+    <View className='relative'>
+      <View className={cn('w-24 h-24 border border-border rounded-xl', className)}>
+        <Image style={{ width: '100%', height: '100%', borderRadius: 12 }} source={{ uri }} resizeMode='cover' />
+      </View>
+      <Pressable
+        onPress={onRemove}
+        className='absolute top-1 right-1 w-6 h-6 bg-rose-500 rounded-full flex items-center justify-center shadow-lg border border-white'
+      >
+        <Feather name='x' size={12} color='white' />
+      </Pressable>
+    </View>
   )
 }
 
@@ -157,6 +166,7 @@ interface ImagePickerComponentProps {
   maxSizeInMB?: number
   placeholder?: string
   containerClassName?: string
+  path: string
 }
 
 export function ImagePickerComponent({
@@ -165,12 +175,14 @@ export function ImagePickerComponent({
   maxImages = 5,
   maxSizeInMB = 5,
   placeholder = 'Add images',
-  containerClassName = ''
+  containerClassName = '',
+  path
 }: ImagePickerComponentProps) {
   const { pickImages, removeImage, resetImages, isUploading, isMaxReached } = useImagePicker({
     maxImages,
     maxSizeInMB,
-    initialImages: images
+    initialImages: images,
+    path
   })
 
   const handlePickImages = async () => {

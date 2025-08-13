@@ -10,7 +10,7 @@ import CreateDesignRequestForm from '~/features/design-request/components/create
 import { usePlaceDesignRequestOrder } from '~/features/order/hooks/use-place-design-request-order'
 import { PlaceDesignRequestOrderFormSchema } from '~/features/order/validations'
 import { useImagePicker } from '~/hooks/use-image-picker'
-import { PRIMARY_COLOR } from '~/lib/constants/constants'
+import { FILE_PATH, PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function CreateDesignRequest() {
   const router = useRouter()
@@ -24,7 +24,8 @@ export default function CreateDesignRequest() {
   const { pickImages, resetImages, isUploading, isMaxReached } = useImagePicker({
     maxImages: 5,
     maxSizeInMB: 5,
-    initialImages: currentImages
+    initialImages: currentImages,
+    path: FILE_PATH.DESIGN_REQUEST
   })
 
   const rootMsg = errors.root?.message || (errors as any)['']?.message || (errors as any)._errors?.[0]

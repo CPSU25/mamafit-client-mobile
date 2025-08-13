@@ -57,6 +57,7 @@
     "expo-image-picker": "~16.1.4",
     "expo-linear-gradient": "~14.1.5",
     "expo-linking": "~7.1.7",
+    "expo-location": "~18.1.6",
     "expo-media-library": "~17.1.7",
     "expo-navigation-bar": "~4.2.7",
     "expo-notifications": "~0.31.4",
@@ -95,7 +96,7 @@
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.5",
     "zod": "^3.25.20",
-    "expo-location": "~18.1.6"
+    "expo-video": "~2.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

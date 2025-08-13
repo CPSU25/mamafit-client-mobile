@@ -1,6 +1,8 @@
 import * as ImagePicker from 'expo-image-picker'
 import { useState } from 'react'
 import { Alert } from 'react-native'
+import { toast } from 'sonner-native'
+import ProgressToast from '~/components/toast/progress-toast'
 import { validateImageConstraints } from '~/lib/utils'
 import firebaseService from '~/services/firebase.service'
 
@@ -9,6 +11,7 @@ interface UseImagePickerOptions {
   maxSizeInMB?: number
   maxDimension?: number
   initialImages?: string[]
+  path: string
 }
 
 const DEFAULT_MAX_IMAGES = 5
@@ -19,26 +22,24 @@ export function useImagePicker({
   maxImages = DEFAULT_MAX_IMAGES,
   maxSizeInMB = DEFAULT_MAX_SIZE_MB,
   maxDimension = DEFAULT_MAX_DIMENSION,
-  initialImages = []
-}: UseImagePickerOptions = {}) {
+  initialImages = [],
+  path
+}: UseImagePickerOptions) {
   const [images, setImages] = useState<string[]>(initialImages)
   const [isUploading, setIsUploading] = useState(false)
 
   const validateImageSize = (asset: ImagePicker.ImagePickerAsset): boolean => {
     const validation = validateImageConstraints(asset.fileSize, asset.width, asset.height, maxSizeInMB, maxDimension)
-
     if (!validation.isValid) {
       Alert.alert('Invalid Image', validation.error || 'Image does not meet requirements')
       return false
     }
-
     return true
   }
 
-  const pickImages = async (path?: string): Promise<string[]> => {
+  const pickImages = async (): Promise<string[]> => {
     try {
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
-
       if (!permissionResult.granted) {
         Alert.alert('Permission Required', 'Permission to access camera roll is required!')
         return []
@@ -56,9 +57,7 @@ export function useImagePicker({
 
       setIsUploading(true)
 
-      // Validate images before upload
       const validAssets = result.assets.filter(validateImageSize)
-
       if (validAssets.length === 0) {
         setIsUploading(false)
         return []
@@ -71,7 +70,42 @@ export function useImagePicker({
         )
       }
 
-      const urls = await firebaseService.uploadImages(validAssets, path)
+      const urls: string[] = []
+
+      await Promise.all(
+        validAssets.map(async (asset, index) => {
+          let currentProgress = 0
+          const toastId = toast.custom(
+            <ProgressToast
+              currentProgress={currentProgress}
+              title={`Uploading ${asset.fileName}` || `Image ${index + 1}`}
+            />,
+            { duration: Infinity }
+          )
+
+          await firebaseService
+            .uploadSingleImage(asset, path, (progress) => {
+              currentProgress = progress
+              toast.custom(
+                <ProgressToast
+                  currentProgress={currentProgress}
+                  title={`Uploading ${asset.fileName}` || `Image ${index + 1}`}
+                />,
+                { id: toastId, duration: Infinity }
+              )
+            })
+            .then((url) => {
+              urls.push(url)
+              toast.dismiss(toastId)
+            })
+            .catch((err) => {
+              console.error(err)
+              toast.dismiss(toastId)
+              toast.error(`Failed: ${asset.fileName || `Image ${index + 1}`}`)
+            })
+        })
+      )
+
       const newImages = [...images, ...urls]
       setImages(newImages)
 
@@ -86,8 +120,7 @@ export function useImagePicker({
   }
 
   const removeImage = (indexToRemove: number) => {
-    const updatedImages = images.filter((_, index) => index !== indexToRemove)
-    setImages(updatedImages)
+    setImages(images.filter((_, index) => index !== indexToRemove))
   }
 
   const resetImages = () => {
