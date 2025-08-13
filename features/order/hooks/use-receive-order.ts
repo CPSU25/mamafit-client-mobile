@@ -12,7 +12,7 @@ export const useReceiveOrder = () => {
       queryClient.invalidateQueries({ queryKey: ['order'] })
       queryClient.invalidateQueries({ queryKey: ['orders'] })
       queryClient.invalidateQueries({ queryKey: ['orders-count'] })
-      queryClient.invalidateQueries({ queryKey: ['order-item-milestones'] })
+      queryClient.invalidateQueries({ queryKey: ['order-items-milestones'] })
       queryClient.invalidateQueries({ queryKey: ['designer-info'] })
     },
     onError: (error) => {

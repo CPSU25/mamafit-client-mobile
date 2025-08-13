@@ -1,7 +1,7 @@
 import { CreateWarrantyRequestSchema } from '~/features/warranty-request/validations'
 import { api } from '~/lib/axios/axios'
 import { BaseResponse } from '~/types/common'
-import { Order, WarrantyItem, WarrantyRequestDetail } from '~/types/order.type'
+import { Order, WarrantyItem, WarrantyItemList, WarrantyRequestDetail } from '~/types/order.type'
 
 class WarrantyService {
   async createWarrantyRequest(warrantyRequest: CreateWarrantyRequestSchema) {
@@ -26,6 +26,22 @@ class WarrantyService {
     const { data } = await api.get<BaseResponse<WarrantyItem>>(`warranty-request-item/order-item/${orderItemId}`)
 
     return data.data
+  }
+
+  async getWarrantyItemsByOrderItem(orderItemId: string) {
+    const { data } = await api.get<BaseResponse<WarrantyItemList[]>>(
+      `warranty-request-item/order-item-list/${orderItemId}`
+    )
+
+    return data.data?.map((warrantyItem) => ({
+      ...warrantyItem,
+      order: {
+        ...warrantyItem.order,
+        items: warrantyItem.order.items.filter(
+          (orderItem) => orderItem.id === orderItemId || orderItem.id === warrantyItem.warrantyRequestItems?.orderItemId
+        )
+      }
+    }))
   }
 }
 

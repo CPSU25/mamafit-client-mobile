@@ -1,9 +1,9 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useAuth } from '~/hooks/use-auth'
 import notificationService from '~/services/notification.service'
-import { NotificationType } from '~/types/notification.type'
+import { NotificationTypeDB } from '~/types/notification.type'
 
-export const useGetNotifications = (type?: NotificationType) => {
+export const useGetNotifications = (type?: NotificationTypeDB) => {
   const { isAuthenticated, user } = useAuth()
 
   return useInfiniteQuery({

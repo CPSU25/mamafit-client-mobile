@@ -232,14 +232,17 @@ export const getStatusIcon = (status: OrderStatus): keyof typeof MaterialCommuni
     // case OrderStatus.InQC:
     //   return 'timeline-check'
     case OrderStatus.AwaitingPaidRest:
+    case OrderStatus.AwaitingPaidWarranty:
       return 'credit-card-refresh'
     case OrderStatus.Packaging:
       return 'package-variant'
     // case OrderStatus.AwaitingDelivery:
     //   return 'mailbox'
     case OrderStatus.Delevering:
+    case OrderStatus.PickUpInProgress:
       return 'truck-fast'
     case OrderStatus.Completed:
+    case OrderStatus.ReceivedAtBranch:
       return 'star-circle'
     // case OrderStatus.WarrantyCheck:
     //   return 'shield-search'

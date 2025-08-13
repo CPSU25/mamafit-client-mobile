@@ -1,6 +1,5 @@
 import { Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
 import { useMemo, useRef, useState } from 'react'
@@ -8,7 +7,9 @@ import { ScrollView, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
 import { Card } from '~/components/ui/card'
+import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
+import { useAddToCart } from '~/features/cart/hooks/use-add-to-cart'
 import { useGetDesignRequestPreset } from '~/features/design-request/hooks/use-get-design-request-preset'
 import { useGetDesignerInfo } from '~/features/design-request/hooks/use-get-designer-info'
 import DeliveryInformation from '~/features/order/components/order-detail/delivery-information'
@@ -201,6 +202,8 @@ export default function ViewOrderDetailScreen() {
     refetchDesignRequestDetail
   ])
 
+  const { addToCartMutation } = useAddToCart()
+
   const handleGoBack = () => {
     if (router.canGoBack()) {
       router.back()
@@ -209,26 +212,14 @@ export default function ViewOrderDetailScreen() {
     }
   }
 
-  const handleCheckOut = async (preset: PresetWithComponentOptions) => {
+  const handleAddToCart = async (preset: PresetWithComponentOptions) => {
     if (!preset) return
 
-    try {
-      await AsyncStorage.setItem(
-        'order-items',
-        JSON.stringify({
-          type: OrderItemType.Preset,
-          items: {
-            [preset.id]: {
-              presetId: preset.id,
-              quantity: 1,
-              options: []
-            }
-          }
-        })
-      )
-    } catch (error) {
-      console.log(error)
-    }
+    addToCartMutation.mutate({
+      itemId: preset.id,
+      type: OrderItemType.Preset,
+      quantity: 1
+    })
   }
 
   const toggleViewMore = () => {
@@ -366,7 +357,7 @@ export default function ViewOrderDetailScreen() {
                     ))}
                   </View>
 
-                  <View className='border-b border-dashed border-muted-foreground/30' />
+                  <Separator />
 
                   {isDesignRequestOrder ? (
                     <DesignRequestOrderItem
@@ -386,17 +377,10 @@ export default function ViewOrderDetailScreen() {
                                 preset={orderItem.preset}
                                 presetOptions={orderItem.addOnOptions}
                                 quantity={orderItem.quantity}
-                                isSameOrder={isSameOrder}
                                 orderCreatedAt={order?.createdAt}
                                 milestones={milestonesData[orderItem.id]}
                               />
-                              <View
-                                className={
-                                  index !== order?.items?.length - 1
-                                    ? 'border-b border-muted-foreground/30 border-dashed'
-                                    : ''
-                                }
-                              />
+                              {index !== order?.items?.length - 1 ? <Separator /> : null}
                             </View>
                           ))
                         : order?.items?.map((orderItem, index) => (
@@ -409,19 +393,13 @@ export default function ViewOrderDetailScreen() {
                                 orderCreatedAt={order?.createdAt}
                                 milestones={milestonesData[orderItem.id]}
                               />
-                              <View
-                                className={
-                                  index !== order?.items?.length - 1
-                                    ? 'border-b border-muted-foreground/30 border-dashed'
-                                    : ''
-                                }
-                              />
+                              {index !== order?.items?.length - 1 ? <Separator /> : null}
                             </View>
                           ))}
                     </View>
                   ) : null}
 
-                  <View className='border-b border-dashed border-muted-foreground/30' />
+                  <Separator />
 
                   <View className='p-3 flex-row'>
                     <Text className='text-sm font-inter-medium flex-1'>Total {order?.items?.length || 0} Item(s)</Text>
@@ -437,7 +415,10 @@ export default function ViewOrderDetailScreen() {
 
                 {/* Design Request Information */}
                 {isDesignRequestOrder && designRequestDetail ? (
-                  <DesignRequestInformation designRequestDetail={designRequestDetail} handleCheckOut={handleCheckOut} />
+                  <DesignRequestInformation
+                    designRequestDetail={designRequestDetail}
+                    handleCheckOut={handleAddToCart}
+                  />
                 ) : null}
 
                 {/* Order Details */}
@@ -462,14 +443,10 @@ export default function ViewOrderDetailScreen() {
 
             {order?.status === OrderStatus.Created ||
             order?.status === OrderStatus.Completed ||
-            order?.status === OrderStatus.Delevering ? (
-              <OrderDetailsActions
-                orderId={order?.id}
-                parentOrderItemId={order?.items[0]?.parentOrderItemId ?? order?.items[0]?.id}
-                status={order?.status}
-                bottom={bottom}
-                orderCode={order?.code}
-              />
+            order?.status === OrderStatus.Delevering ||
+            order?.status === OrderStatus.AwaitingPaidWarranty ||
+            order?.status === OrderStatus.AwaitingPaidRest ? (
+              <OrderDetailsActions orderId={order?.id} status={order?.status} bottom={bottom} orderCode={order?.code} />
             ) : null}
           </Card>
         </LinearGradient>

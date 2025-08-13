@@ -32,13 +32,30 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
 
   return (
     <Card style={styles.container}>
-      <View className='flex-row items-center gap-2 px-3 py-2'>
-        <MaterialCommunityIcons name='shield' size={16} color='#2563eb' />
-        <Text className='font-inter-medium text-sm'>Warranty Information</Text>
+      <View className='flex-row items-center px-3 py-2'>
+        <MaterialCommunityIcons className='mr-2' name='shield' size={16} color='#2563eb' />
+        <Text className='font-inter-medium text-sm mr-1.5'>Warranty Information</Text>
+
+        {warrantyRequestDetail?.warrantyRequest?.requestType === 'FEE' ? (
+          <View className='px-2 bg-rose-50 border border-rose-100 rounded-lg'>
+            <Text className='text-xs font-inter-medium text-rose-600'>Paid Service</Text>
+          </View>
+        ) : (
+          <View className='px-2 bg-emerald-50 border border-emerald-100 rounded-lg'>
+            <Text className='text-xs font-inter-medium text-emerald-600'>Free Service</Text>
+          </View>
+        )}
       </View>
 
       <View className='gap-2'>
-        <View className={cn('gap-1 px-3', !isSameOrder && 'pb-3')}>
+        <View className={cn('gap-1.5 px-3', !isSameOrder && 'pb-3')}>
+          {isSameOrder ? (
+            <View className='flex-row items-start gap-2'>
+              <Text className='flex-1 text-xs text-muted-foreground/80'>Order Number</Text>
+              <Text className='text-foreground/80 text-xs'>{warrantyRequestDetail?.originalOrders[0]?.code}</Text>
+            </View>
+          ) : null}
+
           <View className='flex-row items-center gap-2'>
             <Text className='flex-1 text-xs text-muted-foreground/80'>Request Number</Text>
             <Text className='text-foreground/80 text-xs'>{warrantyRequestDetail?.warrantyRequest?.sku}</Text>
@@ -50,6 +67,17 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
               {text}
             </Text>
           </View>
+
+          {warrantyRequestDetail?.warrantyRequest?.requestType === 'FEE' ? (
+            <View className='flex-row items-center gap-2'>
+              <Text className='flex-1 text-xs text-muted-foreground/80'>Total Fee</Text>
+              <Text className='text-xs px-2 py-0.5 font-inter-medium rounded-lg'>
+                {warrantyRequestDetail?.warrantyRequest?.totalFee
+                  ? `đ${warrantyRequestDetail?.warrantyRequest?.totalFee.toLocaleString('vi-VN')}`
+                  : 'N/A'}
+              </Text>
+            </View>
+          ) : null}
 
           <View className='flex-row items-center gap-2'>
             <Text className='flex-1 text-xs text-muted-foreground/80'>Submitted At</Text>
@@ -64,15 +92,13 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
         <>
           <View className='border-b border-dashed border-muted-foreground/30 my-3' />
 
-          <View className='flex-row items-center gap-3 px-3 pb-3'>
+          <View className='px-3 pb-3'>
             <TouchableOpacity
               onPress={handleGoToOrder}
-              className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-3 bg-blue-600'
+              className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-2 bg-blue-600'
             >
               <Feather name='link' size={16} color='white' />
-              <Text className='text-sm text-white font-inter-medium'>
-                Go To #{warrantyRequestDetail?.originalOrders[0]?.code}
-              </Text>
+              <Text className='text-sm text-white font-inter-medium'>Go To Order</Text>
             </TouchableOpacity>
           </View>
         </>

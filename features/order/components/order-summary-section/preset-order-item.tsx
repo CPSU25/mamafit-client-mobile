@@ -32,7 +32,7 @@ export default function PresetOrderItem({
   const hasOptions = presetOptions && Array.isArray(presetOptions) && presetOptions.length > 0
 
   return (
-    <View className='p-3'>
+    <View className='p-3 gap-2'>
       <View className='flex-row items-center gap-4'>
         <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
           <Image source={{ uri: presetImage }} className='w-full h-full' resizeMode='contain' />

@@ -7,7 +7,7 @@ export const useGetOrderItemsMilestones = (orderItemIds: string[], enabled: bool
 
   const milestoneQueries = useQueries({
     queries: orderItemIds.map((orderItemId) => ({
-      queryKey: ['order-item-milestones', orderItemId, user?.userId],
+      queryKey: ['order-items-milestones', orderItemId, user?.userId],
       queryFn: () => orderService.getOrderItemMilestones(orderItemId),
       enabled: isAuthenticated && enabled && Boolean(orderItemId)
     }))

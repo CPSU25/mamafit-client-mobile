@@ -16,18 +16,11 @@ import CancelOrderForm from './cancel-order-form'
 interface OrderDetailsActionsProps {
   status: OrderStatus
   bottom: number
-  parentOrderItemId: string
   orderId: string
   orderCode: string
 }
 
-export default function OrderDetailsActions({
-  status,
-  bottom,
-  parentOrderItemId,
-  orderId,
-  orderCode
-}: OrderDetailsActionsProps) {
+export default function OrderDetailsActions({ status, bottom, orderId, orderCode }: OrderDetailsActionsProps) {
   const router = useRouter()
   const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -57,7 +50,7 @@ export default function OrderDetailsActions({
         </TouchableOpacity>
       ) : null}
 
-      {status === OrderStatus.Created ? (
+      {status === OrderStatus.Created || status === OrderStatus.AwaitingPaidWarranty ? (
         <View className='flex-row items-center gap-2'>
           <View className='flex-1'>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -115,6 +108,23 @@ export default function OrderDetailsActions({
             <Text className='text-sm font-inter-medium text-emerald-600'>Pay Now</Text>
           </TouchableOpacity>
         </View>
+      ) : null}
+
+      {status === OrderStatus.AwaitingPaidRest ? (
+        <TouchableOpacity
+          className='flex-1 flex-row items-center gap-2 justify-center p-2 rounded-xl border border-emerald-100 bg-emerald-50'
+          onPress={() =>
+            router.push({
+              pathname: '/payment/[orderId]/qr-code',
+              params: {
+                orderId
+              }
+            })
+          }
+        >
+          <MaterialCommunityIcons name='credit-card' size={16} color='#059669' />
+          <Text className='text-sm font-inter-medium text-emerald-600'>Pay Now</Text>
+        </TouchableOpacity>
       ) : null}
 
       {status === OrderStatus.Delevering ? (

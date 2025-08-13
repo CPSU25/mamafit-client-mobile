@@ -59,7 +59,7 @@ export function VideoThumbnail({
   className
 }: {
   uri: string
-  onRemove: () => void
+  onRemove?: () => void
   className?: string
 }) {
   const player = useVideoPlayer(uri, (p) => {
@@ -79,12 +79,14 @@ export function VideoThumbnail({
           contentFit='cover'
         />
       </View>
-      <Pressable
-        onPress={onRemove}
-        className='absolute top-1 right-1 w-6 h-6 bg-rose-500 rounded-full flex items-center justify-center shadow-lg border border-white'
-      >
-        <Feather name='x' size={12} color='white' />
-      </Pressable>
+      {onRemove ? (
+        <Pressable
+          onPress={onRemove}
+          className='absolute top-1 right-1 w-6 h-6 bg-rose-500 rounded-full flex items-center justify-center shadow-lg border border-white'
+        >
+          <Feather name='x' size={12} color='white' />
+        </Pressable>
+      ) : null}
     </View>
   )
 }

@@ -1,32 +1,29 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { format } from 'date-fns'
 import { BlurView } from 'expo-blur'
 import { forwardRef, useMemo } from 'react'
-import { Image, View } from 'react-native'
+import { Image, TouchableOpacity, View } from 'react-native'
 import { Text } from '~/components/ui/text'
+import { VideoThumbnail } from '~/components/ui/video-picker'
 import { WarrantyItem } from '~/types/order.type'
 
 interface WarrantyItemModalProps {
   warrantyItem: WarrantyItem
-  isSameOrder: boolean
-  handleGoToOrder: (orderId: string) => void
+  handleRefetchWarrantyItem: () => void
+  isRefetching: boolean
 }
 
 const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
-  ({ warrantyItem, isSameOrder, handleGoToOrder }, ref) => {
+  ({ warrantyItem, handleRefetchWarrantyItem, isRefetching }, ref) => {
     const snapPoints = useMemo(() => ['50%', '70%', '90%'], [])
 
     return (
       <BottomSheetModal
         style={{
-          shadowColor: '#000',
-          shadowOpacity: 0.08,
-          shadowOffset: { width: 0, height: 6 },
-          shadowRadius: 12,
-          elevation: 6
+          boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.1)',
+          borderRadius: 16
         }}
-        backgroundStyle={{ borderRadius: 16 }}
         ref={ref}
         snapPoints={snapPoints}
         enableDynamicSizing={false}
@@ -44,11 +41,20 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
           <View className='p-4 gap-4 flex-1'>
             {/* Original Order Number */}
             <View className='gap-2'>
-              <View>
-                <Text className='font-inter-semibold'>Order Details</Text>
-                <Text className='text-muted-foreground text-xs'>
-                  Reference to the original order associated with this request.
-                </Text>
+              <View className='flex-row items-center gap-4'>
+                <View className='flex-1'>
+                  <Text className='font-inter-semibold'>Order Details</Text>
+                  <Text className='text-muted-foreground text-xs' numberOfLines={1}>
+                    Reference to the original order
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  className='p-3 bg-muted rounded-full'
+                  onPress={handleRefetchWarrantyItem}
+                  disabled={isRefetching}
+                >
+                  <Feather name='refresh-ccw' size={18} color='black' />
+                </TouchableOpacity>
               </View>
 
               <View className='gap-1 px-3 py-2 rounded-2xl border border-border'>
@@ -56,7 +62,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                   <MaterialCommunityIcons name='package-variant' size={16} color='#6b7280' />
                   <Text className='text-xs text-muted-foreground'>Original Order Number</Text>
                 </View>
-                <Text className='text-sm font-inter-medium'>#{warrantyItem.parentOrder?.code}</Text>
+                <Text className='text-sm font-inter-medium'>{warrantyItem.parentOrder?.code}</Text>
               </View>
             </View>
 
@@ -132,22 +138,38 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                 <Text className='text-sm'>{warrantyItem.warrantyRequestItems?.description}</Text>
               </View>
 
-              <View className='gap-1 px-3 py-2 rounded-2xl border border-border'>
+              <View className='gap-1 rounded-2xl border border-border px-3 py-2'>
                 <View className='flex-row items-center gap-2 mb-1'>
                   <MaterialCommunityIcons name='image-outline' size={16} color='#6b7280' />
                   <Text className='text-xs text-muted-foreground'>Images</Text>
                 </View>
                 <BottomSheetScrollView nestedScrollEnabled horizontal showsHorizontalScrollIndicator={false}>
                   <View className='flex-row items-center gap-2'>
-                    {(warrantyItem.warrantyRequestItems?.images ?? []).map((img) => (
-                      <Image
-                        key={warrantyItem.warrantyRequestItems?.warrantyRequestId + img}
-                        source={{ uri: img }}
-                        className='w-28 h-28 rounded-xl'
-                      />
+                    {(warrantyItem.warrantyRequestItems?.images ?? []).map((img, index) => (
+                      <Image key={index + '-' + img} source={{ uri: img }} className='w-28 h-28 rounded-xl' />
                     ))}
                   </View>
                 </BottomSheetScrollView>
+              </View>
+
+              <View className='gap-1 px-3 py-2 rounded-2xl border border-border'>
+                <View className='flex-row items-center gap-2 mb-1'>
+                  <MaterialCommunityIcons name='image-outline' size={16} color='#6b7280' />
+                  <Text className='text-xs text-muted-foreground'>Videos</Text>
+                </View>
+
+                {warrantyItem.warrantyRequestItems?.videos &&
+                Array.isArray(warrantyItem.warrantyRequestItems?.videos) ? (
+                  <BottomSheetScrollView nestedScrollEnabled horizontal showsHorizontalScrollIndicator={false}>
+                    <View className='flex-row items-center gap-2'>
+                      {(warrantyItem.warrantyRequestItems?.videos ?? []).map((vid, index) => (
+                        <VideoThumbnail key={index + '-' + vid} uri={vid} />
+                      ))}
+                    </View>
+                  </BottomSheetScrollView>
+                ) : (
+                  <Text className='text-xs text-muted-foreground text-center mt-4 mb-6'>No videos</Text>
+                )}
               </View>
 
               <View className='gap-1 px-3 py-2 rounded-2xl bg-rose-50 border border-rose-100'>

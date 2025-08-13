@@ -17,7 +17,6 @@ interface WarrantyPresetOrderItemProps {
   preset: Preset | null | undefined
   presetOptions: AddOnOption[]
   quantity: number | undefined
-  isSameOrder: boolean
   orderCreatedAt?: string
   milestones?: OrderItemMilestone[] | null
 }
@@ -27,14 +26,18 @@ export default function WarrantyPresetOrderItem({
   preset,
   presetOptions,
   quantity,
-  isSameOrder,
   orderCreatedAt,
   milestones
 }: WarrantyPresetOrderItemProps) {
   const router = useRouter()
   const warrantyDetailModalRef = useRef<BottomSheetModal>(null)
 
-  const { data: warrantyItem, isLoading: isLoadingWarrantyItem } = useGetWarrantyItem(orderItem.id)
+  const {
+    data: warrantyItem,
+    isLoading: isLoadingWarrantyItem,
+    refetch: refetchWarrantyItem,
+    isRefetching: isRefetchingWarrantyItem
+  } = useGetWarrantyItem(orderItem.id)
 
   const hasOptions = presetOptions && Array.isArray(presetOptions) && presetOptions.length > 0
 
@@ -50,16 +53,17 @@ export default function WarrantyPresetOrderItem({
     setCompletedMilestones(completed)
   }, [milestones])
 
-  const handleGoToOrder = (orderId: string) => {
-    router.push({
-      pathname: '/order/[orderId]',
-      params: { orderId }
-    })
+  const handleViewHistory = (originalItemId: string) => {
+    router.push(`/order/warranty/${originalItemId}?currentOrderItemId=${orderItem.id}`)
   }
 
   const handlePresentModal = useCallback(() => {
     warrantyDetailModalRef.current?.present()
   }, [])
+
+  const handleRefetchWarrantyItem = useCallback(() => {
+    refetchWarrantyItem()
+  }, [refetchWarrantyItem])
 
   return (
     <View className='gap-3 p-3'>
@@ -70,18 +74,15 @@ export default function WarrantyPresetOrderItem({
 
         <View className='flex-1 h-20 justify-between'>
           <View>
-            <Text className='text-sm font-inter-medium'>
-              {preset?.styleName || 'Custom'} Dress - {preset?.sku}
+            <Text className='text-sm font-inter-medium' numberOfLines={1}>
+              {preset?.styleName || 'Custom'} Dress
             </Text>
-            <View className='flex-row items-center justify-between'>
-              <Text className='text-xs text-muted-foreground'>
-                {preset?.styleName ? 'Made-to-Order Custom Style' : 'Tailored Just for You'}
-              </Text>
+            <View className='flex-row items-center gap-2'>
+              <Text className='text-xs text-muted-foreground flex-1'>{preset?.sku ? `SKU: ${preset?.sku}` : ''}</Text>
               <Text className='text-xs text-muted-foreground'>x{quantity || 1}</Text>
             </View>
           </View>
-          <View className='flex-row items-center gap-2'>
-            <Text className='text-xs text-muted-foreground flex-1'>{preset?.sku ? `SKU: ${preset?.sku}` : ''}</Text>
+          <View className='items-end'>
             <Text className='text-xs'>
               <Text className='text-xs underline'>đ</Text>
               {orderItem?.price?.toLocaleString('vi-VN') || '0'}
@@ -130,33 +131,35 @@ export default function WarrantyPresetOrderItem({
         createdAt={orderCreatedAt}
       />
 
-      <View className='flex-1 flex-row items-center gap-3'>
-        {!isSameOrder && !!warrantyItem?.parentOrder?.id ? (
+      <View className='flex-1 flex-row items-center gap-2'>
+        <View className='flex-1'>
           <TouchableOpacity
-            onPress={() => handleGoToOrder(warrantyItem.parentOrder?.id)}
-            className='flex-1 px-4 py-2 rounded-xl flex-row items-center justify-center gap-3 border border-border'
+            onPress={handlePresentModal}
+            className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-2 border border-border'
+            disabled={isLoadingWarrantyItem}
           >
-            <Feather name='link' size={16} color='black' />
-            <Text className='text-sm font-inter-medium'>Go To Order</Text>
+            <Feather name='file-text' size={16} color='black' />
+            <Text className='text-sm font-inter-medium'>View Details</Text>
           </TouchableOpacity>
-        ) : null}
+        </View>
 
-        <TouchableOpacity
-          onPress={handlePresentModal}
-          className='flex-1 px-4 py-2 rounded-xl flex-row items-center justify-center gap-3 bg-blue-50 border border-blue-100'
-          disabled={isLoadingWarrantyItem}
-        >
-          <Feather name='file-text' size={16} color='#2563eb' />
-          <Text className='text-sm text-blue-600 font-inter-medium'>View Details</Text>
-        </TouchableOpacity>
+        <View className='flex-1'>
+          <TouchableOpacity
+            onPress={() => handleViewHistory(orderItem?.parentOrderItemId ?? '')}
+            className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-2 bg-blue-50 border border-blue-100'
+          >
+            <Feather name='clock' size={16} color='#2563eb' />
+            <Text className='text-sm text-blue-600 font-inter-medium'>View History</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {warrantyItem ? (
         <WarrantyItemModal
           ref={warrantyDetailModalRef}
           warrantyItem={warrantyItem}
-          isSameOrder={isSameOrder}
-          handleGoToOrder={handleGoToOrder}
+          handleRefetchWarrantyItem={handleRefetchWarrantyItem}
+          isRefetching={isRefetchingWarrantyItem}
         />
       ) : null}
     </View>

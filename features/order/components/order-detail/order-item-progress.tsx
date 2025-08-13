@@ -1,5 +1,6 @@
 import { OrderItemMilestone } from '~/types/order.type'
 import OrderStageBar from './order-stage-bar'
+import { Card } from '~/components/ui/card'
 
 interface OrderItemProgressProps {
   completedMilestones: OrderItemMilestone[] | null
@@ -17,12 +18,14 @@ export default function OrderItemProgress({
   return (
     <>
       {milestones && Array.isArray(milestones) && milestones.length > 0 ? (
-        <OrderStageBar
-          milestones={milestones}
-          currentMilestone={currentMilestone}
-          completedMilestones={completedMilestones}
-          orderPlacedAt={createdAt}
-        />
+        <Card className='p-3 bg-muted/5 border-dashed'>
+          <OrderStageBar
+            milestones={milestones}
+            currentMilestone={currentMilestone}
+            completedMilestones={completedMilestones}
+            orderPlacedAt={createdAt}
+          />
+        </Card>
       ) : null}
     </>
   )

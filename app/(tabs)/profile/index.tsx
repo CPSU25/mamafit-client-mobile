@@ -170,8 +170,8 @@ export default function ProfileScreen() {
         <Separator />
 
         <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/order/warranty/create')}>
-          <Feather name='shield' size={20} color={PRIMARY_COLOR.LIGHT} />
-          <Text className='font-inter-medium ml-2.5'>Warranty Request</Text>
+          <Feather name='grid' size={20} color={PRIMARY_COLOR.LIGHT} />
+          <Text className='font-inter-medium ml-2.5'>MamaFit Services</Text>
           <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
         </TouchableOpacity>
 

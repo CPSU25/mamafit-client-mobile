@@ -128,7 +128,7 @@ export default function CartItem({ item, setSelectedItems, selectedItems }: Cart
         <View className='flex-1'>
           <View className='flex-1'>
             <Text className='font-inter-medium pr-4' numberOfLines={1}>
-              {item.preset?.name}
+              {item.preset?.name || 'Untitled'}
             </Text>
             <Text className='text-xs text-muted-foreground'>{item.preset?.styleName || 'Unknown Style'}</Text>
           </View>

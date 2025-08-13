@@ -63,6 +63,9 @@ export enum OrderStatus {
   Confirmed = 'CONFIRMED',
   InProgress = 'IN_PROGRESS',
   AwaitingPaidRest = 'AWAITING_PAID_REST',
+  PickUpInProgress = 'PICKUP_IN_PROGRESS',
+  AwaitingPaidWarranty = 'AWAITING_PAID_WARRANTY',
+  ReceivedAtBranch = 'RECEIVED_AT_BRANCH',
   Packaging = 'PACKAGING',
   Delevering = 'DELIVERING',
   Completed = 'COMPLETED',
@@ -255,6 +258,7 @@ export interface WarrantyItem {
     rejectedReason: string | null
     description: string
     images: string[]
+    videos: string[]
     status: WarrantyRequestItemStatus
     estimateTime: string | null
     destinationType: string
@@ -262,4 +266,25 @@ export interface WarrantyItem {
     warrantyRequest: WarrantyRequest
   }
   parentOrder: Order
+}
+
+export interface WarrantyItemList {
+  warrantyRequestItems: {
+    warrantyRequestId: string
+    orderItemId: string
+    destinationBranchId: string | null
+    destinationBranch: Branch | null
+    trackingCode: string | null
+    fee: number | null
+    rejectedReason: string | null
+    description: string
+    images: string[]
+    videos: string[]
+    status: WarrantyRequestItemStatus
+    estimateTime: string | null
+    destinationType: string
+    warrantyRound: number
+    warrantyRequest: WarrantyRequest
+  }
+  order: Order
 }

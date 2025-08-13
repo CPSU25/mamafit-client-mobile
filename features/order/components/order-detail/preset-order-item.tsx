@@ -46,16 +46,16 @@ export default function PresetOrderItem({
         </View>
         <View className='flex-1 h-20 justify-between'>
           <View>
-            <Text className='text-sm font-inter-medium'>{preset?.styleName || 'Custom'} Dress</Text>
-            <View className='flex-row items-center justify-between'>
-              <Text className='text-xs text-muted-foreground'>
-                {preset?.styleName ? 'Made-to-Order Custom Style' : 'Tailored Just for You'}
-              </Text>
+            <Text className='text-sm font-inter-medium' numberOfLines={1}>
+              {preset?.styleName || 'Custom'} Dress
+            </Text>
+
+            <View className='flex-row items-center gap-2'>
+              <Text className='text-xs text-muted-foreground flex-1'>{preset?.sku ? `SKU: ${preset?.sku}` : ''}</Text>
               <Text className='text-xs text-muted-foreground'>x{quantity || 1}</Text>
             </View>
           </View>
-          <View className='flex-row items-center gap-2'>
-            <Text className='text-xs text-muted-foreground flex-1'>{preset?.sku ? `SKU: ${preset?.sku}` : ''}</Text>
+          <View className='items-end'>
             <Text className='text-xs'>
               <Text className='text-xs underline'>đ</Text>
               {orderItem?.price?.toLocaleString('vi-VN') || '0'}
