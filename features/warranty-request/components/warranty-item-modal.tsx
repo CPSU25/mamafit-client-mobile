@@ -57,12 +57,12 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                 </TouchableOpacity>
               </View>
 
-              <View className='gap-1 px-3 py-2 rounded-2xl border border-border'>
+              <View className='gap-1 p-3 rounded-2xl border border-border bg-muted/20'>
                 <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='package-variant' size={16} color='#6b7280' />
                   <Text className='text-xs text-muted-foreground'>Original Order Number</Text>
                 </View>
-                <Text className='text-sm font-inter-medium'>{warrantyItem.parentOrder?.code}</Text>
+                <Text className='text-sm font-inter-medium'>#{warrantyItem.parentOrder?.code}</Text>
               </View>
             </View>
 
@@ -75,8 +75,8 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
               </View>
 
               {/* Estimated Time & Warranty Round */}
-              <View className='flex-row items-center gap-2'>
-                <View className='flex-1 gap-1 px-3 py-2 rounded-2xl border border-border'>
+              <View className='flex-row items-center gap-2 bg-muted/20'>
+                <View className='flex-1 gap-1 p-3 rounded-2xl border border-border'>
                   <View className='flex-row items-center gap-2'>
                     <MaterialCommunityIcons name='clock-outline' size={16} color='#6b7280' />
                     <Text className='text-xs text-muted-foreground'>Estimated Time</Text>
@@ -87,7 +87,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                       : 'Pending'}
                   </Text>
                 </View>
-                <View className='gap-1 px-3 py-2 rounded-2xl border border-border'>
+                <View className='gap-1 p-3 rounded-2xl border border-border bg-muted/20'>
                   <View className='flex-row items-center gap-2'>
                     <MaterialCommunityIcons name='numeric' size={16} color='#6b7280' />
                     <Text className='text-xs text-muted-foreground'>Round</Text>
@@ -96,7 +96,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                 </View>
               </View>
 
-              <View className='gap-1 px-3 py-2 rounded-2xl bg-emerald-50 border border-emerald-100'>
+              <View className='gap-1 p-3 rounded-2xl bg-emerald-50 border border-emerald-100'>
                 <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='cash' size={16} color='#059669' />
                   <Text className='text-xs text-emerald-600'>Fee</Text>
@@ -110,7 +110,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
               </View>
 
               <View className='flex-row items-center gap-2'>
-                <View className='flex-1 gap-1 px-3 py-2 rounded-2xl border border-border'>
+                <View className='flex-1 gap-1 p-3 rounded-2xl border border-border bg-muted/20'>
                   <View className='flex-row items-center gap-2'>
                     <MaterialCommunityIcons name='progress-clock' size={16} color='#6b7280' />
                     <Text className='text-xs text-muted-foreground'>Status</Text>
@@ -118,7 +118,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                   <Text className='text-sm font-inter-medium'>{warrantyItem?.warrantyRequestItems?.status}</Text>
                 </View>
                 {warrantyItem.warrantyRequestItems?.trackingCode ? (
-                  <View className='flex-1 gap-1 px-3 py-2 rounded-2xl border border-border'>
+                  <View className='flex-1 gap-1 p-3 rounded-2xl border border-border bg-muted/20'>
                     <View className='flex-row items-center gap-2'>
                       <MaterialCommunityIcons name='truck-fast-outline' size={16} color='#6b7280' />
                       <Text className='text-xs text-muted-foreground'>Tracking Code</Text>
@@ -130,7 +130,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                 ) : null}
               </View>
 
-              <View className='gap-1 px-3 py-2 rounded-2xl border border-border'>
+              <View className='gap-1 rounded-2xl border border-border p-3 bg-muted/20'>
                 <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='card-text-outline' size={16} color='#6b7280' />
                   <Text className='text-xs text-muted-foreground'>Description</Text>
@@ -138,8 +138,8 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                 <Text className='text-sm'>{warrantyItem.warrantyRequestItems?.description}</Text>
               </View>
 
-              <View className='gap-1 rounded-2xl border border-border px-3 py-2'>
-                <View className='flex-row items-center gap-2 mb-1'>
+              <View className='rounded-2xl border border-border bg-muted/20 p-3 gap-2'>
+                <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='image-outline' size={16} color='#6b7280' />
                   <Text className='text-xs text-muted-foreground'>Images</Text>
                 </View>
@@ -152,8 +152,8 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                 </BottomSheetScrollView>
               </View>
 
-              <View className='gap-1 px-3 py-2 rounded-2xl border border-border'>
-                <View className='flex-row items-center gap-2 mb-1'>
+              <View className='rounded-2xl border border-border bg-muted/20 p-3 gap-2'>
+                <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='image-outline' size={16} color='#6b7280' />
                   <Text className='text-xs text-muted-foreground'>Videos</Text>
                 </View>
@@ -172,7 +172,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                 )}
               </View>
 
-              <View className='gap-1 px-3 py-2 rounded-2xl bg-rose-50 border border-rose-100'>
+              <View className='rounded-2xl bg-rose-50 border border-rose-100 p-3 gap-2'>
                 <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='cancel' size={16} color='#e11d48' />
                   <Text className='text-xs text-rose-600'>Reject Reason</Text>

@@ -70,7 +70,7 @@ export function VideoThumbnail({
 
   return (
     <View className='relative'>
-      <View className={cn('w-24 h-24 border border-border', className)}>
+      <View className={cn('w-24 h-24 rounded-xl', className)}>
         <VideoView
           style={{ width: '100%', height: '100%', borderRadius: 12 }}
           player={player}

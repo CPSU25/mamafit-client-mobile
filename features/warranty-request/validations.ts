@@ -4,7 +4,10 @@ import { DeliveryMethod, PaymentMethod } from '~/types/order.type'
 export const warrantyRequestSchema = z.object({
   orderItemId: z.string().min(1, { message: 'Order item ID is required' }),
   images: z.array(z.string().url({ message: 'Invalid URL format' })).min(2, { message: 'At least 2 images' }),
-  videos: z.array(z.string().url({ message: 'Invalid URL format' })).max(1, { message: 'Maximum 1 video allowed' }),
+  videos: z
+    .array(z.string().url({ message: 'Invalid URL format' }))
+    .max(1, { message: 'Maximum 1 video allowed' })
+    .optional(),
   description: z.string().min(1, { message: 'Description is required' })
 })
 

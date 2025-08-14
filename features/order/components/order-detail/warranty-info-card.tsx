@@ -52,13 +52,13 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
           {isSameOrder ? (
             <View className='flex-row items-start gap-2'>
               <Text className='flex-1 text-xs text-muted-foreground/80'>Order Number</Text>
-              <Text className='text-foreground/80 text-xs'>{warrantyRequestDetail?.originalOrders[0]?.code}</Text>
+              <Text className='text-foreground/80 text-xs'>#{warrantyRequestDetail?.originalOrders[0]?.code}</Text>
             </View>
           ) : null}
 
           <View className='flex-row items-center gap-2'>
             <Text className='flex-1 text-xs text-muted-foreground/80'>Request Number</Text>
-            <Text className='text-foreground/80 text-xs'>{warrantyRequestDetail?.warrantyRequest?.sku}</Text>
+            <Text className='text-foreground/80 text-xs'>#{warrantyRequestDetail?.warrantyRequest?.sku}</Text>
           </View>
 
           <View className='flex-row items-center gap-2'>

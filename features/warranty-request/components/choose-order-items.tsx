@@ -53,15 +53,10 @@ const OrderItemRow = ({
         <View className='flex-1 h-20 justify-between pr-2'>
           <View>
             <Text className='native:text-sm font-inter-medium'>{orderItem?.preset?.styleName || 'Custom'} Dress</Text>
-            <View className='flex-row items-center justify-between'>
-              <Text className='native:text-xs text-muted-foreground'>
-                {orderItem?.preset?.styleName ? 'Made-to-Order Custom Style' : 'Tailored Just for You'}
-              </Text>
-              <Text className='native:text-xs text-muted-foreground'>x{orderItem?.quantity || 1}</Text>
-            </View>
+            <Text className='native:text-xs text-muted-foreground'>SKU: {orderItem?.preset?.sku}</Text>
           </View>
           <View className='items-end'>
-            <Text className='native:text-xs'>SKU: {orderItem?.preset?.sku}</Text>
+            <Text className='native:text-xs'>x{orderItem?.quantity || 1}</Text>
           </View>
         </View>
       </View>
@@ -91,7 +86,7 @@ const OrderCard = ({
 
       <Separator />
 
-      <View className='p-3'>
+      <View className='p-3 gap-2'>
         {order.items.map((orderItem) => {
           const canSelect = canSelectOrderItem(orderItem, selectedWarrantyType, order.receivedAt ?? '', warrantyPeriod)
 

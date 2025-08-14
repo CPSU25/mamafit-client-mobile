@@ -53,7 +53,7 @@ export default function OrderDetails({
       <View className='gap-1 px-3 pb-3'>
         <View className='flex-row items-center gap-2'>
           <Text className='flex-1 text-xs text-muted-foreground/80'>Order Number</Text>
-          <Text className='text-foreground/80 text-xs'>{orderCode}</Text>
+          <Text className='text-foreground/80 text-xs'>#{orderCode}</Text>
         </View>
 
         <View className='flex-row items-center gap-2'>
