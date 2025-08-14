@@ -52,7 +52,7 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
     urlValue: 'to-pay',
     title: 'Waiting For Payment',
     description:
-      'Your order has been created and is waiting for you to complete the payment so we can start processing.'
+      'Your order has been placed successfully and is waiting for you to complete the payment so we can begin preparing it.'
   },
   {
     id: 2,
@@ -61,34 +61,16 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
     urlValue: 'to-make',
     title: 'Order Confirmed',
     description:
-      'Your payment was confirmed and your order has been accepted. We are preparing everything to start making it.'
-  },
-  {
-    id: 3,
-    label: 'In Design',
-    value: OrderStatus.InDesign,
-    urlValue: 'in-design',
-    title: 'Design In Progress',
-    description:
-      'Our designer is now working closely with you to finalize the design before your order goes to production.'
+      'We have received your payment and confirmed your order. Our team is getting everything ready to start making it.'
   },
   {
     id: 4,
-    label: 'In Production',
-    value: OrderStatus.InProduction,
-    urlValue: 'in-production',
-    title: 'In Production',
+    label: 'In Progress',
+    value: OrderStatus.InProgress,
+    urlValue: 'in-progress',
+    title: 'In Progress',
     description:
-      'Your order is currently being produced by our team with care and attention before it moves to the next step.'
-  },
-  {
-    id: 5,
-    label: 'In QC',
-    value: OrderStatus.InQC,
-    urlValue: 'in-qc',
-    title: 'Quality Check',
-    description:
-      'Your order has been completed and is now undergoing a strict quality check to ensure everything is perfect.'
+      'Your order is now in progress. Our team is carefully working on it to make sure everything meets our quality standards.'
   },
   {
     id: 6,
@@ -97,24 +79,23 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
     urlValue: 'to-pay-rest',
     title: 'Waiting For Remaining Payment',
     description:
-      'Your order passed the quality check. Please pay the remaining balance so we can prepare it for delivery soon.'
+      'Your order has passed all quality checks. Please pay the remaining balance so we can prepare it for shipping to you.'
   },
   {
     id: 7,
+    label: 'To Pay Warranty',
+    value: OrderStatus.AwaitingPaidWarranty,
+    urlValue: 'to-pay-warranty',
+    title: 'Waiting For Warranty Payment',
+    description: 'Please complete the payment so we can continue with the warranty process.'
+  },
+  {
+    id: 8,
     label: 'Packaging',
     value: OrderStatus.Packaging,
     urlValue: 'packaging',
     title: 'Packaging',
-    description:
-      'Your order has passed all checks and is now being carefully packaged and made ready to be sent to you.'
-  },
-  {
-    id: 8,
-    label: 'To Ship',
-    value: OrderStatus.AwaitingDelivery,
-    urlValue: 'to-ship',
-    title: 'Waiting For Delivery',
-    description: 'Your packaged order is waiting for the delivery courier to pick it up and deliver it to you.'
+    description: 'Your order is being carefully packaged to ensure it arrives safely and in perfect condition.'
   },
   {
     id: 9,
@@ -122,35 +103,32 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
     value: OrderStatus.Delevering,
     urlValue: 'to-deliver',
     title: 'Out For Delivery',
-    description:
-      'Your packaged order has been handed to the delivery courier and is on its way to the address you provided.'
+    description: 'Your packaged order is now with the courier and on its way to your delivery address.'
   },
   {
     id: 10,
+    label: 'To Factory',
+    value: OrderStatus.PickUpInProgress,
+    urlValue: 'pick-up-in-progress',
+    title: 'To Factory',
+    description: 'Your order is being prepared for pickup and will be sent to the factory for warranty service.'
+  },
+  {
+    id: 11,
+    label: 'To Pick Up',
+    value: OrderStatus.ReceivedAtBranch,
+    urlValue: 'received-at-branch',
+    title: 'To Pick Up',
+    description: 'Your order has arrived at the branch and is ready for you to collect at your convenience.'
+  },
+  {
+    id: 12,
     label: 'Completed',
     value: OrderStatus.Completed,
     urlValue: 'to-rate',
     title: 'Order Completed',
     description:
-      'Your order has been successfully delivered. Please confirm that you received it and leave your feedback.'
-  },
-  {
-    id: 11,
-    label: 'Warranty Check',
-    value: OrderStatus.WarrantyCheck,
-    urlValue: 'warranty-check',
-    title: 'Warranty Inspection',
-    description:
-      'We are reviewing your request and checking your order to confirm if it is eligible to receive warranty service.'
-  },
-  {
-    id: 12,
-    label: 'In Warranty',
-    value: OrderStatus.InWarranty,
-    urlValue: 'in-warranty',
-    title: 'Under Warranty Process',
-    description:
-      'Your order is being repaired or replaced under warranty and will pass checks again before being delivered.'
+      'Your order has been successfully delivered. Please confirm you have received it and share your feedback with us.'
   },
   {
     id: 13,
@@ -159,7 +137,16 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
     urlValue: 'cancelled',
     title: 'Order Cancelled',
     description:
-      'Your order has been cancelled. Please contact us if you have any questions or need further assistance.'
+      'Your order has been cancelled. If you have any questions or would like to place it again, please contact our support team.'
+  },
+  {
+    id: 14,
+    label: 'Returned',
+    value: OrderStatus.Returned,
+    urlValue: 'returned',
+    title: 'Order Returned',
+    description:
+      'Your order has been returned to us. Please reach out to our support team if you need assistance or more details.'
   }
 ]
 
@@ -173,29 +160,17 @@ export const statusStyles: Record<
     iconColor: '#ca8a04',
     shadowColor: '#eab308'
   },
-  IN_DESIGN: {
-    colors: ['#f6f0ff', '#e9d6fd', '#7c3aed'],
-    textColor: '#5b21b6',
-    iconColor: '#7c3aed',
-    shadowColor: '#8b5cf6'
-  },
   CONFIRMED: {
     colors: ['#f3fbf6', '#d1fae5', '#059669'],
     textColor: '#166534',
     iconColor: '#16a34a',
     shadowColor: '#22c55e'
   },
-  IN_PRODUCTION: {
+  IN_PROGRESS: {
     colors: ['#fff6ea', '#ffe9d6', '#ea580c'],
     textColor: '#9a3412',
     iconColor: '#ea580c',
     shadowColor: '#f97316'
-  },
-  IN_QC: {
-    colors: ['#f4f7fd', '#e0e7ff', '#2563eb'],
-    textColor: '#1e3a8a',
-    iconColor: '#2563eb',
-    shadowColor: '#3b82f6'
   },
   AWAITING_PAID_REST: {
     colors: ['#faf4ff', '#f3e8ff', '#a21caf'],
@@ -209,12 +184,6 @@ export const statusStyles: Record<
     iconColor: '#475569',
     shadowColor: '#64748b'
   },
-  AWAITING_DELIVERY: {
-    colors: ['#fff7ed', '#fed7aa', '#f97316'],
-    textColor: '#b45309',
-    iconColor: '#f59e42',
-    shadowColor: '#fb923c'
-  },
   DELIVERING: {
     colors: ['#f2fdfa', '#ccfbf1', '#0e7490'],
     textColor: '#115e59',
@@ -227,22 +196,34 @@ export const statusStyles: Record<
     iconColor: '#16a34a',
     shadowColor: '#22c55e'
   },
-  WARRANTY_CHECK: {
-    colors: ['#fff5f5', '#ffe4e6', '#dc2626'],
-    textColor: '#991b1b',
-    iconColor: '#dc2626',
-    shadowColor: '#ef4444'
-  },
-  IN_WARRANTY: {
+  AWAITING_PAID_WARRANTY: {
     colors: ['#fffaeb', '#fef9c3', '#b45309'],
     textColor: '#854d0e',
     iconColor: '#ca8a04',
     shadowColor: '#eab308'
+  },
+  PICKUP_IN_PROGRESS: {
+    colors: ['#f0f9ff', '#bae6fd', '#0284c7'],
+    textColor: '#075985',
+    iconColor: '#0ea5e9',
+    shadowColor: '#38bdf8'
+  },
+  RECEIVED_AT_BRANCH: {
+    colors: ['#f3f4f6', '#e5e7eb', '#374151'],
+    textColor: '#1f2937',
+    iconColor: '#4b5563',
+    shadowColor: '#6b7280'
   },
   CANCELLED: {
     colors: ['#fff5f5', '#ffe4e6', '#dc2626'],
     textColor: '#991b1b',
     iconColor: '#dc2626',
     shadowColor: '#ef4444'
+  },
+  RETURNED: {
+    colors: ['#f3fbf6', '#d1fae5', '#059669'],
+    textColor: '#166534',
+    iconColor: '#16a34a',
+    shadowColor: '#22c55e'
   }
 }

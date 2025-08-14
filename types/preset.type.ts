@@ -18,6 +18,7 @@ export interface Preset {
   type: string
   isDefault: boolean
   price: number
+  sku: string | null
 }
 
 export interface PresetWithComponentOptions extends Preset {

@@ -38,8 +38,8 @@ const statuses: OrderStatusUI[] = [
   {
     id: 2,
     name: 'To Ship',
-    url: '/order/status/to-ship',
-    value: OrderStatus.AwaitingDelivery,
+    url: '/order/status/packaging',
+    value: OrderStatus.Packaging,
     icon: SvgIcon.toShip({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
@@ -96,7 +96,6 @@ function OrderStage({
 
 export default function ProfileScreen() {
   const router = useRouter()
-
   const { isDarkColorScheme, setColorScheme } = useColorScheme()
   const [checked, setChecked] = useState(isDarkColorScheme ? true : false)
 
@@ -167,7 +166,17 @@ export default function ProfileScreen() {
           <Text className='font-inter-medium ml-2.5'>My Appointments</Text>
           <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
         </TouchableOpacity>
+
         <Separator />
+
+        <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/order/warranty/create')}>
+          <Feather name='grid' size={20} color={PRIMARY_COLOR.LIGHT} />
+          <Text className='font-inter-medium ml-2.5'>MamaFit Services</Text>
+          <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
+        </TouchableOpacity>
+
+        <Separator />
+
         <Pressable className='flex-row items-center p-4' onPress={toggleColorScheme}>
           <Feather name='moon' size={20} color={PRIMARY_COLOR.LIGHT} />
           <Text className='font-inter-medium ml-2.5 flex-1'>Dark Mode</Text>

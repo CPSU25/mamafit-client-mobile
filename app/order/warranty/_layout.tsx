@@ -11,7 +11,7 @@ export default function WarrantyLayout() {
   return (
     <Stack screenOptions={{ headerShown: false, animation: 'ios_from_right' }}>
       <Stack.Screen name='create' options={{ title: 'Create Warranty Request' }} />
-      <Stack.Screen name='detail' options={{ title: 'Warranty Detail' }} />
+      <Stack.Screen name='policy' options={{ title: 'Warranty Policy' }} />
     </Stack>
   )
 }

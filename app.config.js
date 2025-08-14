@@ -4,7 +4,7 @@ export default ({ config }) => ({
   expo: {
     name: 'Mama Fit',
     slug: 'mamafit-mobile',
-    version: '1.0.6',
+    version: '1.0.7',
     orientation: 'portrait',
     icon: './assets/images/mamafit-app-icon.png',
     scheme: 'mamafit',
@@ -34,6 +34,13 @@ export default ({ config }) => ({
     },
     plugins: [
       'expo-router',
+      [
+        'expo-video',
+        {
+          supportsBackgroundPlayback: true,
+          supportsPictureInPicture: true
+        }
+      ],
       [
         'expo-splash-screen',
         {

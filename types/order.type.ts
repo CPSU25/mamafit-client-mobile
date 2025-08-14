@@ -61,17 +61,16 @@ export interface BranchWithDirection extends Branch {
 export enum OrderStatus {
   Created = 'CREATED',
   Confirmed = 'CONFIRMED',
-  InProduction = 'IN_PRODUCTION',
-  InDesign = 'IN_DESIGN',
+  InProgress = 'IN_PROGRESS',
   AwaitingPaidRest = 'AWAITING_PAID_REST',
-  InQC = 'IN_QC',
-  InWarranty = 'IN_WARRANTY',
+  PickUpInProgress = 'PICKUP_IN_PROGRESS',
+  AwaitingPaidWarranty = 'AWAITING_PAID_WARRANTY',
+  ReceivedAtBranch = 'RECEIVED_AT_BRANCH',
   Packaging = 'PACKAGING',
   Delevering = 'DELIVERING',
-  AwaitingDelivery = 'AWAITING_DELIVERY',
   Completed = 'COMPLETED',
-  WarrantyCheck = 'WARRANTY_CHECK',
-  Cancelled = 'CANCELLED'
+  Cancelled = 'CANCELLED',
+  Returned = 'RETURNED'
 }
 
 export enum OrderItemType {
@@ -204,21 +203,88 @@ export interface DesignerInfo {
   chatRoomId: string | null
 }
 
+export enum WarrantyRequestStatus {
+  Pending = 'PENDING',
+  Repairing = 'REPAIRING',
+  Completed = 'COMPLETED',
+  Rejected = 'REJECTED',
+  Approved = 'APPROVED',
+  PartiallyRejected = 'PARTIALLY_REJECTED',
+  Cancelled = 'CANCELLED'
+}
+
+export enum WarrantyRequestItemStatus {
+  Pending = 'PENDING',
+  Approved = 'APPROVED',
+  Rejected = 'REJECTED',
+  InTransit = 'IN_TRANSIT'
+}
+
 export interface WarrantyRequest {
   id: string
-  warrantyOrderItemId: string
-  orderId: string
-  orderCode: string
-  images: string[]
-  description: string
-  isFactoryError: boolean | null
+  sku: string
+  noteInternal: string | null
+  requestType: 'FREE' | 'FEE'
   rejectedReason: string | null
-  fee: number | null
-  status: string
-  warrantyRound: number
-  createdBy: string
-  updatedBy: null
+  totalFee: number | null
+  status: WarrantyRequestStatus
+  customer: string | null
+  countItem: number
+  createdBy: string | null
+  updatedBy: string | null
   createdAt: string
   updatedAt: string
   isDeleted: boolean
+}
+
+export interface WarrantyRequestDetail {
+  warrantyRequest: WarrantyRequest
+  originalOrders: {
+    id: string
+    code: string
+    receivedAt: string | null
+    orderItems: OrderItem[]
+  }[]
+}
+
+export interface WarrantyItem {
+  warrantyRequestItems: {
+    warrantyRequestId: string
+    orderItemId: string
+    destinationBranchId: string | null
+    destinationBranch: Branch | null
+    trackingCode: string | null
+    fee: number | null
+    rejectedReason: string | null
+    description: string
+    images: string[]
+    videos: string[]
+    status: WarrantyRequestItemStatus
+    estimateTime: string | null
+    destinationType: string
+    warrantyRound: number
+    warrantyRequest: WarrantyRequest
+  }
+  parentOrder: Order
+}
+
+export interface WarrantyItemList {
+  warrantyRequestItems: {
+    warrantyRequestId: string
+    orderItemId: string
+    destinationBranchId: string | null
+    destinationBranch: Branch | null
+    trackingCode: string | null
+    fee: number | null
+    rejectedReason: string | null
+    description: string
+    images: string[]
+    videos: string[]
+    status: WarrantyRequestItemStatus
+    estimateTime: string | null
+    destinationType: string
+    warrantyRound: number
+    warrantyRequest: WarrantyRequest
+  }
+  order: Order
 }

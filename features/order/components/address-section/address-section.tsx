@@ -7,8 +7,7 @@ import { Text } from '~/components/ui/text'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { Address } from '~/types/address.type'
 import { User } from '~/types/common'
-import { Branch } from '~/types/order.type'
-import { DeliveryMethod } from '../../validations'
+import { Branch, DeliveryMethod } from '~/types/order.type'
 import PreviewAddressCard from './address/preview-address-card'
 import PreviewBranchCard from './branch/preview-branch-card'
 
@@ -108,15 +107,15 @@ export default function AddressSection({
       className='w-full max-w-[400px] mx-auto flex-col gap-1.5'
     >
       <TabsList className='flex-row w-full'>
-        <TabsTrigger value={DeliveryMethod.DELIVERY} className='flex-1 flex-row items-center gap-2'>
+        <TabsTrigger value={DeliveryMethod.Delivery} className='flex-1 flex-row items-center gap-2'>
           {SvgIcon.toReceive({
             size: iconSize,
-            color: tabValue === DeliveryMethod.DELIVERY ? 'PRIMARY' : 'GRAY'
+            color: tabValue === DeliveryMethod.Delivery ? 'PRIMARY' : 'GRAY'
           })}
           <Text>Delivery</Text>
         </TabsTrigger>
-        <TabsTrigger value={DeliveryMethod.PICK_UP} className='flex-1 flex-row items-center gap-2'>
-          {SvgIcon.shop({ size: iconSize, color: tabValue === DeliveryMethod.PICK_UP ? 'PRIMARY' : 'GRAY' })}
+        <TabsTrigger value={DeliveryMethod.PickUp} className='flex-1 flex-row items-center gap-2'>
+          {SvgIcon.shop({ size: iconSize, color: tabValue === DeliveryMethod.PickUp ? 'PRIMARY' : 'GRAY' })}
           <Text>Pick Up</Text>
         </TabsTrigger>
       </TabsList>

@@ -3,7 +3,6 @@ import { TouchableOpacity, View } from 'react-native'
 import { Separator } from '~/components/ui/separator'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
-import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { Diary } from '~/types/diary.type'
 
 interface PreviewDiaryCardProps {
@@ -41,7 +40,7 @@ export default function PreviewDiaryCard({ diary, isLoading, onPress }: PreviewD
             </Text>
           </View>
         </View>
-        <Feather name='chevron-right' size={20} color={PRIMARY_COLOR.LIGHT} />
+        <Feather name='chevron-right' size={20} color='lightgray' />
       </View>
     </TouchableOpacity>
   )

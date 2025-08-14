@@ -223,28 +223,31 @@ export const getStatusIcon = (status: OrderStatus): keyof typeof MaterialCommuni
   switch (status) {
     case OrderStatus.Created:
       return 'credit-card-clock'
-    case OrderStatus.InDesign:
-      return 'palette'
+    // case OrderStatus.InDesign:
+    //   return 'palette'
     case OrderStatus.Confirmed:
       return 'credit-card-check'
-    case OrderStatus.InProduction:
+    case OrderStatus.InProgress:
       return 'factory'
-    case OrderStatus.InQC:
-      return 'timeline-check'
+    // case OrderStatus.InQC:
+    //   return 'timeline-check'
     case OrderStatus.AwaitingPaidRest:
+    case OrderStatus.AwaitingPaidWarranty:
       return 'credit-card-refresh'
     case OrderStatus.Packaging:
       return 'package-variant'
-    case OrderStatus.AwaitingDelivery:
-      return 'mailbox'
+    // case OrderStatus.AwaitingDelivery:
+    //   return 'mailbox'
     case OrderStatus.Delevering:
+    case OrderStatus.PickUpInProgress:
       return 'truck-fast'
     case OrderStatus.Completed:
+    case OrderStatus.ReceivedAtBranch:
       return 'star-circle'
-    case OrderStatus.WarrantyCheck:
-      return 'shield-search'
-    case OrderStatus.InWarranty:
-      return 'shield-sync'
+    // case OrderStatus.WarrantyCheck:
+    //   return 'shield-search'
+    // case OrderStatus.InWarranty:
+    //   return 'shield-sync'
     case OrderStatus.Cancelled:
       return 'archive-cancel'
     default:

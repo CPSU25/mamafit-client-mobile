@@ -8,16 +8,16 @@ import { useRefreshs } from '~/hooks/use-refresh'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { cn } from '~/lib/utils'
-import { NotificationType } from '~/types/notification.type'
+import { NotificationTypeDB } from '~/types/notification.type'
 import { useGetNotifications } from '../hooks/use-get-notifications'
 
-const getIconByType = (type: NotificationType, isRead: boolean) => {
+const getIconByType = (type: NotificationTypeDB, isRead: boolean) => {
   switch (type) {
-    case NotificationType.OrderProgress:
+    case NotificationTypeDB.OrderProgress:
       return SvgIcon.box({ size: 28, color: isRead ? 'GRAY' : 'PRIMARY' })
-    case NotificationType.Appointment:
+    case NotificationTypeDB.Appointment:
       return SvgIcon.appointment({ size: 28, color: isRead ? 'GRAY' : 'PRIMARY' })
-    case NotificationType.Payment:
+    case NotificationTypeDB.Payment:
       return SvgIcon.card({ size: 28, color: isRead ? 'GRAY' : 'PRIMARY' })
     default:
       return SvgIcon.messageQuestion({ size: 28, color: isRead ? 'GRAY' : 'PRIMARY' })

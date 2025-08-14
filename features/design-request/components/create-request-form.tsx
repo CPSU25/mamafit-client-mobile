@@ -96,7 +96,10 @@ export default function CreateDesignRequestForm({
               value={value}
               onChangeText={onChange}
               aria-labelledby='textareaLabel'
-              className={cn('bg-background border-input', isFormError(errors, 'description') ? className : '')}
+              className={cn(
+                'native:text-base bg-background border-input',
+                isFormError(errors, 'description') ? className : ''
+              )}
             />
           )}
         />

@@ -168,7 +168,14 @@ export interface Polyline {
 }
 
 export interface AppConfig {
-  fields: { depositRate: number; designRequestServiceFee: number; name: string; presetVersions: number }
+  fields: {
+    depositRate: number
+    designRequestServiceFee: number
+    name: string
+    presetVersions: number
+    warrantyTime: number
+    warrantyPeriod: number
+  }
 }
 
 export interface CartItem {

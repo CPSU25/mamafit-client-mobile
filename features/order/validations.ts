@@ -1,19 +1,5 @@
 import { z } from 'zod'
-
-export enum PaymentType {
-  FULL = 'FULL',
-  DEPOSIT = 'DEPOSIT'
-}
-
-export enum DeliveryMethod {
-  PICK_UP = 'PICK_UP',
-  DELIVERY = 'DELIVERY'
-}
-
-export enum PaymentMethod {
-  CASH = 'CASH',
-  ONLINE_BANKING = 'ONLINE_BANKING'
-}
+import { DeliveryMethod, PaymentMethod, PaymentType } from '~/types/order.type'
 
 // Schema for add-on option in form
 export const addOnOptionFormSchema = z.object({
@@ -38,12 +24,12 @@ export const placePresetOrderFormSchema = z
     measurementDiaryId: z.string().min(1, { message: 'Measurement diary is required' }),
     measurementId: z.string().min(1, { message: 'Measurement is required' }),
     isOnline: z.boolean(),
-    paymentMethod: z.nativeEnum(PaymentMethod),
-    paymentType: z.nativeEnum(PaymentType),
-    deliveryMethod: z.nativeEnum(DeliveryMethod)
+    paymentMethod: z.enum([PaymentMethod.Cash, PaymentMethod.OnlineBanking]),
+    paymentType: z.enum([PaymentType.Full, PaymentType.Deposit]),
+    deliveryMethod: z.enum([DeliveryMethod.Delivery, DeliveryMethod.PickUp])
   })
   .superRefine((data, ctx) => {
-    if (data.deliveryMethod === DeliveryMethod.DELIVERY && !data.addressId) {
+    if (data.deliveryMethod === DeliveryMethod.Delivery && !data.addressId) {
       ctx.addIssue({
         path: ['addressId'],
         code: z.ZodIssueCode.custom,
@@ -51,7 +37,7 @@ export const placePresetOrderFormSchema = z
       })
     }
 
-    if (data.deliveryMethod === DeliveryMethod.PICK_UP && !data.branchId) {
+    if (data.deliveryMethod === DeliveryMethod.PickUp && !data.branchId) {
       ctx.addIssue({
         path: ['branchId'],
         code: z.ZodIssueCode.custom,
@@ -60,7 +46,7 @@ export const placePresetOrderFormSchema = z
     }
 
     // Require shippingFee > 0 for DELIVERY
-    if (data.deliveryMethod === DeliveryMethod.DELIVERY && (!data.shippingFee || data.shippingFee <= 0)) {
+    if (data.deliveryMethod === DeliveryMethod.Delivery && (!data.shippingFee || data.shippingFee <= 0)) {
       ctx.addIssue({
         path: ['shippingFee'],
         code: z.ZodIssueCode.custom,

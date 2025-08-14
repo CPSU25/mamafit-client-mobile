@@ -1,10 +1,16 @@
-export enum NotificationType {
+export enum NotificationTypeRealTime {
+  ORDER_PROGRESS,
+  APPOINTMENT,
+  PAYMENT
+}
+
+export enum NotificationTypeDB {
   OrderProgress = 'ORDER_PROGRESS',
   Appointment = 'APPOINTMENT',
   Payment = 'PAYMENT'
 }
 
-export interface Notification {
+export interface Notification<T> {
   id: string
   actionUrl: string
   createdAt: string
@@ -14,7 +20,7 @@ export interface Notification {
   notificationContent: string
   notificationTitle: string
   receiverId: string
-  type: NotificationType
+  type: T
   updatedAt: string
   updatedBy: string | null
 }

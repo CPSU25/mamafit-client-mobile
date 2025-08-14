@@ -1,93 +1,223 @@
 import { Controller, useFormContext } from 'react-hook-form'
-import { View } from 'react-native'
-import Animated, { FadeInDown } from 'react-native-reanimated'
+import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
 import FieldError from '~/components/field-error'
-import { ImageGrid, ImagePickerTrigger, ImageResetButton } from '~/components/ui/image-picker'
+import { Card } from '~/components/ui/card'
+import { ImageThumbnail } from '~/components/ui/image-picker'
+import { Text } from '~/components/ui/text'
 import { Textarea } from '~/components/ui/textarea'
+import { VideoThumbnail } from '~/components/ui/video-picker'
 import { useFieldError } from '~/hooks/use-field-error'
-import { cn, isFormError } from '~/lib/utils'
+import { useImagePicker } from '~/hooks/use-image-picker'
+import { useVideoPicker } from '~/hooks/use-video-picker'
+import { FILE_PATH, ICON_SIZE, styles } from '~/lib/constants/constants'
+import { SvgIcon } from '~/lib/constants/svg-icon'
+import { cn } from '~/lib/utils'
+import { OrderItem } from '~/types/order.type'
 import { CreateWarrantyRequestSchema } from '../validations'
 
-interface CreateDesignRequestFormProps {
-  pickImages: (path?: string) => Promise<string[]>
-  resetImages: () => void
-  isUploading: boolean
-  isMaxReached: boolean
-  currentImages: string[]
+interface CreateWarrantyRequestFormProps {
+  index: number
+  orderItem?: OrderItem
 }
 
-export default function CreateWarrantyRequestForm({
-  pickImages,
-  resetImages,
-  isUploading,
-  isMaxReached,
-  currentImages
-}: CreateDesignRequestFormProps) {
+const imagesMaxReached = 5
+const videosMaxReached = 1
+
+export default function CreateWarrantyRequestForm({ index, orderItem }: CreateWarrantyRequestFormProps) {
   const {
     control,
     formState: { errors },
-    setValue
+    setValue,
+    watch
   } = useFormContext<CreateWarrantyRequestSchema>()
+
   const className = useFieldError()
+  const imagesPath = `items.${index}.images` as const
+  const videosPath = `items.${index}.videos` as const
+  const descriptionPath = `items.${index}.description` as const
+
+  const currentImages = (watch(imagesPath) as string[]) || []
+  const currentVideos = (watch(videosPath) as string[]) || []
+  const itemErrors = (errors.items?.[index] as any) || {}
+
+  const {
+    pickImages,
+    removeImage,
+    isUploading: isImageUploading
+  } = useImagePicker({
+    maxImages: 5,
+    initialImages: currentImages,
+    path: FILE_PATH.WARRANTY_REQUEST
+  })
+
+  const {
+    pickVideos,
+    removeVideo,
+    isUploading: isVideoUploading
+  } = useVideoPicker({
+    maxVideos: 1,
+    maxSizeInMB: 10,
+    path: FILE_PATH.WARRANTY_REQUEST
+  })
 
   const handlePickImages = async () => {
-    const newUrls = await pickImages('warranty-requests')
+    const newUrls = await pickImages()
     if (newUrls.length > 0) {
-      setValue('images', [...currentImages, ...newUrls])
+      setValue(imagesPath, [...currentImages, ...newUrls], { shouldDirty: true, shouldValidate: true })
+    }
+  }
+
+  const handlePickVideos = async () => {
+    const newUrls = await pickVideos()
+    if (newUrls.length > 0) {
+      setValue(videosPath, [...currentVideos, ...newUrls], { shouldDirty: true, shouldValidate: true })
     }
   }
 
   const handleRemoveImage = (index: number) => {
+    removeImage(index)
     const updatedImages = currentImages.filter((_, i) => i !== index)
-    setValue('images', updatedImages)
+    setValue(imagesPath, updatedImages, { shouldDirty: true, shouldValidate: true })
   }
 
-  const handleResetImages = () => {
-    resetImages()
-    setValue('images', [])
+  const handleRemoveVideo = (index: number) => {
+    removeVideo(index)
+    const updatedVideos = currentVideos.filter((_, i) => i !== index)
+    setValue(videosPath, updatedVideos, { shouldDirty: true, shouldValidate: true })
   }
+
+  const noMedias = currentImages.length === 0 && currentVideos.length === 0
 
   return (
-    <View className='gap-4'>
-      <Animated.View entering={FadeInDown.delay(200)} className='gap-2'>
-        <View
-          className={cn(
-            'flex flex-col gap-4 p-2 border border-dashed rounded-2xl',
-            isMaxReached || isFormError(errors, 'images') ? 'border-rose-200 bg-rose-50/50' : 'border-input bg-muted/20'
-          )}
-        >
-          <ImagePickerTrigger
-            onPress={handlePickImages}
-            isUploading={isUploading}
-            isMaxReached={isMaxReached}
-            currentCount={currentImages.length}
-            maxImages={5}
-            placeholder='Choose images from your gallery'
-          />
-
-          <ImageGrid images={currentImages} onRemoveImage={handleRemoveImage} />
-
-          {isMaxReached && <ImageResetButton onReset={handleResetImages} />}
+    <Card className='p-2 gap-2' style={styles.container}>
+      <View className='flex-1 flex-row items-start gap-2'>
+        <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
+          <Image source={{ uri: orderItem?.preset?.images?.[0] }} className='w-full h-full' resizeMode='contain' />
         </View>
-        {isFormError(errors, 'images') && <FieldError message={errors.images?.message || ''} />}
-      </Animated.View>
+        <View className='flex-1 h-20 justify-between pr-2'>
+          <View>
+            <Text className='native:text-sm font-inter-medium'>{orderItem?.preset?.styleName || 'Custom'} Dress</Text>
+            <View className='flex-row items-center justify-between'>
+              <Text className='native:text-xs text-muted-foreground'>
+                {orderItem?.preset?.styleName ? 'Made-to-Order Custom Style' : 'Tailored Just for You'}
+              </Text>
+              <Text className='native:text-xs text-muted-foreground'>x{orderItem?.quantity || 1}</Text>
+            </View>
+          </View>
+          <View className='items-end'>
+            <Text className='native:text-xs'>SKU: {orderItem?.preset?.sku ?? 'N/A'}</Text>
+          </View>
+        </View>
+      </View>
 
-      <Animated.View entering={FadeInDown.delay(300)} className='flex flex-col gap-2'>
+      {noMedias ? (
+        <View className='flex-row items-center gap-2'>
+          <View className='gap-1 flex-1'>
+            <TouchableOpacity
+              onPress={handlePickImages}
+              disabled={isImageUploading}
+              className='py-3 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
+            >
+              {SvgIcon.galleryImport({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
+              <Text className='text-xs text-muted-foreground'>{isImageUploading ? 'Uploading...' : 'Add Photo'}</Text>
+            </TouchableOpacity>
+          </View>
+          <View className='gap-1 flex-1'>
+            <TouchableOpacity
+              onPress={handlePickVideos}
+              disabled={isVideoUploading}
+              className='py-3 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
+            >
+              {SvgIcon.videoPlay({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
+              <Text className='text-xs text-muted-foreground'>{isVideoUploading ? 'Uploading...' : 'Add Video'}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ) : (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View className='flex-row items-center gap-2'>
+            {currentVideos.length < videosMaxReached ? (
+              <>
+                {currentVideos.map((video, index) => (
+                  <VideoThumbnail
+                    key={index}
+                    uri={video}
+                    onRemove={() => handleRemoveVideo(index)}
+                    className='w-28 h-28 bg-transparent border-transparent p-0'
+                  />
+                ))}
+                <TouchableOpacity
+                  onPress={handlePickVideos}
+                  disabled={isVideoUploading}
+                  className='w-28 h-28 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
+                >
+                  {SvgIcon.videoPlay({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
+                  <Text className='text-sm text-muted-foreground font-inter-medium'>
+                    {videosMaxReached - currentVideos.length}/{videosMaxReached}
+                  </Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              currentVideos.map((video, index) => (
+                <VideoThumbnail
+                  key={index}
+                  uri={video}
+                  onRemove={() => handleRemoveVideo(index)}
+                  className='w-28 h-28 bg-transparent border-transparent p-0'
+                />
+              ))
+            )}
+            {currentImages.length < imagesMaxReached ? (
+              <>
+                {currentImages.map((img, index) => (
+                  <ImageThumbnail
+                    key={`${img}-${index}`}
+                    uri={img}
+                    onRemove={() => handleRemoveImage(index)}
+                    className='w-28 h-28 bg-transparent border-transparent p-0'
+                  />
+                ))}
+                <TouchableOpacity
+                  onPress={handlePickImages}
+                  disabled={isImageUploading}
+                  className='w-28 h-28 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
+                >
+                  {SvgIcon.galleryImport({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
+                  <Text className='text-sm text-muted-foreground font-inter-medium'>
+                    {imagesMaxReached - currentImages.length}/{imagesMaxReached}
+                  </Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              currentImages.map((img, index) => (
+                <ImageThumbnail
+                  key={`${img}-${index}`}
+                  uri={img}
+                  onRemove={() => handleRemoveImage(index)}
+                  className='w-28 h-28 bg-transparent border-transparent p-0'
+                />
+              ))
+            )}
+          </View>
+        </ScrollView>
+      )}
+
+      <View className='gap-1'>
         <Controller
           control={control}
-          name='description'
-          render={({ field: { onChange, value } }) => (
+          name={descriptionPath}
+          render={({ field: { value, onChange, onBlur } }) => (
             <Textarea
-              placeholder='Describe the issue with your item'
               value={value}
               onChangeText={onChange}
-              aria-labelledby='textareaLabel'
-              className={cn('bg-background border-input', isFormError(errors, 'description') ? className : '')}
+              onBlur={onBlur}
+              placeholder='Describe the defect and where it appears'
+              className={cn('rounded-xl native:text-base', itemErrors?.description && className)}
             />
           )}
         />
-        {isFormError(errors, 'description') && <FieldError message={errors.description?.message || ''} />}
-      </Animated.View>
-    </View>
+        {!!itemErrors?.description?.message && <FieldError message={String(itemErrors.description.message)} />}
+      </View>
+    </Card>
   )
 }

@@ -4,7 +4,7 @@ import { Card } from '~/components/ui/card'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
-import { PaymentType } from '../../validations'
+import { PaymentType } from '~/types/order.type'
 
 interface PaymentDetailsSectionProps {
   iconSize: number
@@ -56,7 +56,7 @@ export default function PaymentDetailsSection({
           </View>
         ) : null}
 
-        {paymentType === PaymentType.DEPOSIT && payableMerchandisePortion > 0 ? (
+        {paymentType === PaymentType.Deposit && payableMerchandisePortion > 0 ? (
           <View className='flex-row items-baseline'>
             <Text className='text-xs text-muted-foreground flex-1'>Deposit Subtotal ({depositRate * 100}%)</Text>
             <Text className='text-xs text-muted-foreground'>

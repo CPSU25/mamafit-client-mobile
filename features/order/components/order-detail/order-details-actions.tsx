@@ -16,18 +16,11 @@ import CancelOrderForm from './cancel-order-form'
 interface OrderDetailsActionsProps {
   status: OrderStatus
   bottom: number
-  parentOrderItemId: string
   orderId: string
   orderCode: string
 }
 
-export default function OrderDetailsActions({
-  status,
-  bottom,
-  parentOrderItemId,
-  orderId,
-  orderCode
-}: OrderDetailsActionsProps) {
+export default function OrderDetailsActions({ status, bottom, orderId, orderCode }: OrderDetailsActionsProps) {
   const router = useRouter()
   const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -47,31 +40,17 @@ export default function OrderDetailsActions({
 
   return (
     <View
-      className='absolute bottom-0 bg-background left-0 right-0 px-2 pt-2'
+      className='absolute bottom-0 bg-background left-0 right-0 px-2 pt-3'
       style={{ paddingBottom: bottom, boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
     >
       {status === OrderStatus.Completed ? (
-        <View className='flex-row items-center gap-2'>
-          <TouchableOpacity
-            className='flex-row items-center gap-2 flex-1 justify-center p-2 rounded-xl border border-amber-100 bg-amber-50'
-            onPress={() =>
-              router.push({
-                pathname: '/order/warranty/[orderItemId]/create',
-                params: { orderItemId: parentOrderItemId }
-              })
-            }
-          >
-            <MaterialCommunityIcons name='shield-plus' size={16} color='#d97706' />
-            <Text className='font-inter-medium text-sm text-amber-600'>Demand Warranty</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className='flex-row items-center gap-2 flex-1 justify-center p-2 rounded-xl border border-indigo-100 bg-indigo-50'>
-            <MaterialCommunityIcons name='star-circle' size={16} color='#4f46e5' />
-            <Text className='font-inter-medium text-sm text-indigo-600'>Rate</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity className='flex-row items-center gap-2 flex-1 justify-center p-2 rounded-xl border border-indigo-100 bg-indigo-50'>
+          <MaterialCommunityIcons name='star-circle' size={16} color='#4f46e5' />
+          <Text className='font-inter-medium text-sm text-indigo-600'>Rate Order</Text>
+        </TouchableOpacity>
       ) : null}
 
-      {status === OrderStatus.Created ? (
+      {status === OrderStatus.Created || status === OrderStatus.AwaitingPaidWarranty ? (
         <View className='flex-row items-center gap-2'>
           <View className='flex-1'>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -129,6 +108,23 @@ export default function OrderDetailsActions({
             <Text className='text-sm font-inter-medium text-emerald-600'>Pay Now</Text>
           </TouchableOpacity>
         </View>
+      ) : null}
+
+      {status === OrderStatus.AwaitingPaidRest ? (
+        <TouchableOpacity
+          className='flex-1 flex-row items-center gap-2 justify-center p-2 rounded-xl border border-emerald-100 bg-emerald-50'
+          onPress={() =>
+            router.push({
+              pathname: '/payment/[orderId]/qr-code',
+              params: {
+                orderId
+              }
+            })
+          }
+        >
+          <MaterialCommunityIcons name='credit-card' size={16} color='#059669' />
+          <Text className='text-sm font-inter-medium text-emerald-600'>Pay Now</Text>
+        </TouchableOpacity>
       ) : null}
 
       {status === OrderStatus.Delevering ? (

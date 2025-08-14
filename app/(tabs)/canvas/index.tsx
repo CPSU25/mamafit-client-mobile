@@ -21,8 +21,6 @@ export default function CanvasScreen() {
 
       <View className='p-4 flex-col gap-4'>
         <HeroSection />
-
-        <Text>Show most sold presets</Text>
       </View>
     </SafeView>
   )

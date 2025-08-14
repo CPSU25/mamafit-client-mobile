@@ -1,12 +1,12 @@
 import { api } from '~/lib/axios/axios'
 import { BasePaginationResponse, BaseResponse } from '~/types/common'
-import { Notification, NotificationType } from '~/types/notification.type'
+import { Notification, NotificationTypeDB } from '~/types/notification.type'
 
 class NotificationService {
-  async getNotifications(page: number = 1, pageSize: number = 10, type?: NotificationType) {
+  async getNotifications(page: number = 1, pageSize: number = 10, type?: NotificationTypeDB) {
     const url = `/notification/by-token?index=${page}&pageSize=${pageSize}${type ? `&type=${type}` : ''}`
 
-    const { data } = await api.get<BasePaginationResponse<Notification>>(url)
+    const { data } = await api.get<BasePaginationResponse<Notification<NotificationTypeDB>>>(url)
 
     return data.data
   }

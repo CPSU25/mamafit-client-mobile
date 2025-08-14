@@ -6,11 +6,11 @@ import { AppState, AppStateStatus } from 'react-native'
 import { toast } from 'sonner-native'
 import MessageToast from '~/components/toast/message-toast'
 import NotificationToast from '~/components/toast/notification-toast'
-import { formatRealtimeMessageType } from '~/lib/utils'
+import { formatRealtimeMessageType, formatRealTimeNotificationType } from '~/lib/utils'
 import chatHubService, { ChatHubEvents } from '~/services/signalr/chat-hub.service'
 import notificationHubService, { NotificationHubEvents } from '~/services/signalr/notification-hub.service'
 import { ChatRoom, Message, MessageTypeDB, MessageTypeRealTime } from '~/types/chat.type'
-import { Notification } from '~/types/notification.type'
+import { Notification, NotificationTypeDB, NotificationTypeRealTime } from '~/types/notification.type'
 import { useAuth } from './use-auth'
 
 export const useSignalR = () => {
@@ -45,7 +45,19 @@ export const useSignalR = () => {
 
       const isNotMe = senderId !== user?.userId
 
-      console.log('ChatHub', message)
+      const newMessage: Message<MessageTypeDB> = {
+        id,
+        senderAvatar,
+        senderName,
+        message: message.message,
+        senderId,
+        chatRoomId,
+        type: formatRealtimeMessageType(type),
+        messageTimestamp,
+        isRead
+      }
+
+      console.log('ChatHub', newMessage)
 
       if (isNotMe) {
         // Update rooms list
@@ -74,18 +86,6 @@ export const useSignalR = () => {
           (oldData: { pages: Message<MessageTypeDB>[][]; pageParams: number[] } | undefined) => {
             if (!oldData) return oldData
 
-            const newMessage: Message<MessageTypeDB> = {
-              id,
-              senderAvatar,
-              senderName,
-              message: message.message,
-              senderId,
-              chatRoomId,
-              type: formatRealtimeMessageType(type),
-              messageTimestamp,
-              isRead
-            }
-
             // Add new message to the END of the first page (newest messages page)
             // Since pages are reversed in the component, first page contains newest messages
             const updatedPages = [...oldData.pages]
@@ -107,7 +107,7 @@ export const useSignalR = () => {
         const isOnChatScreen = segments.length > 0 && segments.some((segment) => segment === 'chat')
 
         if (!isOnChatScreen) {
-          toast.custom(<MessageToast message={message} />)
+          toast.custom(<MessageToast message={newMessage} />)
         }
       }
     },
@@ -116,7 +116,7 @@ export const useSignalR = () => {
 
   // Function to display incoming notifications from other users across the app
   const displayNotification = useCallback(
-    (notification: Notification) => {
+    (notification: Notification<NotificationTypeRealTime>) => {
       const notificationId = `${notification.id}-${notification.createdAt}`
 
       if (currentNotifications.current.has(notificationId)) return
@@ -135,7 +135,7 @@ export const useSignalR = () => {
       if (!isOnNotificationScreen) {
         // TODO: Add notification to the query cache
         // 2: Payment related notification
-        if (notification.type === 2) {
+        if (notification.type === NotificationTypeRealTime.PAYMENT) {
           queryClient.setQueryData(
             ['payment-status', notification.metadata?.orderId, user?.userId],
             (oldData: string | undefined) => {
@@ -147,10 +147,15 @@ export const useSignalR = () => {
           queryClient.invalidateQueries({ queryKey: ['order'] })
           queryClient.invalidateQueries({ queryKey: ['orders'] })
           queryClient.invalidateQueries({ queryKey: ['orders-count'] })
-          queryClient.invalidateQueries({ queryKey: ['order-item-milestones'] })
+          queryClient.invalidateQueries({ queryKey: ['order-items-milestones'] })
           queryClient.invalidateQueries({ queryKey: ['designer-info'] })
         }
-        toast.custom(<NotificationToast notification={notification} />)
+
+        const newNotification: Notification<NotificationTypeDB> = {
+          ...notification,
+          type: formatRealTimeNotificationType(notification.type)
+        }
+        toast.custom(<NotificationToast notification={newNotification} />)
       }
     },
     [segments, user?.userId, queryClient]
@@ -172,7 +177,7 @@ export const useSignalR = () => {
 
       const notificationHandler = (...args: unknown[]) => {
         try {
-          const notification = args[0] as Notification
+          const notification = args[0] as Notification<NotificationTypeRealTime>
           if (notification) {
             displayNotification(notification)
           }

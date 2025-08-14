@@ -3,19 +3,19 @@ import { router } from 'expo-router'
 import { TouchableOpacity, View } from 'react-native'
 import { placeholderImage, styles } from '~/lib/constants/constants'
 import { isValidUrl } from '~/lib/utils'
-import { Message } from '~/types/chat.type'
+import { Message, MessageTypeDB } from '~/types/chat.type'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Card } from '../ui/card'
 import { Separator } from '../ui/separator'
 import { Text } from '../ui/text'
 
-export default function MessageToast({ message }: { message: Message }) {
+export default function MessageToast({ message }: { message: Message<MessageTypeDB> }) {
   const { senderName, senderAvatar, messageTimestamp, chatRoomId } = message
   const imageSource = senderAvatar && isValidUrl(senderAvatar) ? senderAvatar : placeholderImage
 
   return (
     <TouchableOpacity onPress={() => router.push(`/chat/${chatRoomId}`)}>
-      <Card className='mx-4 mt-2' style={[styles.container]}>
+      <Card className='mx-2' style={[styles.container]}>
         <View className='flex-row items-center gap-2 px-3 py-1'>
           <View className='size-2 rounded-full bg-emerald-500' />
           <Text className='text-xs font-inter-medium'>New incoming message</Text>
