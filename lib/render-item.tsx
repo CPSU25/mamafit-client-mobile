@@ -9,7 +9,7 @@ interface Options {
 
 const renderItem = ({ rounded = false, style }: Options = {}): CarouselRenderItem<any> => {
   const windowWidth = Dimensions.get('window').width
-  const padding = 16 // px-2 is equivalent to 16px (8px on each side)
+  const padding = 32 // px-2 is equivalent to 16px (8px on each side)
   const fullWidth = windowWidth - padding
 
   const Component = ({ index }: { index: number }) => {

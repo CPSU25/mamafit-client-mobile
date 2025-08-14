@@ -9,10 +9,10 @@ export default function DiaryLayout() {
   if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name='index' options={{ title: 'Diary', animation: 'ios_from_right' }} />
-      <Stack.Screen name='[id]' options={{ title: 'Diary Detail', animation: 'ios_from_right' }} />
-      <Stack.Screen name='create' options={{ title: 'Create Diary', animation: 'ios_from_right' }} />
+    <Stack screenOptions={{ headerShown: false, animation: 'ios_from_right' }}>
+      <Stack.Screen name='index' options={{ title: 'Diary' }} />
+      <Stack.Screen name='[id]' options={{ title: 'Diary Detail' }} />
+      <Stack.Screen name='create' options={{ title: 'Create Diary' }} />
     </Stack>
   )
 }

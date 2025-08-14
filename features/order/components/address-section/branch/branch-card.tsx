@@ -1,0 +1,44 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { Image, View } from 'react-native'
+import { Card } from '~/components/ui/card'
+import { Text } from '~/components/ui/text'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
+import { cn } from '~/lib/utils'
+import { Branch } from '~/types/order.type'
+
+interface BranchCardProps {
+  isSelected: boolean
+  branch: Branch
+}
+
+export default function BranchCard({ isSelected, branch }: BranchCardProps) {
+  return (
+    <Card className={cn('p-2 flex-row gap-3', isSelected && 'border-primary bg-primary/10')}>
+      <Image
+        source={
+          branch.images && branch.images[0]
+            ? { uri: branch.images[0] }
+            : require('~/assets/images/branch-placeholder.png')
+        }
+        className='w-20 h-20 rounded-xl'
+        resizeMode='cover'
+      />
+      <View className='flex-1 justify-between'>
+        <Text className='text-lg font-inter-medium' numberOfLines={1}>
+          {branch.name}
+        </Text>
+        <View className='gap-1'>
+          <Text className='text-sm' numberOfLines={1}>
+            {branch.street}
+          </Text>
+          <View className='flex-row items-center gap-1'>
+            <MaterialCommunityIcons name='storefront' size={14} color={PRIMARY_COLOR.LIGHT} />
+            <Text className='text-xs text-muted-foreground flex-1' numberOfLines={1}>
+              {branch.ward}, {branch.district}, {branch.province}
+            </Text>
+          </View>
+        </View>
+      </View>
+    </Card>
+  )
+}

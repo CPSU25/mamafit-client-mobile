@@ -3,12 +3,11 @@ import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { decodeJwt } from 'jose'
 import { useForm } from 'react-hook-form'
-import authApi from '~/apis/auth.api'
 import { useAuth } from '~/hooks/use-auth'
 import { useSecureStore } from '~/hooks/use-secure-store'
-import { AuthTokens } from '~/lib/axios/axios'
 import { ERROR_MESSAGES } from '~/lib/constants/constants'
-import { JwtUser } from '~/types/common'
+import authService from '~/services/auth.service'
+import { AuthTokens, JwtUser } from '~/types/common'
 import { SignInSchema, signInSchema } from '../validations'
 
 export const useSignIn = () => {
@@ -24,7 +23,7 @@ export const useSignIn = () => {
   const { handleLogout } = useAuth()
 
   const signInMutation = useMutation({
-    mutationFn: authApi.signIn,
+    mutationFn: authService.signIn,
     onSuccess: async ({ data }) => {
       if (data) {
         const { accessToken, refreshToken } = data

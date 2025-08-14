@@ -18,7 +18,14 @@ export default function HistoriesList() {
     <FlatList
       data={measurementsHistory?.measurements.sort((a, b) => b.weekOfPregnancy - a.weekOfPregnancy)}
       renderItem={({ item, index }) => (
-        <Pressable onPress={() => router.push(`/diary/${id}/history/${item.id}`)}>
+        <Pressable
+          onPress={() =>
+            router.push({
+              pathname: '/diary/[id]/history/[measurementId]',
+              params: { id: id, measurementId: item.id }
+            })
+          }
+        >
           <Animated.View
             className='rounded-2xl'
             entering={FadeInDown.delay(100 * index)}

@@ -1,10 +1,11 @@
-import { Feather, FontAwesome } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import FieldError from '~/components/field-error'
+import { TipCard } from '~/components/ui/alert-card'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
@@ -123,22 +124,8 @@ export default function PreviewMeasurementForm() {
           </View>
         </Animated.View>
 
-        <Animated.View
-          entering={FadeInDown.delay(300)}
-          className={cn(
-            'border rounded-2xl p-3 border-dashed flex flex-col gap-1',
-            isDarkColorScheme ? 'bg-emerald-500/10 border-emerald-900' : 'bg-emerald-500/20 border-emerald-500/30'
-          )}
-        >
-          <View className='flex flex-row items-center gap-3'>
-            <FontAwesome name='lightbulb-o' size={20} color={isDarkColorScheme ? '#10b981' : '#059669'} />
-            <View className='flex flex-col gap-0.5 flex-shrink'>
-              <Text className={cn('font-inter-semibold', isDarkColorScheme ? 'text-emerald-500' : 'text-emerald-600')}>
-                Measurement Tips
-              </Text>
-            </View>
-          </View>
-          <View className='flex flex-col gap-0.5'>
+        <TipCard title='Tips' delay={300}>
+          <View className='flex flex-col gap-1'>
             <Text className={cn('text-xs', isDarkColorScheme ? 'text-emerald-500' : 'text-emerald-600')}>
               • Measure at the same time of day for consistency
             </Text>
@@ -149,7 +136,7 @@ export default function PreviewMeasurementForm() {
               • Stand straight and breathe normally while measuring
             </Text>
           </View>
-        </Animated.View>
+        </TipCard>
       </View>
     </KeyboardAwareScrollView>
   )

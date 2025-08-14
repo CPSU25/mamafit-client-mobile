@@ -1,13 +1,15 @@
-import QueryProvider from './query.provider'
-import NotificationProvider from './notifications.provider'
+import { PortalHost } from '@rn-primitives/portal'
+import { focusManager } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { AppState, AppStateStatus, Platform } from 'react-native'
-import { focusManager } from '@tanstack/react-query'
-import { Provider } from 'react-redux'
-import { store } from '~/lib/redux-toolkit/store'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
-import { PortalHost } from '@rn-primitives/portal'
+import { Provider } from 'react-redux'
+import { Toaster } from 'sonner-native'
+import { store } from '~/lib/redux-toolkit/store'
+import NotificationProvider from './notifications.provider'
+import QueryProvider from './query.provider'
+import SignalRProvider from './signalr.provider'
 
 const onAppStateChange = (status: AppStateStatus) => {
   if (Platform.OS !== 'web') {
@@ -23,15 +25,20 @@ export default function AppProvider({ children }: { children: React.ReactNode })
   }, [])
 
   return (
-    <KeyboardProvider>
-      <GestureHandlerRootView>
-        <Provider store={store}>
-          <NotificationProvider>
-            <QueryProvider>{children}</QueryProvider>
-            <PortalHost />
-          </NotificationProvider>
-        </Provider>
-      </GestureHandlerRootView>
-    </KeyboardProvider>
+    <Provider store={store}>
+      <QueryProvider>
+        <KeyboardProvider>
+          <GestureHandlerRootView>
+            <NotificationProvider>
+              <SignalRProvider>
+                {children}
+                <PortalHost />
+                <Toaster />
+              </SignalRProvider>
+            </NotificationProvider>
+          </GestureHandlerRootView>
+        </KeyboardProvider>
+      </QueryProvider>
+    </Provider>
   )
 }

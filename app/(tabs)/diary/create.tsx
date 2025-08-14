@@ -1,11 +1,11 @@
 import { Feather } from '@expo/vector-icons'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown, FadeOutDown, useAnimatedStyle, withSpring } from 'react-native-reanimated'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import FieldError from '~/components/field-error'
+import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
 import PersonalInfoForm from '~/features/diary/components/forms/personal-info-form'
@@ -48,6 +48,7 @@ export default function CreateDiaryScreen() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(0)
   const { isDarkColorScheme } = useColorScheme()
+  const { redirectTo } = useLocalSearchParams() as { redirectTo: string }
 
   const next = () => {
     setCurrentStep((prev) => {
@@ -72,7 +73,7 @@ export default function CreateDiaryScreen() {
   }
 
   const { stepOneMethods, stepTwoMethods, measurementsMethods, previewDiaryMutation, createDiaryMutation } =
-    useCreateDiary(next, handleReset)
+    useCreateDiary(next, handleReset, redirectTo)
 
   const {
     handleSubmit: handleSubmitStepOne,
@@ -103,7 +104,15 @@ export default function CreateDiaryScreen() {
     (measurementsErrors as any)._errors?.[0]
 
   const handleGoBack = () => {
-    router.back()
+    if (redirectTo) {
+      router.replace(redirectTo as any)
+    }
+
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/diary')
+    }
   }
 
   const onSubmitStepOne: SubmitHandler<PersonalInfoFormOutput> = () => {
@@ -229,7 +238,7 @@ export default function CreateDiaryScreen() {
   const stepIconStyles = [stepIconStyle0, stepIconStyle1, stepIconStyle2]
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <View className='flex flex-row items-center justify-start p-4 relative'>
         <TouchableOpacity onPress={handleGoBack} className='absolute left-3 z-10'>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
@@ -267,7 +276,7 @@ export default function CreateDiaryScreen() {
         </View>
       </View>
 
-      {currentStep === 0 && (
+      {currentStep === 0 ? (
         <View className='flex-1 mt-6 px-4'>
           <FormProvider {...stepOneMethods}>
             <PersonalInfoForm />
@@ -286,9 +295,9 @@ export default function CreateDiaryScreen() {
             </Button>
           </Animated.View>
         </View>
-      )}
+      ) : null}
 
-      {currentStep === 1 && (
+      {currentStep === 1 ? (
         <View className='flex-1 mt-4'>
           <FormProvider {...stepTwoMethods}>
             <PregnancyInfoForm />
@@ -316,9 +325,9 @@ export default function CreateDiaryScreen() {
             </View>
           </Animated.View>
         </View>
-      )}
+      ) : null}
 
-      {currentStep === 2 && (
+      {currentStep === 2 ? (
         <View className='flex-1'>
           <FormProvider {...measurementsMethods}>
             <ReviewMeasurementsForm />
@@ -344,7 +353,7 @@ export default function CreateDiaryScreen() {
             </View>
           </Animated.View>
         </View>
-      )}
-    </SafeAreaView>
+      ) : null}
+    </SafeView>
   )
 }

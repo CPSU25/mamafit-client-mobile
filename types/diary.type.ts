@@ -20,6 +20,7 @@ export interface Diary {
   waist: number
   weeksFromUltrasound: number
   weight: number
+  isActive: boolean
 }
 
 export interface DiaryDetail extends Diary {
@@ -42,6 +43,7 @@ export interface Measurement {
   thigh: number
   waist: number
   weekOfPregnancy: number
+  isLocked: boolean
   weight: number
   createdAt: string
   createdBy: string

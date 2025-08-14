@@ -1,20 +1,7 @@
-import axios, { AxiosError, InternalAxiosRequestConfig, isAxiosError } from 'axios'
-import { router } from 'expo-router'
-import * as SecureStore from 'expo-secure-store'
-import * as Updates from 'expo-updates'
-import { BaseResponse } from '~/types/common'
-import { clear, setTokens } from '../redux-toolkit/slices/auth.slice'
-import { store } from '../redux-toolkit/store'
-
-export interface AuthTokens {
-  accessToken: string
-  refreshToken: string
-}
-
-interface RefreshResponse {
-  accessToken: string
-  refreshToken: string
-}
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
+import { AuthTokens } from '~/types/common'
+import { refreshAuthTokens } from '../auth'
+import { getAuthTokens, saveAuthTokens } from '../utils'
 
 const baseURL = process.env.EXPO_PUBLIC_API_BASE_URL
 if (!baseURL) throw new Error('EXPO_PUBLIC_API_BASE_URL is not defined')
@@ -27,71 +14,18 @@ export const api = axios.create({
   }
 })
 
-const getAuthTokens = async (): Promise<AuthTokens | null> => {
-  try {
-    const authData = await SecureStore.getItemAsync('auth-storage')
-    return authData ? JSON.parse(authData) : null
-  } catch (error) {
-    console.error('Error getting auth tokens:', error)
-    return null
+const ghtkBaseURL = process.env.EXPO_PUBLIC_API_BASE_URL
+if (!ghtkBaseURL) throw new Error('EXPO_PUBLIC_API_BASE_URL is not defined')
+
+export const ghtkApi = axios.create({
+  baseURL: ghtkBaseURL,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
   }
-}
+})
 
-const saveAuthTokens = async (tokens: AuthTokens): Promise<void> => {
-  if (!tokens.accessToken || !tokens.refreshToken) {
-    throw new Error('Invalid tokens provided')
-  }
-  try {
-    await SecureStore.setItemAsync('auth-storage', JSON.stringify(tokens))
-    store.dispatch(setTokens(tokens))
-  } catch (error) {
-    console.error('Error saving auth tokens:', error)
-    throw error
-  }
-}
-
-const clearAuthTokens = async (): Promise<void> => {
-  try {
-    await SecureStore.deleteItemAsync('auth-storage')
-    store.dispatch(clear())
-    router.replace('/profile')
-  } catch (error) {
-    console.error('Error clearing auth tokens:', error)
-    throw error
-  }
-}
-
-const refresh = async (): Promise<AuthTokens | undefined> => {
-  try {
-    const authData = await getAuthTokens()
-    const currentRefreshToken = authData?.refreshToken
-
-    if (!currentRefreshToken) {
-      throw new Error('No refresh token available')
-    }
-
-    console.log('Refreshing token...', currentRefreshToken)
-
-    const { data } = await axios.post<BaseResponse<RefreshResponse>>(
-      `${baseURL}auth/refresh-token`,
-      { refreshToken: currentRefreshToken },
-      { headers: { 'Content-Type': 'application/json' } }
-    )
-
-    if (!data.data?.accessToken || !data.data?.refreshToken) {
-      throw new Error('Invalid refresh response')
-    }
-
-    await saveAuthTokens({ accessToken: data.data?.accessToken, refreshToken: data.data?.refreshToken })
-    return data.data
-  } catch (error) {
-    if (isAxiosError(error) && error.response?.status === 401) {
-      await clearAuthTokens()
-      await Updates.reloadAsync()
-    }
-    console.log('error', JSON.stringify(error, null, 2))
-  }
-}
+// Use centralized token refresh
 
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
@@ -115,7 +49,7 @@ const setTokenData = async (tokenData: AuthTokens, axiosClient: typeof api): Pro
 
 const handleTokenRefresh = async (): Promise<AuthTokens | undefined> => {
   try {
-    return await refresh()
+    return await refreshAuthTokens()
   } catch (error) {
     console.error('Token refresh failed:', error)
     throw error

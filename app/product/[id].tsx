@@ -22,7 +22,11 @@ export default function ProductDetailScreen() {
   const { bottom } = useSafeAreaInsets()
 
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/')
+    }
   }
 
   const toggleDescription = () => {

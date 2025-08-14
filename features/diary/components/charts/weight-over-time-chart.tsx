@@ -1,9 +1,10 @@
 import { Feather } from '@expo/vector-icons'
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Text, useWindowDimensions, View } from 'react-native'
+import { ActivityIndicator, useWindowDimensions, View } from 'react-native'
 import { LineChart } from 'react-native-gifted-charts'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
+import { Text } from '~/components/ui/text'
 import { useGetDiaryDetail } from '~/features/diary/hooks/use-get-diary-detail'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { Measurement } from '~/types/diary.type'
@@ -112,7 +113,7 @@ export default function WeightOverTimeChart({ currentWeekData, diaryId, onRefetc
       {/* Header Section */}
       <View className='flex flex-row justify-between items-start'>
         <View className='text-left'>
-          <Text className='font-inter-medium text-sm text-foreground'>Your Weight Over Time</Text>
+          <Text className='font-inter-medium text-sm'>Your Weight Over Time</Text>
           <Text className='font-inter-extrabold text-2xl text-primary mt-1'>
             {currentWeekData?.weight ? currentWeekData?.weight.toFixed(2) : 'N/A'} kg
           </Text>
@@ -154,7 +155,7 @@ export default function WeightOverTimeChart({ currentWeekData, diaryId, onRefetc
 
         {/* Footer Information */}
         <View className='flex flex-col items-center gap-1'>
-          <Text className='font-inter-medium text-center text-sm text-foreground'>{dateRange}</Text>
+          <Text className='font-inter-medium text-center text-sm'>{dateRange}</Text>
           <Text className='text-xs text-muted-foreground text-center'>Press and hold on the chart to see the data</Text>
         </View>
       </View>

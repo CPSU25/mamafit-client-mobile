@@ -1,11 +1,12 @@
-import { Feather, FontAwesome } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
+import SafeView from '~/components/safe-view'
+import { InfoCard, WarningCard } from '~/components/ui/alert-card'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
 import { Text } from '~/components/ui/text'
@@ -45,7 +46,8 @@ export default function DiaryHistoryDetailScreen() {
     }
   }, [measurementDetail, initForm])
 
-  const isEditable = currentWeekData?.weekOfPregnancy === measurementDetail?.weekOfPregnancy
+  const isEditable =
+    currentWeekData?.weekOfPregnancy === measurementDetail?.weekOfPregnancy && !Boolean(measurementDetail?.isLocked)
 
   const mainData = [
     {
@@ -104,7 +106,14 @@ export default function DiaryHistoryDetailScreen() {
   ]
 
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace({
+        pathname: '/diary/[id]/history',
+        params: { id }
+      })
+    }
   }
 
   const onSubmit: SubmitHandler<MeasurementsFormOutput> = (data) => {
@@ -121,7 +130,7 @@ export default function DiaryHistoryDetailScreen() {
   }
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <ScrollView showsVerticalScrollIndicator={false} className='flex-1' refreshControl={refreshControl}>
         <FormProvider {...methods}>
           <View className='flex flex-row items-center justify-between p-4'>
@@ -136,27 +145,23 @@ export default function DiaryHistoryDetailScreen() {
           </View>
           <View className='bg-muted h-2' />
           <View className='flex flex-col gap-4 p-4'>
-            <Animated.View
-              entering={FadeInDown.delay(100)}
-              className={cn(
-                'border rounded-2xl p-4 border-dashed',
-                isDarkColorScheme ? 'bg-amber-500/10 border-amber-900' : 'bg-amber-500/20 border-amber-500/30'
-              )}
-            >
-              <View className='flex flex-row items-baseline gap-3'>
-                <FontAwesome name='exclamation-triangle' size={16} color={isDarkColorScheme ? '#f59e0b' : '#d97706'} />
-                <View className='flex flex-col gap-0.5 flex-shrink'>
-                  <Text className={cn('font-inter-semibold', isDarkColorScheme ? 'text-amber-500' : 'text-amber-600')}>
-                    {isEditable ? 'Important Information' : 'Read-only Information'}
-                  </Text>
-                  <Text className={cn('text-xs', isDarkColorScheme ? 'text-amber-500' : 'text-amber-600')}>
-                    {isEditable
-                      ? 'This information will assist us in delivering the most precise results for your measurements.'
-                      : 'This information is read-only and cannot be edited since it is not the current week of pregnancy.'}
-                  </Text>
-                </View>
-              </View>
-            </Animated.View>
+            {isEditable ? (
+              <WarningCard
+                title='Important Information'
+                delay={100}
+                description='This information will assist us in delivering the most precise results for your measurements.'
+              />
+            ) : (
+              <InfoCard
+                title={Boolean(measurementDetail?.isLocked) ? 'Locked Information' : 'Read-only Information'}
+                delay={100}
+                description={
+                  Boolean(measurementDetail?.isLocked)
+                    ? 'This information is locked and cannot be edited since it is currently being used for an order.'
+                    : 'This information is read-only and cannot be edited since it is not the current week of pregnancy.'
+                }
+              />
+            )}
 
             {mainData.map((category, categoryIndex) => (
               <Animated.View
@@ -243,7 +248,7 @@ export default function DiaryHistoryDetailScreen() {
               </Animated.View>
             ))}
 
-            {isEditable && (
+            {isEditable ? (
               <Button
                 onPress={methods.handleSubmit(onSubmit)}
                 disabled={!methods.formState.isDirty || editMeasurementDetailMutation.isPending}
@@ -252,10 +257,10 @@ export default function DiaryHistoryDetailScreen() {
                   {editMeasurementDetailMutation.isPending ? 'Saving...' : 'Save'}
                 </Text>
               </Button>
-            )}
+            ) : null}
           </View>
         </FormProvider>
       </ScrollView>
-    </SafeAreaView>
+    </SafeView>
   )
 }

@@ -2,8 +2,8 @@ import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useCallback, useRef, useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
+import SafeView from '~/components/safe-view'
 import { Card } from '~/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Text } from '~/components/ui/text'
@@ -51,10 +51,10 @@ const DiaryHeader = ({ diaryId, onGoBack }: DiaryHeaderProps) => {
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='text-xl font-inter-semibold flex-1'>Diary Details</Text>
-        <TouchableOpacity onPress={() => router.push(`/diary/${diaryId}/history`)}>
+        <TouchableOpacity onPress={() => router.push({ pathname: '/diary/[id]/history', params: { id: diaryId } })}>
           <Feather name='clock' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => router.push(`/diary/${diaryId}/setting`)}>
+        <TouchableOpacity onPress={() => router.push({ pathname: '/diary/[id]/setting', params: { id: diaryId } })}>
           <Feather name='settings' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>
@@ -166,7 +166,11 @@ export default function DiaryDetailScreen() {
   const { refreshControl } = useRefreshs(getAllRefetches())
 
   const handleGoBack = () => {
-    router.back()
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/diary')
+    }
   }
 
   if (isCurrentWeekLoading) {
@@ -174,7 +178,7 @@ export default function DiaryDetailScreen() {
   }
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <DiaryHeader diaryId={id} onGoBack={handleGoBack} />
       <ScrollView showsVerticalScrollIndicator={false} className='flex-1' refreshControl={refreshControl}>
         <View className='flex flex-col gap-4 p-4'>
@@ -187,6 +191,6 @@ export default function DiaryDetailScreen() {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </SafeView>
   )
 }

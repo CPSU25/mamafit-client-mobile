@@ -1,9 +1,10 @@
 import { Feather } from '@expo/vector-icons'
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Text, useWindowDimensions, View } from 'react-native'
+import { ActivityIndicator, useWindowDimensions, View } from 'react-native'
 import { LineChart } from 'react-native-gifted-charts'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
+import { Text } from '~/components/ui/text'
 import { useGetDiaryDetail } from '~/features/diary/hooks/use-get-diary-detail'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { Measurement } from '~/types/diary.type'
@@ -147,7 +148,7 @@ export default function WaistHipOverTimeChart({
       {/* Header Section */}
       <View className='flex flex-row justify-between items-start'>
         <View className='text-left'>
-          <Text className='font-inter-medium text-sm text-foreground'>Your Waist & Hip Over Time</Text>
+          <Text className='font-inter-medium text-sm'>Your Waist & Hip Over Time</Text>
           <View className='flex flex-row items-baseline gap-2 mt-1'>
             <Text className='font-inter-extrabold text-2xl' style={{ color: WAIST_HIP_CHART_COLORS.WAIST.primary }}>
               {currentWeekData?.waist ? currentWeekData?.waist.toFixed(1) : 'N/A'} cm
@@ -216,7 +217,7 @@ export default function WaistHipOverTimeChart({
 
         {/* Footer Information */}
         <View className='flex flex-col items-center gap-1'>
-          <Text className='font-inter-medium text-center text-sm text-foreground'>{dateRange}</Text>
+          <Text className='font-inter-medium text-center text-sm'>{dateRange}</Text>
           <Text className='text-xs text-muted-foreground text-center'>Press and hold on the chart to see the data</Text>
         </View>
       </View>

@@ -1,0 +1,294 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { AddOn, AddOnOption } from '~/types/add-on.type'
+import { OrderItemTemp } from '~/types/order-item.type'
+import { OrderItemType, OrderStatus } from '~/types/order.type'
+import { ADD_ON_IMAGE_CONFIG, DEFAULT_ADD_ON_IMAGE, ORDERED_SIZES, ORDERED_TYPES } from './constants'
+import { AddOnImageConfig, AddOnMap, OptionMap, OrderItemStyleType, PositionInfo, SizeInfo } from './types'
+
+export const getAddOnImage = (name: string): AddOnImageConfig => {
+  return ADD_ON_IMAGE_CONFIG[name] ?? DEFAULT_ADD_ON_IMAGE
+}
+
+export const capitalizeText = (text: string): string => {
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
+}
+
+export const sortSizesSafely = (sizes: SizeInfo[]): SizeInfo[] => {
+  return [...sizes].sort((a, b) => {
+    const aIndex = ORDERED_SIZES.indexOf(a.sizeName)
+    const bIndex = ORDERED_SIZES.indexOf(b.sizeName)
+
+    if (aIndex === -1 && bIndex === -1) return a.sizeName.localeCompare(b.sizeName)
+    if (aIndex === -1) return 1
+    if (bIndex === -1) return -1
+
+    return aIndex - bIndex
+  })
+}
+
+export const sortTypesSafely = (types: string[]): string[] => {
+  return [...types].sort((a, b) => {
+    const aIndex = ORDERED_TYPES.indexOf(a)
+    const bIndex = ORDERED_TYPES.indexOf(b)
+
+    if (aIndex === -1 && bIndex === -1) return a.localeCompare(b)
+    if (aIndex === -1) return 1
+    if (bIndex === -1) return -1
+
+    return aIndex - bIndex
+  })
+}
+
+export const transformAddOns = (addOns: AddOn[]): AddOnMap[] => {
+  if (!Array.isArray(addOns) || addOns.length === 0) {
+    return []
+  }
+
+  return addOns.map((addOn): AddOnMap => {
+    if (
+      !addOn.id ||
+      !addOn.name ||
+      !addOn.addOnOptions ||
+      !Array.isArray(addOn.addOnOptions) ||
+      addOn.addOnOptions.length === 0
+    ) {
+      return {
+        id: addOn.id,
+        name: addOn.name,
+        description: addOn.description || '',
+        groupOptions: [],
+        minPrice: 0,
+        maxPrice: 0
+      }
+    }
+
+    const prices = addOn.addOnOptions
+      .map((option: AddOnOption) => option.price)
+      .filter((price: number) => typeof price === 'number' && !isNaN(price))
+
+    if (prices.length === 0) {
+      throw new Error(`No valid prices found for add-on: ${addOn.name}`)
+    }
+
+    return {
+      id: addOn.id,
+      name: addOn.name,
+      description: addOn.description || '',
+      groupOptions: addOn.addOnOptions,
+      minPrice: Math.min(...prices),
+      maxPrice: Math.max(...prices)
+    }
+  })
+}
+
+export const transformOptions = (groupOptions: AddOnOption[]): OptionMap[] => {
+  if (!Array.isArray(groupOptions) || groupOptions.length === 0) {
+    return []
+  }
+
+  const optionsMap = new Map<
+    string,
+    {
+      name: string
+      minPrice: number
+      maxPrice: number
+      type: string
+      positions: Map<string, PositionInfo>
+      sizes: Map<string, SizeInfo>
+      validPairs: Set<string>
+    }
+  >()
+
+  groupOptions.forEach((option) => {
+    const key = `${option.addOnId}-${option.name}`
+    const pairKey = `${option.id}-${option.name}-${option.position.id}-${option.size.id}-${option.itemServiceType}-${option.price}`
+
+    let currentOption = optionsMap.get(key)
+
+    if (currentOption) {
+      currentOption.positions.set(option.position.id, {
+        positionId: option.position.id,
+        positionName: option.position.name,
+        image: option.position.image
+      })
+
+      currentOption.sizes.set(option.size.id, {
+        sizeId: option.size.id,
+        sizeName: option.size.name
+      })
+
+      currentOption.validPairs.add(pairKey)
+      currentOption.minPrice = Math.min(currentOption.minPrice, option.price)
+      currentOption.maxPrice = Math.max(currentOption.maxPrice, option.price)
+    } else {
+      currentOption = {
+        name: option.name,
+        minPrice: option.price,
+        maxPrice: option.price,
+        type: option.itemServiceType || '',
+        positions: new Map([
+          [
+            option.position.id,
+            {
+              positionId: option.position.id,
+              positionName: option.position.name,
+              image: option.position.image
+            }
+          ]
+        ]),
+        sizes: new Map([
+          [
+            option.size.id,
+            {
+              sizeId: option.size.id,
+              sizeName: option.size.name
+            }
+          ]
+        ]),
+        validPairs: new Set([pairKey])
+      }
+      optionsMap.set(key, currentOption)
+    }
+  })
+
+  return Array.from(optionsMap.values()).map((option): OptionMap => {
+    const sizesArray = Array.from(option.sizes.values())
+    const sortedSizes = sortSizesSafely(sizesArray)
+
+    return {
+      name: option.name,
+      minPrice: option.minPrice,
+      maxPrice: option.maxPrice,
+      type: option.type,
+      positions: Array.from(option.positions.values()),
+      sizes: sortedSizes,
+      validPairs: Array.from(option.validPairs).map((pairKey) => {
+        const [id, name, positionId, sizeId, type, price] = pairKey.split('-')
+        return { id, name, positionId, sizeId, type, price: Number(price) }
+      })
+    }
+  })
+}
+
+export const isPositionEnabled = (optionDetail: OptionMap, positionId: string, sizeId: string | null): boolean => {
+  if (!sizeId) return true
+  return optionDetail.validPairs.some((pair) => pair.positionId === positionId && pair.sizeId === sizeId)
+}
+
+export const isSizeEnabled = (optionDetail: OptionMap, sizeId: string, positionId: string | null): boolean => {
+  if (!positionId) return true
+  return optionDetail.validPairs.some((pair) => pair.sizeId === sizeId && pair.positionId === positionId)
+}
+
+export const getAvailableTypes = (optionDetail: OptionMap, positionId: string, sizeId: string): string[] => {
+  const types = optionDetail.validPairs
+    .filter((pair) => pair.positionId === positionId && pair.sizeId === sizeId)
+    .map((pair) => pair.type)
+    .filter((type, index, array) => array.indexOf(type) === index)
+
+  return sortTypesSafely(types)
+}
+
+export const getValidPair = (optionDetail: OptionMap, positionId: string, sizeId: string, type: string) => {
+  return optionDetail.validPairs.find(
+    (pair) => pair.positionId === positionId && pair.sizeId === sizeId && pair.type === type
+  )
+}
+
+export const getOrderItems = async () => {
+  try {
+    const orderItems = await AsyncStorage.getItem('order-items')
+    if (!orderItems) return null
+
+    const parsedOrderItems = JSON.parse(orderItems) as OrderItemTemp<unknown>
+
+    if (
+      parsedOrderItems &&
+      typeof parsedOrderItems === 'object' &&
+      'items' in parsedOrderItems &&
+      'type' in parsedOrderItems
+    ) {
+      return parsedOrderItems
+    }
+
+    return null
+  } catch (error) {
+    console.error('Error getting order items:', error)
+    return null
+  }
+}
+
+export const getStatusIcon = (status: OrderStatus): keyof typeof MaterialCommunityIcons.glyphMap => {
+  switch (status) {
+    case OrderStatus.Created:
+      return 'credit-card-clock'
+    // case OrderStatus.InDesign:
+    //   return 'palette'
+    case OrderStatus.Confirmed:
+      return 'credit-card-check'
+    case OrderStatus.InProgress:
+      return 'factory'
+    // case OrderStatus.InQC:
+    //   return 'timeline-check'
+    case OrderStatus.AwaitingPaidRest:
+    case OrderStatus.AwaitingPaidWarranty:
+      return 'credit-card-refresh'
+    case OrderStatus.Packaging:
+      return 'package-variant'
+    // case OrderStatus.AwaitingDelivery:
+    //   return 'mailbox'
+    case OrderStatus.Delevering:
+    case OrderStatus.PickUpInProgress:
+      return 'truck-fast'
+    case OrderStatus.Completed:
+    case OrderStatus.ReceivedAtBranch:
+      return 'star-circle'
+    // case OrderStatus.WarrantyCheck:
+    //   return 'shield-search'
+    // case OrderStatus.InWarranty:
+    //   return 'shield-sync'
+    case OrderStatus.Cancelled:
+      return 'archive-cancel'
+    default:
+      return 'progress-question'
+  }
+}
+
+export const getOrderItemTypeStyle = (type: OrderItemType): OrderItemStyleType => {
+  switch (type) {
+    case OrderItemType.DesignRequest:
+      return {
+        iconColor: '#9333ea',
+        icon: 'design-services',
+        text: 'Design Request Order',
+        textColor: 'text-purple-600',
+        tagColor: 'bg-purple-50'
+      }
+    case OrderItemType.Preset:
+    case OrderItemType.Warranty:
+      return {
+        iconColor: '#0d9488',
+        icon: 'library-add-check',
+        text: 'Preset Order',
+        textColor: 'text-teal-600',
+        tagColor: 'bg-teal-50'
+      }
+    case OrderItemType.ReadyToBuy:
+      return {
+        iconColor: '#d97706',
+        icon: 'shopping-cart',
+        text: 'Ready to Buy Order',
+        textColor: 'text-amber-600',
+        tagColor: 'bg-amber-50'
+      }
+    default:
+      return {
+        iconColor: '#4b5563',
+        icon: 'circle',
+        text: 'Other Order',
+        textColor: 'text-gray-600',
+        tagColor: 'bg-gray-50'
+      }
+  }
+}

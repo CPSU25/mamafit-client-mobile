@@ -1,35 +1,113 @@
 import { Feather } from '@expo/vector-icons'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Redirect, useRouter } from 'expo-router'
-import { useState } from 'react'
-import { TouchableOpacity, View } from 'react-native'
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useEffect, useState } from 'react'
+import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
+import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
+import CartItem from '~/features/cart/components/cart-item'
+import { useGetCart } from '~/features/cart/hooks/use-get-cart'
 import { useAuth } from '~/hooks/use-auth'
+import { useRefreshs } from '~/hooks/use-refresh'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
+import { PresetInStorage } from '~/types/order-item.type'
+import { OrderItemType } from '~/types/order.type'
+
+export interface SelectedItem {
+  itemId: string
+  type: OrderItemType
+  quantity: number
+  price: number
+}
 
 export default function CartScreen() {
   const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading: isLoadingAuth } = useAuth()
   const { bottom } = useSafeAreaInsets()
   const [checkAll, setCheckAll] = useState(false)
+  const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([])
+
+  const { data: cart, isLoading: isLoadingCart, refetch: refetchCart } = useGetCart()
+
+  const { refreshControl } = useRefreshs([refetchCart])
+
+  const isLoading = isLoadingCart || isLoadingAuth
+
+  useEffect(() => {
+    if (cart && Array.isArray(cart) && cart.length > 0) {
+      const allItemsSelected = cart.every((cartItem) =>
+        selectedItems.some((selectedItem) => selectedItem.itemId === cartItem.itemId)
+      )
+      setCheckAll(allItemsSelected)
+    } else {
+      setCheckAll(false)
+    }
+  }, [selectedItems, cart])
+
+  const handleGoBack = () => {
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/')
+    }
+  }
+
+  const toggleCheckAll = () => {
+    if (cart && Array.isArray(cart)) {
+      setCheckAll((prev) => {
+        if (prev) {
+          setSelectedItems([])
+        } else {
+          setSelectedItems(
+            cart.map((item) => ({
+              itemId: item.itemId,
+              type: item.type,
+              quantity: item.quantity,
+              price: item.preset?.price || 0
+            }))
+          )
+        }
+        return !prev
+      })
+    }
+  }
+
+  const handleCheckOut = async () => {
+    await AsyncStorage.setItem(
+      'order-items',
+      JSON.stringify({
+        type: OrderItemType.Preset,
+        items: selectedItems.reduce(
+          (acc, item) => {
+            acc[item.itemId] = {
+              presetId: item.itemId,
+              quantity: item.quantity,
+              options: []
+            }
+            return acc
+          },
+          {} as Record<string, PresetInStorage>
+        )
+      })
+    )
+
+    router.push('/order/review')
+  }
+
+  const totalPrice = selectedItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
 
   if (isLoading) return <Loading />
 
   if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
 
-  const handleGoBack = () => {
-    router.back()
-  }
-
-  const cartItems = []
-
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <View className='flex flex-row items-center justify-between p-4'>
         <View className='flex flex-row items-center gap-4'>
           <TouchableOpacity onPress={handleGoBack}>
@@ -43,15 +121,26 @@ export default function CartScreen() {
       </View>
       <View className='bg-muted h-2' />
 
-      <View className='flex-1 p-4'>
-        {cartItems.length > 0 ? (
-          <Text>Cart items will go here</Text>
-        ) : (
-          <View className='flex-1 items-center mt-48'>
-            {SvgIcon.cart({ size: ICON_SIZE.EXTRA_LARGE, color: 'GRAY' })}
-            <Text className='text-muted-foreground text-sm mt-2'>Empty cart</Text>
-          </View>
-        )}
+      <View className='flex-1'>
+        <FlatList
+          data={cart}
+          renderItem={({ item }) => (
+            <CartItem item={item} selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
+          )}
+          keyExtractor={(item) => item.itemId}
+          contentContainerClassName='gap-4 p-4'
+          refreshControl={refreshControl}
+          ListEmptyComponent={
+            isLoadingCart ? (
+              <ActivityIndicator size='small' color={PRIMARY_COLOR.LIGHT} />
+            ) : (
+              <View className='flex-1 items-center mt-48'>
+                {SvgIcon.cart({ size: ICON_SIZE.EXTRA_LARGE, color: 'GRAY' })}
+                <Text className='text-muted-foreground text-sm mt-2'>Empty cart</Text>
+              </View>
+            )
+          }
+        />
       </View>
       <View
         className='absolute bottom-0 left-0 right-0 bg-background border-t border-border'
@@ -63,26 +152,23 @@ export default function CartScreen() {
           <Feather name='dollar-sign' size={20} color={PRIMARY_COLOR.LIGHT} />
           <Text className='text-sm font-inter-medium'>Total</Text>
           <Text className='font-inter-semibold text-lg text-primary ml-auto'>
-            <Text className='underline font-inter-semibold text-primary'>đ</Text>3.860.000
+            <Text className='underline font-inter-semibold text-primary'>đ</Text>
+            {totalPrice > 0 ? totalPrice.toLocaleString('vi-VN') : 0}
           </Text>
         </View>
         <Separator />
-        <TouchableOpacity className='flex flex-row items-center gap-4 p-4'>
-          <Feather name='shopping-bag' size={20} color={PRIMARY_COLOR.LIGHT} />
-          <Text className='text-sm font-inter-medium'>MamaFit Vouchers</Text>
-          <Feather name='chevron-right' size={20} color={PRIMARY_COLOR.LIGHT} className='ml-auto' />
-        </TouchableOpacity>
-        <Separator />
         <View className='flex flex-row justify-between items-center p-4'>
           <View className='flex flex-row items-center gap-4'>
-            <Checkbox checked={checkAll} onCheckedChange={setCheckAll} />
+            <Checkbox checked={checkAll} onCheckedChange={toggleCheckAll} disabled={!cart?.length} />
             <Text className='text-sm font-inter-medium'>All</Text>
           </View>
-          <Button>
-            <Text className='text-white text-center font-inter-medium'>Check Out (2)</Text>
+          <Button onPress={handleCheckOut} disabled={selectedItems.length === 0}>
+            <Text className='text-white text-center font-inter-medium'>
+              Check Out {selectedItems.length ? `(${selectedItems.length})` : ''}
+            </Text>
           </Button>
         </View>
       </View>
-    </SafeAreaView>
+    </SafeView>
   )
 }

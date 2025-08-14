@@ -2,23 +2,24 @@ import { Feather } from '@expo/vector-icons'
 import { Redirect, useRouter } from 'expo-router'
 import React from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
+import SafeView from '~/components/safe-view'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import NotificationsList from '~/features/notifications/components/notifications-list'
+import { useMarkAsRead } from '~/features/notifications/hooks/use-mark-as-read'
 import { useAuth } from '~/hooks/use-auth'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 
-interface Notification {
+interface NotificationFilter {
   id: number
   name: string
   description: string
   icon: React.ReactNode
 }
 
-const notifications: Notification[] = [
+const notificationFilters: NotificationFilter[] = [
   {
     id: 1,
     name: 'Promotions',
@@ -48,13 +49,14 @@ const notifications: Notification[] = [
 export default function NotificationsScreen() {
   const router = useRouter()
   const { isAuthenticated, isLoading } = useAuth()
+  const { mutate: markAllAsRead, isPending } = useMarkAsRead()
 
   if (isLoading) return <Loading />
 
   if (!isAuthenticated) return <Redirect href='/auth?focus=sign-in' />
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeView>
       <View className='flex flex-row justify-between items-center p-4'>
         <Text className='text-xl font-inter-semibold'>Notifications</Text>
         <View className='flex flex-row items-center gap-6 mr-1.5'>
@@ -66,30 +68,33 @@ export default function NotificationsScreen() {
           </TouchableOpacity>
         </View>
       </View>
+
       <View className='bg-muted h-2' />
-      {notifications.map((notification, index) => {
+
+      {notificationFilters.map((notification, index) => {
         return (
           <React.Fragment key={notification.id}>
             {index !== 0 && <Separator />}
             <TouchableOpacity>
               <NotificationCard notification={notification} />
             </TouchableOpacity>
-            {index === notifications.length - 1 && <View className='bg-muted h-2' />}
+            {index === notificationFilters.length - 1 && <View className='bg-muted h-2' />}
           </React.Fragment>
         )
       })}
-      <View className='flex flex-row justify-between items-center p-4'>
+
+      <View className='flex flex-row justify-between items-center px-4 pt-4'>
         <Text className='text-sm font-inter-medium'>Order Updates</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => markAllAsRead()} disabled={isPending}>
           <Text className='text-xs text-muted-foreground'>Read All</Text>
         </TouchableOpacity>
       </View>
       <NotificationsList />
-    </SafeAreaView>
+    </SafeView>
   )
 }
 
-function NotificationCard({ notification }: { notification: Notification }) {
+function NotificationCard({ notification }: { notification: NotificationFilter }) {
   return (
     <View className='flex flex-row items-center gap-4 px-4 py-2'>
       <View className='border-2 border-muted rounded-full'>{notification.icon}</View>

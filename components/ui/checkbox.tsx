@@ -1,6 +1,6 @@
-import * as React from 'react'
-import * as CheckboxPrimitive from '@rn-primitives/checkbox'
 import { Feather } from '@expo/vector-icons'
+import * as CheckboxPrimitive from '@rn-primitives/checkbox'
+import * as React from 'react'
 import { cn } from '~/lib/utils'
 
 function Checkbox({
