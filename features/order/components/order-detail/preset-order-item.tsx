@@ -47,7 +47,7 @@ export default function PresetOrderItem({
         <View className='flex-1 h-20 justify-between'>
           <View>
             <Text className='text-sm font-inter-medium' numberOfLines={1}>
-              {preset?.styleName || 'Custom'} Dress
+              {preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
             </Text>
 
             <View className='flex-row items-center gap-2'>
@@ -84,7 +84,7 @@ export default function PresetOrderItem({
                     <Text className='native:text-xs text-muted-foreground'>({option.value})</Text>
                   )}
                 </Text>
-                <Text className='native:text-xs text-muted-foreground'>Position: {option.position.name}</Text>
+                <Text className='native:text-xs text-muted-foreground'>Vị Trí: {option.position.name}</Text>
               </View>
 
               <Text className='native:text-sm font-inter-medium text-blue-600'>

@@ -180,7 +180,7 @@ export default function ChooseAddOnScreen() {
         <FormProvider {...methods}>
           <AddOptionForm optionDetail={optionDetail} />
           <Button className='mx-4 mt-4' onPress={methods.handleSubmit(onSubmit)}>
-            <Text className='font-inter-medium'>Apply Changes</Text>
+            <Text className='font-inter-medium'>Áp Dụng</Text>
           </Button>
         </FormProvider>
       ) : null}

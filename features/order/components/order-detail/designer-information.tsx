@@ -45,7 +45,7 @@ export default function DesignerInformation({ designerInfo }: DesignerInformatio
               <Text className='text-sm font-inter-medium' numberOfLines={1}>
                 {designerInfo.designer.fullName}
               </Text>
-              <Text className='text-xs text-muted-foreground'>Press to chat now</Text>
+              <Text className='text-xs text-muted-foreground'>Nhấn để chat ngay</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -63,10 +63,10 @@ export default function DesignerInformation({ designerInfo }: DesignerInformatio
           </Avatar>
           <View>
             <Text className='text-sm font-inter-medium'>
-              Your Designer <Text className='text-xs text-muted-foreground/80'>(not assigned yet)</Text>
+              Designer <Text className='text-xs text-muted-foreground/80'>(chưa được giao)</Text>
             </Text>
             <Text className='text-xs text-muted-foreground' numberOfLines={1}>
-              Please wait for the designer to be assigned to you
+              Vui lòng chờ designer được giao cho bạn
             </Text>
           </View>
         </View>

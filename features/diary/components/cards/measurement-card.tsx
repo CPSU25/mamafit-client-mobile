@@ -49,7 +49,7 @@ export default function MeasurementCard({ measurement, diaryId }: MeasurementCar
       </View>
       <View className='flex-1 gap-0.5'>
         <Text className='text-sm'>
-          Weight: <Text className='text-sm font-inter-medium'>{measurement?.weight || 'N/A'} kg</Text>
+          Cân Nặng: <Text className='text-sm font-inter-medium'>{measurement?.weight || 'N/A'} kg</Text>
         </Text>
         <View className='flex-row items-center justify-between gap-2'>
           <View className='flex-row items-center gap-1.5'>

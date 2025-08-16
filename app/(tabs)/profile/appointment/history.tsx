@@ -118,7 +118,7 @@ export default function AppointmentHistoryScreen() {
         <TouchableOpacity onPress={handleGoBack} className='p-1'>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl text-foreground'>Appointment History</Text>
+        <Text className='font-inter-semibold text-xl text-foreground'>Lịch Sử Lịch Hẹn</Text>
       </View>
 
       <View className='h-2 bg-muted' />
@@ -131,7 +131,7 @@ export default function AppointmentHistoryScreen() {
         contentContainerClassName='pb-20'
         ListEmptyComponent={
           <View className='flex-1 items-center justify-center p-8'>
-            <Text className='text-center text-muted-foreground'>No appointments found</Text>
+            <Text className='text-center text-muted-foreground'>Không tìm thấy lịch hẹn</Text>
           </View>
         }
         ListFooterComponent={

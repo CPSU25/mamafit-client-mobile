@@ -148,7 +148,7 @@ export default function WaistHipOverTimeChart({
       {/* Header Section */}
       <View className='flex flex-row justify-between items-start'>
         <View className='text-left'>
-          <Text className='font-inter-medium text-sm'>Your Waist & Hip Over Time</Text>
+          <Text className='font-inter-medium text-sm'>Eo & Mông</Text>
           <View className='flex flex-row items-baseline gap-2 mt-1'>
             <Text className='font-inter-extrabold text-2xl' style={{ color: WAIST_HIP_CHART_COLORS.WAIST.primary }}>
               {currentWeekData?.waist ? currentWeekData?.waist.toFixed(1) : 'N/A'} cm
@@ -157,7 +157,7 @@ export default function WaistHipOverTimeChart({
               {currentWeekData?.hip ? currentWeekData?.hip.toFixed(1) : 'N/A'} cm
             </Text>
           </View>
-          <Text className='text-xs text-muted-foreground'>This week&apos;s measurements</Text>
+          <Text className='text-xs text-muted-foreground'>Số đo tuần này</Text>
         </View>
 
         {/* Navigation Buttons */}
@@ -207,18 +207,18 @@ export default function WaistHipOverTimeChart({
         <View className='flex flex-row items-center justify-center gap-6'>
           <View className='flex flex-row items-center gap-2'>
             <View className='w-3 h-3 rounded-full' style={{ backgroundColor: WAIST_HIP_CHART_COLORS.WAIST.primary }} />
-            <Text className='text-xs font-inter-medium text-muted-foreground'>Waist</Text>
+            <Text className='text-xs font-inter-medium text-muted-foreground'>Vòng Eo</Text>
           </View>
           <View className='flex flex-row items-center gap-2'>
             <View className='w-3 h-3 rounded-full' style={{ backgroundColor: WAIST_HIP_CHART_COLORS.HIP.primary }} />
-            <Text className='text-xs font-inter-medium text-muted-foreground'>Hip</Text>
+            <Text className='text-xs font-inter-medium text-muted-foreground'>Vòng Mông</Text>
           </View>
         </View>
 
         {/* Footer Information */}
         <View className='flex flex-col items-center gap-1'>
           <Text className='font-inter-medium text-center text-sm'>{dateRange}</Text>
-          <Text className='text-xs text-muted-foreground text-center'>Press and hold on the chart to see the data</Text>
+          <Text className='text-xs text-muted-foreground text-center'>Nhấn và giữ trên biểu đồ để xem dữ liệu</Text>
         </View>
       </View>
     </Card>

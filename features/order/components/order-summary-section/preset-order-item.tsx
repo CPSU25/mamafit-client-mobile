@@ -40,7 +40,7 @@ export default function PresetOrderItem({
 
         <View className='flex-1 h-20 justify-between'>
           <View>
-            <Text className='native:text-sm font-inter-medium'>{preset?.styleName || 'Custom'} Dress</Text>
+            <Text className='native:text-sm font-inter-medium'>{preset?.styleName || 'Váy Bầu Tùy Chỉnh'}</Text>
             <View className='flex-row items-center justify-between'>
               <Text className='native:text-xs text-muted-foreground'>
                 {preset?.styleName ? 'Made-to-Order Custom Style' : 'Tailored Just for You'}
@@ -107,9 +107,7 @@ export default function PresetOrderItem({
                 className='flex-row items-center gap-2 justify-center py-2'
               >
                 <Feather name='plus' size={iconSize} color='#2563eb' />
-                <Text className='native:text-sm text-blue-600 font-inter-medium'>
-                  Add More ({presetOptions.length})
-                </Text>
+                <Text className='native:text-sm text-blue-600 font-inter-medium'>Thêm ({presetOptions.length})</Text>
               </TouchableOpacity>
             </>
           ) : null}

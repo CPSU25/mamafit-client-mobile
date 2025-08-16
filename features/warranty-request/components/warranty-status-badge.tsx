@@ -13,14 +13,16 @@ export const WarrantyStatusBadge = ({ receivedAt, warrantyPeriod }: WarrantyStat
   if (isFree) {
     return (
       <View className='px-2 py-1 bg-emerald-50 border border-emerald-100 rounded-lg'>
-        <Text className='native:text-xs text-emerald-600 font-inter-medium'>{daysLeft} days left till expiry</Text>
+        <Text className='native:text-xs text-emerald-600 font-inter-medium'>
+          {daysLeft} ngày còn lại cho đến khi hết hạn
+        </Text>
       </View>
     )
   }
 
   return (
     <View className='px-2 py-1 bg-rose-50 border border-rose-100 rounded-lg'>
-      <Text className='native:text-xs text-rose-600 font-inter-medium'>Free warranty expired</Text>
+      <Text className='native:text-xs text-rose-600 font-inter-medium'>Bảo Hành Miễn Phí Hết Hạn</Text>
     </View>
   )
 }

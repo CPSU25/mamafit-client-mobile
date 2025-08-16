@@ -29,13 +29,13 @@ export default function DiaryCard({ isSelected, diary }: DiaryCardProps) {
               {diary.name}
             </Text>
             <Text className={cn('text-xs', isSelected ? 'text-white/60' : 'text-muted-foreground')}>
-              Week {currentWeekData?.weekOfPregnancy || 0} of pregnancy
+              Tuần {currentWeekData?.weekOfPregnancy || 0} của thai kỳ
             </Text>
           </View>
         </View>
         {diary.isActive ? (
           <Badge variant='default' className={cn('border-0', isSelected ? 'bg-white/20' : 'bg-emerald-500')}>
-            <Text className={cn('font-inter-medium', isSelected && 'text-white')}>Active</Text>
+            <Text className={cn('font-inter-medium', isSelected && 'text-white')}>Hoạt Động</Text>
           </Badge>
         ) : null}
       </View>
@@ -43,11 +43,11 @@ export default function DiaryCard({ isSelected, diary }: DiaryCardProps) {
       <View className='px-4 py-2 rounded-xl bg-black/5'>
         <View className='flex-row justify-between'>
           <View className='items-center'>
-            <Text className={cn('text-xs mb-1', isSelected ? 'text-white/60' : 'text-muted-foreground')}>Age</Text>
+            <Text className={cn('text-xs mb-1', isSelected ? 'text-white/60' : 'text-muted-foreground')}>Tuổi</Text>
             <Text className={cn('text-xl font-inter-semibold', isSelected && 'text-white')}>{diary.age}</Text>
           </View>
           <View className='items-center'>
-            <Text className={cn('text-xs mb-1', isSelected ? 'text-white/60' : 'text-muted-foreground')}>Weight</Text>
+            <Text className={cn('text-xs mb-1', isSelected ? 'text-white/60' : 'text-muted-foreground')}>Cân Nặng</Text>
             <Text className={cn('text-xl font-inter-semibold', isSelected && 'text-white')}>
               {diary.weight}
               <Text className={cn('text-sm font-inter-medium', isSelected ? 'text-white/60' : 'text-muted-foreground')}>
@@ -56,7 +56,9 @@ export default function DiaryCard({ isSelected, diary }: DiaryCardProps) {
             </Text>
           </View>
           <View className='items-center'>
-            <Text className={cn('text-xs mb-1', isSelected ? 'text-white/60' : 'text-muted-foreground')}>Height</Text>
+            <Text className={cn('text-xs mb-1', isSelected ? 'text-white/60' : 'text-muted-foreground')}>
+              Chiều Cao
+            </Text>
             <Text className={cn('text-xl font-inter-semibold', isSelected && 'text-white')}>
               {diary.height}
               <Text className={cn('text-sm font-inter-medium', isSelected ? 'text-white/60' : 'text-muted-foreground')}>
@@ -65,9 +67,7 @@ export default function DiaryCard({ isSelected, diary }: DiaryCardProps) {
             </Text>
           </View>
           <View className='items-center'>
-            <Text className={cn('text-xs mb-1', isSelected ? 'text-white/60' : 'text-muted-foreground')}>
-              Pregnancy
-            </Text>
+            <Text className={cn('text-xs mb-1', isSelected ? 'text-white/60' : 'text-muted-foreground')}>Thai Kỳ</Text>
             <Text className={cn('text-xl font-inter-semibold', isSelected && 'text-white')}>
               {diary.numberOfPregnancy}
               <Text className={cn('text-sm font-inter-medium', isSelected ? 'text-white/60' : 'text-muted-foreground')}>

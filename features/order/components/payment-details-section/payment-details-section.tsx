@@ -35,11 +35,11 @@ export default function PaymentDetailsSection({
     <Card className='p-3' style={[styles.container]}>
       <View className='flex-row items-center gap-2'>
         <MaterialCommunityIcons name='information' size={iconSize} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium text-sm'>Payment Details</Text>
+        <Text className='font-inter-medium text-sm'>Chi Tiết Thanh Toán</Text>
       </View>
       <View className='flex flex-col gap-2 mt-2'>
         <View className='flex-row items-baseline'>
-          <Text className='text-xs text-muted-foreground flex-1'>Merchandise Subtotal</Text>
+          <Text className='text-xs text-muted-foreground flex-1'>Tổng Hàng Hóa</Text>
           <Text className='text-xs text-muted-foreground'>
             <Text className='underline text-xs text-muted-foreground'>đ</Text>
             {fullMerchandiseTotal.toLocaleString('vi-VN')}
@@ -48,7 +48,7 @@ export default function PaymentDetailsSection({
 
         {savedAmount > 0 ? (
           <View className='flex-row items-baseline'>
-            <Text className='text-xs text-muted-foreground flex-1'>Voucher Discount</Text>
+            <Text className='text-xs text-muted-foreground flex-1'>Giảm Giá</Text>
             <Text className='text-xs text-primary'>
               -<Text className='underline text-xs text-primary'>đ</Text>
               {savedAmount.toLocaleString('vi-VN')}
@@ -58,7 +58,7 @@ export default function PaymentDetailsSection({
 
         {paymentType === PaymentType.Deposit && payableMerchandisePortion > 0 ? (
           <View className='flex-row items-baseline'>
-            <Text className='text-xs text-muted-foreground flex-1'>Deposit Subtotal ({depositRate * 100}%)</Text>
+            <Text className='text-xs text-muted-foreground flex-1'>Tiền Cọc ({depositRate * 100}%)</Text>
             <Text className='text-xs text-muted-foreground'>
               <Text className='underline text-xs text-muted-foreground'>đ</Text>
               {payableMerchandisePortion.toLocaleString('vi-VN')}
@@ -68,7 +68,7 @@ export default function PaymentDetailsSection({
 
         {addOnsSubtotal > 0 && addOnsCount > 0 ? (
           <View className='flex-row items-baseline'>
-            <Text className='text-xs text-muted-foreground flex-1'>Add-Ons Subtotal ({addOnsCount})</Text>
+            <Text className='text-xs text-muted-foreground flex-1'>Phụ Kiện ({addOnsCount})</Text>
             <Text className='text-xs text-muted-foreground'>
               <Text className='underline text-xs text-muted-foreground'>đ</Text>
               {addOnsSubtotal.toLocaleString('vi-VN')}
@@ -77,7 +77,7 @@ export default function PaymentDetailsSection({
         ) : null}
 
         <View className='flex-row items-baseline'>
-          <Text className='text-xs text-muted-foreground flex-1'>Shipping Subtotal</Text>
+          <Text className='text-xs text-muted-foreground flex-1'>Phí Vận Chuyển</Text>
           <Text className='text-xs text-muted-foreground'>
             <Text className='underline text-xs text-muted-foreground'>đ</Text>
             {shippingFee ? shippingFee.toLocaleString('vi-VN') : '0'}
@@ -87,7 +87,7 @@ export default function PaymentDetailsSection({
         <Separator className='my-1' />
 
         <View className='flex-row items-baseline'>
-          <Text className='font-inter-medium text-sm flex-1'>Total Payment</Text>
+          <Text className='font-inter-medium text-sm flex-1'>Tổng Thanh Toán</Text>
           <Text className='font-inter-medium text-sm'>
             <Text className='underline font-inter-medium text-sm'>đ</Text>
             {totalPaymentNow.toLocaleString('vi-VN')}

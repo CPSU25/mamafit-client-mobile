@@ -52,7 +52,9 @@ const OrderItemRow = ({
         </View>
         <View className='flex-1 h-20 justify-between pr-2'>
           <View>
-            <Text className='native:text-sm font-inter-medium'>{orderItem?.preset?.styleName || 'Custom'} Dress</Text>
+            <Text className='native:text-sm font-inter-medium'>
+              {orderItem?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
+            </Text>
             <Text className='native:text-xs text-muted-foreground'>SKU: {orderItem?.preset?.sku}</Text>
           </View>
           <View className='items-end'>
@@ -80,7 +82,7 @@ const OrderCard = ({
   return (
     <Card style={styles.container}>
       <View className='flex-row items-center gap-2 p-2'>
-        <Text className='native:text-sm font-inter-medium flex-1 pl-1'>Order #{order.code}</Text>
+        <Text className='native:text-sm font-inter-medium flex-1 pl-1'>Đơn Hàng #{order.code}</Text>
         <WarrantyStatusBadge receivedAt={order.receivedAt ?? ''} warrantyPeriod={warrantyPeriod} />
       </View>
 
@@ -109,7 +111,7 @@ const OrderCard = ({
       <Separator />
 
       <View className='flex-row items-center gap-2 p-3'>
-        <Text className='flex-1 text-xs text-muted-foreground/80'>Order Received</Text>
+        <Text className='flex-1 text-xs text-muted-foreground/80'>Nhận Hàng</Text>
         <Text className='text-foreground/80 text-xs'>
           {order?.receivedAt ? format(new Date(order.receivedAt), "MMM dd, yyyy 'at' hh:mm a") : 'N/A'}
         </Text>
@@ -142,9 +144,9 @@ export default function ChooseOrderItems({
             <TouchableOpacity onPress={() => router.push('/order/warranty/policy')}>
               <InfoCard delay={100} title='Warranty Request Policy'>
                 <Text className='text-xs text-sky-600 dark:text-sky-500'>
-                  Each order item includes {warrantyCount} free warranty requests. Additional requests may incur a
-                  service fee <Text className='text-xs text-sky-600 font-inter-medium underline'>(press for more)</Text>
-                  .
+                  Mỗi item đơn hàng bao gồm {warrantyCount} yêu cầu bảo hành miễn phí. Các yêu cầu bổ sung có thể tính
+                  phí dịch vụ{' '}
+                  <Text className='text-xs text-sky-600 font-inter-medium underline'>(nhấn để xem thêm)</Text>.
                 </Text>
               </InfoCard>
             </TouchableOpacity>
@@ -166,7 +168,7 @@ export default function ChooseOrderItems({
             <ActivityIndicator size='small' color={PRIMARY_COLOR.LIGHT} />
           ) : (
             <View className='flex-1 items-center justify-center mt-12'>
-              <Text className='text-sm text-muted-foreground'>No valid orders found</Text>
+              <Text className='text-sm text-muted-foreground'>Không tìm thấy đơn hàng hợp lệ</Text>
             </View>
           )
         }
@@ -177,7 +179,7 @@ export default function ChooseOrderItems({
       {orderRequests && Array.isArray(orderRequests) && orderRequests.length > 0 ? (
         <View className='px-2'>
           <Button onPress={handleNext} disabled={isDisabled}>
-            <Text className='font-inter-medium'>Continue</Text>
+            <Text className='font-inter-medium'>Tiếp Tục</Text>
           </Button>
         </View>
       ) : null}

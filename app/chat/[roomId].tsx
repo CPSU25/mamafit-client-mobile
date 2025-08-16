@@ -43,7 +43,7 @@ export default function ChatRoomScreen() {
 
   const { refreshControl } = useRefreshs([refetchMessages, refetchRoom])
 
-  const { pickImages, isUploading } = useImagePicker({ maxImages: 1 })
+  const { pickImages, isUploading } = useImagePicker({ maxImages: 1, path: 'chat' })
 
   const sender = room?.members?.find((member) => member.memberId !== user?.userId) ?? room?.members?.[0]
   const imageSource = sender?.memberAvatar && isValidUrl(sender?.memberAvatar) ? sender?.memberAvatar : placeholderImage
@@ -127,13 +127,13 @@ export default function ChatRoomScreen() {
           {isLoadingMessages ? (
             <View className='flex-1 items-center justify-center'>
               <ActivityIndicator size='large' color={PRIMARY_COLOR.LIGHT} />
-              <Text className='mt-2 text-sm text-muted-foreground'>Loading messages...</Text>
+              <Text className='mt-2 text-sm text-muted-foreground'>Đang tải tin nhắn...</Text>
             </View>
           ) : !messages || messages.length === 0 ? (
             <View className='flex-1 items-center justify-center p-4'>
-              <Text className='text-center text-muted-foreground mb-1'>No messages yet</Text>
+              <Text className='text-center text-muted-foreground mb-1'>Không có tin nhắn</Text>
               <Text className='text-center text-muted-foreground text-xs'>
-                Start a conversation by sending a message
+                Bắt đầu cuộc trò chuyện bằng cách gửi tin nhắn
               </Text>
             </View>
           ) : (
@@ -157,7 +157,7 @@ export default function ChatRoomScreen() {
                 isFetchingNextPage ? (
                   <View className='py-4 items-center'>
                     <ActivityIndicator size='small' color={PRIMARY_COLOR.LIGHT} />
-                    <Text className='mt-2 text-muted-foreground text-sm'>Loading more messages...</Text>
+                    <Text className='mt-2 text-muted-foreground text-sm'>Đang tải thêm tin nhắn...</Text>
                   </View>
                 ) : null
               }
@@ -174,7 +174,7 @@ export default function ChatRoomScreen() {
                 )
               }
               onStartIconPress={handleSendImage}
-              placeholder={isSendingMessage ? 'Sending...' : 'Type your message...'}
+              placeholder={isSendingMessage ? 'Đang gửi...' : 'Nhập tin nhắn...'}
               className='shrink'
               value={message}
               onChangeText={setMessage}

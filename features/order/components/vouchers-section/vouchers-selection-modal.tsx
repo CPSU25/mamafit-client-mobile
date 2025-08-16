@@ -79,14 +79,14 @@ const VouchersSelectionModal = forwardRef<BottomSheetModal, VouchersSelectionMod
           />
         )}
       >
-        <Text className='text-xl font-inter-semibold text-center'>Vouchers Selection</Text>
+        <Text className='text-xl font-inter-semibold text-center'>Chọn Mã Giảm Giá</Text>
         <BottomSheetFlatList
           data={vouchers}
           keyExtractor={(voucher) => voucher.voucherId}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
             <View className='mx-auto mt-24'>
-              <Text className='text-sm text-muted-foreground'>No vouchers found</Text>
+              <Text className='text-sm text-muted-foreground'>Không tìm thấy mã giảm giá</Text>
             </View>
           }
           renderItem={({ item }) => {

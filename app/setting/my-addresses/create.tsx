@@ -49,7 +49,7 @@ export default function CreateAddressScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>New Address</Text>
+        <Text className='font-inter-semibold text-xl'>Thêm Địa Chỉ</Text>
       </View>
 
       <View className='bg-muted h-2' />
@@ -62,7 +62,7 @@ export default function CreateAddressScreen() {
             {rootMsg && <FieldError message={rootMsg} />}
             <Button onPress={methods.handleSubmit(onSubmit)} disabled={isGeocoding || addAddressMutation.isPending}>
               <Text className='font-inter-medium'>
-                {addAddressMutation.isPending || isGeocoding ? 'Processing...' : 'Save'}
+                {addAddressMutation.isPending || isGeocoding ? 'Đang Xử Lý...' : 'Lưu'}
               </Text>
             </Button>
           </View>

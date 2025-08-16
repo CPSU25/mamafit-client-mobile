@@ -115,9 +115,9 @@ export function MeasurementField({
         }}
       >
         <DialogHeader>
-          <DialogTitle>Enter your {label.toLowerCase()}</DialogTitle>
+          <DialogTitle>Nhập {label.toLowerCase()}</DialogTitle>
           <Input
-            placeholder={`${label} measurement`}
+            placeholder={`${label} số đo`}
             value={tempValue}
             onChangeText={setTempValue}
             autoFocus
@@ -128,11 +128,11 @@ export function MeasurementField({
         <DialogFooter className='flex flex-row gap-2'>
           <DialogClose asChild>
             <Button variant='outline' onPress={() => setDialogOpen(false)} className='flex-1'>
-              <Text className='font-inter-medium'>Cancel</Text>
+              <Text className='font-inter-medium'>Hủy</Text>
             </Button>
           </DialogClose>
           <Button onPress={handleSave} className='flex-1'>
-            <Text className='font-inter-medium'>Save</Text>
+            <Text className='font-inter-medium'>Lưu</Text>
           </Button>
         </DialogFooter>
       </DialogContent>

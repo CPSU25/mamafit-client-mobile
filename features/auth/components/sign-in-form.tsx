@@ -42,7 +42,7 @@ export default function SignInForm() {
               {...field}
               value={value}
               onChangeText={onChange}
-              placeholder='Username or email'
+              placeholder='Tên Đăng Nhập hoặc Email'
               StartIcon={<Feather name='mail' size={20} color={PRIMARY_COLOR.LIGHT} />}
               autoFocus
               spellCheck={false}
@@ -58,7 +58,7 @@ export default function SignInForm() {
               {...field}
               value={value}
               onChangeText={onChange}
-              placeholder='Password'
+              placeholder='Mật Khẩu'
               StartIcon={<Feather name='lock' size={20} color={PRIMARY_COLOR.LIGHT} />}
               secureTextEntry
               spellCheck={false}
@@ -67,12 +67,12 @@ export default function SignInForm() {
           )}
         />
       </View>
-      <Text className='text-right text-sm text-primary font-inter-semibold mt-2.5'>Forgot password?</Text>
+      <Text className='text-right text-sm text-primary font-inter-semibold mt-2.5'>Quên mật khẩu?</Text>
       <View className='flex-1' />
       <View className='flex flex-col gap-2' style={{ paddingBottom: bottom }}>
         {rootMsg && <FieldError message={rootMsg} />}
         <Button onPress={handleSubmit(onSubmit)} disabled={isSigningIn}>
-          <Text className='font-inter-medium text-white'>{isSigningIn ? 'Signing in...' : "Let's Go!"}</Text>
+          <Text className='font-inter-medium text-white'>{isSigningIn ? 'Đang Đăng Nhập...' : 'Đăng Nhập'}</Text>
         </Button>
         <GoogleAuthButton />
       </View>

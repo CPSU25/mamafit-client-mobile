@@ -61,7 +61,7 @@ export default function CreateCanvasScreen() {
                 <View className='px-4 py-2'>
                   <Button onPress={methods.handleSubmit(handleSubmit)} disabled={getPresetMutation.isPending}>
                     <Text className='font-inter-medium'>
-                      {getPresetMutation.isPending ? 'Applying...' : 'View Changes'}
+                      {getPresetMutation.isPending ? 'Đang Lưu...' : 'Lưu Thay Đổi'}
                     </Text>
                   </Button>
                 </View>
@@ -75,7 +75,7 @@ export default function CreateCanvasScreen() {
               style={{ boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
             >
               <View className='flex-1'>
-                <Text className='text-sm text-muted-foreground font-inter-medium'>Total Price</Text>
+                <Text className='text-sm text-muted-foreground font-inter-medium'>Giá</Text>
                 <Text className='font-inter-semibold text-xl text-primary'>
                   <Text className='underline font-inter-semibold text-primary'>đ</Text>
                   {preset?.price ? preset.price.toLocaleString('vi-VN') : '0'}
@@ -88,7 +88,9 @@ export default function CreateCanvasScreen() {
                 <FontAwesome name='paint-brush' size={24} color={PRIMARY_COLOR.LIGHT} />
               </TouchableOpacity>
               <Button onPress={addToCartMethods.handleSubmit(handleAddToCart)} disabled={addToCartMutation.isPending}>
-                <Text className='font-inter-medium'>{addToCartMutation.isPending ? 'Adding...' : 'Add to Cart'}</Text>
+                <Text className='font-inter-medium'>
+                  {addToCartMutation.isPending ? 'Đang Thêm...' : 'Thêm Giỏ Hàng'}
+                </Text>
               </Button>
             </View>
           </View>

@@ -46,7 +46,7 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
       {status === OrderStatus.Completed ? (
         <TouchableOpacity className='flex-row items-center gap-2 flex-1 justify-center p-2 rounded-xl border border-indigo-100 bg-indigo-50'>
           <MaterialCommunityIcons name='star-circle' size={16} color='#4f46e5' />
-          <Text className='font-inter-medium text-sm text-indigo-600'>Rate Order</Text>
+          <Text className='font-inter-medium text-sm text-indigo-600'>Đánh Giá</Text>
         </TouchableOpacity>
       ) : null}
 
@@ -57,7 +57,7 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
               <DialogTrigger asChild>
                 <TouchableOpacity className='flex-1 flex-row items-center gap-2 justify-center p-2 rounded-xl border border-rose-100 bg-rose-50'>
                   <MaterialCommunityIcons name='cancel' size={16} color='#e11d48' />
-                  <Text className='font-inter-medium text-sm text-rose-600'>Cancel Order</Text>
+                  <Text className='font-inter-medium text-sm text-rose-600'>G</Text>
                 </TouchableOpacity>
               </DialogTrigger>
 

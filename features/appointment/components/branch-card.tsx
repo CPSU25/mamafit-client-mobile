@@ -24,7 +24,7 @@ export default function BranchCard({ branch, onPress, isFirstBranch }: BranchCar
             </Text>
             {isFirstBranch ? (
               <View className='bg-emerald-500 px-3 py-1 rounded-xl'>
-                <Text className='text-xs font-inter-semibold text-white'>Nearest</Text>
+                <Text className='text-xs font-inter-semibold text-white'>Gần Nhất</Text>
               </View>
             ) : null}
           </View>
@@ -45,7 +45,7 @@ export default function BranchCard({ branch, onPress, isFirstBranch }: BranchCar
             <View className='flex-row items-center gap-1.5'>
               <MaterialCommunityIcons name='motorbike' size={14} color={PRIMARY_COLOR.LIGHT} />
               <Text className='flex-1 text-xs text-muted-foreground pr-2' numberOfLines={1}>
-                Distance: {branch.distance?.toFixed(1)}km
+                Cách Bạn: {branch.distance?.toFixed(1)}km
               </Text>
             </View>
           </View>
@@ -54,7 +54,7 @@ export default function BranchCard({ branch, onPress, isFirstBranch }: BranchCar
 
       <TouchableOpacity onPress={onPress} className='bg-primary/10 p-2 rounded-xl flex-row items-center'>
         <MaterialCommunityIcons name='chevron-right' size={24} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium text-primary'>Book Now!</Text>
+        <Text className='font-inter-medium text-primary'>Đặt Lịch Ngay!</Text>
       </TouchableOpacity>
     </Card>
   )

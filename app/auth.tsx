@@ -12,16 +12,16 @@ import { cn } from '~/lib/utils'
 
 const STEP_DESCRIPTIONS = {
   1: {
-    title: 'Add your email',
-    description: 'Enter your email to create an account'
+    title: 'Thêm Email',
+    description: 'Nhập email để tạo tài khoản'
   },
   2: {
-    title: 'Verify your email',
-    description: 'Enter the code sent to your email'
+    title: 'Xác Thực Email',
+    description: 'Nhập mã đã được gửi đến email của bạn'
   },
   3: {
-    title: 'Create your password',
-    description: 'Create a password to secure your account'
+    title: 'Tạo Mật Khẩu',
+    description: 'Tạo mật khẩu để bảo mật tài khoản của bạn'
   }
 }
 
@@ -52,10 +52,12 @@ export default function AuthScreen() {
 
       <View className='flex flex-col items-start'>
         <Text className='text-white font-inter-bold text-3xl'>
-          {tabValue === 'sign-in' ? 'Get Started now' : stepDescription.title}
+          {tabValue === 'sign-in' ? 'Bắt Đầu Ngay' : stepDescription.title}
         </Text>
         <Text className='text-white text-sm mt-2'>
-          {tabValue === 'sign-in' ? 'Enter your credentials and start your journey' : stepDescription.description}
+          {tabValue === 'sign-in'
+            ? 'Nhập thông tin đăng nhập và bắt đầu hành trình của bạn'
+            : stepDescription.description}
         </Text>
       </View>
     </View>
@@ -80,10 +82,10 @@ export default function AuthScreen() {
         >
           <TabsList className='flex-row w-full'>
             <TabsTrigger value='sign-in' className='flex-1'>
-              <Text>Sign In</Text>
+              <Text>Đăng Nhập</Text>
             </TabsTrigger>
             <TabsTrigger value='register' className='flex-1'>
-              <Text>Register</Text>
+              <Text>Đăng Ký</Text>
             </TabsTrigger>
           </TabsList>
           <TabsContent value='sign-in' className='flex-1 flex'>

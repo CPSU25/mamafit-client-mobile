@@ -219,7 +219,7 @@ export default function CreateWarrantyRequestScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>Submit Warranty Request</Text>
+        <Text className='font-inter-semibold text-xl'>Gửi Yêu Cầu Bảo Hành</Text>
       </View>
 
       <View className='bg-muted h-2' />
