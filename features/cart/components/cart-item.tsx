@@ -128,9 +128,9 @@ export default function CartItem({ item, setSelectedItems, selectedItems }: Cart
         <View className='flex-1'>
           <View className='flex-1'>
             <Text className='font-inter-medium pr-4' numberOfLines={1}>
-              {item.preset?.name || 'Untitled'}
+              {item.preset?.name || 'Không Có Tên'}
             </Text>
-            <Text className='text-xs text-muted-foreground'>{item.preset?.styleName || 'Unknown Style'}</Text>
+            <Text className='text-xs text-muted-foreground'>{item.preset?.styleName || 'Không Có Kiểu'}</Text>
           </View>
 
           <View className='flex-row items-center justify-between'>

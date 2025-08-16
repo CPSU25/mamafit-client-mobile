@@ -27,7 +27,7 @@ export default function OrderSummarySection({
     <Card style={[styles.container]}>
       <View className='flex flex-row items-center gap-2 p-3'>
         <MaterialCommunityIcons name='card-text' size={iconSize} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='text-sm font-inter-medium'>Order Summary</Text>
+        <Text className='text-sm font-inter-medium'>Tổng Tiền</Text>
       </View>
 
       <Separator />
@@ -39,12 +39,12 @@ export default function OrderSummarySection({
       <View className='p-3 flex flex-col gap-2'>
         <View className='flex-row items-center gap-2'>
           <MaterialCommunityIcons name='truck-fast' size={iconSize} color='#047857' />
-          <Text className='font-inter-medium text-sm'>Shipping Option</Text>
+          <Text className='font-inter-medium text-sm'>Phương Thức Vận Chuyển</Text>
         </View>
         <View className='bg-emerald-50 border border-emerald-200 rounded-2xl py-3 px-4 flex-row items-center justify-center gap-2'>
           <View className='flex-1'>
-            <Text className='text-sm font-inter-medium text-emerald-700'>Standard Delivery</Text>
-            <Text className='text-xs text-emerald-600'>3-5 business days</Text>
+            <Text className='text-sm font-inter-medium text-emerald-700'>Vận Chuyển Tiêu Chuẩn</Text>
+            <Text className='text-xs text-emerald-600'>3-5 ngày làm việc</Text>
           </View>
           {isLoadingShippingFee ? (
             <ActivityIndicator size={iconSize} color='#047857' />
@@ -59,7 +59,7 @@ export default function OrderSummarySection({
       <Separator />
       <View className='p-3 flex flex-row'>
         <Text className='text-sm font-inter-medium flex-1'>
-          Total {Object.keys(orderItems?.items || {}).length} Item(s)
+          Tổng {Object.keys(orderItems?.items || {}).length} Item(s)
         </Text>
         <Text className='font-inter-medium text-sm'>
           <Text className='underline font-inter-medium text-xs'>đ</Text>

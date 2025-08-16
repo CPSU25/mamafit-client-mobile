@@ -26,31 +26,31 @@ const navigationOptions = [
   {
     id: 1,
     name: 'index',
-    title: 'Home',
+    title: 'Trang Chủ',
     icon: (focused: boolean) => SvgIcon.home({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 2,
     name: 'diary',
-    title: 'Diary',
+    title: 'Nhật Ký',
     icon: (focused: boolean) => SvgIcon.diary({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 3,
     name: 'canvas',
-    title: 'Canvas',
+    title: 'Thiết Kế',
     icon: (focused: boolean) => SvgIcon.penTool({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 4,
     name: 'notifications',
-    title: 'Notifications',
+    title: 'Thông Báo',
     icon: (focused: boolean) => SvgIcon.notification({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 5,
     name: 'profile',
-    title: 'Profile',
+    title: 'Tôi',
     icon: (focused: boolean) => SvgIcon.user({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
   }
 ]

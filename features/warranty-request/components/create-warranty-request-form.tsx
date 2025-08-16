@@ -96,10 +96,12 @@ export default function CreateWarrantyRequestForm({ index, orderItem }: CreateWa
         </View>
         <View className='flex-1 h-20 justify-between pr-2'>
           <View>
-            <Text className='native:text-sm font-inter-medium'>{orderItem?.preset?.styleName || 'Custom'} Dress</Text>
+            <Text className='native:text-sm font-inter-medium'>
+              {orderItem?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
+            </Text>
             <View className='flex-row items-center justify-between'>
               <Text className='native:text-xs text-muted-foreground'>
-                {orderItem?.preset?.styleName ? 'Made-to-Order Custom Style' : 'Tailored Just for You'}
+                {orderItem?.preset?.styleName ? 'Váy Bầu Tùy Chỉnh' : 'Váy Bầu Tùy Chỉnh'}
               </Text>
               <Text className='native:text-xs text-muted-foreground'>x{orderItem?.quantity || 1}</Text>
             </View>
@@ -119,7 +121,7 @@ export default function CreateWarrantyRequestForm({ index, orderItem }: CreateWa
               className='py-3 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
             >
               {SvgIcon.galleryImport({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
-              <Text className='text-xs text-muted-foreground'>{isImageUploading ? 'Uploading...' : 'Add Photo'}</Text>
+              <Text className='text-xs text-muted-foreground'>{isImageUploading ? 'Đang Tải Lên...' : 'Thêm Ảnh'}</Text>
             </TouchableOpacity>
           </View>
           <View className='gap-1 flex-1'>
@@ -129,7 +131,9 @@ export default function CreateWarrantyRequestForm({ index, orderItem }: CreateWa
               className='py-3 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
             >
               {SvgIcon.videoPlay({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
-              <Text className='text-xs text-muted-foreground'>{isVideoUploading ? 'Uploading...' : 'Add Video'}</Text>
+              <Text className='text-xs text-muted-foreground'>
+                {isVideoUploading ? 'Đang Tải Lên...' : 'Thêm Video'}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -211,7 +215,7 @@ export default function CreateWarrantyRequestForm({ index, orderItem }: CreateWa
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
-              placeholder='Describe the defect and where it appears'
+              placeholder='Mô tả lỗi và vị trí xuất hiện'
               className={cn('rounded-xl native:text-base', itemErrors?.description && className)}
             />
           )}

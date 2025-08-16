@@ -24,13 +24,13 @@ export default function AddOnCard({ addOn, getAddOnImage }: AddOnCardProps) {
         </Text>
 
         <View className='flex-row items-center gap-1 mt-1'>
-          <Text className='text-xs text-foreground/70'>Starting from:</Text>
+          <Text className='text-xs text-foreground/70'>Bắt đầu từ:</Text>
           <Text className='text-xs font-inter-medium' style={{ color: getAddOnImage(addOn.name).textColor }}>
             ₫{addOn.minPrice.toLocaleString('vi-VN')}
           </Text>
           {addOn.minPrice !== addOn.maxPrice ? (
             <>
-              <Text className='text-xs text-muted-foreground'>to</Text>
+              <Text className='text-xs text-muted-foreground'>đến</Text>
               <Text className='text-xs font-inter-medium' style={{ color: getAddOnImage(addOn.name).textColor }}>
                 ₫{addOn.maxPrice.toLocaleString('vi-VN')}
               </Text>

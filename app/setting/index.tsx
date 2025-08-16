@@ -23,19 +23,19 @@ export default function SettingScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>Settings</Text>
+        <Text className='font-inter-semibold text-xl'>Cài Đặt</Text>
       </View>
       <View className='bg-muted h-2' />
 
       <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/setting/account')}>
         <Feather name='user' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5'>Account</Text>
+        <Text className='font-inter-medium ml-2.5'>Tài Khoản</Text>
         <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
       </TouchableOpacity>
       <Separator />
       <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/setting/my-addresses')}>
         <Feather name='map-pin' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5'>My Addresses</Text>
+        <Text className='font-inter-medium ml-2.5'>Địa Chỉ Của Tôi</Text>
         <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
       </TouchableOpacity>
       <Separator />

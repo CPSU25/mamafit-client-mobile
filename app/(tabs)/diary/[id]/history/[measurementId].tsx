@@ -51,56 +51,56 @@ export default function DiaryHistoryDetailScreen() {
 
   const mainData = [
     {
-      title: 'Pregnancy Status',
-      description: 'Tap to recalculate your measurements',
+      title: 'Trạng Thái Thai Kỳ',
+      description: 'Chạm để cập nhật số đo',
       icon: SvgIcon.calendarOne({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       measurements: [
-        { name: 'weekOfPregnancy' as const, label: 'Gestational age', unit: 'weeks', editable: false },
-        { name: 'weight' as const, label: 'Weight', unit: 'kg', editable: isEditable },
-        { name: 'bust' as const, label: 'Bust', unit: 'cm', editable: isEditable },
-        { name: 'waist' as const, label: 'Waist', unit: 'cm', editable: isEditable },
-        { name: 'hip' as const, label: 'Hip', unit: 'cm', editable: isEditable }
+        { name: 'weekOfPregnancy' as const, label: 'Tuần Thai', unit: 'tuần', editable: false },
+        { name: 'weight' as const, label: 'Cân Nặng', unit: 'kg', editable: isEditable },
+        { name: 'bust' as const, label: 'Vòng Ngực', unit: 'cm', editable: isEditable },
+        { name: 'waist' as const, label: 'Vòng Eo', unit: 'cm', editable: isEditable },
+        { name: 'hip' as const, label: 'Vòng Hông', unit: 'cm', editable: isEditable }
       ]
     }
   ]
 
   const calculatedData = [
     {
-      title: 'Upper Body',
-      description: 'Tap any measurement to edit',
+      title: 'Thân Trên',
+      description: 'Chạm để chỉnh sửa',
       icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       measurements: [
-        { name: 'neck' as const, label: 'Neck', unit: 'cm', editable: isEditable },
-        { name: 'coat' as const, label: 'Coat', unit: 'cm', editable: isEditable },
-        { name: 'chestAround' as const, label: 'Chest around', unit: 'cm', editable: isEditable },
-        { name: 'shoulderWidth' as const, label: 'Shoulder width', unit: 'cm', editable: isEditable }
+        { name: 'neck' as const, label: 'Cổ', unit: 'cm', editable: isEditable },
+        { name: 'coat' as const, label: 'Áo', unit: 'cm', editable: isEditable },
+        { name: 'chestAround' as const, label: 'Ngực', unit: 'cm', editable: isEditable },
+        { name: 'shoulderWidth' as const, label: 'Vai', unit: 'cm', editable: isEditable }
       ]
     },
     {
-      title: 'Core & Waist',
-      description: 'Tap any measurement to edit',
+      title: 'Thân & Eo',
+      description: 'Chạm để chỉnh sửa',
       icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       measurements: [
-        { name: 'stomach' as const, label: 'Stomach', unit: 'cm', editable: isEditable },
-        { name: 'pantsWaist' as const, label: 'Pants waist', unit: 'cm', editable: isEditable }
+        { name: 'stomach' as const, label: 'Bụng', unit: 'cm', editable: isEditable },
+        { name: 'pantsWaist' as const, label: 'Eo Quần', unit: 'cm', editable: isEditable }
       ]
     },
     {
-      title: 'Lower Body',
-      description: 'Tap any measurement to edit',
+      title: 'Thân Dưới',
+      description: 'Chạm để chỉnh sửa',
       icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       measurements: [
-        { name: 'thigh' as const, label: 'Thigh', unit: 'cm', editable: isEditable },
-        { name: 'legLength' as const, label: 'Leg length', unit: 'cm', editable: isEditable }
+        { name: 'thigh' as const, label: 'Đùi', unit: 'cm', editable: isEditable },
+        { name: 'legLength' as const, label: 'Dài Chân', unit: 'cm', editable: isEditable }
       ]
     },
     {
-      title: 'Garment Specific',
-      description: 'Tap any measurement to edit',
+      title: 'Trang Phục',
+      description: 'Chạm để chỉnh sửa',
       icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       measurements: [
-        { name: 'dressLength' as const, label: 'Dress length', unit: 'cm', editable: isEditable },
-        { name: 'sleeveLength' as const, label: 'Sleeve length', unit: 'cm', editable: isEditable }
+        { name: 'dressLength' as const, label: 'Dài Váy', unit: 'cm', editable: isEditable },
+        { name: 'sleeveLength' as const, label: 'Dài Tay', unit: 'cm', editable: isEditable }
       ]
     }
   ]
@@ -147,18 +147,18 @@ export default function DiaryHistoryDetailScreen() {
           <View className='flex flex-col gap-4 p-4'>
             {isEditable ? (
               <WarningCard
-                title='Important Information'
+                title='Thông Tin Quan Trọng'
                 delay={100}
-                description='This information will assist us in delivering the most precise results for your measurements.'
+                description='Giúp chúng tôi dự đoán số đo chính xác hơn.'
               />
             ) : (
               <InfoCard
-                title={Boolean(measurementDetail?.isLocked) ? 'Locked Information' : 'Read-only Information'}
+                title={Boolean(measurementDetail?.isLocked) ? 'Thông Tin Đã Khóa' : 'Chỉ Đọc'}
                 delay={100}
                 description={
                   Boolean(measurementDetail?.isLocked)
-                    ? 'This information is locked and cannot be edited since it is currently being used for an order.'
-                    : 'This information is read-only and cannot be edited since it is not the current week of pregnancy.'
+                    ? 'Thông tin đã khóa, không thể chỉnh sửa.'
+                    : 'Thông tin chỉ đọc, không phải tuần thai hiện tại.'
                 }
               />
             )}
@@ -203,10 +203,8 @@ export default function DiaryHistoryDetailScreen() {
 
             <Animated.View entering={FadeInDown.delay(300)}>
               <View className='flex flex-col gap-1'>
-                <Text className='font-inter-semibold'>Our Estimation</Text>
-                <Text className='text-muted-foreground text-xs'>
-                  This is an estimation of your measurements based on your pregnancy status.
-                </Text>
+                <Text className='font-inter-semibold'>Ước Tính</Text>
+                <Text className='text-muted-foreground text-xs'>Dựa trên tình trạng thai kỳ hiện tại.</Text>
               </View>
             </Animated.View>
 
@@ -254,7 +252,7 @@ export default function DiaryHistoryDetailScreen() {
                 disabled={!methods.formState.isDirty || editMeasurementDetailMutation.isPending}
               >
                 <Text className='font-inter-medium'>
-                  {editMeasurementDetailMutation.isPending ? 'Saving...' : 'Save'}
+                  {editMeasurementDetailMutation.isPending ? 'Đang Lưu...' : 'Lưu'}
                 </Text>
               </Button>
             ) : null}

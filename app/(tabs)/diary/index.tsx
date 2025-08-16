@@ -18,7 +18,7 @@ export default function DiaryScreen() {
     <SafeView>
       {/* Header */}
       <View className='flex flex-row justify-between items-center p-4'>
-        <Text className='text-xl font-inter-semibold'>Your Diary</Text>
+        <Text className='text-xl font-inter-semibold'>Nhật Ký Của Bạn</Text>
         <TouchableOpacity onPress={() => router.push('/diary/create')}>
           <Feather name='plus' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
@@ -28,7 +28,7 @@ export default function DiaryScreen() {
       {/* Search */}
       <Input
         className='mx-4 mt-4'
-        placeholder='Search'
+        placeholder='Tìm Kiếm'
         StartIcon={<Feather name='search' size={24} color={PRIMARY_COLOR.LIGHT} />}
         value={nameSearch}
         onChangeText={setNameSearch}

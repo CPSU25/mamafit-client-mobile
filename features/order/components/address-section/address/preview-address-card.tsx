@@ -25,7 +25,7 @@ export default function PreviewAddressCard({ address, fullName, phoneNumber, onP
           <Text className='text-sm font-inter-medium' numberOfLines={1}>
             {fullName}{' '}
             <Text className='text-muted-foreground text-xs'>
-              {phoneNumber ? formatVnPhone(phoneNumber) : '(missing phone number)'}
+              {phoneNumber ? formatVnPhone(phoneNumber) : '(thiếu số điện thoại)'}
             </Text>
           </Text>
 

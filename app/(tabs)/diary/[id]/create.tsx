@@ -22,12 +22,12 @@ import { cn } from '~/lib/utils'
 const steps = [
   {
     id: 1,
-    name: 'Personal Information',
+    name: 'Thông Tin Cá Nhân',
     icon: (color: keyof typeof COLORS) => SvgIcon.folderAdd({ size: ICON_SIZE.SMALL, color })
   },
   {
     id: 2,
-    name: 'Review Measurements',
+    name: 'Xác Nhận Số Đo',
     icon: (color: keyof typeof COLORS) => SvgIcon.chartSuccess({ size: ICON_SIZE.SMALL, color })
   }
 ]
@@ -159,7 +159,7 @@ export default function CreateMeasurementScreen() {
         <TouchableOpacity onPress={handleGoBack} className='absolute left-3 z-10'>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl text-center flex-1'>Add Measurement</Text>
+        <Text className='font-inter-semibold text-xl text-center flex-1'>Thêm Số Đo</Text>
       </View>
 
       <View className='px-4'>
@@ -193,7 +193,7 @@ export default function CreateMeasurementScreen() {
             {stepOneRootMsg && <FieldError message={stepOneRootMsg} />}
             <Button onPress={handlePreviewMeasurement(onSubmitStepOne)} disabled={previewMeasurementMutation.isPending}>
               <Text className='font-inter-medium'>
-                {previewMeasurementMutation.isPending ? 'Calculating...' : 'Next'}
+                {previewMeasurementMutation.isPending ? 'Đang Tính...' : 'Tiếp Theo'}
               </Text>
             </Button>
           </Animated.View>
@@ -214,16 +214,14 @@ export default function CreateMeasurementScreen() {
             {stepTwoRootMsg && <FieldError message={stepTwoRootMsg} />}
             <View className='flex flex-row gap-2'>
               <Button className='flex-1' variant='outline' onPress={prev}>
-                <Text className='font-inter-medium'>Previous</Text>
+                <Text className='font-inter-medium'>Trước</Text>
               </Button>
               <Button
                 className='flex-1'
                 onPress={handleSubmitMeasurement(onSubmitStepTwo)}
                 disabled={createMeasurementMutation.isPending}
               >
-                <Text className='font-inter-medium'>
-                  {createMeasurementMutation.isPending ? 'Submitting...' : 'Submit'}
-                </Text>
+                <Text className='font-inter-medium'>{createMeasurementMutation.isPending ? 'Đang Gửi...' : 'Gửi'}</Text>
               </Button>
             </View>
           </Animated.View>

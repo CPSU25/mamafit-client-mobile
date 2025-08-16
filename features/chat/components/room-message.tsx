@@ -123,10 +123,10 @@ export default function RoomMessage({ message }: RoomMessageProps) {
           <View className='flex-row items-center justify-between m-2'>
             <View className='flex-row items-center gap-2'>
               {SvgIcon.penTool({ size: 18, color: 'PRIMARY' })}
-              <Text className='text-primary text-sm font-inter-semibold'>Design Request</Text>
+              <Text className='text-primary text-sm font-inter-semibold'>Yêu Cầu Thiết Kế</Text>
             </View>
             <View className='px-2.5 py-0.5 bg-white/30 rounded-lg'>
-              <Text className='text-primary text-[10px] font-inter-medium'>Tap to view</Text>
+              <Text className='text-primary text-[10px] font-inter-medium'>Nhấn để xem</Text>
             </View>
           </View>
 
@@ -150,7 +150,7 @@ export default function RoomMessage({ message }: RoomMessageProps) {
 
               <View className='flex-1 justify-between'>
                 <View>
-                  <Text className='text-primary/70 text-[8px] font-inter-medium uppercase'>Description</Text>
+                  <Text className='text-primary/70 text-[8px] font-inter-medium uppercase'>Mô Tả</Text>
                   <Text
                     className='text-foreground/80 text-xs font-inter-medium leading-4'
                     numberOfLines={2}
@@ -162,7 +162,7 @@ export default function RoomMessage({ message }: RoomMessageProps) {
 
                 {designRequest?.createdAt ? (
                   <View>
-                    <Text className='text-primary/70 text-[8px] font-inter-medium uppercase'>Placed</Text>
+                    <Text className='text-primary/70 text-[8px] font-inter-medium uppercase'>Đặt</Text>
                     <Text className='text-foreground/80 text-xs font-inter-medium'>
                       {format(designRequest.createdAt, "MMM dd, yyyy 'at' hh:mm a")}
                     </Text>
@@ -206,7 +206,7 @@ export default function RoomMessage({ message }: RoomMessageProps) {
           <View className='flex-row items-center justify-between mt-2 mx-2 mb-1'>
             <View className='flex-row items-center gap-2'>
               {SvgIcon.note2({ size: 18, color: 'PRIMARY' })}
-              <Text className='text-primary text-sm font-inter-semibold'>Designed Preset</Text>
+              <Text className='text-primary text-sm font-inter-semibold'>Bản Thiết Kế</Text>
             </View>
             <View className='px-2.5 py-0.5 bg-white/30 rounded-lg'>
               <Text>
@@ -241,5 +241,5 @@ export default function RoomMessage({ message }: RoomMessageProps) {
     ) : null
   }
 
-  return <Text className='text-center text-xs text-muted-foreground'>Invalid Message</Text>
+  return <Text className='text-center text-xs text-muted-foreground'>Lỗi Tin Nhắn</Text>
 }

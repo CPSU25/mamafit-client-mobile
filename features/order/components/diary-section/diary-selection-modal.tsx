@@ -34,7 +34,7 @@ const DiarySelectionModal = forwardRef<BottomSheetModal, DiarySelectionModalProp
           />
         )}
       >
-        <Text className='text-xl font-inter-semibold text-center'>Diary Selection</Text>
+        <Text className='text-xl font-inter-semibold text-center'>Chọn Nhật Ký</Text>
         <BottomSheetFlatList
           data={diaries}
           keyExtractor={(diary) => diary.id}

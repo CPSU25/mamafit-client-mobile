@@ -41,7 +41,7 @@ export default function AddAddressForm({ geocodingData, isGeocoding }: AddAddres
       <Controller control={control} name='mapId' render={() => <View style={{ display: 'none' }} />} />
 
       <View className='gap-1'>
-        <Text className='text-sm font-inter-medium text-muted-foreground'>Province</Text>
+        <Text className='text-sm font-inter-medium text-muted-foreground'>Tỉnh</Text>
         <Controller
           control={control}
           name='province'
@@ -51,7 +51,7 @@ export default function AddAddressForm({ geocodingData, isGeocoding }: AddAddres
         />
       </View>
       <View className='gap-1'>
-        <Text className='text-sm font-inter-medium text-muted-foreground'>District</Text>
+        <Text className='text-sm font-inter-medium text-muted-foreground'>Quận</Text>
         <Controller
           control={control}
           name='district'
@@ -61,7 +61,7 @@ export default function AddAddressForm({ geocodingData, isGeocoding }: AddAddres
         />
       </View>
       <View className='gap-1'>
-        <Text className='text-sm font-inter-medium text-muted-foreground'>Ward</Text>
+        <Text className='text-sm font-inter-medium text-muted-foreground'>Phường</Text>
         <Controller
           control={control}
           name='ward'
@@ -71,7 +71,7 @@ export default function AddAddressForm({ geocodingData, isGeocoding }: AddAddres
         />
       </View>
       <View className='gap-1'>
-        <Text className='text-sm font-inter-medium text-muted-foreground'>Street</Text>
+        <Text className='text-sm font-inter-medium text-muted-foreground'>Đường</Text>
         <Controller
           control={control}
           name='street'
@@ -84,7 +84,7 @@ export default function AddAddressForm({ geocodingData, isGeocoding }: AddAddres
       {renderMap()}
 
       <View className='flex-row justify-between'>
-        <Text>Set as Default Address</Text>
+        <Text>Đặt Làm Địa Chỉ Mặc Định</Text>
         <Controller
           control={control}
           name='isDefault'

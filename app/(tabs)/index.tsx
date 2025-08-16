@@ -47,7 +47,7 @@ export default function HomeScreen() {
             >
               <View className='flex flex-row items-center gap-2'>
                 <Feather name='search' size={18} color={PRIMARY_COLOR.LIGHT} />
-                <Text className='font-inter text-sm text-muted-foreground'>Search</Text>
+                <Text className='font-inter text-sm text-muted-foreground'>Tìm Kiếm</Text>
               </View>
             </Pressable>
             <View className='flex flex-row items-center gap-6 mr-2'>
@@ -134,7 +134,7 @@ export default function HomeScreen() {
                   ))}
               </View>
             </View>
-            <Text className='text-center text-muted-foreground text-xs mt-4'>No more products</Text>
+            <Text className='text-center text-muted-foreground text-xs mt-4'>Không còn sản phẩm</Text>
           </View>
         </View>
       </ScrollView>

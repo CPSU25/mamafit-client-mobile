@@ -39,7 +39,7 @@ export default function OrdersList({ currentStatus }: OrdersListProps) {
           <Loading />
         ) : (
           <View className='flex items-center px-4 mt-10'>
-            <Text className='text-muted-foreground text-sm mt-2'>No orders found</Text>
+            <Text className='text-muted-foreground text-sm mt-2'>Không tìm thấy đơn hàng</Text>
           </View>
         )
       }

@@ -4,7 +4,7 @@ export default ({ config }) => ({
   expo: {
     name: 'Mama Fit',
     slug: 'mamafit-mobile',
-    version: '1.0.7',
+    version: '1.0.8',
     orientation: 'portrait',
     icon: './assets/images/mamafit-app-icon.png',
     scheme: 'mamafit',
@@ -25,7 +25,26 @@ export default ({ config }) => ({
         googleMaps: {
           apiKey: process.env.GOOGLE_MAPS_API_KEY
         }
-      }
+      },
+      intentFilters: [
+        {
+          action: 'VIEW',
+          autoVerify: true,
+          data: [
+            {
+              scheme: 'https',
+              host: 'mamafit.studio',
+              pathPrefix: '/'
+            },
+            {
+              scheme: 'mamafit',
+              host: '*',
+              pathPrefix: '/'
+            }
+          ],
+          category: ['BROWSABLE', 'DEFAULT']
+        }
+      ]
     },
     web: {
       bundler: 'metro',

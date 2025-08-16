@@ -26,10 +26,10 @@ export default function OrdersByStatusScreen() {
   const [scrollViewWidth, setScrollViewWidth] = useState(0)
   const [tabLayouts, setTabLayouts] = useState<{ [key: string]: { x: number; width: number } }>({})
   const [currentStatus, setCurrentStatus] = useState<CurrentStatus>({
-    title: ORDER_STATUS_TYPES.find((status) => status.urlValue === orderStatus)?.title || 'Waiting for Payment',
+    title: ORDER_STATUS_TYPES.find((status) => status.urlValue === orderStatus)?.title || 'Đang Chờ Thanh Toán',
     description:
       ORDER_STATUS_TYPES.find((status) => status.urlValue === orderStatus)?.description ||
-      'Your order has been created. Please complete the payment to start processing.',
+      'Đơn hàng của bạn đã được tạo. Vui lòng hoàn thành thanh toán để bắt đầu xử lý.',
     value: ORDER_STATUS_TYPES.find((status) => status.urlValue === orderStatus)?.value || OrderStatus.Created,
     urlValue: orderStatus || 'to-pay'
   })
@@ -79,7 +79,7 @@ export default function OrdersByStatusScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>My Purchases</Text>
+        <Text className='font-inter-semibold text-xl'>Đơn Hàng Của Tôi</Text>
       </View>
 
       <View className='px-4 pt-2'>

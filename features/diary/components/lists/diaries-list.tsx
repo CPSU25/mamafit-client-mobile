@@ -50,14 +50,14 @@ export default function DiariesList({ nameSearch }: { nameSearch: string }) {
         ) : (
           <View className='flex items-center px-4 mt-48'>
             {SvgIcon.diary({ size: ICON_SIZE.EXTRA_LARGE, color: 'GRAY' })}
-            <Text className='text-muted-foreground text-sm mt-2'>Create your first diary to get started!</Text>
+            <Text className='text-muted-foreground text-sm mt-2'>Tạo nhật ký đầu tiên của bạn để bắt đầu!</Text>
             <Button
               size='sm'
               className='mt-8 flex flex-row items-center gap-2'
               onPress={() => router.push('/diary/create')}
             >
               <Feather name='plus' size={16} color='white' />
-              <Text className='font-inter-medium'>Create Diary</Text>
+              <Text className='font-inter-medium'>Tạo Nhật Ký</Text>
             </Button>
           </View>
         )

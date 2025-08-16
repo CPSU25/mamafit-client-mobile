@@ -50,7 +50,7 @@ const DiaryHeader = ({ diaryId, onGoBack }: DiaryHeaderProps) => {
         <TouchableOpacity onPress={onGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='text-xl font-inter-semibold flex-1'>Diary Details</Text>
+        <Text className='text-xl font-inter-semibold flex-1'>Chi Tiết Nhật Ký</Text>
         <TouchableOpacity onPress={() => router.push({ pathname: '/diary/[id]/history', params: { id: diaryId } })}>
           <Feather name='clock' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
@@ -68,10 +68,10 @@ const CurrentWeekSection = ({ measurement, diaryId }: CurrentWeekSectionProps) =
     <View className='flex flex-col gap-1'>
       <View className='flex flex-row items-center gap-2'>
         {SvgIcon.calendar({ size: ICON_SIZE.EXTRA_SMALL, color: 'PRIMARY' })}
-        <Text className='font-inter-semibold'>Current Week - {measurement?.weekOfPregnancy}</Text>
+        <Text className='font-inter-semibold'>Tuần Hiện Tại - {measurement?.weekOfPregnancy}</Text>
       </View>
       <Text className='text-muted-foreground text-xs'>
-        You can edit measurements only in the current week. Previous weeks&apos; data cannot be changed.
+        Bạn chỉ có thể chỉnh sửa số đo trong tuần hiện tại. Dữ liệu của các tuần trước không thể chỉnh sửa.
       </Text>
     </View>
 
@@ -114,10 +114,10 @@ const InsightsSection = ({ currentWeekData, diaryId, weightRefetchRef, waistHipR
         >
           <TabsList className='flex-row w-full'>
             <TabsTrigger value={CHART_TABS.WEIGHT} className='flex-1'>
-              <Text>Weight</Text>
+              <Text>Cân Nặng</Text>
             </TabsTrigger>
             <TabsTrigger value={CHART_TABS.WAIST_HIP} className='flex-1'>
-              <Text>Waist & Hip</Text>
+              <Text>Eo & Mông</Text>
             </TabsTrigger>
           </TabsList>
 

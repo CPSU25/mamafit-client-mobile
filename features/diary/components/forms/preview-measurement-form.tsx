@@ -29,15 +29,15 @@ export default function PreviewMeasurementForm() {
         {/* Weight Section */}
         <Animated.View entering={FadeInDown.delay(100)} className='flex flex-col gap-2'>
           <View>
-            <Text className='font-inter-medium text-sm'>Weight</Text>
-            <Text className='text-muted-foreground text-xs'>Track your weight changes throughout pregnancy</Text>
+            <Text className='font-inter-medium text-sm'>Cân Nặng</Text>
+            <Text className='text-muted-foreground text-xs'>Theo dõi các thay đổi về cân nặng trong suốt thai kỳ</Text>
           </View>
           <Controller
             control={control}
             name='weight'
             render={({ field: { onChange, value, ...field } }) => (
               <Input
-                placeholder='Enter your current weight'
+                placeholder='Nhập cân nặng hiện tại'
                 keyboardType='numeric'
                 StartIcon={<Feather name='activity' size={20} color={PRIMARY_COLOR.LIGHT} />}
                 {...field}
@@ -54,8 +54,10 @@ export default function PreviewMeasurementForm() {
         {/* Body Measurements Section */}
         <Animated.View entering={FadeInDown.delay(200)} className='flex flex-col gap-2'>
           <View>
-            <Text className='font-inter-medium text-sm'>Body Circumferences</Text>
-            <Text className='text-muted-foreground text-xs'>Monitor changes in your body shape during pregnancy</Text>
+            <Text className='font-inter-medium text-sm'>Vòng Eo & Vòng Mông</Text>
+            <Text className='text-muted-foreground text-xs'>
+              Theo dõi các thay đổi về hình dạng cơ thể trong suốt thai kỳ
+            </Text>
           </View>
 
           <View className='flex flex-col gap-2'>
@@ -66,7 +68,7 @@ export default function PreviewMeasurementForm() {
                 name='bust'
                 render={({ field: { onChange, value, ...field } }) => (
                   <Input
-                    placeholder='Bust circumference'
+                    placeholder='Vòng Eo'
                     keyboardType='numeric'
                     StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                     {...field}
@@ -87,7 +89,7 @@ export default function PreviewMeasurementForm() {
                 name='waist'
                 render={({ field: { onChange, value, ...field } }) => (
                   <Input
-                    placeholder='Waist circumference'
+                    placeholder='Vòng Mông'
                     keyboardType='numeric'
                     StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                     {...field}
@@ -108,7 +110,7 @@ export default function PreviewMeasurementForm() {
                 name='hip'
                 render={({ field: { onChange, value, ...field } }) => (
                   <Input
-                    placeholder='Hip circumference'
+                    placeholder='Vòng Mông'
                     keyboardType='numeric'
                     StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                     {...field}
@@ -127,13 +129,13 @@ export default function PreviewMeasurementForm() {
         <TipCard title='Tips' delay={300}>
           <View className='flex flex-col gap-1'>
             <Text className={cn('text-xs', isDarkColorScheme ? 'text-emerald-500' : 'text-emerald-600')}>
-              • Measure at the same time of day for consistency
+              • Đo cùng lúc vào cùng một thời điểm để đảm bảo tính đồng nhất
             </Text>
             <Text className={cn('text-xs', isDarkColorScheme ? 'text-emerald-500' : 'text-emerald-600')}>
-              • Use a flexible measuring tape
+              • Sử dụng thước đo mềm
             </Text>
             <Text className={cn('text-xs', isDarkColorScheme ? 'text-emerald-500' : 'text-emerald-600')}>
-              • Stand straight and breathe normally while measuring
+              • Đứng thẳng và thở bình thường trong khi đo
             </Text>
           </View>
         </TipCard>

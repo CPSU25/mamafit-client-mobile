@@ -49,8 +49,8 @@ export default function AddressSection({
           {!currentUserProfile?.phoneNumber ? (
             <TouchableOpacity onPress={() => router.push('/setting/account')}>
               <WarningCard
-                title='Oops! No phone number found'
-                description='Please add your phone number first'
+                title='Chưa có số điện thoại'
+                description='Vui lòng thêm số điện thoại trước'
                 hasAnimation={false}
               />
             </TouchableOpacity>
@@ -67,8 +67,8 @@ export default function AddressSection({
       return (
         <TouchableOpacity onPress={() => router.push('/setting/my-addresses/create')}>
           <WarningCard
-            title='Oops! No address found'
-            description='Please add your address first to select this delivery method'
+            title='Chưa có địa chỉ'
+            description='Vui lòng thêm địa chỉ để sử dụng phương thức giao hàng này'
           />
         </TouchableOpacity>
       )
@@ -86,8 +86,8 @@ export default function AddressSection({
           {!currentUserProfile?.phoneNumber ? (
             <TouchableOpacity onPress={() => router.push('/setting/account')}>
               <WarningCard
-                title='Oops! No phone number found'
-                description='Please add your phone number first'
+                title='Chưa có số điện thoại'
+                description='Vui lòng thêm số điện thoại trước'
                 hasAnimation={false}
               />
             </TouchableOpacity>
@@ -97,7 +97,7 @@ export default function AddressSection({
       )
     }
 
-    return <WarningCard title='Oops! No branch found' description='This feature is not available yet' />
+    return <WarningCard title='Chưa có chi nhánh' description='Tính năng này chưa khả dụng' />
   }
 
   return (
@@ -112,11 +112,11 @@ export default function AddressSection({
             size: iconSize,
             color: tabValue === DeliveryMethod.Delivery ? 'PRIMARY' : 'GRAY'
           })}
-          <Text>Delivery</Text>
+          <Text>Giao Hàng</Text>
         </TabsTrigger>
         <TabsTrigger value={DeliveryMethod.PickUp} className='flex-1 flex-row items-center gap-2'>
           {SvgIcon.shop({ size: iconSize, color: tabValue === DeliveryMethod.PickUp ? 'PRIMARY' : 'GRAY' })}
-          <Text>Pick Up</Text>
+          <Text>Tại Cửa Hàng</Text>
         </TabsTrigger>
       </TabsList>
       <TabsContent value='DELIVERY'>{renderAddressContent()}</TabsContent>

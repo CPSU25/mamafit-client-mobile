@@ -525,7 +525,7 @@ export default function ReviewOrderScreen() {
     return (
       <View className='flex items-center justify-center min-h-60 px-6'>
         <MaterialCommunityIcons name='package-variant' size={48} color='#E5E7EB' />
-        <Text className='text-muted-foreground text-center mt-4'>Unsupported order type: {orderType}</Text>
+        <Text className='text-muted-foreground text-center mt-4'>Loại đơn hàng không được hỗ trợ: {orderType}</Text>
       </View>
     )
   }
@@ -553,7 +553,7 @@ export default function ReviewOrderScreen() {
           <TouchableOpacity onPress={handleGoBack}>
             <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
-          <Text className='font-inter-semibold text-xl'>Review Order</Text>
+          <Text className='font-inter-semibold text-xl'>Xem Đơn Hàng</Text>
         </View>
 
         <BottomSheetModalProvider>
@@ -637,7 +637,7 @@ export default function ReviewOrderScreen() {
                   />
 
                   <Text className='text-xs text-muted-foreground px-2 mb-4'>
-                    By clicking &apos;Place Order&apos;, you are agreeing to MamaFit&apos;s General Transaction Terms
+                    Bằng cách nhấn &apos;Đặt Đơn Hàng&apos;, bạn đồng ý với Điều Khoản Giao Dịch Của MamaFit
                   </Text>
                 </Animated.View>
               </View>
@@ -650,13 +650,13 @@ export default function ReviewOrderScreen() {
             >
               <View className='flex flex-col items-end gap-1'>
                 <Text className='font-inter-semibold text-primary'>
-                  <Text className='text-sm'>Total</Text>{' '}
+                  <Text className='text-sm'>Tổng Cộng</Text>{' '}
                   <Text className='underline font-inter-semibold text-sm text-primary'>đ</Text>
                   {totalPaymentNow.toLocaleString('vi-VN')}
                 </Text>
 
                 <Text className='font-inter-medium text-primary text-sm'>
-                  <Text className='text-xs'>Saved</Text>{' '}
+                  <Text className='text-xs'>Đã Tiết Kiệm</Text>{' '}
                   <Text className='underline font-inter-medium text-sm text-primary'>đ</Text>
                   {savedAmount > 0 ? savedAmount.toLocaleString('vi-VN') : '0'}
                 </Text>
@@ -666,7 +666,7 @@ export default function ReviewOrderScreen() {
                 disabled={placePresetOrderMutation.isPending || isLoading}
               >
                 <Text className='font-inter-medium'>
-                  {placePresetOrderMutation.isPending ? 'Placing Order...' : 'Place Order'}
+                  {placePresetOrderMutation.isPending ? 'Đang Đặt...' : 'Đặt Đơn Hàng'}
                 </Text>
               </Button>
             </View>

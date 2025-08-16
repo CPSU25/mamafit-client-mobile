@@ -27,8 +27,8 @@ export default function DiarySettingScreen() {
 
   const sections = [
     {
-      title: 'Basic Information',
-      description: 'Personal details and measurements',
+      title: 'Thông Tin Cơ Bản',
+      description: 'Thông tin cá nhân và số đo',
       icon: SvgIcon.personalCard({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       data: [
         { label: 'Name', value: diaryDetail?.name, icon: 'badge' },
@@ -38,8 +38,8 @@ export default function DiarySettingScreen() {
       ]
     },
     {
-      title: 'Body Measurements',
-      description: 'Current body measurements',
+      title: 'Số Đo Cơ Thể',
+      description: 'Số đo cơ thể hiện tại',
       icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       data: [
         { label: 'Bust', value: diaryDetail?.bust, suffix: ' cm', icon: 'straighten' },
@@ -48,46 +48,46 @@ export default function DiarySettingScreen() {
       ]
     },
     {
-      title: 'Pregnancy Details',
-      description: 'Pregnancy-related information',
+      title: 'Thông Tin Thai Kỳ',
+      description: 'Thông tin thai kỳ',
       icon: SvgIcon.folderFavorite({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       data: [
-        { label: 'Number of Pregnancies', value: diaryDetail?.numberOfPregnancy, icon: 'format-list-numbered' },
-        { label: 'Menstrual Cycle', value: diaryDetail?.averageMenstrualCycle, suffix: ' days', icon: 'schedule' },
+        { label: 'Số Lần Thai Kỳ', value: diaryDetail?.numberOfPregnancy, icon: 'format-list-numbered' },
+        { label: 'Chu Kỳ Kinh Nguyệt', value: diaryDetail?.averageMenstrualCycle, suffix: ' ngày', icon: 'schedule' },
         {
-          label: 'Last Period Date',
+          label: 'Ngày Kỳ Kinh Cuối',
           value: diaryDetail?.firstDateOfLastPeriod
             ? format(new Date(diaryDetail?.firstDateOfLastPeriod), 'MMM dd, yyyy')
             : null,
           icon: 'calendar-today'
         },
         {
-          label: 'Ultrasound Date',
+          label: 'Ngày Siêu Âm',
           value: diaryDetail?.ultrasoundDate
             ? format(new Date(diaryDetail?.ultrasoundDate), 'MMM dd, yyyy')
-            : 'Not set',
+            : 'Không có',
           icon: 'medical-services'
         },
         {
-          label: 'Weeks from Ultrasound',
-          value: diaryDetail?.weeksFromUltrasound ? `${diaryDetail?.weeksFromUltrasound} weeks` : 'Not set',
-          suffix: ' weeks',
+          label: 'Tuần Từ Siêu Âm',
+          value: diaryDetail?.weeksFromUltrasound ? `${diaryDetail?.weeksFromUltrasound} tuần` : 'Không có',
+          suffix: ' tuần',
           icon: 'timeline'
         }
       ]
     },
     {
-      title: 'Record Details',
-      description: 'Creation and modification dates',
+      title: 'Chi Tiết Ghi Nhận',
+      description: 'Ngày tạo và sửa đổi',
       icon: SvgIcon.timeStart({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       data: [
         {
-          label: 'Created',
+          label: 'Ngày Tạo',
           value: diaryDetail?.createdAt ? format(new Date(diaryDetail?.createdAt), 'MMM dd, yyyy') : null,
           icon: 'add-circle'
         },
         {
-          label: 'Last Updated',
+          label: 'Ngày Cập Nhật',
           value: diaryDetail?.updatedAt ? format(new Date(diaryDetail?.updatedAt), 'MMM dd, yyyy') : null,
           icon: 'update'
         }
@@ -102,7 +102,7 @@ export default function DiarySettingScreen() {
           <TouchableOpacity onPress={handleGoBack}>
             <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
-          <Text className='font-inter-semibold text-xl'>Diary Settings</Text>
+          <Text className='font-inter-semibold text-xl'>Cài Đặt Nhật Ký</Text>
         </View>
       </View>
       <View className='bg-muted h-2' />

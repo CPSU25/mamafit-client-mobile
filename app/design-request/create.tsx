@@ -48,7 +48,7 @@ export default function CreateDesignRequest() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>Contact Our Designer</Text>
+        <Text className='font-inter-semibold text-xl'>Liên Hệ Nhà Thiết Kế</Text>
       </View>
 
       <View className='bg-muted h-2' />
@@ -71,7 +71,7 @@ export default function CreateDesignRequest() {
             disabled={placeDesignRequestMutation.isPending || isUploading}
           >
             <Text className='font-inter-medium'>
-              {placeDesignRequestMutation.isPending ? 'Sending...' : 'Send Request'}
+              {placeDesignRequestMutation.isPending ? 'Đang Gửi...' : 'Gửi Yêu Cầu'}
             </Text>
           </Button>
         </View>

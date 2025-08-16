@@ -27,18 +27,18 @@ export default function PregnancyInfoForm() {
       <View className='flex flex-col gap-4'>
         <View className='mx-4'>
           <WarningCard
-            title='Important Information'
+            title='Thông Tin Quan Trọng'
             delay={100}
-            description='This information will assist us in delivering the most precise results and recommendations.'
+            description='Thông tin này sẽ giúp chúng tôi cung cấp kết quả và gợi ý chính xác nhất.'
           />
         </View>
 
         <Animated.View entering={FadeInDown.delay(200)} className='flex flex-col gap-1 px-4'>
           <View className='flex flex-col gap-1'>
-            <Text className='font-inter-semibold'>Pregnancy Details</Text>
+            <Text className='font-inter-semibold'>Chi Tiết Thai Kỳ</Text>
             <Text className='text-muted-foreground text-xs'>
-              Please provide accurate information about your pregnancy to help us calculate important dates and
-              measurements.
+              Vui lòng cung cấp thông tin chính xác về thai kỳ của bạn để giúp chúng tôi tính toán các ngày và số đo
+              quan trọng.
             </Text>
           </View>
 
@@ -47,7 +47,7 @@ export default function PregnancyInfoForm() {
             <DatePicker
               control={control}
               name='firstDateOfLastPeriod'
-              placeholder='First date of last period'
+              placeholder='Ngày Đầu Tiên Của Kỳ Kinh Cuối'
               required
               errors={errors}
             />
@@ -61,7 +61,7 @@ export default function PregnancyInfoForm() {
               name='numberOfPregnancy'
               render={({ field: { onChange, value, ...field } }) => (
                 <Input
-                  placeholder='Number of pregnancy'
+                  placeholder='Số Thai Kỳ'
                   keyboardType='numeric'
                   StartIcon={<MaterialIcons name='numbers' size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
@@ -81,9 +81,9 @@ export default function PregnancyInfoForm() {
         </Animated.View>
         <Animated.View entering={FadeInDown.delay(300)} className='flex flex-col gap-1 px-4'>
           <View className='flex flex-col gap-1'>
-            <Text className='font-inter-semibold'>Body Measurements</Text>
+            <Text className='font-inter-semibold'>Số Đo Cơ Thể</Text>
             <Text className='text-muted-foreground text-xs'>
-              Your current measurements help us track changes throughout your pregnancy.
+              Số đo hiện tại của bạn giúp chúng tôi theo dõi các thay đổi trong suốt thai kỳ của bạn.
             </Text>
           </View>
 
@@ -94,7 +94,7 @@ export default function PregnancyInfoForm() {
               name='bust'
               render={({ field: { onChange, value, ...field } }) => (
                 <Input
-                  placeholder='Bust circumference'
+                  placeholder='Vòng Eo'
                   keyboardType='numeric'
                   StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
@@ -113,7 +113,7 @@ export default function PregnancyInfoForm() {
               name='waist'
               render={({ field: { onChange, value, ...field } }) => (
                 <Input
-                  placeholder='Waist circumference'
+                  placeholder='Vòng Mông'
                   keyboardType='numeric'
                   StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
@@ -132,7 +132,7 @@ export default function PregnancyInfoForm() {
               name='hip'
               render={({ field: { onChange, value, ...field } }) => (
                 <Input
-                  placeholder='Hip circumference'
+                  placeholder='Vòng Mông'
                   keyboardType='numeric'
                   StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
@@ -151,16 +151,16 @@ export default function PregnancyInfoForm() {
 
         <Animated.View entering={FadeInDown.delay(400)} className='px-4'>
           <View className='flex flex-col gap-1'>
-            <Text className='font-inter-semibold'>Additional Details</Text>
+            <Text className='font-inter-semibold'>Chi Tiết Thêm</Text>
             <Text className='text-muted-foreground text-xs'>
-              Provide extra information to help us better understand your pregnancy journey.
+              Cung cấp thông tin thêm để giúp chúng tôi hiểu rõ hơn về chuyển động thai kỳ của bạn.
             </Text>
           </View>
 
           <Accordion type='multiple' collapsible className='w-full max-w-sm native:max-w-md pb-10'>
             <AccordionItem value='menstrual-cycle'>
               <AccordionTrigger>
-                <Text className='font-inter-medium'>Menstrual Cycle</Text>
+                <Text className='font-inter-medium'>Chu Kỳ Kinh</Text>
               </AccordionTrigger>
               <AccordionContent>
                 <View className='flex flex-col gap-4'>
@@ -170,7 +170,7 @@ export default function PregnancyInfoForm() {
                     name='averageMenstrualCycle'
                     render={({ field: { onChange, value, ...field } }) => (
                       <Input
-                        placeholder='Average cycle length'
+                        placeholder='Chiều Dài Chu Kỳ Kinh Trung Bình'
                         keyboardType='numeric'
                         StartIcon={<Feather name='repeat' size={20} color={PRIMARY_COLOR.LIGHT} />}
                         {...field}
@@ -180,7 +180,7 @@ export default function PregnancyInfoForm() {
                           'bg-background border-input',
                           isFormError(errors, 'averageMenstrualCycle') ? className : ''
                         )}
-                        EndIcon={<Text className='text-muted-foreground native:text-sm'>days</Text>}
+                        EndIcon={<Text className='text-muted-foreground native:text-sm'>ngày</Text>}
                       />
                     )}
                   />
@@ -192,7 +192,7 @@ export default function PregnancyInfoForm() {
             </AccordionItem>
             <AccordionItem value='ultrasound'>
               <AccordionTrigger>
-                <Text className='font-inter-medium'>Ultrasound</Text>
+                <Text className='font-inter-medium'>Siêu Âm</Text>
               </AccordionTrigger>
               <AccordionContent>
                 <View className='flex flex-col gap-4'>
@@ -202,7 +202,7 @@ export default function PregnancyInfoForm() {
                     name='weeksFromUltrasound'
                     render={({ field: { onChange, value, ...field } }) => (
                       <Input
-                        placeholder='Weeks from ultrasound'
+                        placeholder='Tuần Siêu Âm'
                         keyboardType='numeric'
                         StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                         {...field}
@@ -212,7 +212,7 @@ export default function PregnancyInfoForm() {
                           'bg-background border-input',
                           isFormError(errors, 'weeksFromUltrasound') ? className : ''
                         )}
-                        EndIcon={<Text className='text-muted-foreground native:text-sm'>weeks</Text>}
+                        EndIcon={<Text className='text-muted-foreground native:text-sm'>tuần</Text>}
                       />
                     )}
                   />
@@ -224,7 +224,7 @@ export default function PregnancyInfoForm() {
                   <DatePicker
                     control={control}
                     name='ultrasoundDate'
-                    placeholder='Ultrasound date'
+                    placeholder='Ngày Siêu Âm'
                     required
                     errors={errors}
                   />
@@ -236,7 +236,7 @@ export default function PregnancyInfoForm() {
                   {/* <DatePicker
                     control={control}
                     name='dueDateFromUltrasound'
-                    placeholder='Due date from ultrasound'
+                    placeholder='Ngày Dự Đoán'
                     required
                     errors={errors}
                   />

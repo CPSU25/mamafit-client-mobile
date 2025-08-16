@@ -32,12 +32,12 @@ const steps = [
   { id: 1, name: 'Email', field: ['email', 'phoneNumber'] },
   {
     id: 2,
-    name: 'Code verification',
+    name: 'Xác Thực OTP',
     field: ['code']
   },
   {
     id: 3,
-    name: 'Password',
+    name: 'Mật Khẩu',
     field: ['password']
   }
 ]
@@ -163,7 +163,7 @@ export default function RegisterStep({ currentStep, setCurrentStep, setTabValue 
     default:
       return (
         <View>
-          <Text>Something went wrong</Text>
+          <Text>Có lỗi xảy ra</Text>
         </View>
       )
   }
@@ -189,7 +189,7 @@ function SendCode({ control, errors, isSendingCode, next, bottom }: SendCodeProp
             {...field}
             value={value}
             onChangeText={onChange}
-            placeholder='Phone number'
+            placeholder='Số Điện Thoại'
             keyboardType='phone-pad'
             StartIcon={<Feather name='phone' size={20} color={PRIMARY_COLOR.LIGHT} />}
             autoFocus
@@ -216,7 +216,7 @@ function SendCode({ control, errors, isSendingCode, next, bottom }: SendCodeProp
       {isFormError(errors, 'email') && <FieldError message={errors.email?.message || ''} />}
       <View className='flex-1' />
       <Button onPress={next} disabled={isSendingCode} style={{ marginBottom: bottom }}>
-        <Text className='font-inter-medium'>{isSendingCode ? 'Sending...' : 'Continue'}</Text>
+        <Text className='font-inter-medium'>{isSendingCode ? 'Đang Gửi...' : 'Tiếp Tục'}</Text>
       </Button>
     </View>
   )
@@ -250,7 +250,7 @@ function VerifyCode({
 }: VerifyCodeProps) {
   return (
     <View className='flex-1 flex flex-col mt-6'>
-      <Text className='text-center mb-4'>We have just sent 6-digit code to {email}, enter it below:</Text>
+      <Text className='text-center mb-4'>Chúng tôi vừa gửi mã 6 chữ số đến {email}, nhập nó bên dưới:</Text>
       <Controller
         control={control}
         name='code'
@@ -297,11 +297,11 @@ function VerifyCode({
         )}
       />
       <Text className='text-center mt-8' onPress={prev}>
-        Wrong email? <Text className='text-primary font-inter-semibold'>Send to different email</Text>
+        Sai email? <Text className='text-primary font-inter-semibold'>Gửi đến email khác</Text>
       </Text>
       <View className='flex-1' />
       <Button onPress={handleResendCode} disabled={!isReady || isVerifyingCode} style={{ marginBottom: bottom }}>
-        <Text className='font-inter-medium'>{isReady ? 'Send again' : `Resend in (${timeLeft}s)`} </Text>
+        <Text className='font-inter-medium'>{isReady ? 'Gửi lại' : `Gửi lại trong (${timeLeft}s)`} </Text>
       </Button>
     </View>
   )
@@ -335,7 +335,7 @@ function CreatePassword({
             {...field}
             value={value}
             onChangeText={onChange}
-            placeholder='Enter your password'
+            placeholder='Nhập mật khẩu'
             StartIcon={<Feather name='lock' size={20} color={PRIMARY_COLOR.LIGHT} />}
             autoFocus
             spellCheck={false}
@@ -347,7 +347,7 @@ function CreatePassword({
       {isFormError(errors, 'password') && <FieldError message={errors.password?.message || ''} />}
       <View className='flex-1' />
       <Button onPress={handleSubmit(onSubmit)} disabled={isCompletingRegister} style={{ marginBottom: bottom }}>
-        <Text className='font-inter-medium'>{isCompletingRegister ? 'Creating...' : 'Create account'}</Text>
+        <Text className='font-inter-medium'>{isCompletingRegister ? 'Đang Tạo...' : 'Tạo Tài Khoản'}</Text>
       </Button>
     </View>
   )

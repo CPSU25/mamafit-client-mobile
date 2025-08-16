@@ -36,7 +36,7 @@ export default function DeliveryInformation({
         <>
           <View className='px-3 py-2 flex-row items-center gap-2'>
             <MaterialCommunityIcons name='truck-fast' size={16} color='#059669' />
-            <Text className='font-inter-medium text-sm'>Shipping Information</Text>
+            <Text className='font-inter-medium text-sm'>Mã Vận Đơn</Text>
           </View>
 
           <View className='flex-1 px-3 pb-3'>
@@ -49,7 +49,7 @@ export default function DeliveryInformation({
 
       <View className='px-3 py-2 flex-row items-center gap-2'>
         <MaterialCommunityIcons name='map-marker' size={16} color='#059669' />
-        <Text className='font-inter-medium text-sm'>Delivery Information</Text>
+        <Text className='font-inter-medium text-sm'>Thông Tin Giao Hàng</Text>
       </View>
 
       <View className='flex-1 px-3 pb-3'>
@@ -59,11 +59,11 @@ export default function DeliveryInformation({
               <Text className='text-sm font-inter-medium'>
                 {fullName}{' '}
                 <Text className='text-muted-foreground text-xs'>
-                  {phoneNumber ? formatVnPhone(phoneNumber) : '(missing phone number)'}
+                  {phoneNumber ? formatVnPhone(phoneNumber) : '(thiếu số điện thoại)'}
                 </Text>
               </Text>
               <View className='bg-emerald-50 rounded-lg px-2 py-0.5'>
-                <Text className='text-xs font-inter-medium text-emerald-600 text-center'>Ship</Text>
+                <Text className='text-xs font-inter-medium text-emerald-600 text-center'>Giao hàng</Text>
               </View>
             </View>
             <Text className='text-xs text-muted-foreground'>
@@ -77,7 +77,7 @@ export default function DeliveryInformation({
             <View className='flex-row items-center gap-2 mb-0.5'>
               <Text className='text-sm font-inter-medium'>{branch.name}</Text>
               <View className='bg-emerald-50 rounded-lg px-2 py-0.5'>
-                <Text className='text-xs font-inter-medium text-emerald-600 text-center'>Pickup</Text>
+                <Text className='text-xs font-inter-medium text-emerald-600 text-center'>Nhận tại cửa hàng</Text>
               </View>
             </View>
             <Text className='text-xs text-muted-foreground'>
@@ -88,7 +88,7 @@ export default function DeliveryInformation({
               onPress={() => openInMaps(branch.latitude, branch.longitude)}
             >
               <Feather name='map' size={16} color='#059669' />
-              <Text className='text-sm text-emerald-600 font-inter-medium'>Open In Maps</Text>
+              <Text className='text-sm text-emerald-600 font-inter-medium'>Mở Google Maps</Text>
             </TouchableOpacity>
           </>
         ) : null}

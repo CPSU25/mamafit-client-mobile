@@ -47,106 +47,106 @@ export const ORDERED_TYPES = ['TEXT', 'IMAGE', 'PATTERN']
 export const ORDER_STATUS_TYPES: OrderStatusType[] = [
   {
     id: 1,
-    label: 'To Pay',
+    label: 'Chờ Thanh Toán',
     value: OrderStatus.Created,
     urlValue: 'to-pay',
-    title: 'Waiting For Payment',
+    title: 'Đang Chờ Thanh Toán',
     description:
-      'Your order has been placed successfully and is waiting for you to complete the payment so we can begin preparing it.'
+      'Đơn hàng của bạn đã được đặt thành công và đang chờ bạn hoàn tất thanh toán để chúng tôi bắt đầu chuẩn bị.'
   },
   {
     id: 2,
-    label: 'Confirmed',
+    label: 'Xác Nhận',
     value: OrderStatus.Confirmed,
     urlValue: 'to-make',
-    title: 'Order Confirmed',
+    title: 'Đơn Hàng Đã Xác Nhận',
     description:
-      'We have received your payment and confirmed your order. Our team is getting everything ready to start making it.'
+      'Chúng tôi đã nhận được thanh toán của bạn và xác nhận đơn hàng. Đội ngũ của chúng tôi đang chuẩn bị mọi thứ để tiến hành sản xuất.'
   },
   {
     id: 4,
-    label: 'In Progress',
+    label: 'Đang Xử Lý',
     value: OrderStatus.InProgress,
     urlValue: 'in-progress',
-    title: 'In Progress',
+    title: 'Đang Xử Lý',
     description:
-      'Your order is now in progress. Our team is carefully working on it to make sure everything meets our quality standards.'
+      'Đơn hàng của bạn đang được xử lý. Đội ngũ của chúng tôi đang làm việc cẩn thận để đảm bảo mọi thứ đạt chuẩn chất lượng.'
   },
   {
     id: 6,
-    label: 'To Pay Rest',
+    label: 'Thanh Toán Cọc',
     value: OrderStatus.AwaitingPaidRest,
     urlValue: 'to-pay-rest',
-    title: 'Waiting For Remaining Payment',
+    title: 'Đang Chờ Thanh Toán Còn Lại',
     description:
-      'Your order has passed all quality checks. Please pay the remaining balance so we can prepare it for shipping to you.'
+      'Đơn hàng của bạn đã vượt qua tất cả kiểm tra chất lượng. Vui lòng thanh toán phần còn lại để chúng tôi chuẩn bị giao hàng cho bạn.'
   },
   {
     id: 7,
-    label: 'To Pay Warranty',
+    label: 'Thanh Toán Bảo Hành',
     value: OrderStatus.AwaitingPaidWarranty,
     urlValue: 'to-pay-warranty',
-    title: 'Waiting For Warranty Payment',
-    description: 'Please complete the payment so we can continue with the warranty process.'
+    title: 'Đang Chờ Thanh Toán Bảo Hành',
+    description: 'Vui lòng hoàn tất thanh toán để chúng tôi tiếp tục quy trình bảo hành.'
   },
   {
     id: 8,
-    label: 'Packaging',
+    label: 'Đang Đóng Gói',
     value: OrderStatus.Packaging,
     urlValue: 'packaging',
-    title: 'Packaging',
-    description: 'Your order is being carefully packaged to ensure it arrives safely and in perfect condition.'
+    title: 'Đang Đóng Gói',
+    description: 'Đơn hàng của bạn đang được đóng gói cẩn thận để đảm bảo đến tay bạn an toàn và nguyên vẹn.'
   },
   {
     id: 9,
-    label: 'To Deliver',
+    label: 'Đang Giao Hàng',
     value: OrderStatus.Delevering,
     urlValue: 'to-deliver',
-    title: 'Out For Delivery',
-    description: 'Your packaged order is now with the courier and on its way to your delivery address.'
+    title: 'Đang Giao Hàng',
+    description: 'Đơn hàng đã được đóng gói và đang trên đường giao tới địa chỉ của bạn.'
   },
   {
     id: 10,
-    label: 'To Factory',
+    label: 'Đang Lấy Hàng',
     value: OrderStatus.PickUpInProgress,
     urlValue: 'pick-up-in-progress',
-    title: 'To Factory',
-    description: 'Your order is being prepared for pickup and will be sent to the factory for warranty service.'
+    title: 'Đang Chuẩn Bị Lấy Hàng',
+    description: 'Đơn hàng của bạn đang được chuẩn bị để gửi đến nhà máy cho dịch vụ bảo hành.'
   },
   {
     id: 11,
-    label: 'To Pick Up',
+    label: 'Chờ Lấy Hàng',
     value: OrderStatus.ReceivedAtBranch,
     urlValue: 'received-at-branch',
-    title: 'To Pick Up',
-    description: 'Your order has arrived at the branch and is ready for you to collect at your convenience.'
+    title: 'Chờ Lấy Hàng',
+    description: 'Đơn hàng đã đến chi nhánh và sẵn sàng để bạn nhận theo thời gian thuận tiện.'
   },
   {
     id: 12,
-    label: 'Completed',
+    label: 'Đã Nhận Hàng',
     value: OrderStatus.Completed,
     urlValue: 'to-rate',
-    title: 'Order Completed',
+    title: 'Đã Hoàn Thành Đơn Hàng',
     description:
-      'Your order has been successfully delivered. Please confirm you have received it and share your feedback with us.'
+      'Đơn hàng của bạn đã được giao thành công. Vui lòng xác nhận đã nhận và chia sẻ phản hồi với chúng tôi.'
   },
   {
     id: 13,
-    label: 'Cancelled',
+    label: 'Đã Hủy',
     value: OrderStatus.Cancelled,
     urlValue: 'cancelled',
-    title: 'Order Cancelled',
+    title: 'Đơn Hàng Đã Hủy',
     description:
-      'Your order has been cancelled. If you have any questions or would like to place it again, please contact our support team.'
+      'Đơn hàng của bạn đã bị hủy. Nếu cần hỗ trợ hoặc muốn đặt lại, vui lòng liên hệ bộ phận chăm sóc khách hàng.'
   },
   {
     id: 14,
-    label: 'Returned',
+    label: 'Đã Trả Hàng',
     value: OrderStatus.Returned,
     urlValue: 'returned',
-    title: 'Order Returned',
+    title: 'Đơn Hàng Đã Trả',
     description:
-      'Your order has been returned to us. Please reach out to our support team if you need assistance or more details.'
+      'Đơn hàng của bạn đã được trả lại cho chúng tôi. Vui lòng liên hệ bộ phận hỗ trợ nếu cần trợ giúp hoặc thêm thông tin.'
   }
 ]
 

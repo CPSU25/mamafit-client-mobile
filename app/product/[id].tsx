@@ -53,7 +53,7 @@ export default function ProductDetailScreen() {
           <Feather name='shopping-bag' size={24} color='white' />
         </TouchableOpacity>
         <View className='flex flex-col gap-2'>
-          <Text className='text-xs text-muted-foreground px-4 pt-4'>{variations.length} variations available</Text>
+          <Text className='text-xs text-muted-foreground px-4 pt-4'>{variations.length} biến thể có sẵn</Text>
           <FlatList
             data={variations}
             renderItem={({ item }) => (
@@ -75,7 +75,7 @@ export default function ProductDetailScreen() {
               <Text className='text-primary underline font-inter-medium text-lg'>đ</Text>139.400
             </Text>
             <View className='flex flex-row items-center gap-2'>
-              <Text className='font-inter-semibold text-[10px]'>26,6k Sold</Text>
+              <Text className='font-inter-semibold text-[10px]'>26,6k Đã Bán</Text>
               <Feather name='heart' size={16} color='lightgray' />
             </View>
           </View>
@@ -87,9 +87,9 @@ export default function ProductDetailScreen() {
             <Text className='font-inter-medium text-lg'>5.0</Text>
             <AntDesign name='star' size={16} color='orange' />
             <Text className='font-inter-medium text-sm flex-1'>
-              Product Ratings <Text className='text-muted-foreground text-xs'>(100)</Text>
+              Đánh Giá Sản Phẩm <Text className='text-muted-foreground text-xs'>(100)</Text>
             </Text>
-            <Text className='text-muted-foreground text-xs'>View All</Text>
+            <Text className='text-muted-foreground text-xs'>Xem Tất Cả</Text>
             <Feather name='chevron-right' size={16} color='lightgray' />
           </TouchableOpacity>
           <Separator />
@@ -98,7 +98,7 @@ export default function ProductDetailScreen() {
           <Feedback />
           <View className='bg-muted h-2' />
           <View className='px-4'>
-            <Text className='font-inter-medium text-sm'>Description</Text>
+            <Text className='font-inter-medium text-sm'>Mô Tả</Text>
             <Text className='text-muted-foreground text-sm my-2' numberOfLines={isDescriptionExpanded ? undefined : 3}>
               THÔNG TIN SẢN PHẨM: Chất liệu: 100% Cotton Màu sắc: Đen Size áo: S/ M Video HƯỚNG DẪN BẢO QUẢN SẢN PHẨM: -
               Khuyển khích giặt bằng tay để giữ được form - Không giặt chung với quần áo sáng màu Không sử dụng nước tẩy
@@ -114,7 +114,7 @@ export default function ProductDetailScreen() {
             onPress={toggleDescription}
             className='flex flex-row justify-center items-end gap-1 w-full mb-28'
           >
-            <Text className='text-sm'>{isDescriptionExpanded ? 'See Less' : 'See More'}</Text>
+            <Text className='text-sm'>{isDescriptionExpanded ? 'Xem Ít Hơn' : 'Xem Nhiều Hơn'}</Text>
             <Feather name={isDescriptionExpanded ? 'chevron-up' : 'chevron-down'} size={20} color='lightgray' />
           </TouchableOpacity>
         </View>
@@ -127,15 +127,15 @@ export default function ProductDetailScreen() {
       >
         <TouchableOpacity className='flex flex-col items-center gap-1 w-1/4'>
           <Feather name='message-circle' size={20} color={isDarkColorScheme ? 'white' : 'black'} />
-          <Text className={cn('text-xs', isDarkColorScheme && 'text-white')}>Chat Now</Text>
+          <Text className={cn('text-xs', isDarkColorScheme && 'text-white')}>Trò Chuyện Ngay</Text>
         </TouchableOpacity>
         <Separator orientation='vertical' className='h-2/3' />
         <TouchableOpacity className='flex flex-col items-center gap-1 w-1/4 py-2'>
           <Feather name='shopping-bag' size={20} color={isDarkColorScheme ? 'white' : 'black'} />
-          <Text className={cn('text-xs', isDarkColorScheme && 'text-white')}>Add to Cart</Text>
+          <Text className={cn('text-xs', isDarkColorScheme && 'text-white')}>Thêm Vào Giỏ Hàng</Text>
         </TouchableOpacity>
         <TouchableOpacity className='flex flex-col items-center gap-1 w-2/4 bg-primary py-2'>
-          <Text className='text-white text-sm font-inter-medium'>Buy Now</Text>
+          <Text className='text-white text-sm font-inter-medium'>Mua Ngay</Text>
           <Text className='text-white font-inter-semibold text-xl'>
             <Text className='text-white underline font-inter-medium'>đ</Text>139.400
           </Text>
@@ -162,7 +162,7 @@ function Feedback() {
           <AntDesign name='star' size={12} color='orange' key={item} />
         ))}
       </View>
-      <Text className='text-muted-foreground text-xs'>Variation: White, S</Text>
+      <Text className='text-muted-foreground text-xs'>Biến Thể: Trắng, S</Text>
       <Text numberOfLines={2} className='text-xs'>
         Áo mềm chất ổn, form rộng nha, phù hợp với các bạn cao to mặc vừa che khuyết điểm tốt vừa có gu
       </Text>

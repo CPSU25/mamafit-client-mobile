@@ -30,28 +30,28 @@ interface OrderStatusUI {
 const statuses: OrderStatusUI[] = [
   {
     id: 1,
-    name: 'To Pay',
+    name: 'Chờ Xác Nhận',
     url: '/order/status/to-pay',
     value: OrderStatus.Created,
     icon: SvgIcon.toPay({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 2,
-    name: 'To Ship',
+    name: 'Chờ Lấy Hàng',
     url: '/order/status/packaging',
     value: OrderStatus.Packaging,
     icon: SvgIcon.toShip({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 3,
-    name: 'To Receive',
+    name: 'Chờ Giao Hàng',
     url: '/order/status/to-deliver',
     value: OrderStatus.Delevering,
     icon: SvgIcon.toReceive({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   },
   {
     id: 4,
-    name: 'To Rate',
+    name: 'Đánh Giá',
     url: '/order/status/to-rate',
     value: OrderStatus.Completed,
     icon: SvgIcon.toRate({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
@@ -79,10 +79,10 @@ function OrderStage({
         <View
           className={cn(
             'w-5 h-5 rounded-full absolute bg-red-600 justify-center items-center z-10',
-            status.id === 1 && 'top-1 -right-1',
-            status.id === 2 && 'top-1 -right-1',
-            status.id === 3 && 'top-1 right-1.5',
-            status.id === 4 && 'top-1 -right-1'
+            status.id === 1 && 'top-1 right-4',
+            status.id === 2 && 'top-1 right-4',
+            status.id === 3 && 'top-1 right-5',
+            status.id === 4 && 'top-1 right-0'
           )}
         >
           <Text className='text-xs text-white font-inter-medium'>{orderCount}</Text>
@@ -135,19 +135,19 @@ export default function ProfileScreen() {
           ) : (
             <View className='flex flex-row items-center gap-2'>
               <Button className='w-32' variant='outline' onPress={() => router.push('/auth?focus=sign-in')} size='sm'>
-                <Text className='font-inter-medium'>Sign In</Text>
+                <Text className='font-inter-medium'>Đăng Nhập</Text>
               </Button>
               <Button className='w-32' variant='default' onPress={() => router.push('/auth?focus=register')} size='sm'>
-                <Text className='font-inter-medium'>Register</Text>
+                <Text className='font-inter-medium'>Đăng Ký</Text>
               </Button>
             </View>
           )}
         </View>
         <View className='bg-muted h-2' />
         <View className='flex flex-row items-baseline justify-between p-4 mb-2'>
-          <Text className='font-inter-medium'>My Purchases</Text>
+          <Text className='font-inter-medium'>Đơn Mua</Text>
           <TouchableOpacity className='flex flex-row items-start' onPress={() => router.push(`/order/status/to-rate`)}>
-            <Text className='text-xs text-muted-foreground mr-0.5'>View Purchase History</Text>
+            <Text className='text-xs text-muted-foreground mr-0.5'>Xem Lịch Sử Mua Hàng</Text>
             <Feather name='chevron-right' size={18} color='lightgray' />
           </TouchableOpacity>
         </View>
@@ -163,7 +163,7 @@ export default function ProfileScreen() {
 
         <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/profile/appointment')}>
           <Feather name='calendar' size={20} color={PRIMARY_COLOR.LIGHT} />
-          <Text className='font-inter-medium ml-2.5'>My Appointments</Text>
+          <Text className='font-inter-medium ml-3.5'>Lịch</Text>
           <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
         </TouchableOpacity>
 
@@ -171,7 +171,15 @@ export default function ProfileScreen() {
 
         <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/order/warranty/create')}>
           <Feather name='grid' size={20} color={PRIMARY_COLOR.LIGHT} />
-          <Text className='font-inter-medium ml-2.5'>MamaFit Services</Text>
+          <Text className='font-inter-medium ml-3.5'>Dịch Vụ Bảo Hành</Text>
+          <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
+        </TouchableOpacity>
+
+        <Separator />
+
+        <TouchableOpacity className='flex-row items-center p-4'>
+          <Feather name='refresh-cw' size={20} color={PRIMARY_COLOR.LIGHT} />
+          <Text className='font-inter-medium ml-3.5'>Yêu Cầu Trả Hàng</Text>
           <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
         </TouchableOpacity>
 
@@ -179,7 +187,7 @@ export default function ProfileScreen() {
 
         <Pressable className='flex-row items-center p-4' onPress={toggleColorScheme}>
           <Feather name='moon' size={20} color={PRIMARY_COLOR.LIGHT} />
-          <Text className='font-inter-medium ml-2.5 flex-1'>Dark Mode</Text>
+          <Text className='font-inter-medium ml-3.5 flex-1'>Chế Độ Tối</Text>
           <Switch checked={checked} onCheckedChange={toggleColorScheme} />
         </Pressable>
       </ScrollView>

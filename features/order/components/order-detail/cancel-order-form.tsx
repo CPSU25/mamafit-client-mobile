@@ -20,7 +20,7 @@ export default function CancelOrderForm() {
           {...field}
           value={value}
           onChangeText={onChange}
-          placeholder='Reason'
+          placeholder='Lý Do'
           StartIcon={<Feather name='alert-triangle' size={20} color={PRIMARY_COLOR.LIGHT} />}
           autoFocus
           spellCheck={false}

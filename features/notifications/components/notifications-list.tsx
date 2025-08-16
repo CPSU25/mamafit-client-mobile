@@ -78,7 +78,7 @@ export default function NotificationsList() {
         ) : (
           <View className='flex flex-1 items-center px-4 mt-20'>
             {SvgIcon.bell({ size: ICON_SIZE.EXTRA_LARGE, color: 'GRAY' })}
-            <Text className='text-muted-foreground text-sm mt-2'>You don&apos;t have any notifications yet.</Text>
+            <Text className='text-muted-foreground text-sm mt-2'>Bạn chưa có thông báo nào.</Text>
           </View>
         )
       }

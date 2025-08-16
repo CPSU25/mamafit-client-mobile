@@ -34,15 +34,15 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
     <Card style={styles.container}>
       <View className='flex-row items-center px-3 py-2'>
         <MaterialCommunityIcons className='mr-2' name='shield' size={16} color='#2563eb' />
-        <Text className='font-inter-medium text-sm mr-1.5'>Warranty Information</Text>
+        <Text className='font-inter-medium text-sm mr-1.5'>Thông Tin Bảo Hành</Text>
 
         {warrantyRequestDetail?.warrantyRequest?.requestType === 'FEE' ? (
           <View className='px-2 bg-rose-50 border border-rose-100 rounded-lg'>
-            <Text className='text-xs font-inter-medium text-rose-600'>Paid Service</Text>
+            <Text className='text-xs font-inter-medium text-rose-600'>Có Phí</Text>
           </View>
         ) : (
           <View className='px-2 bg-emerald-50 border border-emerald-100 rounded-lg'>
-            <Text className='text-xs font-inter-medium text-emerald-600'>Free Service</Text>
+            <Text className='text-xs font-inter-medium text-emerald-600'>Miễn Phí</Text>
           </View>
         )}
       </View>
@@ -51,18 +51,18 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
         <View className={cn('gap-1.5 px-3', !isSameOrder && 'pb-3')}>
           {isSameOrder ? (
             <View className='flex-row items-start gap-2'>
-              <Text className='flex-1 text-xs text-muted-foreground/80'>Order Number</Text>
+              <Text className='flex-1 text-xs text-muted-foreground/80'>Mã Đơn</Text>
               <Text className='text-foreground/80 text-xs'>#{warrantyRequestDetail?.originalOrders[0]?.code}</Text>
             </View>
           ) : null}
 
           <View className='flex-row items-center gap-2'>
-            <Text className='flex-1 text-xs text-muted-foreground/80'>Request Number</Text>
+            <Text className='flex-1 text-xs text-muted-foreground/80'>Mã Yêu Cầu</Text>
             <Text className='text-foreground/80 text-xs'>#{warrantyRequestDetail?.warrantyRequest?.sku}</Text>
           </View>
 
           <View className='flex-row items-center gap-2'>
-            <Text className='flex-1 text-xs text-muted-foreground/80'>Status</Text>
+            <Text className='flex-1 text-xs text-muted-foreground/80'>Trạng Thái</Text>
             <Text className='text-xs px-2 py-0.5 font-inter-medium rounded-lg' style={{ color, backgroundColor }}>
               {text}
             </Text>
@@ -70,7 +70,7 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
 
           {warrantyRequestDetail?.warrantyRequest?.requestType === 'FEE' ? (
             <View className='flex-row items-center gap-2'>
-              <Text className='flex-1 text-xs text-muted-foreground/80'>Total Fee</Text>
+              <Text className='flex-1 text-xs text-muted-foreground/80'>Tổng Phí</Text>
               <Text className='text-xs px-2 py-0.5 font-inter-medium rounded-lg'>
                 {warrantyRequestDetail?.warrantyRequest?.totalFee
                   ? `đ${warrantyRequestDetail?.warrantyRequest?.totalFee.toLocaleString('vi-VN')}`
@@ -80,7 +80,7 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
           ) : null}
 
           <View className='flex-row items-center gap-2'>
-            <Text className='flex-1 text-xs text-muted-foreground/80'>Submitted At</Text>
+            <Text className='flex-1 text-xs text-muted-foreground/80'>Ngày Gửi</Text>
             <Text className='text-foreground/80 text-xs'>
               {formatWarrantyDate(warrantyRequestDetail?.warrantyRequest.createdAt)}
             </Text>
@@ -98,7 +98,7 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
               className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-2 bg-blue-600'
             >
               <Feather name='link' size={16} color='white' />
-              <Text className='text-sm text-white font-inter-medium'>Go To Order</Text>
+              <Text className='text-sm text-white font-inter-medium'>Xem Đơn</Text>
             </TouchableOpacity>
           </View>
         </>

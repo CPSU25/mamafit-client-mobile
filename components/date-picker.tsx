@@ -25,7 +25,7 @@ interface DatePickerProps<T extends FieldValues> {
 export default function DatePicker<T extends FieldValues>({
   control,
   name,
-  placeholder = 'Select date',
+  placeholder = 'Chọn ngày',
   label,
   errors,
   required = false,

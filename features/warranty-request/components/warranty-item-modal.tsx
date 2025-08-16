@@ -43,9 +43,9 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
             <View className='gap-2'>
               <View className='flex-row items-center gap-4'>
                 <View className='flex-1'>
-                  <Text className='font-inter-semibold'>Order Details</Text>
+                  <Text className='font-inter-semibold'>Chi Tiết Đơn Hàng</Text>
                   <Text className='text-muted-foreground text-xs' numberOfLines={1}>
-                    Reference to the original order
+                    Tham Chiếu Đến Đơn Hàng Gốc
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -60,7 +60,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
               <View className='gap-1 p-3 rounded-2xl border border-border bg-muted/20'>
                 <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='package-variant' size={16} color='#6b7280' />
-                  <Text className='text-xs text-muted-foreground'>Original Order Number</Text>
+                  <Text className='text-xs text-muted-foreground'>Mã Đơn Gốc</Text>
                 </View>
                 <Text className='text-sm font-inter-medium'>#{warrantyItem.parentOrder?.code}</Text>
               </View>
@@ -68,10 +68,8 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
 
             <View className='gap-2'>
               <View>
-                <Text className='font-inter-semibold'>Warranty Details</Text>
-                <Text className='text-muted-foreground text-xs'>
-                  Details of the warranty provided for this request.
-                </Text>
+                <Text className='font-inter-semibold'>Chi Tiết Bảo Hành</Text>
+                <Text className='text-muted-foreground text-xs'>Chi Tiết bảo hành được cung cấp cho yêu cầu này.</Text>
               </View>
 
               {/* Estimated Time & Warranty Round */}
@@ -79,7 +77,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                 <View className='flex-1 gap-1 p-3 rounded-2xl border border-border'>
                   <View className='flex-row items-center gap-2'>
                     <MaterialCommunityIcons name='clock-outline' size={16} color='#6b7280' />
-                    <Text className='text-xs text-muted-foreground'>Estimated Time</Text>
+                    <Text className='text-xs text-muted-foreground'>Thời Gian Ước Tính</Text>
                   </View>
                   <Text className='text-sm font-inter-medium'>
                     {warrantyItem.warrantyRequestItems?.estimateTime
@@ -90,7 +88,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                 <View className='gap-1 p-3 rounded-2xl border border-border bg-muted/20'>
                   <View className='flex-row items-center gap-2'>
                     <MaterialCommunityIcons name='numeric' size={16} color='#6b7280' />
-                    <Text className='text-xs text-muted-foreground'>Round</Text>
+                    <Text className='text-xs text-muted-foreground'>Số Lần</Text>
                   </View>
                   <Text className='text-sm font-inter-medium'>{warrantyItem?.warrantyRequestItems?.warrantyRound}</Text>
                 </View>
@@ -99,7 +97,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
               <View className='gap-1 p-3 rounded-2xl bg-emerald-50 border border-emerald-100'>
                 <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='cash' size={16} color='#059669' />
-                  <Text className='text-xs text-emerald-600'>Fee</Text>
+                  <Text className='text-xs text-emerald-600'>Phí</Text>
                 </View>
                 <Text className='text-xs font-inter-medium text-emerald-600'>
                   đ
@@ -113,7 +111,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                 <View className='flex-1 gap-1 p-3 rounded-2xl border border-border bg-muted/20'>
                   <View className='flex-row items-center gap-2'>
                     <MaterialCommunityIcons name='progress-clock' size={16} color='#6b7280' />
-                    <Text className='text-xs text-muted-foreground'>Status</Text>
+                    <Text className='text-xs text-muted-foreground'>Trạng Thái</Text>
                   </View>
                   <Text className='text-sm font-inter-medium'>{warrantyItem?.warrantyRequestItems?.status}</Text>
                 </View>
@@ -121,7 +119,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                   <View className='flex-1 gap-1 p-3 rounded-2xl border border-border bg-muted/20'>
                     <View className='flex-row items-center gap-2'>
                       <MaterialCommunityIcons name='truck-fast-outline' size={16} color='#6b7280' />
-                      <Text className='text-xs text-muted-foreground'>Tracking Code</Text>
+                      <Text className='text-xs text-muted-foreground'>Mã Vận Đơn</Text>
                     </View>
                     <Text className='text-sm font-inter-medium'>
                       {warrantyItem?.warrantyRequestItems?.trackingCode}
@@ -133,7 +131,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
               <View className='gap-1 rounded-2xl border border-border p-3 bg-muted/20'>
                 <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='card-text-outline' size={16} color='#6b7280' />
-                  <Text className='text-xs text-muted-foreground'>Description</Text>
+                  <Text className='text-xs text-muted-foreground'>Mô Tả</Text>
                 </View>
                 <Text className='text-sm'>{warrantyItem.warrantyRequestItems?.description}</Text>
               </View>
@@ -141,7 +139,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
               <View className='rounded-2xl border border-border bg-muted/20 p-3 gap-2'>
                 <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='image-outline' size={16} color='#6b7280' />
-                  <Text className='text-xs text-muted-foreground'>Images</Text>
+                  <Text className='text-xs text-muted-foreground'>Ảnh</Text>
                 </View>
                 <BottomSheetScrollView nestedScrollEnabled horizontal showsHorizontalScrollIndicator={false}>
                   <View className='flex-row items-center gap-2'>
@@ -155,7 +153,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
               <View className='rounded-2xl border border-border bg-muted/20 p-3 gap-2'>
                 <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='image-outline' size={16} color='#6b7280' />
-                  <Text className='text-xs text-muted-foreground'>Videos</Text>
+                  <Text className='text-xs text-muted-foreground'>Video</Text>
                 </View>
 
                 {warrantyItem.warrantyRequestItems?.videos &&
@@ -168,17 +166,17 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                     </View>
                   </BottomSheetScrollView>
                 ) : (
-                  <Text className='text-xs text-muted-foreground text-center mt-4 mb-6'>No videos</Text>
+                  <Text className='text-xs text-muted-foreground text-center mt-4 mb-6'>Không có video</Text>
                 )}
               </View>
 
               <View className='rounded-2xl bg-rose-50 border border-rose-100 p-3 gap-2'>
                 <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='cancel' size={16} color='#e11d48' />
-                  <Text className='text-xs text-rose-600'>Reject Reason</Text>
+                  <Text className='text-xs text-rose-600'>Lý Do Từ Chối</Text>
                 </View>
                 <Text className='text-xs font-inter-medium text-rose-600'>
-                  {warrantyItem.warrantyRequestItems?.rejectedReason || 'Empty'}
+                  {warrantyItem.warrantyRequestItems?.rejectedReason || 'Trống'}
                 </Text>
               </View>
             </View>
