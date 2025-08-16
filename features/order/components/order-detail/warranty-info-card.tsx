@@ -7,7 +7,7 @@ import { Text } from '~/components/ui/text'
 import { getWarrantyRequestStatus } from '~/features/warranty-request/utils'
 import { styles } from '~/lib/constants/constants'
 import { cn } from '~/lib/utils'
-import { WarrantyRequestDetail } from '~/types/order.type'
+import { WarrantyRequestDetail } from '~/types/warranty.type'
 
 interface WarrantyInfoCardProps {
   warrantyRequestDetail: WarrantyRequestDetail | null | undefined

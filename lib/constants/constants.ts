@@ -110,5 +110,6 @@ export const measurementCategories = [
 
 export const FILE_PATH = {
   DESIGN_REQUEST: 'design-requests',
-  WARRANTY_REQUEST: 'warranty-requests'
+  WARRANTY_REQUEST: 'warranty-requests',
+  TICKET: 'tickets'
 }
