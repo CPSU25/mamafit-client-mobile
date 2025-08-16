@@ -1,5 +1,6 @@
 import { addDays, differenceInDays, parseISO } from 'date-fns'
-import { Order, OrderItem, WarrantyRequestStatus } from '~/types/order.type'
+import { Order, OrderItem } from '~/types/order.type'
+import { WarrantyRequestStatus } from '~/types/warranty.type'
 import { requestStatusMap } from './constants'
 
 export const calculateWarrantyStatus = (receivedAt: string, period: number) => {

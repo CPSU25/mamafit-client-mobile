@@ -1,50 +1,36 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { format } from 'date-fns'
-import { useRouter } from 'expo-router'
 import { ActivityIndicator, FlatList, Image, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-import { InfoCard } from '~/components/ui/alert-card'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
-import { WarrantyStatusBadge } from '~/features/warranty-request/components/warranty-status-badge'
-import { canSelectOrderItem } from '~/features/warranty-request/utils'
 import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
 import { Order, OrderItem } from '~/types/order.type'
 
-interface ChooseOrderItemsProps {
+interface ChooseOrderItemProps {
   orderRequests: Order[] | null | undefined
-  handleSelectOrderItem: (orderItem: OrderItem) => void
-  isSelected: (orderItem: OrderItem) => boolean
-  warrantyPeriod: number
+  selectedOrderItem: OrderItem | null
   isLoading: boolean
   refreshControl: React.JSX.Element
-  selectedWarrantyType: 'free' | 'expired' | null
-  warrantyCount: number
-  handleNext: () => void
   isDisabled: boolean
+  handleSelectOrderItem: (orderItem: OrderItem) => void
+  handleNext: () => void
 }
 
 const OrderItemRow = ({
   orderItem,
   isSelected,
-  onSelect,
-  isDisabled
+  onSelect
 }: {
   orderItem: OrderItem
   isSelected: boolean
   onSelect: () => void
-  isDisabled: boolean
 }) => {
   return (
-    <TouchableOpacity
-      className={`flex-row items-center gap-4 ${isDisabled ? 'opacity-40' : 'opacity-100'}`}
-      onPress={onSelect}
-      disabled={isDisabled}
-    >
-      <View className='w-5 h-5 border border-border rounded-md justify-center items-center'>
-        {isSelected ? <MaterialCommunityIcons name='check-bold' size={14} color={PRIMARY_COLOR.LIGHT} /> : null}
+    <TouchableOpacity className='flex-row items-center gap-4' onPress={onSelect}>
+      <View className='w-5 h-5 border border-border rounded-full justify-center items-center'>
+        {isSelected && <View className='w-3 h-3 bg-primary rounded-full' />}
       </View>
       <View className='flex-1 flex-row items-start gap-2'>
         <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
@@ -68,44 +54,30 @@ const OrderItemRow = ({
 
 const OrderCard = ({
   order,
-  warrantyPeriod,
-  selectedWarrantyType,
   handleSelectOrderItem,
-  isSelected
+  selectedOrderItem
 }: {
   order: Order
-  warrantyPeriod: number
-  selectedWarrantyType: 'free' | 'expired' | null
   handleSelectOrderItem: (orderItem: OrderItem) => void
-  isSelected: (orderItem: OrderItem) => boolean
+  selectedOrderItem: OrderItem | null
 }) => {
   return (
     <Card style={styles.container}>
       <View className='flex-row items-center gap-2 p-2'>
         <Text className='native:text-sm font-inter-medium flex-1 pl-1'>Đơn Hàng #{order.code}</Text>
-        <WarrantyStatusBadge receivedAt={order.receivedAt ?? ''} warrantyPeriod={warrantyPeriod} />
       </View>
 
       <Separator />
 
       <View className='p-3 gap-2'>
-        {order.items.map((orderItem) => {
-          const canSelect = canSelectOrderItem(orderItem, selectedWarrantyType, order.receivedAt ?? '', warrantyPeriod)
-
-          return (
-            <OrderItemRow
-              key={orderItem.id}
-              orderItem={orderItem}
-              isSelected={isSelected(orderItem)}
-              onSelect={() => {
-                if (canSelect) {
-                  handleSelectOrderItem(orderItem)
-                }
-              }}
-              isDisabled={!canSelect}
-            />
-          )
-        })}
+        {order.items.map((orderItem) => (
+          <OrderItemRow
+            key={orderItem.id}
+            orderItem={orderItem}
+            isSelected={selectedOrderItem?.id === orderItem.id}
+            onSelect={() => handleSelectOrderItem(orderItem)}
+          />
+        ))}
       </View>
 
       <Separator />
@@ -120,46 +92,27 @@ const OrderCard = ({
   )
 }
 
-export default function ChooseOrderItems({
+export default function ChooseOrderItem({
   orderRequests,
-  handleSelectOrderItem,
-  isSelected,
-  warrantyPeriod,
+  selectedOrderItem,
   isLoading,
   refreshControl,
-  selectedWarrantyType,
-  warrantyCount,
+  isDisabled,
   handleNext,
-  isDisabled
-}: ChooseOrderItemsProps) {
-  const router = useRouter()
-
+  handleSelectOrderItem
+}: ChooseOrderItemProps) {
   return (
     <View className='flex-1'>
       <FlatList
         data={orderRequests}
         keyExtractor={(item) => item.id}
-        ListHeaderComponent={
-          orderRequests && Array.isArray(orderRequests) && orderRequests.length > 0 ? (
-            <TouchableOpacity onPress={() => router.push('/order/warranty/policy')}>
-              <InfoCard delay={100} title='Warranty Request Policy'>
-                <Text className='text-xs text-sky-600 dark:text-sky-500'>
-                  Mỗi item đơn hàng bao gồm {warrantyCount} yêu cầu bảo hành miễn phí. Các yêu cầu bổ sung có thể tính
-                  phí dịch vụ{' '}
-                  <Text className='text-xs text-sky-600 font-inter-medium underline'>(nhấn để xem thêm)</Text>.
-                </Text>
-              </InfoCard>
-            </TouchableOpacity>
-          ) : null
-        }
+        showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
           <Animated.View entering={FadeInDown.delay(200 + index * 50)}>
             <OrderCard
               order={item}
-              warrantyPeriod={warrantyPeriod}
-              selectedWarrantyType={selectedWarrantyType}
               handleSelectOrderItem={handleSelectOrderItem}
-              isSelected={isSelected}
+              selectedOrderItem={selectedOrderItem}
             />
           </Animated.View>
         )}
@@ -177,7 +130,7 @@ export default function ChooseOrderItems({
       />
 
       {orderRequests && Array.isArray(orderRequests) && orderRequests.length > 0 ? (
-        <View className='px-2'>
+        <View className='px-4 pt-4'>
           <Button onPress={handleNext} disabled={isDisabled}>
             <Text className='font-inter-medium'>Tiếp Tục</Text>
           </Button>

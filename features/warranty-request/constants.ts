@@ -1,4 +1,4 @@
-import { WarrantyRequestStatus } from '~/types/order.type'
+import { WarrantyRequestStatus } from '~/types/warranty.type'
 
 export const requestStatusMap: Record<WarrantyRequestStatus, { text: string; color: string; backgroundColor: string }> =
   {

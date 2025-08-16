@@ -29,7 +29,7 @@ export default function ChatScreen() {
   return (
     <SafeView>
       <View className='flex-1'>
-        <View className='flex flex-row items-center gap-4 p-4'>
+        <View className='flex flex-row items-center gap-3 p-4'>
           <TouchableOpacity onPress={handleGoBack}>
             <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
