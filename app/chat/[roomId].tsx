@@ -98,7 +98,7 @@ export default function ChatRoomScreen() {
     <SafeView>
       <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={5} className='flex-1'>
         <View className='flex-1'>
-          <View className='flex-row items-center gap-4 p-4'>
+          <View className='flex-row items-center gap-3 p-4'>
             <TouchableOpacity onPress={handleGoBack}>
               <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
             </TouchableOpacity>

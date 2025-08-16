@@ -79,9 +79,9 @@ function OrderStage({
         <View
           className={cn(
             'w-5 h-5 rounded-full absolute bg-red-600 justify-center items-center z-10',
-            status.id === 1 && 'top-1 right-4',
-            status.id === 2 && 'top-1 right-4',
-            status.id === 3 && 'top-1 right-5',
+            status.id === 1 && 'top-1 right-3.5',
+            status.id === 2 && 'top-1 right-3',
+            status.id === 3 && 'top-1 right-4',
             status.id === 4 && 'top-1 right-0'
           )}
         >
@@ -89,7 +89,7 @@ function OrderStage({
         </View>
       ) : null}
       {status.icon}
-      <Text className='text-xs'>{status.name}</Text>
+      <Text className='text-[9px]'>{status.name}</Text>
     </View>
   )
 }
@@ -162,32 +162,32 @@ export default function ProfileScreen() {
         <View className='bg-muted h-2' />
 
         <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/profile/appointment')}>
-          <Feather name='calendar' size={20} color={PRIMARY_COLOR.LIGHT} />
-          <Text className='font-inter-medium ml-3.5'>Lịch</Text>
-          <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
+          <Feather name='calendar' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <Text className='font-inter-medium ml-3'>Lịch</Text>
+          <Feather name='chevron-right' size={18} color='lightgray' className='ml-auto' />
         </TouchableOpacity>
 
         <Separator />
 
         <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/order/warranty/create')}>
-          <Feather name='grid' size={20} color={PRIMARY_COLOR.LIGHT} />
-          <Text className='font-inter-medium ml-3.5'>Dịch Vụ Bảo Hành</Text>
-          <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
+          <Feather name='shield' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <Text className='font-inter-medium ml-3'>Dịch Vụ Bảo Hành</Text>
+          <Feather name='chevron-right' size={18} color='lightgray' className='ml-auto' />
         </TouchableOpacity>
 
         <Separator />
 
-        <TouchableOpacity className='flex-row items-center p-4'>
-          <Feather name='refresh-cw' size={20} color={PRIMARY_COLOR.LIGHT} />
-          <Text className='font-inter-medium ml-3.5'>Yêu Cầu Trả Hàng</Text>
-          <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
+        <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/ticket/create')}>
+          <Feather name='alert-triangle' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <Text className='font-inter-medium ml-3'>Yêu Cầu Hỗ Trợ</Text>
+          <Feather name='chevron-right' size={18} color='lightgray' className='ml-auto' />
         </TouchableOpacity>
 
         <Separator />
 
         <Pressable className='flex-row items-center p-4' onPress={toggleColorScheme}>
-          <Feather name='moon' size={20} color={PRIMARY_COLOR.LIGHT} />
-          <Text className='font-inter-medium ml-3.5 flex-1'>Chế Độ Tối</Text>
+          <Feather name='moon' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <Text className='font-inter-medium ml-3 flex-1'>Chế Độ Tối</Text>
           <Switch checked={checked} onCheckedChange={toggleColorScheme} />
         </Pressable>
       </ScrollView>

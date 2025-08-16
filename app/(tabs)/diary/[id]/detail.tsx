@@ -46,7 +46,7 @@ const DiaryHeader = ({ diaryId, onGoBack }: DiaryHeaderProps) => {
 
   return (
     <>
-      <View className='flex flex-row items-center gap-4 p-4'>
+      <View className='flex flex-row items-center gap-3 p-4'>
         <TouchableOpacity onPress={onGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>

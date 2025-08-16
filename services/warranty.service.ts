@@ -1,7 +1,8 @@
 import { CreateWarrantyRequestSchema } from '~/features/warranty-request/validations'
 import { api } from '~/lib/axios/axios'
 import { BaseResponse } from '~/types/common'
-import { Order, WarrantyItem, WarrantyItemList, WarrantyRequestDetail } from '~/types/order.type'
+import { Order } from '~/types/order.type'
+import { WarrantyItem, WarrantyItemList, WarrantyRequestDetail } from '~/types/warranty.type'
 
 class WarrantyService {
   async createWarrantyRequest(warrantyRequest: CreateWarrantyRequestSchema) {

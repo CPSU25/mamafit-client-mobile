@@ -1,118 +1,128 @@
 import { Controller, useFormContext } from 'react-hook-form'
-import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
+import { ScrollView, TouchableOpacity, View } from 'react-native'
+import Animated, { FadeInDown } from 'react-native-reanimated'
 import FieldError from '~/components/field-error'
-import { Card } from '~/components/ui/card'
 import { ImageThumbnail } from '~/components/ui/image-picker'
+import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import { Textarea } from '~/components/ui/textarea'
 import { VideoThumbnail } from '~/components/ui/video-picker'
 import { useFieldError } from '~/hooks/use-field-error'
-import { useImagePicker } from '~/hooks/use-image-picker'
-import { useVideoPicker } from '~/hooks/use-video-picker'
-import { FILE_PATH, ICON_SIZE, styles } from '~/lib/constants/constants'
+import { ICON_SIZE } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
-import { cn } from '~/lib/utils'
-import { OrderItem } from '~/types/order.type'
-import { CreateWarrantyRequestSchema } from '../validations'
+import { cn, isFormError } from '~/lib/utils'
+import { TicketType } from '~/types/ticket.type'
+import { CreateTicketFormSchema } from '../validations'
 
-interface CreateWarrantyRequestFormProps {
-  index: number
-  orderItem?: OrderItem
+interface CreateTicketFormProps {
+  pickImages: () => Promise<string[]>
+  pickVideos: () => Promise<string[]>
+  isImageUploading: boolean
+  currentImages: string[]
+  isVideoUploading: boolean
+  currentVideos: string[]
 }
 
-const imagesMaxReached = 5
-const videosMaxReached = 1
-
-export default function CreateWarrantyRequestForm({ index, orderItem }: CreateWarrantyRequestFormProps) {
+export default function CreateTicketForm({
+  pickImages,
+  pickVideos,
+  isImageUploading,
+  currentImages,
+  isVideoUploading,
+  currentVideos
+}: CreateTicketFormProps) {
   const {
     control,
     formState: { errors },
-    setValue,
-    watch
-  } = useFormContext<CreateWarrantyRequestSchema>()
-
+    setValue
+  } = useFormContext<CreateTicketFormSchema>()
   const className = useFieldError()
-  const imagesPath = `items.${index}.images` as const
-  const videosPath = `items.${index}.videos` as const
-  const descriptionPath = `items.${index}.description` as const
-
-  const currentImages = (watch(imagesPath) as string[]) || []
-  const currentVideos = (watch(videosPath) as string[]) || []
-  const itemErrors = (errors.items?.[index] as any) || {}
-
-  const {
-    pickImages,
-    removeImage,
-    isUploading: isImageUploading
-  } = useImagePicker({
-    maxImages: 5,
-    initialImages: currentImages,
-    path: FILE_PATH.WARRANTY_REQUEST
-  })
-
-  const {
-    pickVideos,
-    removeVideo,
-    isUploading: isVideoUploading
-  } = useVideoPicker({
-    maxVideos: 1,
-    maxSizeInMB: 10,
-    path: FILE_PATH.WARRANTY_REQUEST
-  })
 
   const handlePickImages = async () => {
     const newUrls = await pickImages()
     if (newUrls.length > 0) {
-      setValue(imagesPath, [...currentImages, ...newUrls], { shouldDirty: true, shouldValidate: true })
+      setValue('images', [...currentImages, ...newUrls])
     }
+  }
+
+  const handleRemoveImage = (index: number) => {
+    const updatedImages = currentImages.filter((_, i) => i !== index)
+    setValue('images', updatedImages)
   }
 
   const handlePickVideos = async () => {
     const newUrls = await pickVideos()
     if (newUrls.length > 0) {
-      setValue(videosPath, [...currentVideos, ...newUrls], { shouldDirty: true, shouldValidate: true })
+      setValue('videos', [...currentVideos, ...newUrls])
     }
   }
 
-  const handleRemoveImage = (index: number) => {
-    removeImage(index)
-    const updatedImages = currentImages.filter((_, i) => i !== index)
-    setValue(imagesPath, updatedImages, { shouldDirty: true, shouldValidate: true })
-  }
-
   const handleRemoveVideo = (index: number) => {
-    removeVideo(index)
     const updatedVideos = currentVideos.filter((_, i) => i !== index)
-    setValue(videosPath, updatedVideos, { shouldDirty: true, shouldValidate: true })
+    setValue('videos', updatedVideos)
   }
 
   const noMedias = currentImages.length === 0 && currentVideos.length === 0
+  const imagesMaxReached = 5
+  const videosMaxReached = 1
 
   return (
-    <Card className='p-2 gap-2' style={styles.container}>
-      <View className='flex-1 flex-row items-start gap-2'>
-        <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
-          <Image source={{ uri: orderItem?.preset?.images?.[0] }} className='w-full h-full' resizeMode='contain' />
-        </View>
-        <View className='flex-1 h-20 justify-between pr-2'>
-          <View>
-            <Text className='native:text-sm font-inter-medium'>
-              {orderItem?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
-            </Text>
-            <View className='flex-row items-center justify-between'>
-              <Text className='native:text-xs text-muted-foreground'>
-                {orderItem?.preset?.styleName ? 'Váy Bầu Tùy Chỉnh' : 'Váy Bầu Tùy Chỉnh'}
-              </Text>
-              <Text className='native:text-xs text-muted-foreground'>x{orderItem?.quantity || 1}</Text>
-            </View>
-          </View>
-          <View className='items-end'>
-            <Text className='native:text-xs'>SKU: {orderItem?.preset?.sku ?? 'N/A'}</Text>
-          </View>
-        </View>
-      </View>
+    <View className='gap-4'>
+      {/* Title */}
+      <Animated.View entering={FadeInDown.delay(100)} className='flex flex-col gap-1'>
+        <Text className='font-inter-medium text-sm'>Tiêu đề</Text>
+        <Controller
+          control={control}
+          name='title'
+          render={({ field: { onChange, value } }) => (
+            <Input
+              placeholder='Nhập tiêu đề'
+              value={value}
+              onChangeText={onChange}
+              className={cn('bg-background border-input', isFormError(errors, 'title') ? className : '')}
+            />
+          )}
+        />
+        {isFormError(errors, 'title') && <FieldError message={errors.title?.message || ''} />}
+      </Animated.View>
 
-      <View className='gap-2'>
+      {/* Ticket Type */}
+      <Animated.View entering={FadeInDown.delay(200)} className='flex flex-col gap-2'>
+        <Text className='font-inter-medium text-sm'>Loại yêu cầu</Text>
+        <Controller
+          control={control}
+          name='type'
+          render={({ field: { onChange, value } }) => (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View className='flex-row gap-2'>
+                {Object.values(TicketType).map((type) => (
+                  <View
+                    key={type}
+                    className={`px-3 py-2 rounded-lg border ${
+                      value === type ? 'border-primary bg-primary/10' : 'border-input bg-background'
+                    }`}
+                  >
+                    <TouchableOpacity onPress={() => onChange(type)}>
+                      <Text
+                        className={`text-sm ${value === type ? 'text-primary font-inter-medium' : 'text-foreground'}`}
+                      >
+                        {type === TicketType.WarrantyService && 'Dịch vụ bảo hành'}
+                        {type === TicketType.DeliveryService && 'Dịch vụ vận chuyển'}
+                        {type === TicketType.Other && 'Khác'}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            </ScrollView>
+          )}
+        />
+        {isFormError(errors, 'type') && <FieldError message={errors.type?.message || ''} />}
+      </Animated.View>
+
+      {/* Media Picker */}
+      <Animated.View entering={FadeInDown.delay(300)} className='flex flex-col gap-2'>
+        <Text className='font-inter-medium text-sm'>Hình ảnh & Video</Text>
         {noMedias ? (
           <View className='flex-row items-center gap-2'>
             <View className='gap-1 flex-1'>
@@ -208,26 +218,30 @@ export default function CreateWarrantyRequestForm({ index, orderItem }: CreateWa
             </View>
           </ScrollView>
         )}
-        {!!itemErrors?.images?.message && <FieldError message={String(itemErrors.images.message)} />}
-        {!!itemErrors?.videos?.message && <FieldError message={String(itemErrors.videos.message)} />}
-      </View>
+        {isFormError(errors, 'images') && <FieldError message={errors.images?.message || ''} />}
+        {isFormError(errors, 'videos') && <FieldError message={errors.videos?.message || ''} />}
+      </Animated.View>
 
-      <View className='gap-1'>
+      {/* Description */}
+      <Animated.View entering={FadeInDown.delay(400)} className='flex flex-col gap-2'>
         <Controller
           control={control}
-          name={descriptionPath}
-          render={({ field: { value, onChange, onBlur } }) => (
+          name='description'
+          render={({ field: { onChange, value } }) => (
             <Textarea
+              placeholder='Mô tả chi tiết vấn đề của bạn'
               value={value}
               onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder='Mô tả lỗi và vị trí xuất hiện'
-              className={cn('rounded-xl native:text-base', itemErrors?.description && className)}
+              aria-labelledby='descriptionLabel'
+              className={cn(
+                'native:text-base bg-background border-input',
+                isFormError(errors, 'description') ? className : ''
+              )}
             />
           )}
         />
-        {!!itemErrors?.description?.message && <FieldError message={String(itemErrors.description.message)} />}
-      </View>
-    </Card>
+        {isFormError(errors, 'description') && <FieldError message={errors.description?.message || ''} />}
+      </Animated.View>
+    </View>
   )
 }

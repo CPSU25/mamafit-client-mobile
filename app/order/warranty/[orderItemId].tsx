@@ -14,7 +14,7 @@ import { useGetWarrantyItems } from '~/features/warranty-request/hooks/use-get-w
 import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
 import { cn } from '~/lib/utils'
-import { WarrantyRequestItemStatus } from '~/types/order.type'
+import { WarrantyRequestItemStatus } from '~/types/warranty.type'
 
 const getStatusText = (status: WarrantyRequestItemStatus) => {
   switch (status) {

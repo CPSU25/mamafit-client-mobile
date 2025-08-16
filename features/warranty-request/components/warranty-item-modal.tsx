@@ -6,7 +6,7 @@ import { forwardRef, useMemo } from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
 import { Text } from '~/components/ui/text'
 import { VideoThumbnail } from '~/components/ui/video-picker'
-import { WarrantyItem } from '~/types/order.type'
+import { WarrantyItem } from '~/types/warranty.type'
 
 interface WarrantyItemModalProps {
   warrantyItem: WarrantyItem
