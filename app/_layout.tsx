@@ -116,10 +116,6 @@ export default function RootLayout() {
             options={{ title: 'Payment', headerShown: false, animation: 'ios_from_right' }}
           />
           <Stack.Screen name='order' options={{ title: 'Orders', headerShown: false, animation: 'ios_from_right' }} />
-          <Stack.Screen
-            name='sepay/callback'
-            options={{ title: 'Sepay Callback', headerShown: false, animation: 'ios_from_right' }}
-          />
         </Stack>
       </ThemeProvider>
     </AppProvider>
