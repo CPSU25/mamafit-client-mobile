@@ -19,13 +19,13 @@ import { WarrantyRequestItemStatus } from '~/types/order.type'
 const getStatusText = (status: WarrantyRequestItemStatus) => {
   switch (status) {
     case WarrantyRequestItemStatus.Approved:
-      return 'Approved'
+      return 'Đã Duyệt'
     case WarrantyRequestItemStatus.InTransit:
-      return 'In Transit'
+      return 'Đang Vận Chuyển'
     case WarrantyRequestItemStatus.Rejected:
-      return 'Rejected'
+      return 'Từ Chối'
     default:
-      return 'Pending'
+      return 'Đang Chờ'
   }
 }
 
@@ -138,7 +138,7 @@ export default function ViewWarrantyHistory() {
         <TouchableOpacity onPress={handleGoBack} className='p-1'>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl text-foreground'>Warranty History</Text>
+        <Text className='font-inter-semibold text-xl text-foreground'>Lịch Sử Bảo Hành</Text>
       </View>
 
       <View className='flex-1'>
@@ -163,11 +163,11 @@ export default function ViewWarrantyHistory() {
                       </View>
                       <View>
                         <Text className='font-inter-medium text-white text-sm'>
-                          Original Order{' '}
+                          Đơn Hàng Gốc{' '}
                           {generalStats.parentOrder?.order.code ? `#${generalStats.parentOrder.order.code}` : ''}
                         </Text>
                         <Text className='text-[9px] text-white/80'>
-                          Placed:{' '}
+                          Đặt:{' '}
                           {generalStats.parentOrder?.order?.createdAt
                             ? format(new Date(generalStats.parentOrder.order.createdAt), "MMM dd, yyyy 'at' hh:mm a")
                             : 'N/A'}
@@ -190,7 +190,7 @@ export default function ViewWarrantyHistory() {
                     <View className='flex-1 h-20 justify-between'>
                       <View>
                         <Text className='text-sm font-inter-medium' numberOfLines={1}>
-                          {generalStats.parentOrder?.order?.items?.[0]?.preset?.styleName || 'Custom'} Dress
+                          {generalStats.parentOrder?.order?.items?.[0]?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
                         </Text>
 
                         <View className='flex-row items-center gap-2'>
@@ -225,7 +225,7 @@ export default function ViewWarrantyHistory() {
                           <View className='p-2 rounded-full bg-blue-600'>
                             <MaterialCommunityIcons name='inbox-multiple' size={14} color='white' />
                           </View>
-                          <Text className='text-sm font-inter-medium text-blue-600'>Total Requests</Text>
+                          <Text className='text-sm font-inter-medium text-blue-600'>Tổng Số Yêu Cầu</Text>
                         </View>
                         <Text className='text-blue-600 font-inter-semibold text-lg'>{generalStats.count}</Text>
                       </View>
@@ -234,7 +234,7 @@ export default function ViewWarrantyHistory() {
                           <View className='p-2 rounded-full bg-emerald-600'>
                             <MaterialCommunityIcons name='cash-register' size={14} color='white' />
                           </View>
-                          <Text className='text-sm font-inter-medium text-emerald-600'>Total Fee</Text>
+                          <Text className='text-sm font-inter-medium text-emerald-600'>Tổng Phí</Text>
                         </View>
                         <Text className='text-emerald-600 font-inter-semibold text-lg'>
                           <Text className='text-emerald-600 font-inter-semibold'>đ</Text>
@@ -252,7 +252,7 @@ export default function ViewWarrantyHistory() {
                       className='bg-primary/10 border border-primary/20 rounded-xl p-2 flex-row justify-center items-center gap-2'
                     >
                       <Feather name='link' size={16} color={PRIMARY_COLOR.LIGHT} />
-                      <Text className='text-primary font-inter-medium text-sm'>Go To Order</Text>
+                      <Text className='text-primary font-inter-medium text-sm'>Xem Đơn Hàng</Text>
                     </TouchableOpacity>
                   </View>
                 </Card>
@@ -261,11 +261,11 @@ export default function ViewWarrantyHistory() {
               <View className='mt-4 gap-1'>
                 <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='clock-fast' size={24} color='black' />
-                  <Text className='font-inter-semibold'>Recent Requests</Text>
+                  <Text className='font-inter-semibold'>Yêu Cầu Gần Nhất</Text>
                 </View>
                 <Text className='text-muted-foreground text-xs'>
-                  View the history of warranty requests for this item, including both free and paid services, to see how
-                  many times it’s been repaired.
+                  Xem lịch sử yêu cầu bảo hành cho sản phẩm này, bao gồm cả dịch vụ miễn phí và có phí, để xem sản phẩm
+                  đã được sửa chữa bao nhiêu lần.
                 </Text>
               </View>
             </>
@@ -322,14 +322,14 @@ export default function ViewWarrantyHistory() {
                       <View className='flex-1 gap-1 px-2 py-1 rounded-xl border border-border bg-muted/50'>
                         <View className='flex-row items-center gap-1.5'>
                           <MaterialCommunityIcons name='package-variant' size={14} color='#6b7280' />
-                          <Text className='text-xs text-muted-foreground'>Order Number</Text>
+                          <Text className='text-xs text-muted-foreground'>Số Đơn Hàng</Text>
                         </View>
                         <Text className='text-xs font-inter-semibold'>#{item.order.code}</Text>
                       </View>
                       <View className='gap-1 px-2 py-1 rounded-xl border border-border bg-muted/50'>
                         <View className='flex-row items-center gap-1.5'>
                           <MaterialCommunityIcons name='barcode' size={14} color='#6b7280' />
-                          <Text className='text-xs text-muted-foreground'>Tracking Code</Text>
+                          <Text className='text-xs text-muted-foreground'>Mã Vận Đơn</Text>
                         </View>
                         <Text className='text-xs font-inter-semibold'>
                           {item.warrantyRequestItems.trackingCode || 'N/A'}
@@ -341,7 +341,7 @@ export default function ViewWarrantyHistory() {
                       <View className='flex-1 gap-1 px-2 py-1 rounded-xl bg-emerald-50 border border-emerald-100'>
                         <View className='flex-row items-center gap-1.5'>
                           <MaterialCommunityIcons name='cash' size={14} color='#059669' />
-                          <Text className='text-xs text-emerald-600'>Fee</Text>
+                          <Text className='text-xs text-emerald-600'>Phí</Text>
                         </View>
                         <Text className='text-xs font-inter-medium text-emerald-600'>
                           đ
@@ -353,7 +353,7 @@ export default function ViewWarrantyHistory() {
                       <View className='flex-1 gap-1 px-2 py-1 rounded-xl bg-orange-50 border border-orange-100'>
                         <View className='flex-row items-center gap-1.5'>
                           <MaterialCommunityIcons name='clock-outline' size={14} color='#ea580c' />
-                          <Text className='text-xs text-orange-600'>Estimated</Text>
+                          <Text className='text-xs text-orange-600'>Dự Kiến</Text>
                         </View>
                         <Text className='text-xs font-inter-medium text-orange-600'>
                           <Text className='text-sm font-inter-medium text-orange-600'>
@@ -368,14 +368,14 @@ export default function ViewWarrantyHistory() {
                     <View className='gap-1 px-2 py-1 rounded-xl border border-border bg-muted/50'>
                       <View className='flex-row items-center gap-1.5'>
                         <MaterialCommunityIcons name='card-text-outline' size={14} color='#6b7280' />
-                        <Text className='text-xs text-muted-foreground'>Description</Text>
+                        <Text className='text-xs text-muted-foreground'>Mô Tả</Text>
                       </View>
                       <Text className='text-xs'>{item.warrantyRequestItems.description || 'N/A'}</Text>
                     </View>
 
                     <View className='gap-1 mb-1'>
                       <Text className='text-sm font-inter-semibold'>
-                        Attached Images{' '}
+                        Ảnh Đính Kèm{' '}
                         <Text className='text-xs text-muted-foreground'>
                           ({item.warrantyRequestItems.images?.length})
                         </Text>
@@ -391,7 +391,7 @@ export default function ViewWarrantyHistory() {
 
                     <View className='gap-1 mb-1'>
                       <Text className='text-sm font-inter-semibold'>
-                        Attached Videos{' '}
+                        Video Đính Kèm{' '}
                         <Text className='text-xs text-muted-foreground'>
                           {item.warrantyRequestItems.videos &&
                           Array.isArray(item.warrantyRequestItems.videos) &&
@@ -412,7 +412,7 @@ export default function ViewWarrantyHistory() {
                         </ScrollView>
                       ) : (
                         <View className='px-2 py-1 rounded-xl border border-border bg-muted/50'>
-                          <Text className='text-center text-xs text-muted-foreground my-4'>No videos</Text>
+                          <Text className='text-center text-xs text-muted-foreground my-4'>Không có video</Text>
                         </View>
                       )}
                     </View>
@@ -427,7 +427,7 @@ export default function ViewWarrantyHistory() {
                       className='bg-primary/10 border border-primary/20 rounded-xl p-2 flex-row justify-center items-center gap-2'
                     >
                       <Feather name='link' size={16} color={PRIMARY_COLOR.LIGHT} />
-                      <Text className='text-primary font-inter-medium text-sm'>Go To Order</Text>
+                      <Text className='text-primary font-inter-medium text-sm'>Xem Đơn Hàng</Text>
                     </TouchableOpacity>
                   </View>
                 </Card>

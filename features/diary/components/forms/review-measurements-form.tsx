@@ -15,9 +15,9 @@ export default function ReviewMeasurementsForm() {
     <ScrollView showsVerticalScrollIndicator={false} className='p-4 mb-4'>
       <View className='flex flex-col gap-4 mb-4'>
         <InfoCard
-          title='Your measurements are ready!'
+          title='Số Đo Của Bạn Đã Sẵn Sàng!'
           delay={100}
-          description='Remember, these measurements are estimates. Please check and update if needed.'
+          description='Hãy nhớ, các số đo này là ước tính. Vui lòng kiểm tra và cập nhật nếu cần.'
         />
 
         {measurementCategories.map((category, categoryIndex) => (

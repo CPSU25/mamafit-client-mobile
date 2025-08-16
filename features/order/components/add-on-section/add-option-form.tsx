@@ -26,7 +26,7 @@ export default function AddOptionForm({ optionDetail }: AddOptionFormProps) {
     watch,
     formState: { errors }
   } = useFormContext<SelectAddOnOptionFormSchema>()
-  const { pickImages, isUploading, isMaxReached } = useImagePicker({ maxImages: 1 })
+  const { pickImages, isUploading, isMaxReached } = useImagePicker({ maxImages: 1, path: 'add-ons' })
 
   const sizeId = watch('sizeId')
   const positionId = watch('positionId')
@@ -47,7 +47,7 @@ export default function AddOptionForm({ optionDetail }: AddOptionFormProps) {
   const handleUploadImage = async () => {
     if (type !== 'IMAGE') return
 
-    const urls = await pickImages('add-ons')
+    const urls = await pickImages()
     if (urls.length > 0) {
       setValue('value', urls[0])
     }
@@ -61,14 +61,14 @@ export default function AddOptionForm({ optionDetail }: AddOptionFormProps) {
     <KeyboardAwareScrollView bottomOffset={KEYBOARD_OFFSET} className='flex-1' showsVerticalScrollIndicator={false}>
       <View className='flex-1 p-4 gap-4'>
         <View className='flex-row items-center justify-between bg-emerald-100 p-4 rounded-2xl border border-emerald-500 border-dashed'>
-          <Text className='font-inter-medium text-emerald-600'>Final Price</Text>
+          <Text className='font-inter-medium text-emerald-600'>Giá Cuối Cùng</Text>
           {validPair ? (
             <Text className='font-inter-medium text-emerald-600'>
               <Text className='underline font-inter-medium text-emerald-600'>đ</Text>
               {validPair?.price.toLocaleString('vi-VN')}
             </Text>
           ) : (
-            <Text className='text-emerald-600 text-sm'>Waiting for your selection</Text>
+            <Text className='text-emerald-600 text-sm'>Đang chờ lựa chọn của bạn</Text>
           )}
         </View>
 
@@ -78,9 +78,9 @@ export default function AddOptionForm({ optionDetail }: AddOptionFormProps) {
           render={({ field }) => (
             <View className='flex-col gap-4'>
               <Animated.View entering={FadeInDown.delay(100)} className='flex flex-col gap-1'>
-                <Text className='font-inter-semibold'>Positions</Text>
+                <Text className='font-inter-semibold'>Vị Trí</Text>
                 <Text className='text-muted-foreground text-xs'>
-                  Please choose where to place the add-on on the dress, like chest, waist, or sleeve.
+                  Vui lòng chọn vị trí để đặt add-on lên áo, như là vòng ngực, vòng eo, hoặc vòng tay.
                 </Text>
               </Animated.View>
 
@@ -134,9 +134,9 @@ export default function AddOptionForm({ optionDetail }: AddOptionFormProps) {
           render={({ field }) => (
             <View className='flex-col gap-4'>
               <Animated.View entering={FadeInDown.delay(300)} className='flex flex-col gap-1'>
-                <Text className='font-inter-semibold'>Available Sizes</Text>
+                <Text className='font-inter-semibold'>Kích Thước</Text>
                 <Text className='text-muted-foreground text-xs'>
-                  Please choose the size you want for the add-on, such as small, medium, or large.
+                  Vui lòng chọn kích thước bạn muốn cho add-on, như là nhỏ, trung bình, hoặc lớn.
                 </Text>
               </Animated.View>
               <Animated.View entering={FadeInDown.delay(400)} className='flex-row items-center flex-wrap gap-2'>
@@ -173,10 +173,8 @@ export default function AddOptionForm({ optionDetail }: AddOptionFormProps) {
             render={({ field }) => (
               <View className='flex-col gap-4'>
                 <Animated.View entering={FadeInDown.delay(100)} className='flex flex-col gap-1'>
-                  <Text className='font-inter-semibold'>Types</Text>
-                  <Text className='text-muted-foreground text-xs'>
-                    Choose the type of content you want for the add-on
-                  </Text>
+                  <Text className='font-inter-semibold'>Loại</Text>
+                  <Text className='text-muted-foreground text-xs'>Chọn loại nội dung bạn muốn cho add-on</Text>
                 </Animated.View>
                 <Animated.View entering={FadeInDown.delay(200)} className='flex-row items-center flex-wrap gap-2'>
                   {types.map((type) => (
@@ -223,10 +221,8 @@ export default function AddOptionForm({ optionDetail }: AddOptionFormProps) {
             render={({ field: { onChange, value, ...field } }) => (
               <View className='gap-4'>
                 <Animated.View entering={FadeInDown.delay(100)} className='flex flex-col gap-1'>
-                  <Text className='font-inter-semibold'>Your Content</Text>
-                  <Text className='text-muted-foreground text-xs'>
-                    Enter your content or upload an image to get started.
-                  </Text>
+                  <Text className='font-inter-semibold'>Nội Dung</Text>
+                  <Text className='text-muted-foreground text-xs'>Nhập nội dung hoặc tải lên ảnh để bắt đầu.</Text>
                 </Animated.View>
                 <Animated.View entering={FadeInDown.delay(200)}>
                   {type === 'TEXT' ? (

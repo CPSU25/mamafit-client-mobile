@@ -22,26 +22,26 @@ interface NotificationFilter {
 const notificationFilters: NotificationFilter[] = [
   {
     id: 1,
-    name: 'Promotions',
-    description: 'Latest deals and special offers.',
+    name: 'Khuyến Mãi',
+    description: 'Khuyến mãi và ưu đãi mới nhất.',
     icon: SvgIcon.promotions({ size: ICON_SIZE.MEDIUM })
   },
   {
     id: 2,
-    name: 'Order Updates',
-    description: 'Track your order from start to finish.',
+    name: 'Cập Nhật Đơn Hàng',
+    description: 'Theo dõi đơn hàng của bạn từ đầu đến cuối.',
     icon: SvgIcon.orderUpdates({ size: ICON_SIZE.MEDIUM })
   },
   {
     id: 3,
-    name: 'Payment Status',
-    description: "Don't forget to pay your bills on time.",
+    name: 'Trạng Thái Thanh Toán',
+    description: 'Đừng quên thanh toán hóa đơn đúng hạn.',
     icon: SvgIcon.paymentStatus({ size: ICON_SIZE.MEDIUM })
   },
   {
     id: 4,
-    name: 'Appointment Reminders',
-    description: "Don't forget your appointment.",
+    name: 'Nhắc Nhở Lịch Hẹn',
+    description: 'Đừng quên lịch hẹn của bạn.',
     icon: SvgIcon.appointmentReminders({ size: ICON_SIZE.MEDIUM })
   }
 ]
@@ -58,7 +58,7 @@ export default function NotificationsScreen() {
   return (
     <SafeView>
       <View className='flex flex-row justify-between items-center p-4'>
-        <Text className='text-xl font-inter-semibold'>Notifications</Text>
+        <Text className='text-xl font-inter-semibold'>Thông Báo</Text>
         <View className='flex flex-row items-center gap-6 mr-1.5'>
           <TouchableOpacity onPress={() => router.push('/cart')}>
             <Feather name='shopping-bag' size={24} color={PRIMARY_COLOR.LIGHT} />
@@ -84,9 +84,9 @@ export default function NotificationsScreen() {
       })}
 
       <View className='flex flex-row justify-between items-center px-4 pt-4'>
-        <Text className='text-sm font-inter-medium'>Order Updates</Text>
+        <Text className='text-sm font-inter-medium'>Đơn Hàng</Text>
         <TouchableOpacity onPress={() => markAllAsRead()} disabled={isPending}>
-          <Text className='text-xs text-muted-foreground'>Read All</Text>
+          <Text className='text-xs text-muted-foreground'>Đọc Tất Cả</Text>
         </TouchableOpacity>
       </View>
       <NotificationsList />

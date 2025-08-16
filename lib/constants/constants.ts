@@ -48,18 +48,18 @@ export const placeholderImage =
   'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg'
 
 export const ERROR_MESSAGES = {
-  ALREADY_HAVE_MEASUREMENT: 'You already have a measurement for this week.',
-  SOMETHING_WENT_WRONG: 'Something went wrong! Please try again later.',
-  WRONG_CREDENTIALS: 'Wrong credentials! Please try again.',
-  INSUFFICIENT_PERMISSION: 'You are not authorized to access this app.'
+  ALREADY_HAVE_MEASUREMENT: 'Bạn đã có đo lường cho tuần này.',
+  SOMETHING_WENT_WRONG: 'Có lỗi xảy ra! Vui lòng thử lại sau.',
+  WRONG_CREDENTIALS: 'Thông tin đăng nhập không chính xác! Vui lòng thử lại.',
+  INSUFFICIENT_PERMISSION: 'Bạn không có quyền truy cập vào ứng dụng này.'
 }
 
 export const ORDERED_COMPONENTS_OPTIONS = ['Neckline', 'Sleeves', 'Waist', 'Hem', 'Color', 'Fabric']
 
 export const measurementCategories = [
   {
-    title: 'Pregnancy Status',
-    description: 'Something wrong? Go back to edit',
+    title: 'Trạng Thái Thai',
+    description: 'Có lỗi xảy ra? Quay lại để chỉnh sửa',
     icon: SvgIcon.calendarOne({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
     measurements: [
       { name: 'weekOfPregnancy' as const, label: 'Gestational age', unit: 'weeks', editable: false },
@@ -69,8 +69,8 @@ export const measurementCategories = [
     ]
   },
   {
-    title: 'Upper Body',
-    description: 'Tap any measurement to edit',
+    title: 'Phần Trên',
+    description: 'Nhấn vào bất kỳ đo lường nào để chỉnh sửa',
     icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
     measurements: [
       { name: 'neck' as const, label: 'Neck', unit: 'cm', editable: true },
@@ -80,8 +80,8 @@ export const measurementCategories = [
     ]
   },
   {
-    title: 'Core & Waist',
-    description: 'Tap any measurement to edit',
+    title: 'Phần Trung & Vòng Eo',
+    description: 'Nhấn vào bất kỳ đo lường nào để chỉnh sửa',
     icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
     measurements: [
       { name: 'stomach' as const, label: 'Stomach', unit: 'cm', editable: true },
@@ -89,8 +89,8 @@ export const measurementCategories = [
     ]
   },
   {
-    title: 'Lower Body',
-    description: 'Tap any measurement to edit',
+    title: 'Phần Dưới',
+    description: 'Nhấn vào bất kỳ đo lường nào để chỉnh sửa',
     icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
     measurements: [
       { name: 'thigh' as const, label: 'Thigh', unit: 'cm', editable: true },
@@ -98,8 +98,8 @@ export const measurementCategories = [
     ]
   },
   {
-    title: 'Garment Specific',
-    description: 'Tap any measurement to edit',
+    title: 'Váy Bầu Tùy Chỉnh',
+    description: 'Nhấn vào bất kỳ đo lường nào để chỉnh sửa',
     icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
     measurements: [
       { name: 'dressLength' as const, label: 'Dress length', unit: 'cm', editable: true },

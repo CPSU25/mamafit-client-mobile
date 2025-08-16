@@ -57,10 +57,10 @@ export default function DiarySection({
                 isDarkColorScheme ? 'text-primary-foreground' : 'text-primary'
               )}
             >
-              Choose a diary
+              Chọn nhật ký
             </Text>
             <Text className={cn('text-xs', isDarkColorScheme ? 'text-primary-foreground/70' : 'text-primary/70')}>
-              This will help shape your maternity dress
+              Hãy giúp chúng tôi tạo ra chiếc váy phù hợp nhất
             </Text>
           </View>
         </View>
@@ -69,7 +69,7 @@ export default function DiarySection({
           <DialogTrigger asChild>
             <TouchableOpacity className='flex-1 gap-2 px-2 pb-2 flex-row items-center justify-center'>
               <MaterialCommunityIcons name='eye' size={iconSize} color={PRIMARY_COLOR.LIGHT} />
-              <Text className='text-sm font-inter-medium text-primary'>Preview Latest Measurement</Text>
+              <Text className='text-sm font-inter-medium text-primary'>Xem Số Đo Gần Nhất</Text>
             </TouchableOpacity>
           </DialogTrigger>
           <DialogContent
@@ -81,7 +81,7 @@ export default function DiarySection({
           >
             <PreviewLatestMeasurement measurement={latestMeasurement ?? undefined} />
             <Button variant='outline' onPress={() => setDialogOpen(false)}>
-              <Text className='font-inter-medium'>Close</Text>
+              <Text className='font-inter-medium'>Đóng</Text>
             </Button>
           </DialogContent>
         </Dialog>
@@ -91,7 +91,7 @@ export default function DiarySection({
 
   return (
     <TouchableOpacity onPress={() => router.push('/diary/create?redirectTo=/order/review')}>
-      <WarningCard title='Oops! No diary found' description='Press to create your diary first to place your order' />
+      <WarningCard title='Chưa có nhật ký' description='Vui lòng tạo nhật ký để đặt hàng' />
     </TouchableOpacity>
   )
 }

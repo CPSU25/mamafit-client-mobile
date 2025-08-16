@@ -25,7 +25,7 @@ export default function SearchScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Input placeholder='Search' className='flex-1 border-primary' editable={true} autoFocus={autoFocus} />
+        <Input placeholder='Tìm Kiếm' className='flex-1 border-primary' editable={true} autoFocus={autoFocus} />
       </View>
     </SafeView>
   )

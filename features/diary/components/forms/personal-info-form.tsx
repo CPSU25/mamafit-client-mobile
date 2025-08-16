@@ -22,9 +22,9 @@ export default function PersonalInfoForm() {
     <KeyboardAwareScrollView bottomOffset={KEYBOARD_OFFSET} showsVerticalScrollIndicator={false}>
       <View className='flex flex-col gap-4'>
         <Animated.View entering={FadeInDown.delay(100)} className='flex flex-col gap-1'>
-          <Text className='font-inter-semibold'>Basic Information</Text>
+          <Text className='font-inter-semibold'>Thông Tin Cơ Bản</Text>
           <Text className='text-muted-foreground text-xs'>
-            Please provide your basic information to help us personalize your experience.
+            Vui lòng cung cấp thông tin cơ bản của bạn để giúp chúng tôi cá nhân hóa trải nghiệm của bạn.
           </Text>
         </Animated.View>
 
@@ -34,7 +34,7 @@ export default function PersonalInfoForm() {
             name='name'
             render={({ field: { onChange, value, ...field } }) => (
               <Input
-                placeholder='Diary name'
+                placeholder='Tên Nhật Ký'
                 keyboardType='default'
                 StartIcon={<Feather name='book' size={20} color={PRIMARY_COLOR.LIGHT} />}
                 {...field}
@@ -48,10 +48,8 @@ export default function PersonalInfoForm() {
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(300)} className='flex flex-col gap-1'>
-          <Text className='font-inter-semibold'>Physical Measurements</Text>
-          <Text className='text-muted-foreground text-xs'>
-            Your measurements help us provide accurate recommendations.
-          </Text>
+          <Text className='font-inter-semibold'>Số Đo Cơ Thể</Text>
+          <Text className='text-muted-foreground text-xs'>Số đo của bạn giúp chúng tôi cung cấp gợi ý chính xác.</Text>
 
           <View className='flex flex-col gap-2 mt-4'>
             <Controller
@@ -59,7 +57,7 @@ export default function PersonalInfoForm() {
               name='weight'
               render={({ field: { onChange, value, ...field } }) => (
                 <Input
-                  placeholder='Weight'
+                  placeholder='Cân Nặng'
                   keyboardType='numeric'
                   StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
@@ -77,7 +75,7 @@ export default function PersonalInfoForm() {
               name='height'
               render={({ field: { onChange, value, ...field } }) => (
                 <Input
-                  placeholder='Height'
+                  placeholder='Chiều Cao'
                   keyboardType='numeric'
                   StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
@@ -93,8 +91,10 @@ export default function PersonalInfoForm() {
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(400)} className='flex flex-col gap-1'>
-          <Text className='font-inter-semibold'>Personal Details</Text>
-          <Text className='text-muted-foreground text-xs'>Your age helps us calculate important health metrics.</Text>
+          <Text className='font-inter-semibold'>Chi Tiết Cá Nhân</Text>
+          <Text className='text-muted-foreground text-xs'>
+            Tuổi của bạn giúp chúng tôi tính toán các chỉ số sức khỏe quan trọng.
+          </Text>
 
           <View className='flex flex-col gap-2 mt-4'>
             <Controller
@@ -102,14 +102,14 @@ export default function PersonalInfoForm() {
               name='age'
               render={({ field: { onChange, value, ...field } }) => (
                 <Input
-                  placeholder='Age'
+                  placeholder='Tuổi'
                   keyboardType='numeric'
                   StartIcon={<MaterialIcons name='numbers' size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
                   value={value}
                   onChangeText={onChange}
                   className={cn('bg-background border-input', isFormError(errors, 'age') ? className : '')}
-                  EndIcon={<Text className='text-muted-foreground text-sm'>years</Text>}
+                  EndIcon={<Text className='text-muted-foreground text-sm'>tuổi</Text>}
                 />
               )}
             />

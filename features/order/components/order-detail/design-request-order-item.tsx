@@ -16,7 +16,7 @@ export default function DesignRequestOrderItem({ designRequest, price, quantity 
       </View>
       <View className='flex-1 h-20 justify-between'>
         <View>
-          <Text className='text-sm font-inter-medium'>Design Request</Text>
+          <Text className='text-sm font-inter-medium'>Yêu Cầu Thiết Kế</Text>
           <View className='flex-row items-center justify-between'>
             <Text className='text-xs text-muted-foreground flex-1' numberOfLines={2}>
               {designRequest?.description}

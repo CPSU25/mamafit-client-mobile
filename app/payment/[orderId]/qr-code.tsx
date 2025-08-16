@@ -140,9 +140,9 @@ export default function PaymentQRCode() {
                 loop={false}
                 style={{ width: 300, height: 300 }}
               />
-              <Text className='text-2xl font-inter-semibold mt-10'>Payment successful!</Text>
+              <Text className='text-2xl font-inter-semibold mt-10'>Thanh Toán Thành Công!</Text>
               <Text className='text-sm text-muted-foreground mt-2 mx-10 text-center'>
-                Your transaction has been completed. Thank you for your purchase!
+                Giao dịch của bạn đã hoàn tất. Cảm ơn bạn đã mua hàng!
               </Text>
             </View>
 
@@ -156,10 +156,10 @@ export default function PaymentQRCode() {
                   })
                 }
               >
-                <Text className='font-inter-medium'>View Order</Text>
+                <Text className='font-inter-medium'>Xem Đơn Hàng</Text>
               </Button>
               <Button className='w-full' variant='outline' onPress={handleGoHome}>
-                <Text className='font-inter-medium'>Back To Home</Text>
+                <Text className='font-inter-medium'>Quay Về Trang Chủ</Text>
               </Button>
             </View>
           </View>
@@ -185,10 +185,10 @@ export default function PaymentQRCode() {
             <Text
               className={cn('text-xl font-inter-semibold', isDarkColorScheme ? 'text-emerald-400' : 'text-emerald-600')}
             >
-              Order confirmed!
+              Đơn Hàng Đã Xác Nhận!
             </Text>
             <Text className={cn('text-xs', isDarkColorScheme ? 'text-emerald-300/80' : 'text-emerald-600')}>
-              Order code #{qrCodeData?.orderWithItem?.code}
+              Số Đơn Hàng: #{qrCodeData?.orderWithItem?.code}
             </Text>
           </View>
         </Animated.View>
@@ -204,7 +204,7 @@ export default function PaymentQRCode() {
               <Text
                 className={cn('text-sm font-inter-medium flex-1', isDarkColorScheme ? 'text-white' : 'text-gray-900')}
               >
-                Payment status
+                Trạng Thái Thanh Toán
               </Text>
               <Text
                 className={cn(
@@ -239,18 +239,18 @@ export default function PaymentQRCode() {
                       isDarkColorScheme ? 'text-primary-foreground' : 'text-primary'
                     )}
                   >
-                    Scan the QR code
+                    Quét mã QR
                   </Text>
                   <Text className={cn('text-xs', isDarkColorScheme ? 'text-primary-foreground/70' : 'text-primary/70')}>
-                    Pay with your banking app to confirm the order
+                    Thanh toán với ứng dụng ngân hàng của bạn để xác nhận đơn hàng
                   </Text>
                 </View>
               </View>
               <Image source={{ uri: qrCodeData?.qrUrl }} className='w-full h-96 mt-4 rounded-2xl' />
               <View className='p-1 gap-2 mt-2'>
                 <WarningCard
-                  title='Important Payment Note'
-                  description='Please keep the transfer description unchanged for automatic payment confirmation.'
+                  title='Lưu Ý Thanh Toán'
+                  description='Vui lòng giữ nguyên mô tả chuyển khoản để xác nhận thanh toán tự động.'
                   delay={400}
                 />
                 <Button
@@ -264,7 +264,7 @@ export default function PaymentQRCode() {
                 >
                   <Feather name='download' size={16} color={PRIMARY_COLOR.LIGHT} />
                   <Text className='native:text-sm font-inter-medium text-primary'>
-                    {downloading ? 'Downloading...' : 'Download QR Code'}
+                    {downloading ? 'Đang Tải...' : 'Tải QR Code'}
                   </Text>
                 </Button>
               </View>
@@ -276,21 +276,21 @@ export default function PaymentQRCode() {
               <View className='p-3 flex-row items-center gap-2'>
                 <Feather name='credit-card' size={16} color={isDarkColorScheme ? 'white' : 'black'} />
                 <Text className={cn('text-sm font-inter-medium', isDarkColorScheme ? 'text-white' : 'text-gray-900')}>
-                  Payment details
+                  Chi Tiết Thanh Toán
                 </Text>
               </View>
               <Separator />
               <View className='flex flex-col gap-3 p-4'>
                 <View className='flex-row justify-between items-center'>
-                  <Text className='text-xs font-inter-medium'>Account holder</Text>
+                  <Text className='text-xs font-inter-medium'>Tên Chủ Tài Khoản</Text>
                   <Text className='text-xs font-inter-semibold'>LE DUC ANH</Text>
                 </View>
                 <View className='flex-row justify-between items-center'>
-                  <Text className='text-xs font-inter-medium'>Account number</Text>
+                  <Text className='text-xs font-inter-medium'>Số Tài Khoản</Text>
                   <Text className='text-xs font-inter-semibold'>{qrCodeParams.acc}</Text>
                 </View>
                 <View className='flex-row justify-between items-center'>
-                  <Text className='text-xs font-inter-medium'>Amount</Text>
+                  <Text className='text-xs font-inter-medium'>Số Tiền</Text>
                   <View className={cn('px-2 py-1 rounded-md', isDarkColorScheme ? 'bg-primary/30' : 'bg-primary/20')}>
                     <Text className='text-xs font-inter-bold text-primary'>
                       đ
@@ -301,7 +301,7 @@ export default function PaymentQRCode() {
                   </View>
                 </View>
                 <View className='flex-row justify-between items-center'>
-                  <Text className='text-xs font-inter-medium'>Transfer description</Text>
+                  <Text className='text-xs font-inter-medium'>Mô Tả</Text>
                   <View className={cn('px-2 py-1 rounded-md', isDarkColorScheme ? 'bg-gray-800' : 'bg-gray-100')}>
                     <Text className='text-xs font-inter-semibold'>{qrCodeParams.des}</Text>
                   </View>

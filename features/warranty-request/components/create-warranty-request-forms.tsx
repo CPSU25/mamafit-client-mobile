@@ -54,14 +54,12 @@ export default function CreateWarrantyRequestForms({
 
             <TipCard title='Tips' delay={300 + fields.length * 50}>
               <View className='flex flex-col gap-1'>
+                <Text className='text-xs text-emerald-600 dark:text-emerald-500'>• Mô tả lỗi và vị trí xuất hiện.</Text>
                 <Text className='text-xs text-emerald-600 dark:text-emerald-500'>
-                  • Describe the defect and where it appears.
+                  • Tải lên ảnh chất lượng cao (nhiều góc).
                 </Text>
                 <Text className='text-xs text-emerald-600 dark:text-emerald-500'>
-                  • Upload mandatory high-res photos (multiple angles).
-                </Text>
-                <Text className='text-xs text-emerald-600 dark:text-emerald-500'>
-                  • Make sure images are well-lit and sharply focused.
+                  • Đảm bảo ảnh được chiếu sáng và tập trung.
                 </Text>
               </View>
             </TipCard>
@@ -74,7 +72,7 @@ export default function CreateWarrantyRequestForms({
         style={{ boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
       >
         <Button onPress={onSubmitPress} disabled={isSubmitting}>
-          <Text className='font-inter-medium'>{isSubmitting ? 'Submitting...' : 'Submit Warranty'}</Text>
+          <Text className='font-inter-medium'>{isSubmitting ? 'Đang Gửi...' : 'Gửi Yêu Cầu'}</Text>
         </Button>
       </View>
 

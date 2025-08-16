@@ -20,7 +20,7 @@ export default function GeneralAddOnOptionCard({ option, onPress }: GeneralAddOn
         <View className='flex-row items-center gap-1.5 flex-wrap'>
           <View className='flex-row items-center gap-1.5'>
             <MaterialCommunityIcons name='map-marker' color='gray' size={14} />
-            <Text className='text-xs text-muted-foreground font-inter-medium'>Positions</Text>
+            <Text className='text-xs text-muted-foreground font-inter-medium'>Vị Trí</Text>
           </View>
           {option.positions.map((pos) => (
             <View key={pos.positionId} className='px-2 py-0.5 bg-sky-100/50 rounded-lg flex-row items-center gap-2'>
@@ -32,7 +32,7 @@ export default function GeneralAddOnOptionCard({ option, onPress }: GeneralAddOn
         <View className='flex-row items-center gap-1.5'>
           <View className='flex-row items-center gap-1.5'>
             <MaterialCommunityIcons name='resize' color='gray' size={14} />
-            <Text className='text-xs text-muted-foreground font-inter-medium'>Sizes</Text>
+            <Text className='text-xs text-muted-foreground font-inter-medium'>Kích Thước</Text>
           </View>
           {option.sizes.map((size) => (
             <View key={size.sizeId} className='px-2 py-0.5 bg-sky-100/50 rounded-lg flex-row items-center gap-2'>
@@ -58,7 +58,7 @@ export default function GeneralAddOnOptionCard({ option, onPress }: GeneralAddOn
           </View>
         </View>
         <TouchableOpacity className='rounded-xl flex-row items-center gap-1.5 pl-4 pr-2 h-full' onPress={onPress}>
-          <Text className='text-primary font-inter-medium text-xs'>Apply Now</Text>
+          <Text className='text-primary font-inter-medium text-xs'>Áp Dụng Ngay</Text>
           <AntDesign name='arrowright' size={14} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>

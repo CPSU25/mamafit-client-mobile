@@ -75,7 +75,7 @@ export default function WarrantyPresetOrderItem({
         <View className='flex-1 h-20 justify-between'>
           <View>
             <Text className='text-sm font-inter-medium' numberOfLines={1}>
-              {preset?.styleName || 'Custom'} Dress
+              {preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
             </Text>
             <View className='flex-row items-center gap-2'>
               <Text className='text-xs text-muted-foreground flex-1'>{preset?.sku ? `SKU: ${preset?.sku}` : ''}</Text>
@@ -111,7 +111,7 @@ export default function WarrantyPresetOrderItem({
                     <Text className='native:text-xs text-muted-foreground'>({option.value})</Text>
                   )}
                 </Text>
-                <Text className='native:text-xs text-muted-foreground'>Position: {option.position.name}</Text>
+                <Text className='native:text-xs text-muted-foreground'>Vị Trí: {option.position.name}</Text>
               </View>
 
               <Text className='native:text-sm font-inter-medium text-blue-600'>
@@ -139,7 +139,7 @@ export default function WarrantyPresetOrderItem({
             disabled={isLoadingWarrantyItem}
           >
             <Feather name='file-text' size={16} color='black' />
-            <Text className='text-sm font-inter-medium'>View Details</Text>
+            <Text className='text-sm font-inter-medium'>Xem Chi Tiết</Text>
           </TouchableOpacity>
         </View>
 
@@ -149,7 +149,7 @@ export default function WarrantyPresetOrderItem({
             className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-2 bg-blue-50 border border-blue-100'
           >
             <Feather name='clock' size={16} color='#2563eb' />
-            <Text className='text-sm text-blue-600 font-inter-medium'>View History</Text>
+            <Text className='text-sm text-blue-600 font-inter-medium'>Xem Lịch Sử</Text>
           </TouchableOpacity>
         </View>
       </View>

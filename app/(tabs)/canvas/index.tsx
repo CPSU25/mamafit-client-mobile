@@ -12,7 +12,7 @@ export default function CanvasScreen() {
   return (
     <SafeView>
       <View className='flex flex-row justify-between items-center p-4'>
-        <Text className='text-xl font-inter-semibold'>Design Your Dress</Text>
+        <Text className='text-xl font-inter-semibold'>Tự Thiết Kế Váy</Text>
         <TouchableOpacity onPress={() => router.push('/canvas/create')}>
           <Feather name='plus' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>

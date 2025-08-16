@@ -20,8 +20,7 @@ export default function DesignRequestInformation({
       <View className='px-3 py-2 flex-row items-center gap-2'>
         <MaterialCommunityIcons name='file-multiple' size={16} color={PRIMARY_COLOR.LIGHT} />
         <Text className='font-inter-medium text-sm'>
-          Your Designed Presets{' '}
-          <Text className='text-xs text-muted-foreground'>({designRequestDetail?.length || 0})</Text>
+          Thiết Kế Của Bạn <Text className='text-xs text-muted-foreground'>({designRequestDetail?.length || 0})</Text>
         </Text>
       </View>
 
@@ -54,7 +53,7 @@ export default function DesignRequestInformation({
           ))
         ) : (
           <View className='flex-row items-center justify-center my-4'>
-            <Text className='text-muted-foreground text-xs'>No preset designed yet</Text>
+            <Text className='text-muted-foreground text-xs'>Chưa có bản thiết kế</Text>
           </View>
         )}
       </View>

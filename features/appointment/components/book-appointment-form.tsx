@@ -41,8 +41,8 @@ export default function BookAppointmentForm({ availableSlots, bookingDate, isLoa
   return (
     <View className='gap-4'>
       <InfoCard
-        title='Estimated Arrival Time'
-        description='You may need to wait a little if earlier customers take longer than planned. Thank you for your understanding.'
+        title='Thời Gian Dự Kiến'
+        description='Bạn có thể cần phải chờ một chút nếu khách hàng trước đó mất thời gian hơn dự kiến. Cảm ơn bạn đã hiểu.'
         delay={100}
       />
 
@@ -57,7 +57,7 @@ export default function BookAppointmentForm({ availableSlots, bookingDate, isLoa
           name='note'
           render={({ field: { onChange, value } }) => (
             <Input
-              placeholder='Note'
+              placeholder='Ghi Chú'
               value={value}
               onChangeText={onChange}
               StartIcon={<Feather name='file-text' size={20} color={PRIMARY_COLOR.LIGHT} />}
@@ -75,8 +75,8 @@ export default function BookAppointmentForm({ availableSlots, bookingDate, isLoa
           render={({ field: { onChange, value } }) => (
             <Animated.View entering={FadeInDown.delay(400)} className='gap-2 pb-1'>
               <View className='mb-2'>
-                <Text className='font-inter-medium'>Available Slots</Text>
-                <Text className='text-xs text-muted-foreground'>{validSlots?.length} slots available</Text>
+                <Text className='font-inter-medium'>Giờ Còn Trống</Text>
+                <Text className='text-xs text-muted-foreground'>{validSlots?.length} giờ còn trống</Text>
               </View>
               <BottomSheetScrollView showsVerticalScrollIndicator={false} className='h-64'>
                 <View className='flex-row flex-wrap gap-2'>

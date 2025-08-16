@@ -13,7 +13,7 @@ export default function PreviewLatestMeasurement({ measurement }: PreviewLatestM
 
   return (
     <View className='gap-2'>
-      <Text className='font-inter-semibold mb-2'>Preview Measurement ({measurement.weekOfPregnancy} weeks)</Text>
+      <Text className='font-inter-semibold mb-2'>Xem Số Đo Gần Nhất ({measurement.weekOfPregnancy} tuần)</Text>
       {measurementCategories.map((category, categoryIndex) => (
         <View key={category.title} className='flex flex-col gap-2'>
           {category.measurements.map((key, index) => (

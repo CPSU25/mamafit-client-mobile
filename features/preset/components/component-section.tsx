@@ -56,7 +56,7 @@ export default function ComponentSection<T extends FieldValues>({
             <AccordionTrigger>
               <Text>
                 {component.name}{' '}
-                <Text className='text-muted-foreground native:text-sm'>({component?.options?.length} variants)</Text>
+                <Text className='text-muted-foreground native:text-sm'>({component?.options?.length} biến thể)</Text>
               </Text>
             </AccordionTrigger>
             <AccordionContent>

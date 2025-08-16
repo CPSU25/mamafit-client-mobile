@@ -72,7 +72,7 @@ export default function OrderCard({ order }: OrderCardProps) {
             {order.type === OrderType.Warranty ? (
               <View className='px-3 py-1.5 bg-blue-50 rounded-lg flex-row items-center gap-1.5'>
                 <MaterialIcons name='safety-check' size={14} color='#2563eb' />
-                <Text className='text-xs text-blue-600 font-inter-medium'>Warranty Order</Text>
+                <Text className='text-xs text-blue-600 font-inter-medium'>Đơn Bảo Hành</Text>
               </View>
             ) : null}
 
@@ -126,7 +126,7 @@ export default function OrderCard({ order }: OrderCardProps) {
 
         <View className='mx-2 mt-3 mb-2 items-end'>
           <Text className='text-xs'>
-            Total {order.items?.length} Item{order.items?.length > 1 ? 's' : ''}:{' '}
+            Tổng {order.items?.length} Item{order.items?.length > 1 ? 's' : ''}:{' '}
             <Text className='text-sm font-inter-semibold'>
               <Text className='text-xs font-inter-semibold underline'>đ</Text>
               {totalPrice.toLocaleString('vi-VN')}
@@ -147,7 +147,7 @@ export default function OrderCard({ order }: OrderCardProps) {
                 })
               }
             >
-              <Text className='text-sm font-inter-medium'>View Details</Text>
+              <Text className='text-sm font-inter-medium'>Xem Chi Tiết</Text>
             </TouchableOpacity>
           ) : null}
 
@@ -157,7 +157,7 @@ export default function OrderCard({ order }: OrderCardProps) {
               onPress={() => mutate(order?.id)}
               disabled={isPending}
             >
-              <Text className='text-sm font-inter-medium'>{isPending ? 'Loading...' : 'Receive'}</Text>
+              <Text className='text-sm font-inter-medium'>{isPending ? 'Đang Nhận...' : 'Nhận Hàng'}</Text>
             </TouchableOpacity>
           ) : null}
 
@@ -166,7 +166,7 @@ export default function OrderCard({ order }: OrderCardProps) {
               <DialogTrigger asChild>
                 <TouchableOpacity className='px-6 py-2 rounded-xl items-center border border-border'>
                   <Text className='text-sm font-inter-medium text-rose-600'>
-                    {cancelOrderMutation.isPending ? 'Canceling...' : 'Cancel Order'}
+                    {cancelOrderMutation.isPending ? 'Đang Hủy...' : 'Hủy Đơn'}
                   </Text>
                 </TouchableOpacity>
               </DialogTrigger>
@@ -180,9 +180,9 @@ export default function OrderCard({ order }: OrderCardProps) {
               >
                 <FormProvider {...methods}>
                   <View className='gap-2'>
-                    <Text className='font-inter-semibold text-xl'>Cancel Order #{order?.code}</Text>
+                    <Text className='font-inter-semibold text-xl'>Hủy Đơn #{order?.code}</Text>
                     <Text className='text-sm text-muted-foreground'>
-                      This action cannot be undone. Please confirm if you want to cancel the order .
+                      Hành động này không thể hoàn tác. Vui lòng xác nhận nếu bạn muốn hủy đơn hàng.
                     </Text>
                   </View>
 
@@ -195,7 +195,7 @@ export default function OrderCard({ order }: OrderCardProps) {
                   >
                     <Feather name='x' size={16} color='#e11d48' />
                     <Text className='text-sm text-rose-600 font-inter-medium'>
-                      {cancelOrderMutation.isPending ? 'Canceling...' : 'Cancel Order'}
+                      {cancelOrderMutation.isPending ? 'Đang Hủy...' : 'Hủy Đơn'}
                     </Text>
                   </TouchableOpacity>
                 </FormProvider>
@@ -215,13 +215,13 @@ export default function OrderCard({ order }: OrderCardProps) {
                 })
               }
             >
-              <Text className='text-sm font-inter-medium'>Pay Now</Text>
+              <Text className='text-sm font-inter-medium'>Thanh Toán Ngay</Text>
             </TouchableOpacity>
           ) : null}
 
           {isDisplayRateButton ? (
             <TouchableOpacity className='px-6 py-2 rounded-xl items-center border border-border'>
-              <Text className='text-sm font-inter-medium'>Rate Order</Text>
+              <Text className='text-sm font-inter-medium'>Đánh Giá</Text>
             </TouchableOpacity>
           ) : null}
         </View>
@@ -241,10 +241,10 @@ const PresetOrderItem = ({ item }: { item: OrderItem }) => {
       </View>
       <View className='flex-1 h-20 justify-between'>
         <View>
-          <Text className='text-sm font-inter-medium'>{preset?.styleName || 'Custom'} Dress</Text>
+          <Text className='text-sm font-inter-medium'>{preset?.styleName || 'Váy Bầu Tùy Chỉnh'}</Text>
           <View className='flex-row items-center justify-between'>
             <Text className='text-xs text-muted-foreground flex-1' numberOfLines={2}>
-              {preset?.styleName ? 'Made-to-Order Custom Style' : 'Tailored Just for You'}
+              {preset?.styleName ? 'Váy Bầu Tùy Chỉnh' : 'Váy Bầu Tùy Chỉnh'}
             </Text>
             <Text className='text-xs text-muted-foreground'>x{quantity}</Text>
           </View>
@@ -271,7 +271,7 @@ const DesignRequestOrderItem = ({ item }: { item: OrderItem }) => {
       </View>
       <View className='flex-1 h-20 justify-between'>
         <View>
-          <Text className='text-sm font-inter-medium'>Design Request</Text>
+          <Text className='text-sm font-inter-medium'>Yêu Cầu Thiết Kế</Text>
           <View className='flex-row items-center justify-between'>
             <Text className='text-xs text-muted-foreground flex-1' numberOfLines={2}>
               {designRequest?.description}

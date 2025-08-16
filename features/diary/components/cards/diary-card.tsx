@@ -40,7 +40,7 @@ export default function DiaryCard({ diary }: DiaryCardProps) {
             <Text className='font-inter-medium' numberOfLines={1}>
               {diary.name}
             </Text>
-            <Text className='text-xs text-muted-foreground'>Created At: {format(diary.createdAt, 'dd/MM/yyyy')}</Text>
+            <Text className='text-xs text-muted-foreground'>Tạo: {format(diary.createdAt, 'dd/MM/yyyy')}</Text>
           </View>
         </View>
 
@@ -51,7 +51,7 @@ export default function DiaryCard({ diary }: DiaryCardProps) {
             <Text
               className={`text-xs ${isDarkColorScheme ? 'text-muted-foreground/80' : 'text-muted-foreground'} font-inter-medium mb-1`}
             >
-              Weight
+              Cân Nặng
             </Text>
             <Text className={`text-sm font-inter-medium ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
               {diary.weight} kg
@@ -62,7 +62,7 @@ export default function DiaryCard({ diary }: DiaryCardProps) {
             <Text
               className={`text-xs ${isDarkColorScheme ? 'text-muted-foreground/80' : 'text-muted-foreground'} font-inter-medium mb-1`}
             >
-              Height
+              Chiều Cao
             </Text>
             <Text className={`text-sm font-inter-medium ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
               {diary.height} cm
@@ -73,7 +73,7 @@ export default function DiaryCard({ diary }: DiaryCardProps) {
             <Text
               className={`text-xs ${isDarkColorScheme ? 'text-muted-foreground/80' : 'text-muted-foreground'} font-inter-medium mb-1`}
             >
-              Pregnancy
+              Thai Kỳ
             </Text>
             <Text className={`text-sm font-inter-medium ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
               {diary.numberOfPregnancy}

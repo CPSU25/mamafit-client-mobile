@@ -34,7 +34,7 @@ const AddressSelectionModal = forwardRef<BottomSheetModal, AddressSelectionModal
           />
         )}
       >
-        <Text className='text-xl font-inter-semibold text-center'>Address Selection</Text>
+        <Text className='text-xl font-inter-semibold text-center'>Chọn Địa Chỉ</Text>
         <BottomSheetFlatList
           data={addresses}
           keyExtractor={(address) => address.id}

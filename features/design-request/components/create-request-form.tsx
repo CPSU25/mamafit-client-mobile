@@ -59,8 +59,10 @@ export default function CreateDesignRequestForm({
   return (
     <View className='flex flex-col gap-4'>
       <Animated.View entering={FadeInDown.delay(100)} className='flex flex-col gap-1'>
-        <Text className='font-inter-semibold'>Design Request</Text>
-        <Text className='text-muted-foreground text-xs'>Complete the form below to submit your design request.</Text>
+        <Text className='font-inter-semibold'>Yêu Cầu Thiết Kế</Text>
+        <Text className='text-muted-foreground text-xs'>
+          Hoàn thành biểu mẫu bên dưới để gửi yêu cầu thiết kế của bạn.
+        </Text>
       </Animated.View>
 
       {/* Custom Image Picker UI */}
@@ -76,7 +78,7 @@ export default function CreateDesignRequestForm({
             isMaxReached={isMaxReached}
             currentCount={currentImages.length}
             maxImages={5}
-            placeholder='Choose images from your gallery'
+            placeholder='Chọn ảnh từ thư viện của bạn'
           />
 
           <ImageGrid images={currentImages} onRemoveImage={handleRemoveImage} />
@@ -92,7 +94,7 @@ export default function CreateDesignRequestForm({
           name='description'
           render={({ field: { onChange, value } }) => (
             <Textarea
-              placeholder='Describe your design request'
+              placeholder='Mô tả yêu cầu thiết kế của bạn'
               value={value}
               onChangeText={onChange}
               aria-labelledby='textareaLabel'
@@ -106,24 +108,24 @@ export default function CreateDesignRequestForm({
         {isFormError(errors, 'description') && <FieldError message={errors.description?.message || ''} />}
       </Animated.View>
 
-      <WarningCard title='Notes' delay={400}>
+      <WarningCard title='Lưu Ý' delay={400}>
         <Text className='text-xs text-amber-600 dark:text-amber-500'>
-          You will be charged
+          Bạn sẽ được tính phí
           <Text className='text-xs font-inter-semibold text-amber-600 dark:text-amber-500'>
             {' '}
             {config && config.designRequestServiceFee && config.designRequestServiceFee.toLocaleString('vi-VN')} VND
           </Text>{' '}
-          service fee for each design request.
+          phí dịch vụ cho mỗi yêu cầu thiết kế.
         </Text>
       </WarningCard>
 
-      <TipCard title='Tips' delay={500}>
+      <TipCard title='Mẹo' delay={500}>
         <View className='flex flex-col gap-1'>
           <Text className='text-xs text-emerald-600 dark:text-emerald-500'>
-            • Please provide a clear and detailed description of your design request.
+            • Vui lòng cung cấp mô tả rõ ràng và chi tiết về yêu cầu thiết kế của bạn.
           </Text>
           <Text className='text-xs text-emerald-600 dark:text-emerald-500'>
-            • Images are optional, but they can help us understand your request better.
+            • Ảnh là tùy chọn, nhưng chúng có thể giúp chúng tôi hiểu yêu cầu của bạn tốt hơn.
           </Text>
         </View>
       </TipCard>

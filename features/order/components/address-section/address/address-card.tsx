@@ -26,7 +26,7 @@ export default function AddressCard({ isSelected, address }: AddressCardProps) {
       </View>
       {address.isDefault ? (
         <Badge variant='default' className='mr-auto mt-1'>
-          <Text className='font-inter-medium'>Default</Text>
+          <Text className='font-inter-medium'>Mặc Định</Text>
         </Badge>
       ) : null}
     </Card>

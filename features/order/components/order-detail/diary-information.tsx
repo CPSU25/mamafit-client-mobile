@@ -22,22 +22,22 @@ export default function DiaryInformation({ diary }: DiaryInformationProps) {
     <Card className='bg-muted/5' style={styles.container}>
       <View className='flex-row items-center gap-2 px-3 py-2'>
         <MaterialCommunityIcons name='book-multiple' size={16} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium text-sm'>Diary Information</Text>
+        <Text className='font-inter-medium text-sm'>Thông Tin Nhật Ký</Text>
       </View>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
           <TouchableOpacity className='flex-1 gap-1 px-3 pb-3'>
             <Text className='font-inter-medium' numberOfLines={1}>
-              {diary?.name} <Text className='text-xs text-muted-foreground'>({diary?.age} years old)</Text>
+              {diary?.name} <Text className='text-xs text-muted-foreground'>({diary?.age} tuổi)</Text>
             </Text>
             <View className='flex-row items-center gap-2'>
-              <Text className='text-xs text-muted-foreground'>Weight: {diary?.weight}kg</Text>
+              <Text className='text-xs text-muted-foreground'>Cân Nặng: {diary?.weight}kg</Text>
               <Separator orientation='vertical' className='h-4' />
-              <Text className='text-xs text-muted-foreground'>Height: {diary?.height}cm</Text>
+              <Text className='text-xs text-muted-foreground'>Chiều Cao: {diary?.height}cm</Text>
               <Separator orientation='vertical' className='h-4' />
               <Text className='text-xs text-muted-foreground'>
-                Pregnancy: {diary?.numberOfPregnancy}
+                Thai Kỳ: {diary?.numberOfPregnancy}
                 {diary?.numberOfPregnancy === 1
                   ? 'st'
                   : diary?.numberOfPregnancy === 2
@@ -58,7 +58,7 @@ export default function DiaryInformation({ diary }: DiaryInformationProps) {
         >
           <PreviewLatestMeasurement measurement={diary?.measurements?.[0]} />
           <Button variant='outline' onPress={() => setDialogOpen(false)}>
-            <Text className='font-inter-medium'>Close</Text>
+            <Text className='font-inter-medium'>Đóng</Text>
           </Button>
         </DialogContent>
       </Dialog>

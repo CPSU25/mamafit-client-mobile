@@ -350,13 +350,13 @@ export default function AppointmentScreen() {
                     <Text className='text-white font-inter-semibold text-xs'>
                       {selectedBranch.distance ? `${selectedBranch.distance.toFixed(1)}km` : 'N/A'}
                     </Text>
-                    <Text className='text-white/70 font-inter-regular text-xs'>Distance</Text>
+                    <Text className='text-white/70 font-inter-regular text-xs'>Cách Bạn</Text>
                   </View>
                   <View className='items-center'>
                     <Text className='text-white font-inter-semibold text-xs'>
                       {selectedBranch.duration ? `${Math.round(selectedBranch.duration)}min` : 'N/A'}
                     </Text>
-                    <Text className='text-white/70 font-inter-regular text-xs'>Duration</Text>
+                    <Text className='text-white/70 font-inter-regular text-xs'>Thời Gian</Text>
                   </View>
                 </View>
               </View>
@@ -385,16 +385,16 @@ export default function AppointmentScreen() {
           <FormProvider {...methods}>
             <View className='flex-1' style={{ paddingBottom: bottom }}>
               {appointments && Array.isArray(appointments) && appointments.length > 0 ? (
-                <Text className='font-inter-semibold text-lg mb-4'>Appointment Details</Text>
+                <Text className='font-inter-semibold text-lg mb-4'>Chi Tiết Lịch Hẹn</Text>
               ) : (
                 <>
                   {currentStep === 1 ? (
                     <>
                       <View className='flex-row items-center justify-between px-4'>
                         <View>
-                          <Text className='font-inter-semibold text-xl text-center'>Select a branch</Text>
+                          <Text className='font-inter-semibold text-xl text-center'>Chọn Chi Nhánh</Text>
                           <Text className='text-xs text-muted-foreground'>
-                            {branchesWithDirections.length} branches available
+                            {branchesWithDirections.length} chi nhánh có sẵn
                           </Text>
                         </View>
                         <TouchableOpacity
@@ -425,9 +425,9 @@ export default function AppointmentScreen() {
                     <>
                       <View className='flex-row items-center justify-between px-4'>
                         <View>
-                          <Text className='font-inter-semibold text-xl'>Appointment Details</Text>
+                          <Text className='font-inter-semibold text-xl'>Chi Tiết Lịch Hẹn</Text>
                           <Text className='text-xs text-muted-foreground' numberOfLines={1}>
-                            Working Hour: {format(parse(selectedBranch.openingHour, 'HH:mm:ss', new Date()), 'hh:mm a')}{' '}
+                            Giờ Làm Việc: {format(parse(selectedBranch.openingHour, 'HH:mm:ss', new Date()), 'hh:mm a')}{' '}
                             - {format(parse(selectedBranch.closingHour, 'HH:mm:ss', new Date()), 'hh:mm a')}
                           </Text>
                         </View>
@@ -450,7 +450,7 @@ export default function AppointmentScreen() {
 
                         <Button onPress={handleSubmit(onSubmit)} disabled={bookAppointmentMutation.isPending}>
                           <Text className='font-inter-medium'>
-                            {bookAppointmentMutation.isPending ? 'Booking...' : 'Book Now!'}
+                            {bookAppointmentMutation.isPending ? 'Đang Đặt...' : 'Đặt Lịch Hẹn'}
                           </Text>
                         </Button>
                       </View>

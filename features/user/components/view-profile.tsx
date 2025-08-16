@@ -25,13 +25,13 @@ export default function ViewProfile({ user }: ViewProfileProps) {
 
       <View className='flex-row items-end'>
         <Feather name='user' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5 flex-1'>Fullname</Text>
+        <Text className='font-inter-medium ml-2.5 flex-1'>Tên Tài Khoản</Text>
         <Text className='text-muted-foreground text-sm'>{user.fullName || 'N/A'}</Text>
       </View>
       <Separator />
       <View className='flex-row items-end'>
         <Feather name='user' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5 flex-1'>Username</Text>
+        <Text className='font-inter-medium ml-2.5 flex-1'>Tên Đăng Nhập</Text>
         <Text className='text-muted-foreground text-sm'>{user.userName || 'N/A'}</Text>
       </View>
       <Separator />
@@ -43,7 +43,7 @@ export default function ViewProfile({ user }: ViewProfileProps) {
       <Separator />
       <View className='flex-row items-end'>
         <Feather name='phone' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5 flex-1'>Phone number</Text>
+        <Text className='font-inter-medium ml-2.5 flex-1'>Số Điện Thoại</Text>
         <Text className='text-muted-foreground text-sm'>{user.phoneNumber || 'N/A'}</Text>
       </View>
     </View>
