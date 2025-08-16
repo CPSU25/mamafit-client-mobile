@@ -13,6 +13,7 @@ export default function TicketLayout() {
     <Stack screenOptions={{ headerShown: false, animation: 'ios_from_right' }}>
       <Stack.Screen name='create' options={{ title: 'Create Ticket' }} />
       <Stack.Screen name='[ticketId]/detail' options={{ title: 'Ticket Detail' }} />
+      <Stack.Screen name='history' options={{ title: 'Ticket History' }} />
     </Stack>
   )
 }

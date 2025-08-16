@@ -131,7 +131,7 @@ export default function AppointmentDetailScreen() {
 
   return (
     <SafeView>
-      <View className='flex flex-row items-center gap-4 p-4 bg-background'>
+      <View className='flex flex-row items-center gap-3 p-4 bg-background'>
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>

@@ -112,99 +112,105 @@ export default function CreateWarrantyRequestForm({ index, orderItem }: CreateWa
         </View>
       </View>
 
-      {noMedias ? (
-        <View className='flex-row items-center gap-2'>
-          <View className='gap-1 flex-1'>
-            <TouchableOpacity
-              onPress={handlePickImages}
-              disabled={isImageUploading}
-              className='py-3 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
-            >
-              {SvgIcon.galleryImport({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
-              <Text className='text-xs text-muted-foreground'>{isImageUploading ? 'Đang Tải Lên...' : 'Thêm Ảnh'}</Text>
-            </TouchableOpacity>
-          </View>
-          <View className='gap-1 flex-1'>
-            <TouchableOpacity
-              onPress={handlePickVideos}
-              disabled={isVideoUploading}
-              className='py-3 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
-            >
-              {SvgIcon.videoPlay({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
-              <Text className='text-xs text-muted-foreground'>
-                {isVideoUploading ? 'Đang Tải Lên...' : 'Thêm Video'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      ) : (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <View className='gap-2'>
+        {noMedias ? (
           <View className='flex-row items-center gap-2'>
-            {currentVideos.length < videosMaxReached ? (
-              <>
-                {currentVideos.map((video, index) => (
+            <View className='gap-1 flex-1'>
+              <TouchableOpacity
+                onPress={handlePickImages}
+                disabled={isImageUploading}
+                className='py-3 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
+              >
+                {SvgIcon.galleryImport({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
+                <Text className='text-xs text-muted-foreground'>
+                  {isImageUploading ? 'Đang Tải Lên...' : 'Thêm Ảnh'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View className='gap-1 flex-1'>
+              <TouchableOpacity
+                onPress={handlePickVideos}
+                disabled={isVideoUploading}
+                className='py-3 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
+              >
+                {SvgIcon.videoPlay({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
+                <Text className='text-xs text-muted-foreground'>
+                  {isVideoUploading ? 'Đang Tải Lên...' : 'Thêm Video'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View className='flex-row items-center gap-2'>
+              {currentVideos.length < videosMaxReached ? (
+                <>
+                  {currentVideos.map((video, index) => (
+                    <VideoThumbnail
+                      key={index}
+                      uri={video}
+                      onRemove={() => handleRemoveVideo(index)}
+                      className='w-28 h-28 bg-transparent border-transparent p-0'
+                    />
+                  ))}
+                  <TouchableOpacity
+                    onPress={handlePickVideos}
+                    disabled={isVideoUploading}
+                    className='w-28 h-28 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
+                  >
+                    {SvgIcon.videoPlay({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
+                    <Text className='text-sm text-muted-foreground font-inter-medium'>
+                      {videosMaxReached - currentVideos.length}/{videosMaxReached}
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                currentVideos.map((video, index) => (
                   <VideoThumbnail
                     key={index}
                     uri={video}
                     onRemove={() => handleRemoveVideo(index)}
                     className='w-28 h-28 bg-transparent border-transparent p-0'
                   />
-                ))}
-                <TouchableOpacity
-                  onPress={handlePickVideos}
-                  disabled={isVideoUploading}
-                  className='w-28 h-28 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
-                >
-                  {SvgIcon.videoPlay({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
-                  <Text className='text-sm text-muted-foreground font-inter-medium'>
-                    {videosMaxReached - currentVideos.length}/{videosMaxReached}
-                  </Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              currentVideos.map((video, index) => (
-                <VideoThumbnail
-                  key={index}
-                  uri={video}
-                  onRemove={() => handleRemoveVideo(index)}
-                  className='w-28 h-28 bg-transparent border-transparent p-0'
-                />
-              ))
-            )}
-            {currentImages.length < imagesMaxReached ? (
-              <>
-                {currentImages.map((img, index) => (
+                ))
+              )}
+              {currentImages.length < imagesMaxReached ? (
+                <>
+                  {currentImages.map((img, index) => (
+                    <ImageThumbnail
+                      key={`${img}-${index}`}
+                      uri={img}
+                      onRemove={() => handleRemoveImage(index)}
+                      className='w-28 h-28 bg-transparent border-transparent p-0'
+                    />
+                  ))}
+                  <TouchableOpacity
+                    onPress={handlePickImages}
+                    disabled={isImageUploading}
+                    className='w-28 h-28 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
+                  >
+                    {SvgIcon.galleryImport({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
+                    <Text className='text-sm text-muted-foreground font-inter-medium'>
+                      {imagesMaxReached - currentImages.length}/{imagesMaxReached}
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                currentImages.map((img, index) => (
                   <ImageThumbnail
                     key={`${img}-${index}`}
                     uri={img}
                     onRemove={() => handleRemoveImage(index)}
                     className='w-28 h-28 bg-transparent border-transparent p-0'
                   />
-                ))}
-                <TouchableOpacity
-                  onPress={handlePickImages}
-                  disabled={isImageUploading}
-                  className='w-28 h-28 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
-                >
-                  {SvgIcon.galleryImport({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
-                  <Text className='text-sm text-muted-foreground font-inter-medium'>
-                    {imagesMaxReached - currentImages.length}/{imagesMaxReached}
-                  </Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              currentImages.map((img, index) => (
-                <ImageThumbnail
-                  key={`${img}-${index}`}
-                  uri={img}
-                  onRemove={() => handleRemoveImage(index)}
-                  className='w-28 h-28 bg-transparent border-transparent p-0'
-                />
-              ))
-            )}
-          </View>
-        </ScrollView>
-      )}
+                ))
+              )}
+            </View>
+          </ScrollView>
+        )}
+        {!!itemErrors?.images?.message && <FieldError message={String(itemErrors.images.message)} />}
+        {!!itemErrors?.videos?.message && <FieldError message={String(itemErrors.videos.message)} />}
+      </View>
 
       <View className='gap-1'>
         <Controller

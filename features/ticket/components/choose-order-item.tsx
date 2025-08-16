@@ -106,6 +106,7 @@ export default function ChooseOrderItem({
       <FlatList
         data={orderRequests}
         keyExtractor={(item) => item.id}
+        showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
           <Animated.View entering={FadeInDown.delay(200 + index * 50)}>
             <OrderCard
@@ -124,12 +125,12 @@ export default function ChooseOrderItem({
             </View>
           )
         }
-        contentContainerClassName='gap-2 p-2'
+        contentContainerClassName='gap-3 p-4'
         refreshControl={refreshControl}
       />
 
       {orderRequests && Array.isArray(orderRequests) && orderRequests.length > 0 ? (
-        <View className='px-2'>
+        <View className='px-4 pt-4'>
           <Button onPress={handleNext} disabled={isDisabled}>
             <Text className='font-inter-medium'>Tiếp Tục</Text>
           </Button>

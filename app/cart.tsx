@@ -109,7 +109,7 @@ export default function CartScreen() {
   return (
     <SafeView>
       <View className='flex flex-row items-center justify-between p-4'>
-        <View className='flex flex-row items-center gap-4'>
+        <View className='flex flex-row items-center gap-3'>
           <TouchableOpacity onPress={handleGoBack}>
             <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>

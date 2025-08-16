@@ -5,7 +5,10 @@ export const createTicketFormSchema = z.object({
   orderItemId: z.string().min(1, { message: 'Order item ID is required' }),
   title: z.string().min(1, { message: 'Title is required' }).max(100, { message: 'Title is too long' }),
   images: z.array(z.string().url({ message: 'Invalid URL format' })).min(2, { message: 'At least 2 images' }),
-  videos: z.array(z.string().url({ message: 'Invalid URL format' })).max(1, { message: 'Maximum 1 video allowed' }),
+  videos: z
+    .array(z.string().url({ message: 'Invalid URL format' }))
+    .min(1, { message: 'At least 1 video' })
+    .max(1, { message: 'Maximum 1 video allowed' }),
   type: z.enum([TicketType.WarrantyService, TicketType.DeliveryService, TicketType.Other], {
     message: 'Type is required'
   }),

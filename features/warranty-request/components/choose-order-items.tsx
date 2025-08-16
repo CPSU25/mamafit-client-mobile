@@ -172,7 +172,7 @@ export default function ChooseOrderItems({
             </View>
           )
         }
-        contentContainerClassName='gap-2 p-2'
+        contentContainerClassName='gap-3 p-4'
         refreshControl={refreshControl}
       />
 

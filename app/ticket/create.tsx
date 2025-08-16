@@ -1,7 +1,7 @@
 import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useCallback, useState } from 'react'
-import { FormProvider } from 'react-hook-form'
+import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { Image, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import SafeView from '~/components/safe-view'
@@ -11,6 +11,7 @@ import { Text } from '~/components/ui/text'
 import ChooseOrderItem from '~/features/ticket/components/choose-order-item'
 import CreateTicketForm from '~/features/ticket/components/create-ticket-form'
 import { useCreateTicket } from '~/features/ticket/hooks/use-create-ticket'
+import { CreateTicketFormSchema } from '~/features/ticket/validations'
 import { useGetOrderRequests } from '~/features/warranty-request/hooks/use-get-order-requests'
 import { useImagePicker } from '~/hooks/use-image-picker'
 import { useRefreshs } from '~/hooks/use-refresh'
@@ -21,7 +22,7 @@ import { OrderItem } from '~/types/order.type'
 export default function CreateTicketScreen() {
   const router = useRouter()
 
-  const { methods } = useCreateTicket()
+  const { methods, createTicketMutation } = useCreateTicket()
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedOrderItem, setSelectedOrderItem] = useState<OrderItem | null>(null)
 
@@ -48,15 +49,18 @@ export default function CreateTicketScreen() {
     path: FILE_PATH.TICKET
   })
 
-  const handleSelectOrderItem = useCallback((orderItem: OrderItem) => {
-    setSelectedOrderItem((prev) => {
-      if (prev?.id === orderItem.id) {
-        return null
-      }
-
-      return orderItem
-    })
-  }, [])
+  const handleSelectOrderItem = useCallback(
+    (orderItem: OrderItem) => {
+      setSelectedOrderItem((prev) => {
+        if (prev?.id === orderItem.id) {
+          return null
+        }
+        methods.setValue('orderItemId', orderItem.id)
+        return orderItem
+      })
+    },
+    [methods]
+  )
 
   const { refreshControl } = useRefreshs([refetchOrderRequests])
 
@@ -76,16 +80,27 @@ export default function CreateTicketScreen() {
     }
   }, [router, currentStep])
 
-  const isDisabled = !selectedOrderItem
+  const onSubmit: SubmitHandler<CreateTicketFormSchema> = (data) => {
+    console.log(data)
+
+    createTicketMutation.mutate(data)
+  }
 
   return (
     <SafeView>
-      <View className='flex flex-row items-center gap-4 p-4'>
-        <TouchableOpacity onPress={handleGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+      <View className='flex-row items-center gap-2 p-4'>
+        <View className='flex-row items-center gap-3 flex-1'>
+          <TouchableOpacity onPress={handleGoBack}>
+            <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          </TouchableOpacity>
+          <Text className='font-inter-semibold text-xl'>Tạo Yêu Cầu Hỗ Trợ</Text>
+        </View>
+        <TouchableOpacity onPress={() => router.push('/ticket/history')}>
+          <Feather name='clock' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>Tạo Yêu Cầu Hỗ Trợ</Text>
       </View>
+
+      <View className='bg-muted h-2' />
 
       <View className='flex-1'>
         {currentStep === 1 ? (
@@ -96,60 +111,64 @@ export default function CreateTicketScreen() {
             isLoading={isLoadingOrderRequests}
             refreshControl={refreshControl}
             handleNext={handleNext}
-            isDisabled={isDisabled}
+            isDisabled={!selectedOrderItem}
           />
         ) : null}
 
         {currentStep === 2 ? (
-          <FormProvider {...methods}>
-            <KeyboardAwareScrollView bottomOffset={50} className='flex-1' showsVerticalScrollIndicator={false}>
-              <View className='gap-4 px-4'>
-                {selectedOrderItem ? (
-                  <Card className='flex-row items-start gap-2 p-2' style={styles.container}>
-                    <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
-                      <Image
-                        source={{ uri: selectedOrderItem?.preset?.images?.[0] }}
-                        className='w-full h-full'
-                        resizeMode='contain'
-                      />
-                    </View>
-                    <View className='flex-1 h-20 justify-between pr-2'>
-                      <View>
-                        <Text className='native:text-sm font-inter-medium'>
-                          {selectedOrderItem?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
-                        </Text>
-                        <View className='flex-row items-center justify-between'>
-                          <Text className='native:text-xs text-muted-foreground'>
-                            {selectedOrderItem?.preset?.styleName ? 'Váy Bầu Tùy Chỉnh' : 'Váy Bầu Tùy Chỉnh'}
+          <View className='pt-4 flex-1'>
+            <FormProvider {...methods}>
+              <KeyboardAwareScrollView bottomOffset={50} className='flex-1' showsVerticalScrollIndicator={false}>
+                <View className='gap-4 px-4'>
+                  {selectedOrderItem ? (
+                    <Card className='flex-row items-start gap-2 p-2' style={styles.container}>
+                      <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
+                        <Image
+                          source={{ uri: selectedOrderItem?.preset?.images?.[0] }}
+                          className='w-full h-full'
+                          resizeMode='contain'
+                        />
+                      </View>
+                      <View className='flex-1 h-20 justify-between pr-2'>
+                        <View>
+                          <Text className='native:text-sm font-inter-medium'>
+                            {selectedOrderItem?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
                           </Text>
-                          <Text className='native:text-xs text-muted-foreground'>
-                            x{selectedOrderItem?.quantity || 1}
-                          </Text>
+                          <View className='flex-row items-center justify-between'>
+                            <Text className='native:text-xs text-muted-foreground'>
+                              {selectedOrderItem?.preset?.styleName ? 'Váy Bầu Tùy Chỉnh' : 'Váy Bầu Tùy Chỉnh'}
+                            </Text>
+                            <Text className='native:text-xs text-muted-foreground'>
+                              x{selectedOrderItem?.quantity || 1}
+                            </Text>
+                          </View>
+                        </View>
+                        <View className='items-end'>
+                          <Text className='native:text-xs'>SKU: {selectedOrderItem?.preset?.sku ?? 'N/A'}</Text>
                         </View>
                       </View>
-                      <View className='items-end'>
-                        <Text className='native:text-xs'>SKU: {selectedOrderItem?.preset?.sku ?? 'N/A'}</Text>
-                      </View>
-                    </View>
-                  </Card>
-                ) : null}
+                    </Card>
+                  ) : null}
 
-                <CreateTicketForm
-                  pickImages={pickImages}
-                  pickVideos={pickVideos}
-                  isImageUploading={isImageUploading}
-                  currentImages={currentImages}
-                  isVideoUploading={isVideoUploading}
-                  currentVideos={currentVideos}
-                />
+                  <CreateTicketForm
+                    pickImages={pickImages}
+                    pickVideos={pickVideos}
+                    isImageUploading={isImageUploading}
+                    currentImages={currentImages}
+                    isVideoUploading={isVideoUploading}
+                    currentVideos={currentVideos}
+                  />
+                </View>
+              </KeyboardAwareScrollView>
+              <View className='px-4 pt-4'>
+                <Button onPress={methods.handleSubmit(onSubmit)} disabled={createTicketMutation.isPending}>
+                  <Text className='font-inter-medium'>
+                    {createTicketMutation.isPending ? 'Đang Gửi...' : 'Gửi Yêu Cầu'}
+                  </Text>
+                </Button>
               </View>
-            </KeyboardAwareScrollView>
-            <View className='px-4'>
-              <Button>
-                <Text className='font-inter-medium'>Tạo Yêu Cầu</Text>
-              </Button>
-            </View>
-          </FormProvider>
+            </FormProvider>
+          </View>
         ) : null}
       </View>
     </SafeView>
