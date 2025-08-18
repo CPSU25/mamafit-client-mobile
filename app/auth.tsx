@@ -12,15 +12,15 @@ import { cn } from '~/lib/utils'
 
 const STEP_DESCRIPTIONS = {
   1: {
-    title: 'Thêm Email',
-    description: 'Nhập email để tạo tài khoản'
+    title: 'Thêm thông tin liên lạc',
+    description: 'Nhập email và số điện thoại để tạo tài khoản'
   },
   2: {
-    title: 'Xác Thực Email',
+    title: 'Xác thực email',
     description: 'Nhập mã đã được gửi đến email của bạn'
   },
   3: {
-    title: 'Tạo Mật Khẩu',
+    title: 'Tạo mật khẩu',
     description: 'Tạo mật khẩu để bảo mật tài khoản của bạn'
   }
 }
@@ -82,10 +82,10 @@ export default function AuthScreen() {
         >
           <TabsList className='flex-row w-full'>
             <TabsTrigger value='sign-in' className='flex-1'>
-              <Text>Đăng Nhập</Text>
+              <Text>Đăng nhập</Text>
             </TabsTrigger>
             <TabsTrigger value='register' className='flex-1'>
-              <Text>Đăng Ký</Text>
+              <Text>Đăng ký</Text>
             </TabsTrigger>
           </TabsList>
           <TabsContent value='sign-in' className='flex-1 flex'>

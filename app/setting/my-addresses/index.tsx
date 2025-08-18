@@ -57,7 +57,7 @@ export default function MyAddressesScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>Địa Chỉ Của Tôi</Text>
+        <Text className='font-inter-medium text-xl'>Danh sách địa chỉ</Text>
       </View>
 
       <View className='bg-muted h-2' />
@@ -73,7 +73,7 @@ export default function MyAddressesScreen() {
             onPress={() => router.push('/setting/my-addresses/create')}
           >
             <AntDesign name='pluscircleo' size={14} color={isDarkColorScheme ? 'white' : 'black'} />
-            <Text className='native:text-sm font-inter-medium'>Thêm Địa Chỉ</Text>
+            <Text className='native:text-sm font-inter-medium'>Thêm địa chỉ</Text>
           </Button>
         }
         contentContainerClassName='gap-4 p-4'

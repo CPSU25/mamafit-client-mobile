@@ -61,7 +61,7 @@ export default function CreateCanvasScreen() {
                 <View className='px-4 py-2'>
                   <Button onPress={methods.handleSubmit(handleSubmit)} disabled={getPresetMutation.isPending}>
                     <Text className='font-inter-medium'>
-                      {getPresetMutation.isPending ? 'Đang Lưu...' : 'Lưu Thay Đổi'}
+                      {getPresetMutation.isPending ? 'Đang lưu...' : 'Lưu thay đổi'}
                     </Text>
                   </Button>
                 </View>
@@ -89,7 +89,7 @@ export default function CreateCanvasScreen() {
               </TouchableOpacity>
               <Button onPress={addToCartMethods.handleSubmit(handleAddToCart)} disabled={addToCartMutation.isPending}>
                 <Text className='font-inter-medium'>
-                  {addToCartMutation.isPending ? 'Đang Thêm...' : 'Thêm Giỏ Hàng'}
+                  {addToCartMutation.isPending ? 'Đang thêm...' : 'Thêm giỏ hàng'}
                 </Text>
               </Button>
             </View>

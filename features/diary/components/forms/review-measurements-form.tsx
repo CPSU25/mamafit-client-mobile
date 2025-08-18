@@ -15,7 +15,7 @@ export default function ReviewMeasurementsForm() {
     <ScrollView showsVerticalScrollIndicator={false} className='p-4 mb-4'>
       <View className='flex flex-col gap-4 mb-4'>
         <InfoCard
-          title='Số Đo Của Bạn Đã Sẵn Sàng!'
+          title='Số đo của bạn đã sẵn sàng!'
           delay={100}
           description='Hãy nhớ, các số đo này là ước tính. Vui lòng kiểm tra và cập nhật nếu cần.'
         />
@@ -37,7 +37,7 @@ export default function ReviewMeasurementsForm() {
                   {category.icon}
                 </View>
                 <View>
-                  <Text className='font-inter-semibold text-sm uppercase'>{category.title}</Text>
+                  <Text className='font-inter-medium text-sm'>{category.title}</Text>
                   <Text className='text-xs text-muted-foreground'>{category.description}</Text>
                 </View>
               </View>

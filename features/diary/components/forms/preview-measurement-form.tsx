@@ -25,11 +25,11 @@ export default function PreviewMeasurementForm() {
 
   return (
     <KeyboardAwareScrollView bottomOffset={KEYBOARD_OFFSET} showsVerticalScrollIndicator={false}>
-      <View className='flex flex-col gap-4'>
+      <View className='gap-4'>
         {/* Weight Section */}
-        <Animated.View entering={FadeInDown.delay(100)} className='flex flex-col gap-2'>
+        <Animated.View entering={FadeInDown.delay(100)} className='gap-2'>
           <View>
-            <Text className='font-inter-medium text-sm'>Cân Nặng</Text>
+            <Text className='font-inter-medium'>Cân nặng</Text>
             <Text className='text-muted-foreground text-xs'>Theo dõi các thay đổi về cân nặng trong suốt thai kỳ</Text>
           </View>
           <Controller
@@ -52,9 +52,9 @@ export default function PreviewMeasurementForm() {
         </Animated.View>
 
         {/* Body Measurements Section */}
-        <Animated.View entering={FadeInDown.delay(200)} className='flex flex-col gap-2'>
+        <Animated.View entering={FadeInDown.delay(200)} className='gap-2'>
           <View>
-            <Text className='font-inter-medium text-sm'>Vòng Eo & Vòng Mông</Text>
+            <Text className='font-inter-medium text-sm'>Số đo 3 vòng</Text>
             <Text className='text-muted-foreground text-xs'>
               Theo dõi các thay đổi về hình dạng cơ thể trong suốt thai kỳ
             </Text>
@@ -68,7 +68,7 @@ export default function PreviewMeasurementForm() {
                 name='bust'
                 render={({ field: { onChange, value, ...field } }) => (
                   <Input
-                    placeholder='Vòng Eo'
+                    placeholder='Vòng eo'
                     keyboardType='numeric'
                     StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                     {...field}
@@ -89,7 +89,7 @@ export default function PreviewMeasurementForm() {
                 name='waist'
                 render={({ field: { onChange, value, ...field } }) => (
                   <Input
-                    placeholder='Vòng Mông'
+                    placeholder='Vòng hông'
                     keyboardType='numeric'
                     StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                     {...field}
@@ -110,7 +110,7 @@ export default function PreviewMeasurementForm() {
                 name='hip'
                 render={({ field: { onChange, value, ...field } }) => (
                   <Input
-                    placeholder='Vòng Mông'
+                    placeholder='Vòng hông'
                     keyboardType='numeric'
                     StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                     {...field}
@@ -129,13 +129,13 @@ export default function PreviewMeasurementForm() {
         <TipCard title='Tips' delay={300}>
           <View className='flex flex-col gap-1'>
             <Text className={cn('text-xs', isDarkColorScheme ? 'text-emerald-500' : 'text-emerald-600')}>
-              • Đo cùng lúc vào cùng một thời điểm để đảm bảo tính đồng nhất
+              • Đo cùng một thời điểm để đảm bảo tính đồng nhất.
             </Text>
             <Text className={cn('text-xs', isDarkColorScheme ? 'text-emerald-500' : 'text-emerald-600')}>
-              • Sử dụng thước đo mềm
+              • Sử dụng thước đo mềm.
             </Text>
             <Text className={cn('text-xs', isDarkColorScheme ? 'text-emerald-500' : 'text-emerald-600')}>
-              • Đứng thẳng và thở bình thường trong khi đo
+              • Đứng thẳng và thở bình thường trong khi đo.
             </Text>
           </View>
         </TipCard>

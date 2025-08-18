@@ -46,7 +46,7 @@ export default function AccountScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>Tài Khoản</Text>
+        <Text className='font-inter-medium text-xl'>Tài khoản</Text>
       </View>
 
       <View className='bg-muted h-2' />
@@ -57,8 +57,10 @@ export default function AccountScreen() {
 
       <View className='p-4'>
         <Text className='text-xs text-muted-foreground text-center mb-2'>MamaFit &copy; 2025</Text>
-        <Button size='lg' variant='outline' onPress={handleLogout} disabled={isPending}>
-          <Text className='text-rose-500 font-inter-medium'>{isPending ? 'Đang Đăng Xuất...' : 'Đăng Xuất'}</Text>
+        <Button variant='outline' onPress={handleLogout} disabled={isPending}>
+          <Text className='text-rose-500 font-inter-medium native:text-sm'>
+            {isPending ? 'Đang đăng xuất...' : 'Đăng xuất'}
+          </Text>
         </Button>
       </View>
     </SafeView>

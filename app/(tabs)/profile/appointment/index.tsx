@@ -350,13 +350,13 @@ export default function AppointmentScreen() {
                     <Text className='text-white font-inter-semibold text-xs'>
                       {selectedBranch.distance ? `${selectedBranch.distance.toFixed(1)}km` : 'N/A'}
                     </Text>
-                    <Text className='text-white/70 font-inter-regular text-xs'>Cách Bạn</Text>
+                    <Text className='text-white/70 font-inter-regular text-xs'>Cách bạn</Text>
                   </View>
                   <View className='items-center'>
                     <Text className='text-white font-inter-semibold text-xs'>
                       {selectedBranch.duration ? `${Math.round(selectedBranch.duration)}min` : 'N/A'}
                     </Text>
-                    <Text className='text-white/70 font-inter-regular text-xs'>Thời Gian</Text>
+                    <Text className='text-white/70 font-inter-regular text-xs'>Thời gian</Text>
                   </View>
                 </View>
               </View>
@@ -385,14 +385,14 @@ export default function AppointmentScreen() {
           <FormProvider {...methods}>
             <View className='flex-1' style={{ paddingBottom: bottom }}>
               {appointments && Array.isArray(appointments) && appointments.length > 0 ? (
-                <Text className='font-inter-semibold text-lg mb-4'>Chi Tiết Lịch Hẹn</Text>
+                <Text className='font-inter-medium text-lg mb-4'>Chi tiết lịch hẹn</Text>
               ) : (
                 <>
                   {currentStep === 1 ? (
                     <>
                       <View className='flex-row items-center justify-between px-4'>
                         <View>
-                          <Text className='font-inter-semibold text-xl text-center'>Chọn Chi Nhánh</Text>
+                          <Text className='font-inter-medium text-xl text-center'>Chọn chi nhánh</Text>
                           <Text className='text-xs text-muted-foreground'>
                             {branchesWithDirections.length} chi nhánh có sẵn
                           </Text>
@@ -425,9 +425,9 @@ export default function AppointmentScreen() {
                     <>
                       <View className='flex-row items-center justify-between px-4'>
                         <View>
-                          <Text className='font-inter-semibold text-xl'>Chi Tiết Lịch Hẹn</Text>
+                          <Text className='font-inter-medium text-xl'>Chi tiết lịch hẹn</Text>
                           <Text className='text-xs text-muted-foreground' numberOfLines={1}>
-                            Giờ Làm Việc: {format(parse(selectedBranch.openingHour, 'HH:mm:ss', new Date()), 'hh:mm a')}{' '}
+                            Giờ làm việc: {format(parse(selectedBranch.openingHour, 'HH:mm:ss', new Date()), 'hh:mm a')}{' '}
                             - {format(parse(selectedBranch.closingHour, 'HH:mm:ss', new Date()), 'hh:mm a')}
                           </Text>
                         </View>
@@ -450,7 +450,7 @@ export default function AppointmentScreen() {
 
                         <Button onPress={handleSubmit(onSubmit)} disabled={bookAppointmentMutation.isPending}>
                           <Text className='font-inter-medium'>
-                            {bookAppointmentMutation.isPending ? 'Đang Đặt...' : 'Đặt Lịch Hẹn'}
+                            {bookAppointmentMutation.isPending ? 'Đang đặt...' : 'Đặt lịch hẹn'}
                           </Text>
                         </Button>
                       </View>

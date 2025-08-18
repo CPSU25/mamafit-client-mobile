@@ -58,8 +58,8 @@ export default function CreateDesignRequestForm({
 
   return (
     <View className='flex flex-col gap-4'>
-      <Animated.View entering={FadeInDown.delay(100)} className='flex flex-col gap-1'>
-        <Text className='font-inter-semibold'>Yêu Cầu Thiết Kế</Text>
+      <Animated.View entering={FadeInDown.delay(100)}>
+        <Text className='font-inter-medium text-sm'>Yêu cầu thiết kế</Text>
         <Text className='text-muted-foreground text-xs'>
           Hoàn thành biểu mẫu bên dưới để gửi yêu cầu thiết kế của bạn.
         </Text>
@@ -78,7 +78,7 @@ export default function CreateDesignRequestForm({
             isMaxReached={isMaxReached}
             currentCount={currentImages.length}
             maxImages={5}
-            placeholder='Chọn ảnh từ thư viện của bạn'
+            placeholder='Chọn ảnh'
           />
 
           <ImageGrid images={currentImages} onRemoveImage={handleRemoveImage} />
@@ -108,7 +108,7 @@ export default function CreateDesignRequestForm({
         {isFormError(errors, 'description') && <FieldError message={errors.description?.message || ''} />}
       </Animated.View>
 
-      <WarningCard title='Lưu Ý' delay={400}>
+      <WarningCard title='Lưu ý' delay={400}>
         <Text className='text-xs text-amber-600 dark:text-amber-500'>
           Bạn sẽ được tính phí
           <Text className='text-xs font-inter-semibold text-amber-600 dark:text-amber-500'>

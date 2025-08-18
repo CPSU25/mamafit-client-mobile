@@ -113,11 +113,15 @@ export default function WeightOverTimeChart({ currentWeekData, diaryId, onRefetc
       {/* Header Section */}
       <View className='flex flex-row justify-between items-start'>
         <View className='text-left'>
-          <Text className='font-inter-medium text-sm'>Cân Nặng Của Bạn</Text>
-          <Text className='font-inter-extrabold text-2xl text-primary mt-1'>
-            {currentWeekData?.weight ? currentWeekData?.weight.toFixed(2) : 'N/A'} kg
-          </Text>
-          <Text className='text-xs text-muted-foreground'>Cân Nặng Tuần Này</Text>
+          <Text className='font-inter-medium text-sm'>Cân nặng của bạn</Text>
+          {currentWeekData?.weight ? (
+            <Text className='font-inter-extrabold text-2xl text-primary mt-1'>
+              {currentWeekData?.weight.toFixed(2)} kg
+            </Text>
+          ) : (
+            <Text className='font-inter-extrabold text-2xl text-primary mt-1'>N/A</Text>
+          )}
+          <Text className='text-xs text-muted-foreground'>Cân nặng tuần này</Text>
         </View>
 
         {/* Navigation Buttons */}

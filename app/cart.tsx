@@ -113,7 +113,7 @@ export default function CartScreen() {
           <TouchableOpacity onPress={handleGoBack}>
             <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
-          <Text className='font-inter-semibold text-xl'>Giỏ Hàng</Text>
+          <Text className='font-inter-medium text-xl'>Giỏ hàng</Text>
         </View>
         <TouchableOpacity onPress={() => router.push('/chat')}>
           <Feather name='message-circle' size={24} color={PRIMARY_COLOR.LIGHT} />
@@ -160,11 +160,11 @@ export default function CartScreen() {
         <View className='flex flex-row justify-between items-center p-4'>
           <View className='flex flex-row items-center gap-4'>
             <Checkbox checked={checkAll} onCheckedChange={toggleCheckAll} disabled={!cart?.length} />
-            <Text className='text-sm font-inter-medium'>Chọn Tất Cả</Text>
+            <Text className='text-sm font-inter-medium'>Chọn tất cả</Text>
           </View>
           <Button onPress={handleCheckOut} disabled={selectedItems.length === 0}>
             <Text className='text-white text-center font-inter-medium'>
-              Thanh Toán {selectedItems.length ? `(${selectedItems.length})` : ''}
+              Thanh toán {selectedItems.length ? `(${selectedItems.length})` : ''}
             </Text>
           </Button>
         </View>

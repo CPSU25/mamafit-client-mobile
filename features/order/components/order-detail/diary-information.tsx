@@ -22,7 +22,7 @@ export default function DiaryInformation({ diary }: DiaryInformationProps) {
     <Card className='bg-muted/5' style={styles.container}>
       <View className='flex-row items-center gap-2 px-3 py-2'>
         <MaterialCommunityIcons name='book-multiple' size={16} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium text-sm'>Thông Tin Nhật Ký</Text>
+        <Text className='font-inter-medium text-sm'>Thông tin nhật ký</Text>
       </View>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -32,20 +32,11 @@ export default function DiaryInformation({ diary }: DiaryInformationProps) {
               {diary?.name} <Text className='text-xs text-muted-foreground'>({diary?.age} tuổi)</Text>
             </Text>
             <View className='flex-row items-center gap-2'>
-              <Text className='text-xs text-muted-foreground'>Cân Nặng: {diary?.weight}kg</Text>
+              <Text className='text-xs text-muted-foreground'>Cân nặng: {diary?.weight}kg</Text>
               <Separator orientation='vertical' className='h-4' />
-              <Text className='text-xs text-muted-foreground'>Chiều Cao: {diary?.height}cm</Text>
+              <Text className='text-xs text-muted-foreground'>Chiều cao: {diary?.height}cm</Text>
               <Separator orientation='vertical' className='h-4' />
-              <Text className='text-xs text-muted-foreground'>
-                Thai Kỳ: {diary?.numberOfPregnancy}
-                {diary?.numberOfPregnancy === 1
-                  ? 'st'
-                  : diary?.numberOfPregnancy === 2
-                    ? 'nd'
-                    : diary?.numberOfPregnancy === 3
-                      ? 'rd'
-                      : 'th'}
-              </Text>
+              <Text className='text-xs text-muted-foreground'>Thai kỳ: Lần {diary?.numberOfPregnancy}</Text>
             </View>
           </TouchableOpacity>
         </DialogTrigger>

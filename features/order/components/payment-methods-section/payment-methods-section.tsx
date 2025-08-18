@@ -26,15 +26,15 @@ export default function PaymentMethodsSection({ iconSize, depositRate }: Payment
             <RadioGroupItemWithLabel
               value='FULL'
               onPress={() => onChange('FULL')}
-              label='Thanh Toán Đầy Đủ (Ngân Hàng)'
-              description='Thanh Toán đầy đủ ngay lập tức'
+              label='Thanh toán hết (Ngân hàng)'
+              description='Thanh toán đầy đủ đơn hàng'
               icon={<MaterialCommunityIcons name='credit-card-check' size={iconSize} color={PRIMARY_COLOR.LIGHT} />}
             />
             <RadioGroupItemWithLabel
               value='DEPOSIT'
               onPress={() => onChange('DEPOSIT')}
-              label={`Cọc ${depositRate * 100}% (Ngân Hàng)`}
-              description={`Thanh Toán ${depositRate * 100}% của tổng số tiền ngay lập tức`}
+              label={`Đặt cọc ${depositRate * 100}% (Ngân hàng)`}
+              description={`Thanh toán ${depositRate * 100}% của tổng số tiền`}
               icon={<MaterialCommunityIcons name='credit-card-clock' size={iconSize} color={PRIMARY_COLOR.LIGHT} />}
             />
           </RadioGroup>

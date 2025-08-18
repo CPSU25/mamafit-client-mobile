@@ -47,17 +47,17 @@ export default function OrderDetails({
     <Card className='bg-muted/5' style={[styles.container, { marginBottom: 48 }]}>
       <View className='px-3 py-2 flex-row items-center gap-2'>
         <MaterialCommunityIcons name='receipt' size={16} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium text-sm'>Chi Tiết Đơn Hàng</Text>
+        <Text className='font-inter-medium text-sm'>Chi tiết đơn hàng</Text>
       </View>
 
       <View className='gap-1 px-3 pb-3'>
         <View className='flex-row items-center gap-2'>
-          <Text className='flex-1 text-xs text-muted-foreground/80'>Mã Đơn Hàng</Text>
+          <Text className='flex-1 text-xs text-muted-foreground/80'>Mã đơn hàng</Text>
           <Text className='text-foreground/80 text-xs'>#{orderCode}</Text>
         </View>
 
         <View className='flex-row items-center gap-2'>
-          <Text className='flex-1 text-xs text-muted-foreground/80'>Ngày Đặt</Text>
+          <Text className='flex-1 text-xs text-muted-foreground/80'>Ngày đặt</Text>
           <Text className='text-foreground/80 text-xs'>
             {orderPlacedAt ? format(new Date(orderPlacedAt), "MMM dd, yyyy 'lúc' hh:mm a") : 'N/A'}
           </Text>
@@ -67,7 +67,7 @@ export default function OrderDetails({
           <View className='gap-1'>
             {subTotalAmount ? (
               <View className='flex-row items-center gap-2'>
-                <Text className='flex-1 text-xs text-muted-foreground/80'>Tổng Hàng Hóa</Text>
+                <Text className='flex-1 text-xs text-muted-foreground/80'>Tổng hàng hóa</Text>
                 <Text className='text-foreground/80 text-xs'>
                   đ{subTotalAmount > 0 ? subTotalAmount.toLocaleString('vi-VN') : '0'}
                 </Text>
@@ -76,7 +76,7 @@ export default function OrderDetails({
 
             {serviceAmount ? (
               <View className='flex-row items-center gap-2'>
-                <Text className='flex-1 text-xs text-muted-foreground/80'>Phí Dịch Vụ</Text>
+                <Text className='flex-1 text-xs text-muted-foreground/80'>Phí dịch vụ</Text>
                 <Text className='text-foreground/80 text-xs'>
                   đ{serviceAmount > 0 ? serviceAmount.toLocaleString('vi-VN') : '0'}
                 </Text>
@@ -116,7 +116,7 @@ export default function OrderDetails({
 
             {shippingFee ? (
               <View className='flex-row items-center gap-2'>
-                <Text className='flex-1 text-xs text-muted-foreground/80'>Phí Vận Chuyển</Text>
+                <Text className='flex-1 text-xs text-muted-foreground/80'>Phí vận chuyển</Text>
                 <Text className='text-foreground/80 text-xs'>
                   đ{shippingFee > 0 ? shippingFee.toLocaleString('vi-VN') : '0'}
                 </Text>
@@ -134,7 +134,7 @@ export default function OrderDetails({
               isViewMoreOrderDetails && 'font-inter-medium text-foreground text-sm'
             )}
           >
-            Tổng Thanh Toán
+            Tổng thanh toán
           </Text>
           <Text className={cn('text-foreground/80 text-xs', isViewMoreOrderDetails && 'font-inter-medium text-sm')}>
             đ{totalAmount ? totalAmount.toLocaleString('vi-VN') : '0'}
@@ -144,12 +144,12 @@ export default function OrderDetails({
         <View className='mt-2'>
           {isViewMoreOrderDetails ? (
             <TouchableOpacity className='flex-row items-center gap-1 justify-center p-2' onPress={toggleViewMore}>
-              <Text className='text-muted-foreground text-xs'>Thu Gọn</Text>
+              <Text className='text-muted-foreground text-xs'>Thu gọn</Text>
               <Feather name='chevron-up' color={isDarkColorScheme ? 'lightgray' : 'gray'} size={16} />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity className='flex-row items-center gap-1 justify-center p-2' onPress={toggleViewMore}>
-              <Text className='text-muted-foreground text-xs'>Xem Thêm</Text>
+              <Text className='text-muted-foreground text-xs'>Xem thêm</Text>
               <Feather name='chevron-down' color={isDarkColorScheme ? 'lightgray' : 'gray'} size={16} />
             </TouchableOpacity>
           )}

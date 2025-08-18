@@ -26,25 +26,25 @@ const navigationOptions = [
   {
     id: 1,
     name: 'index',
-    title: 'Trang Chủ',
+    title: 'Trang chủ',
     icon: (focused: boolean) => SvgIcon.home({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 2,
     name: 'diary',
-    title: 'Nhật Ký',
+    title: 'Nhật ký',
     icon: (focused: boolean) => SvgIcon.diary({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 3,
     name: 'canvas',
-    title: 'Thiết Kế',
+    title: 'Thiết kế',
     icon: (focused: boolean) => SvgIcon.penTool({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 4,
     name: 'notifications',
-    title: 'Thông Báo',
+    title: 'Thông báo',
     icon: (focused: boolean) => SvgIcon.notification({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
