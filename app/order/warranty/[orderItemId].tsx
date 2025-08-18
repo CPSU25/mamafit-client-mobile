@@ -138,7 +138,7 @@ export default function ViewWarrantyHistory() {
         <TouchableOpacity onPress={handleGoBack} className='p-1'>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl text-foreground'>Lịch Sử Bảo Hành</Text>
+        <Text className='font-inter-medium text-xl text-foreground'>Lịch Sử Bảo Hành</Text>
       </View>
 
       <View className='flex-1'>
@@ -252,7 +252,7 @@ export default function ViewWarrantyHistory() {
                       className='bg-primary/10 border border-primary/20 rounded-xl p-2 flex-row justify-center items-center gap-2'
                     >
                       <Feather name='link' size={16} color={PRIMARY_COLOR.LIGHT} />
-                      <Text className='text-primary font-inter-medium text-sm'>Xem Đơn Hàng</Text>
+                      <Text className='text-primary font-inter-medium text-sm'>Xem đơn hàng</Text>
                     </TouchableOpacity>
                   </View>
                 </Card>
@@ -261,7 +261,7 @@ export default function ViewWarrantyHistory() {
               <View className='mt-4 gap-1'>
                 <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='clock-fast' size={24} color='black' />
-                  <Text className='font-inter-semibold'>Yêu Cầu Gần Nhất</Text>
+                  <Text className='font-inter-semibold'>Yêu cầu gần nhất</Text>
                 </View>
                 <Text className='text-muted-foreground text-xs'>
                   Xem lịch sử yêu cầu bảo hành cho sản phẩm này, bao gồm cả dịch vụ miễn phí và có phí, để xem sản phẩm
@@ -329,7 +329,7 @@ export default function ViewWarrantyHistory() {
                       <View className='gap-1 px-2 py-1 rounded-xl border border-border bg-muted/50'>
                         <View className='flex-row items-center gap-1.5'>
                           <MaterialCommunityIcons name='barcode' size={14} color='#6b7280' />
-                          <Text className='text-xs text-muted-foreground'>Mã Vận Đơn</Text>
+                          <Text className='text-xs text-muted-foreground'>Mã vận đơn</Text>
                         </View>
                         <Text className='text-xs font-inter-semibold'>
                           {item.warrantyRequestItems.trackingCode || 'N/A'}
@@ -427,7 +427,7 @@ export default function ViewWarrantyHistory() {
                       className='bg-primary/10 border border-primary/20 rounded-xl p-2 flex-row justify-center items-center gap-2'
                     >
                       <Feather name='link' size={16} color={PRIMARY_COLOR.LIGHT} />
-                      <Text className='text-primary font-inter-medium text-sm'>Xem Đơn Hàng</Text>
+                      <Text className='text-primary font-inter-medium text-sm'>Xem đơn hàng Hàng</Text>
                     </TouchableOpacity>
                   </View>
                 </Card>

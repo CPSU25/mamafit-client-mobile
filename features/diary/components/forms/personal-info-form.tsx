@@ -20,44 +20,50 @@ export default function PersonalInfoForm() {
 
   return (
     <KeyboardAwareScrollView bottomOffset={KEYBOARD_OFFSET} showsVerticalScrollIndicator={false}>
-      <View className='flex flex-col gap-4'>
-        <Animated.View entering={FadeInDown.delay(100)} className='flex flex-col gap-1'>
-          <Text className='font-inter-semibold'>Thông Tin Cơ Bản</Text>
-          <Text className='text-muted-foreground text-xs'>
-            Vui lòng cung cấp thông tin cơ bản của bạn để giúp chúng tôi cá nhân hóa trải nghiệm của bạn.
-          </Text>
-        </Animated.View>
+      <View className='gap-4'>
+        <View className='gap-2'>
+          <Animated.View entering={FadeInDown.delay(100)}>
+            <Text className='font-inter-medium'>Thông tin cơ bản</Text>
+            <Text className='text-muted-foreground text-xs'>
+              Vui lòng cung cấp thông tin cơ bản của bạn để giúp chúng tôi cá nhân hóa trải nghiệm của bạn.
+            </Text>
+          </Animated.View>
 
-        <Animated.View entering={FadeInDown.delay(200)} className='flex flex-col gap-2'>
-          <Controller
-            control={control}
-            name='name'
-            render={({ field: { onChange, value, ...field } }) => (
-              <Input
-                placeholder='Tên Nhật Ký'
-                keyboardType='default'
-                StartIcon={<Feather name='book' size={20} color={PRIMARY_COLOR.LIGHT} />}
-                {...field}
-                value={value}
-                onChangeText={onChange}
-                className={cn('bg-background border-input', isFormError(errors, 'name') ? className : '')}
-              />
-            )}
-          />
-          {isFormError(errors, 'name') && <FieldError message={errors.name?.message || ''} />}
-        </Animated.View>
+          <Animated.View entering={FadeInDown.delay(200)} className='gap-2'>
+            <Controller
+              control={control}
+              name='name'
+              render={({ field: { onChange, value, ...field } }) => (
+                <Input
+                  placeholder='Tên nhật ký'
+                  keyboardType='default'
+                  StartIcon={<Feather name='book' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                  {...field}
+                  value={value}
+                  onChangeText={onChange}
+                  className={cn('bg-background border-input', isFormError(errors, 'name') ? className : '')}
+                />
+              )}
+            />
+            {isFormError(errors, 'name') && <FieldError message={errors.name?.message || ''} />}
+          </Animated.View>
+        </View>
 
-        <Animated.View entering={FadeInDown.delay(300)} className='flex flex-col gap-1'>
-          <Text className='font-inter-semibold'>Số Đo Cơ Thể</Text>
-          <Text className='text-muted-foreground text-xs'>Số đo của bạn giúp chúng tôi cung cấp gợi ý chính xác.</Text>
+        <Animated.View entering={FadeInDown.delay(300)} className='gap-2'>
+          <View>
+            <Text className='font-inter-medium'>Số đo cơ thể</Text>
+            <Text className='text-muted-foreground text-xs'>
+              Số đo của bạn giúp chúng tôi cung cấp gợi ý chính xác.
+            </Text>
+          </View>
 
-          <View className='flex flex-col gap-2 mt-4'>
+          <View className='gap-2'>
             <Controller
               control={control}
               name='weight'
               render={({ field: { onChange, value, ...field } }) => (
                 <Input
-                  placeholder='Cân Nặng'
+                  placeholder='Cân nặng'
                   keyboardType='numeric'
                   StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
@@ -75,7 +81,7 @@ export default function PersonalInfoForm() {
               name='height'
               render={({ field: { onChange, value, ...field } }) => (
                 <Input
-                  placeholder='Chiều Cao'
+                  placeholder='Chiều cao'
                   keyboardType='numeric'
                   StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
@@ -90,13 +96,15 @@ export default function PersonalInfoForm() {
           </View>
         </Animated.View>
 
-        <Animated.View entering={FadeInDown.delay(400)} className='flex flex-col gap-1'>
-          <Text className='font-inter-semibold'>Chi Tiết Cá Nhân</Text>
-          <Text className='text-muted-foreground text-xs'>
-            Tuổi của bạn giúp chúng tôi tính toán các chỉ số sức khỏe quan trọng.
-          </Text>
+        <Animated.View entering={FadeInDown.delay(400)} className='gap-2'>
+          <View>
+            <Text className='font-inter-medium'>Thông tin khác</Text>
+            <Text className='text-muted-foreground text-xs'>
+              Tuổi của bạn giúp chúng tôi tính toán các số đo chính xác hơn.
+            </Text>
+          </View>
 
-          <View className='flex flex-col gap-2 mt-4'>
+          <View className='gap-2'>
             <Controller
               control={control}
               name='age'

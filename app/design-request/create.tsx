@@ -48,7 +48,7 @@ export default function CreateDesignRequest() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>Liên Hệ Nhà Thiết Kế</Text>
+        <Text className='font-inter-medium text-xl'>Liên hệ Designer</Text>
       </View>
 
       <View className='bg-muted h-2' />

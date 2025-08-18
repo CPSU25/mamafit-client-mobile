@@ -47,104 +47,104 @@ export const ORDERED_TYPES = ['TEXT', 'IMAGE', 'PATTERN']
 export const ORDER_STATUS_TYPES: OrderStatusType[] = [
   {
     id: 1,
-    label: 'Chờ Thanh Toán',
+    label: 'Chờ thanh toán',
     value: OrderStatus.Created,
     urlValue: 'to-pay',
-    title: 'Đang Chờ Thanh Toán',
+    title: 'Đang chờ thanh toán',
     description:
       'Đơn hàng của bạn đã được đặt thành công và đang chờ bạn hoàn tất thanh toán để chúng tôi bắt đầu chuẩn bị.'
   },
   {
     id: 2,
-    label: 'Xác Nhận',
+    label: 'Xác nhận',
     value: OrderStatus.Confirmed,
-    urlValue: 'to-make',
-    title: 'Đơn Hàng Đã Xác Nhận',
+    urlValue: 'confirmed',
+    title: 'Đơn hàng đã xác nhận',
     description:
       'Chúng tôi đã nhận được thanh toán của bạn và xác nhận đơn hàng. Đội ngũ của chúng tôi đang chuẩn bị mọi thứ để tiến hành sản xuất.'
   },
   {
     id: 4,
-    label: 'Đang Xử Lý',
+    label: 'Đang xử lý',
     value: OrderStatus.InProgress,
     urlValue: 'in-progress',
-    title: 'Đang Xử Lý',
+    title: 'Đang xử lý',
     description:
       'Đơn hàng của bạn đang được xử lý. Đội ngũ của chúng tôi đang làm việc cẩn thận để đảm bảo mọi thứ đạt chuẩn chất lượng.'
   },
   {
     id: 6,
-    label: 'Thanh Toán Cọc',
+    label: 'Thanh toán cọc',
     value: OrderStatus.AwaitingPaidRest,
     urlValue: 'to-pay-rest',
-    title: 'Đang Chờ Thanh Toán Còn Lại',
+    title: 'Đang chờ thanh toán còn lại',
     description:
       'Đơn hàng của bạn đã vượt qua tất cả kiểm tra chất lượng. Vui lòng thanh toán phần còn lại để chúng tôi chuẩn bị giao hàng cho bạn.'
   },
   {
     id: 7,
-    label: 'Thanh Toán Bảo Hành',
+    label: 'Thanh toán bảo hành',
     value: OrderStatus.AwaitingPaidWarranty,
     urlValue: 'to-pay-warranty',
-    title: 'Đang Chờ Thanh Toán Bảo Hành',
+    title: 'Đang chờ thanh toán bảo hành',
     description: 'Vui lòng hoàn tất thanh toán để chúng tôi tiếp tục quy trình bảo hành.'
   },
   {
     id: 8,
-    label: 'Đang Đóng Gói',
+    label: 'Đang đóng gói',
     value: OrderStatus.Packaging,
     urlValue: 'packaging',
-    title: 'Đang Đóng Gói',
+    title: 'Đang đóng gói',
     description: 'Đơn hàng của bạn đang được đóng gói cẩn thận để đảm bảo đến tay bạn an toàn và nguyên vẹn.'
   },
   {
     id: 9,
-    label: 'Đang Giao Hàng',
+    label: 'Đang giao hàng',
     value: OrderStatus.Delevering,
     urlValue: 'to-deliver',
-    title: 'Đang Giao Hàng',
+    title: 'Đang giao hàng',
     description: 'Đơn hàng đã được đóng gói và đang trên đường giao tới địa chỉ của bạn.'
   },
   {
     id: 10,
-    label: 'Đang Lấy Hàng',
+    label: 'Đang lấy hàng',
     value: OrderStatus.PickUpInProgress,
     urlValue: 'pick-up-in-progress',
-    title: 'Đang Chuẩn Bị Lấy Hàng',
+    title: 'Đang chuẩn bị lấy hàng',
     description: 'Đơn hàng của bạn đang được chuẩn bị để gửi đến nhà máy cho dịch vụ bảo hành.'
   },
   {
     id: 11,
-    label: 'Chờ Lấy Hàng',
+    label: 'Chờ lấy hàng',
     value: OrderStatus.ReceivedAtBranch,
     urlValue: 'received-at-branch',
-    title: 'Chờ Lấy Hàng',
+    title: 'Chờ lấy hàng',
     description: 'Đơn hàng đã đến chi nhánh và sẵn sàng để bạn nhận theo thời gian thuận tiện.'
   },
   {
     id: 12,
-    label: 'Đã Nhận Hàng',
+    label: 'Đã nhận hàng',
     value: OrderStatus.Completed,
     urlValue: 'to-rate',
-    title: 'Đã Hoàn Thành Đơn Hàng',
+    title: 'Đã hoàn thành đơn hàng',
     description:
       'Đơn hàng của bạn đã được giao thành công. Vui lòng xác nhận đã nhận và chia sẻ phản hồi với chúng tôi.'
   },
   {
     id: 13,
-    label: 'Đã Hủy',
+    label: 'Đã hủy',
     value: OrderStatus.Cancelled,
     urlValue: 'cancelled',
-    title: 'Đơn Hàng Đã Hủy',
+    title: 'Đơn hàng đã hủy',
     description:
       'Đơn hàng của bạn đã bị hủy. Nếu cần hỗ trợ hoặc muốn đặt lại, vui lòng liên hệ bộ phận chăm sóc khách hàng.'
   },
   {
     id: 14,
-    label: 'Đã Trả Hàng',
+    label: 'Đã trả hàng',
     value: OrderStatus.Returned,
     urlValue: 'returned',
-    title: 'Đơn Hàng Đã Trả',
+    title: 'Đơn hàng đã trả',
     description:
       'Đơn hàng của bạn đã được trả lại cho chúng tôi. Vui lòng liên hệ bộ phận hỗ trợ nếu cần trợ giúp hoặc thêm thông tin.'
   }

@@ -57,7 +57,7 @@ export default function DiarySection({
                 isDarkColorScheme ? 'text-primary-foreground' : 'text-primary'
               )}
             >
-              Chọn nhật ký
+              Chọn nhật ký mang thai
             </Text>
             <Text className={cn('text-xs', isDarkColorScheme ? 'text-primary-foreground/70' : 'text-primary/70')}>
               Hãy giúp chúng tôi tạo ra chiếc váy phù hợp nhất
@@ -69,7 +69,7 @@ export default function DiarySection({
           <DialogTrigger asChild>
             <TouchableOpacity className='flex-1 gap-2 px-2 pb-2 flex-row items-center justify-center'>
               <MaterialCommunityIcons name='eye' size={iconSize} color={PRIMARY_COLOR.LIGHT} />
-              <Text className='text-sm font-inter-medium text-primary'>Xem Số Đo Gần Nhất</Text>
+              <Text className='text-sm font-inter-medium text-primary'>Xem số đo mới nhất</Text>
             </TouchableOpacity>
           </DialogTrigger>
           <DialogContent

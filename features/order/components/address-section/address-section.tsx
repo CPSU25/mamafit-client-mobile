@@ -112,11 +112,11 @@ export default function AddressSection({
             size: iconSize,
             color: tabValue === DeliveryMethod.Delivery ? 'PRIMARY' : 'GRAY'
           })}
-          <Text>Giao Hàng</Text>
+          <Text>Giao hàng</Text>
         </TabsTrigger>
         <TabsTrigger value={DeliveryMethod.PickUp} className='flex-1 flex-row items-center gap-2'>
           {SvgIcon.shop({ size: iconSize, color: tabValue === DeliveryMethod.PickUp ? 'PRIMARY' : 'GRAY' })}
-          <Text>Tại Cửa Hàng</Text>
+          <Text>Tại cửa hàng</Text>
         </TabsTrigger>
       </TabsList>
       <TabsContent value='DELIVERY'>{renderAddressContent()}</TabsContent>

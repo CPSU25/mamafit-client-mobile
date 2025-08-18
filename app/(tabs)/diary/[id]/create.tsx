@@ -159,7 +159,7 @@ export default function CreateMeasurementScreen() {
         <TouchableOpacity onPress={handleGoBack} className='absolute left-3 z-10'>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl text-center flex-1'>Thêm Số Đo</Text>
+        <Text className='font-inter-medium text-xl text-center flex-1'>Thêm số đo mới</Text>
       </View>
 
       <View className='px-4'>
@@ -193,7 +193,7 @@ export default function CreateMeasurementScreen() {
             {stepOneRootMsg && <FieldError message={stepOneRootMsg} />}
             <Button onPress={handlePreviewMeasurement(onSubmitStepOne)} disabled={previewMeasurementMutation.isPending}>
               <Text className='font-inter-medium'>
-                {previewMeasurementMutation.isPending ? 'Đang Tính...' : 'Tiếp Theo'}
+                {previewMeasurementMutation.isPending ? 'Đang tính toán...' : 'Tiếp theo'}
               </Text>
             </Button>
           </Animated.View>

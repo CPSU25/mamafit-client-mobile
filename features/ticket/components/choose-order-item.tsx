@@ -83,7 +83,7 @@ const OrderCard = ({
       <Separator />
 
       <View className='flex-row items-center gap-2 p-3'>
-        <Text className='flex-1 text-xs text-muted-foreground/80'>Nhận Hàng</Text>
+        <Text className='flex-1 text-xs text-muted-foreground/80'>Nhận hàng</Text>
         <Text className='text-foreground/80 text-xs'>
           {order?.receivedAt ? format(new Date(order.receivedAt), "MMM dd, yyyy 'at' hh:mm a") : 'N/A'}
         </Text>

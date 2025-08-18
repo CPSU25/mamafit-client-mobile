@@ -36,7 +36,7 @@ export default function DeliveryInformation({
         <>
           <View className='px-3 py-2 flex-row items-center gap-2'>
             <MaterialCommunityIcons name='truck-fast' size={16} color='#059669' />
-            <Text className='font-inter-medium text-sm'>Mã Vận Đơn</Text>
+            <Text className='font-inter-medium text-sm'>Mã vận đơn</Text>
           </View>
 
           <View className='flex-1 px-3 pb-3'>
@@ -49,7 +49,7 @@ export default function DeliveryInformation({
 
       <View className='px-3 py-2 flex-row items-center gap-2'>
         <MaterialCommunityIcons name='map-marker' size={16} color='#059669' />
-        <Text className='font-inter-medium text-sm'>Thông Tin Giao Hàng</Text>
+        <Text className='font-inter-medium text-sm'>Thông tin giao hàng</Text>
       </View>
 
       <View className='flex-1 px-3 pb-3'>

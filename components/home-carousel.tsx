@@ -15,7 +15,7 @@ export default function HomeCarousel() {
         autoPlayInterval={10 * 1000} // 10 seconds
         autoPlay={true}
         data={defaultDataWith6Colors}
-        height={200}
+        height={180}
         loop={true}
         pagingEnabled={true}
         snapEnabled={true}

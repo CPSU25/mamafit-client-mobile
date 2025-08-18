@@ -34,7 +34,7 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
     <Card style={styles.container}>
       <View className='flex-row items-center px-3 py-2'>
         <MaterialCommunityIcons className='mr-2' name='shield' size={16} color='#2563eb' />
-        <Text className='font-inter-medium text-sm mr-1.5'>Thông Tin Bảo Hành</Text>
+        <Text className='font-inter-medium text-sm mr-1.5'>Thông tin bảo hành</Text>
 
         {warrantyRequestDetail?.warrantyRequest?.requestType === 'FEE' ? (
           <View className='px-2 bg-rose-50 border border-rose-100 rounded-lg'>
@@ -98,7 +98,7 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
               className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-2 bg-blue-600'
             >
               <Feather name='link' size={16} color='white' />
-              <Text className='text-sm text-white font-inter-medium'>Xem Đơn</Text>
+              <Text className='text-sm text-white font-inter-medium'>Xem đơn hàng</Text>
             </TouchableOpacity>
           </View>
         </>

@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import Ratings from '~/components/ratings'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
@@ -53,7 +54,7 @@ export default function ProductDetailScreen() {
           <Feather name='shopping-bag' size={24} color='white' />
         </TouchableOpacity>
         <View className='flex flex-col gap-2'>
-          <Text className='text-xs text-muted-foreground px-4 pt-4'>{variations.length} biến thể có sẵn</Text>
+          <Text className='text-xs text-muted-foreground px-4 pt-2'>{variations.length} phân loại</Text>
           <FlatList
             data={variations}
             renderItem={({ item }) => (
@@ -72,7 +73,7 @@ export default function ProductDetailScreen() {
           />
           <View className='flex flex-row items-center justify-between px-4'>
             <Text className='text-primary font-inter-semibold text-2xl'>
-              <Text className='text-primary underline font-inter-medium text-lg'>đ</Text>139.400
+              <Text className='text-primary underline font-inter-semibold text-lg'>đ</Text>139.400
             </Text>
             <View className='flex flex-row items-center gap-2'>
               <Text className='font-inter-semibold text-[10px]'>26,6k Đã Bán</Text>
@@ -86,10 +87,10 @@ export default function ProductDetailScreen() {
           <TouchableOpacity className='flex flex-row items-center gap-1 px-4'>
             <Text className='font-inter-medium text-lg'>5.0</Text>
             <AntDesign name='star' size={16} color='orange' />
-            <Text className='font-inter-medium text-sm flex-1'>
-              Đánh Giá Sản Phẩm <Text className='text-muted-foreground text-xs'>(100)</Text>
+            <Text className='ml-2 font-inter-medium text-xs flex-1'>
+              Đánh giá sản phẩm <Text className='text-muted-foreground text-[8px]'>(100)</Text>
             </Text>
-            <Text className='text-muted-foreground text-xs'>Xem Tất Cả</Text>
+            <Text className='text-muted-foreground text-xs'>Xem tất cả</Text>
             <Feather name='chevron-right' size={16} color='lightgray' />
           </TouchableOpacity>
           <Separator />
@@ -114,28 +115,29 @@ export default function ProductDetailScreen() {
             onPress={toggleDescription}
             className='flex flex-row justify-center items-end gap-1 w-full mb-28'
           >
-            <Text className='text-sm'>{isDescriptionExpanded ? 'Xem Ít Hơn' : 'Xem Nhiều Hơn'}</Text>
-            <Feather name={isDescriptionExpanded ? 'chevron-up' : 'chevron-down'} size={20} color='lightgray' />
+            <Text className='text-sm'>{isDescriptionExpanded ? 'Thu gọn' : 'Xem thêm'}</Text>
+            <Feather name={isDescriptionExpanded ? 'chevron-up' : 'chevron-down'} size={20} color='gray' />
           </TouchableOpacity>
         </View>
       </ScrollView>
       <View
         className='absolute bottom-0 bg-background w-full flex flex-row items-center'
         style={{
-          paddingBottom: bottom
+          paddingBottom: bottom,
+          boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)'
         }}
       >
         <TouchableOpacity className='flex flex-col items-center gap-1 w-1/4'>
           <Feather name='message-circle' size={20} color={isDarkColorScheme ? 'white' : 'black'} />
-          <Text className={cn('text-xs', isDarkColorScheme && 'text-white')}>Trò Chuyện Ngay</Text>
+          <Text className={cn('text-xs', isDarkColorScheme && 'text-white')}>Trò chuyện</Text>
         </TouchableOpacity>
         <Separator orientation='vertical' className='h-2/3' />
         <TouchableOpacity className='flex flex-col items-center gap-1 w-1/4 py-2'>
           <Feather name='shopping-bag' size={20} color={isDarkColorScheme ? 'white' : 'black'} />
-          <Text className={cn('text-xs', isDarkColorScheme && 'text-white')}>Thêm Vào Giỏ Hàng</Text>
+          <Text className={cn('text-xs', isDarkColorScheme && 'text-white')}>Thêm giỏ hàng</Text>
         </TouchableOpacity>
         <TouchableOpacity className='flex flex-col items-center gap-1 w-2/4 bg-primary py-2'>
-          <Text className='text-white text-sm font-inter-medium'>Mua Ngay</Text>
+          <Text className='text-white text-sm font-inter-medium'>Mua ngay</Text>
           <Text className='text-white font-inter-semibold text-xl'>
             <Text className='text-white underline font-inter-medium'>đ</Text>139.400
           </Text>
@@ -157,12 +159,8 @@ function Feedback() {
         </Avatar>
         <Text className='font-inter-medium text-xs'>9u4aclg24u</Text>
       </View>
-      <View className='flex flex-row items-center gap-0.5'>
-        {[1, 2, 3, 4, 5].map((item) => (
-          <AntDesign name='star' size={12} color='orange' key={item} />
-        ))}
-      </View>
-      <Text className='text-muted-foreground text-xs'>Biến Thể: Trắng, S</Text>
+      <Ratings rating={5} displayCount={false} />
+      <Text className='text-muted-foreground text-xs'>Phân loại: Trắng, S</Text>
       <Text numberOfLines={2} className='text-xs'>
         Áo mềm chất ổn, form rộng nha, phù hợp với các bạn cao to mặc vừa che khuyết điểm tốt vừa có gu
       </Text>

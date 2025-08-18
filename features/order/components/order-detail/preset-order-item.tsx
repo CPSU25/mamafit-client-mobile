@@ -84,7 +84,7 @@ export default function PresetOrderItem({
                     <Text className='native:text-xs text-muted-foreground'>({option.value})</Text>
                   )}
                 </Text>
-                <Text className='native:text-xs text-muted-foreground'>Vị Trí: {option.position.name}</Text>
+                <Text className='native:text-xs text-muted-foreground'>Vị trí: {option.position.name}</Text>
               </View>
 
               <Text className='native:text-sm font-inter-medium text-blue-600'>

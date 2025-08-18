@@ -71,15 +71,15 @@ export default function ViewTicketDetailScreen() {
               </View>
             </Card>
             <Card className='px-3 py-2 border-transparent flex-row items-center gap-2'>
-              <Text className='font-inter-medium flex-1'>Loại Hỗ Trợ</Text>
+              <Text className='font-inter-medium flex-1'>Loại hỗ trợ</Text>
               {ticket?.type === TicketType.DeliveryService ? (
-                <Text className='text-xs text-muted-foreground'>Hỗ Trợ Giao Hàng</Text>
+                <Text className='text-xs text-muted-foreground'>Hỗ trợ giao hàng</Text>
               ) : null}
               {ticket?.type === TicketType.WarrantyService ? (
-                <Text className='text-xs text-muted-foreground'>Hỗ Trợ Bảo Hành</Text>
+                <Text className='text-xs text-muted-foreground'>Hỗ trợ bảo hành</Text>
               ) : null}
               {ticket?.type === TicketType.Other ? (
-                <Text className='text-xs text-muted-foreground'>Hỗ Trợ Khác</Text>
+                <Text className='text-xs text-muted-foreground'>Hỗ trợ khác</Text>
               ) : null}
             </Card>
             <Card className='px-3 py-2 border-transparent flex-row items-center gap-2'>
@@ -91,7 +91,7 @@ export default function ViewTicketDetailScreen() {
               <Text className='text-sm text-muted-foreground/80'>{ticket?.description}</Text>
             </Card>
             <Card className='gap-1 p-2 border-transparent'>
-              <Text className='font-inter-medium mb-1'>Hình Ảnh & Video</Text>
+              <Text className='font-inter-medium mb-1'>Hình ảnh & Video</Text>
               <ScrollView nestedScrollEnabled horizontal showsHorizontalScrollIndicator={false}>
                 <View className='flex-row items-center gap-3'>
                   {(ticket?.videos ?? []).map((img, index) => (

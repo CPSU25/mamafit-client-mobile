@@ -10,8 +10,8 @@ import { Text } from '~/components/ui/text'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { isFormError } from '~/lib/utils'
 import { useSignIn } from '../hooks/use-sign-in'
-import GoogleAuthButton from './google-auth-button'
 import { SignInSchema } from '../validations'
+import GoogleAuthButton from './google-auth-button'
 
 export default function SignInForm() {
   const { bottom } = useSafeAreaInsets()
@@ -42,7 +42,7 @@ export default function SignInForm() {
               {...field}
               value={value}
               onChangeText={onChange}
-              placeholder='Tên Đăng Nhập hoặc Email'
+              placeholder='Email hoặc tên đăng nhập'
               StartIcon={<Feather name='mail' size={20} color={PRIMARY_COLOR.LIGHT} />}
               autoFocus
               spellCheck={false}
@@ -58,7 +58,7 @@ export default function SignInForm() {
               {...field}
               value={value}
               onChangeText={onChange}
-              placeholder='Mật Khẩu'
+              placeholder='Mật khẩu'
               StartIcon={<Feather name='lock' size={20} color={PRIMARY_COLOR.LIGHT} />}
               secureTextEntry
               spellCheck={false}
@@ -72,7 +72,7 @@ export default function SignInForm() {
       <View className='flex flex-col gap-2' style={{ paddingBottom: bottom }}>
         {rootMsg && <FieldError message={rootMsg} />}
         <Button onPress={handleSubmit(onSubmit)} disabled={isSigningIn}>
-          <Text className='font-inter-medium text-white'>{isSigningIn ? 'Đang Đăng Nhập...' : 'Đăng Nhập'}</Text>
+          <Text className='font-inter-medium text-white'>{isSigningIn ? 'Đang đăng nhập...' : 'Đăng Nhập'}</Text>
         </Button>
         <GoogleAuthButton />
       </View>

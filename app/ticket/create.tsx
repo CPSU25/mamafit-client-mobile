@@ -93,7 +93,7 @@ export default function CreateTicketScreen() {
           <TouchableOpacity onPress={handleGoBack}>
             <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
-          <Text className='font-inter-semibold text-xl'>Tạo Yêu Cầu Hỗ Trợ</Text>
+          <Text className='font-inter-medium text-xl'>Hỗ trợ</Text>
         </View>
         <TouchableOpacity onPress={() => router.push('/ticket/history')}>
           <Feather name='clock' size={24} color={PRIMARY_COLOR.LIGHT} />

@@ -27,7 +27,7 @@ export default function PreviewAddOnOptionCard({ option, onRemove, iconSize, qua
           {option.name}{' '}
           {option.type === 'TEXT' && <Text className='native:text-xs text-muted-foreground'>({option.value})</Text>}
         </Text>
-        <Text className='native:text-xs text-muted-foreground'>Vị Trí: {option.positionName}</Text>
+        <Text className='native:text-xs text-muted-foreground'>Vị trí: {option.positionName}</Text>
       </View>
 
       <Text className='native:text-sm font-inter-medium text-blue-600'>

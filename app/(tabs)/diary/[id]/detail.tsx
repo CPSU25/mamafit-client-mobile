@@ -50,13 +50,15 @@ const DiaryHeader = ({ diaryId, onGoBack }: DiaryHeaderProps) => {
         <TouchableOpacity onPress={onGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='text-xl font-inter-semibold flex-1'>Chi Tiết Nhật Ký</Text>
-        <TouchableOpacity onPress={() => router.push({ pathname: '/diary/[id]/history', params: { id: diaryId } })}>
-          <Feather name='clock' size={24} color={PRIMARY_COLOR.LIGHT} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => router.push({ pathname: '/diary/[id]/setting', params: { id: diaryId } })}>
-          <Feather name='settings' size={24} color={PRIMARY_COLOR.LIGHT} />
-        </TouchableOpacity>
+        <Text className='text-xl font-inter-medium flex-1'>Chi tiết nhật ký</Text>
+        <View className='flex-row items-center gap-4'>
+          <TouchableOpacity onPress={() => router.push({ pathname: '/diary/[id]/history', params: { id: diaryId } })}>
+            <Feather name='clock' size={24} color={PRIMARY_COLOR.LIGHT} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push({ pathname: '/diary/[id]/setting', params: { id: diaryId } })}>
+            <Feather name='settings' size={24} color={PRIMARY_COLOR.LIGHT} />
+          </TouchableOpacity>
+        </View>
       </View>
       <View className='bg-muted h-2' />
     </>
@@ -68,10 +70,10 @@ const CurrentWeekSection = ({ measurement, diaryId }: CurrentWeekSectionProps) =
     <View className='flex flex-col gap-1'>
       <View className='flex flex-row items-center gap-2'>
         {SvgIcon.calendar({ size: ICON_SIZE.EXTRA_SMALL, color: 'PRIMARY' })}
-        <Text className='font-inter-semibold'>Tuần Hiện Tại - {measurement?.weekOfPregnancy}</Text>
+        <Text className='font-inter-medium'>Tuần thai hiện tại - Tuần {measurement?.weekOfPregnancy}</Text>
       </View>
       <Text className='text-muted-foreground text-xs'>
-        Bạn chỉ có thể chỉnh sửa số đo trong tuần hiện tại. Dữ liệu của các tuần trước không thể chỉnh sửa.
+        Bạn chỉ có thể chỉnh sửa số đo trong tuần thai hiện tại. Dữ liệu của các tuần trước không thể chỉnh sửa.
       </Text>
     </View>
 
@@ -117,7 +119,7 @@ const InsightsSection = ({ currentWeekData, diaryId, weightRefetchRef, waistHipR
               <Text>Cân Nặng</Text>
             </TabsTrigger>
             <TabsTrigger value={CHART_TABS.WAIST_HIP} className='flex-1'>
-              <Text>Eo & Mông</Text>
+              <Text>Eo & Hông</Text>
             </TabsTrigger>
           </TabsList>
 

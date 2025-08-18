@@ -23,28 +23,48 @@ export default function ViewProfile({ user }: ViewProfileProps) {
         </AvatarFallback>
       </Avatar>
 
-      <View className='flex-row items-end'>
-        <Feather name='user' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5 flex-1'>Tên Tài Khoản</Text>
-        <Text className='text-muted-foreground text-sm'>{user.fullName || 'N/A'}</Text>
+      <View className='flex-row items-center'>
+        <View className='p-2 bg-primary/10 rounded-full'>
+          <Feather name='user' size={18} color={PRIMARY_COLOR.LIGHT} />
+        </View>
+        <View className='ml-3 flex-1'>
+          <Text className='font-inter-medium text-sm'>Tên tài khoản</Text>
+          <Text className='text-xs text-muted-foreground'>Sẽ hiển thị công khai</Text>
+        </View>
+        <Text className='text-muted-foreground text-xs'>{user.fullName || 'N/A'}</Text>
       </View>
       <Separator />
-      <View className='flex-row items-end'>
-        <Feather name='user' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5 flex-1'>Tên Đăng Nhập</Text>
-        <Text className='text-muted-foreground text-sm'>{user.userName || 'N/A'}</Text>
+      <View className='flex-row items-center'>
+        <View className='p-2 bg-primary/10 rounded-full'>
+          <Feather name='user' size={18} color={PRIMARY_COLOR.LIGHT} />
+        </View>
+        <View className='ml-3 flex-1'>
+          <Text className='font-inter-medium text-sm'>Tên đăng nhập</Text>
+          <Text className='text-xs text-muted-foreground'>Dùng để đăng nhập vào hệ thống</Text>
+        </View>
+        <Text className='text-muted-foreground text-xs'>{user.userName || 'N/A'}</Text>
       </View>
       <Separator />
-      <View className='flex-row items-end'>
-        <Feather name='mail' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5 flex-1'>Email</Text>
-        <Text className='text-muted-foreground text-sm'>{user.userEmail || 'N/A'}</Text>
+      <View className='flex-row items-center'>
+        <View className='p-2 bg-primary/10 rounded-full'>
+          <Feather name='mail' size={18} color={PRIMARY_COLOR.LIGHT} />
+        </View>
+        <View className='ml-3 flex-1'>
+          <Text className='font-inter-medium text-sm'>Email</Text>
+          <Text className='text-xs text-muted-foreground'>Nhận hóa đơn và thông tin khác</Text>
+        </View>
+        <Text className='text-muted-foreground text-xs'>{user.userEmail || 'N/A'}</Text>
       </View>
       <Separator />
-      <View className='flex-row items-end'>
-        <Feather name='phone' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5 flex-1'>Số Điện Thoại</Text>
-        <Text className='text-muted-foreground text-sm'>{user.phoneNumber || 'N/A'}</Text>
+      <View className='flex-row items-center'>
+        <View className='p-2 bg-primary/10 rounded-full'>
+          <Feather name='phone' size={18} color={PRIMARY_COLOR.LIGHT} />
+        </View>
+        <View className='ml-3 flex-1'>
+          <Text className='font-inter-medium text-sm'>Số điện thoại</Text>
+          <Text className='text-xs text-muted-foreground'>Shipper sẽ gọi điện cho bạn</Text>
+        </View>
+        <Text className='text-muted-foreground text-xs'>{user.phoneNumber || 'N/A'}</Text>
       </View>
     </View>
   )

@@ -23,19 +23,32 @@ export default function SettingScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>Cài Đặt</Text>
+        <Text className='font-inter-medium text-xl'>Cài Đặt</Text>
       </View>
       <View className='bg-muted h-2' />
 
-      <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/setting/account')}>
-        <Feather name='user' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5'>Tài Khoản</Text>
+      <TouchableOpacity className='flex-row items-center px-4 py-3' onPress={() => router.push('/setting/account')}>
+        <View className='p-2 bg-primary/10 rounded-full'>
+          <Feather name='user' size={18} color={PRIMARY_COLOR.LIGHT} />
+        </View>
+        <View className='ml-3 flex-1'>
+          <Text className='font-inter-medium text-sm'>Tài khoản</Text>
+          <Text className='text-xs text-muted-foreground'>Quản lý thông tin tài khoản của bạn</Text>
+        </View>
         <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
       </TouchableOpacity>
       <Separator />
-      <TouchableOpacity className='flex-row items-center p-4' onPress={() => router.push('/setting/my-addresses')}>
-        <Feather name='map-pin' size={20} color={PRIMARY_COLOR.LIGHT} />
-        <Text className='font-inter-medium ml-2.5'>Địa Chỉ Của Tôi</Text>
+      <TouchableOpacity
+        className='flex-row items-center px-4 py-3'
+        onPress={() => router.push('/setting/my-addresses')}
+      >
+        <View className='p-2 bg-primary/10 rounded-full'>
+          <Feather name='map-pin' size={18} color={PRIMARY_COLOR.LIGHT} />
+        </View>
+        <View className='ml-3 flex-1'>
+          <Text className='font-inter-medium text-sm'>Địa chỉ của tôi</Text>
+          <Text className='text-xs text-muted-foreground'>Quản lý địa chỉ nhận/gửi hàng của bạn</Text>
+        </View>
         <Feather name='chevron-right' size={20} color='lightgray' className='ml-auto' />
       </TouchableOpacity>
       <Separator />

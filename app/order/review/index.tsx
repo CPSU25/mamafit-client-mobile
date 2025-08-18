@@ -553,7 +553,7 @@ export default function ReviewOrderScreen() {
           <TouchableOpacity onPress={handleGoBack}>
             <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
-          <Text className='font-inter-semibold text-xl'>Xem Đơn Hàng</Text>
+          <Text className='font-inter-medium text-xl'>Thanh toán</Text>
         </View>
 
         <BottomSheetModalProvider>
@@ -637,7 +637,7 @@ export default function ReviewOrderScreen() {
                   />
 
                   <Text className='text-xs text-muted-foreground px-2 mb-4'>
-                    Bằng cách nhấn &apos;Đặt Đơn Hàng&apos;, bạn đồng ý với Điều Khoản Giao Dịch Của MamaFit
+                    Bằng cách nhấn &apos;Đặt hàng&apos;, bạn đồng ý với Điều Khoản Giao Dịch Của MamaFit
                   </Text>
                 </Animated.View>
               </View>
@@ -650,13 +650,13 @@ export default function ReviewOrderScreen() {
             >
               <View className='flex flex-col items-end gap-1'>
                 <Text className='font-inter-semibold text-primary'>
-                  <Text className='text-sm'>Tổng Cộng</Text>{' '}
+                  <Text className='text-sm'>Tổng cộng</Text>{' '}
                   <Text className='underline font-inter-semibold text-sm text-primary'>đ</Text>
                   {totalPaymentNow.toLocaleString('vi-VN')}
                 </Text>
 
                 <Text className='font-inter-medium text-primary text-sm'>
-                  <Text className='text-xs'>Đã Tiết Kiệm</Text>{' '}
+                  <Text className='text-xs'>Đã tiết kiệm</Text>{' '}
                   <Text className='underline font-inter-medium text-sm text-primary'>đ</Text>
                   {savedAmount > 0 ? savedAmount.toLocaleString('vi-VN') : '0'}
                 </Text>
@@ -666,7 +666,7 @@ export default function ReviewOrderScreen() {
                 disabled={placePresetOrderMutation.isPending || isLoading}
               >
                 <Text className='font-inter-medium'>
-                  {placePresetOrderMutation.isPending ? 'Đang Đặt...' : 'Đặt Đơn Hàng'}
+                  {placePresetOrderMutation.isPending ? 'Đang đặt...' : 'Đặt hàng'}
                 </Text>
               </Button>
             </View>

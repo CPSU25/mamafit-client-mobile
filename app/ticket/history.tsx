@@ -36,7 +36,7 @@ export default function ViewTicketHistoryScreen() {
         <TouchableOpacity onPress={handleGoBack} className='p-1'>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl text-foreground'>Lịch Sử Hỗ Trợ</Text>
+        <Text className='font-inter-medium text-xl text-foreground'>Lịch sử hỗ trợ</Text>
       </View>
 
       <View className='bg-muted h-2' />
@@ -54,19 +54,19 @@ export default function ViewTicketHistoryScreen() {
                   {item.type === TicketType.DeliveryService ? (
                     <View className='flex-row items-center gap-2'>
                       <View className='w-2 h-2 rounded-full bg-blue-500' />
-                      <Text className='text-xs font-inter-medium'>Hỗ Trợ Giao Hàng</Text>
+                      <Text className='text-xs font-inter-medium'>Hỗ trợ giao hàng</Text>
                     </View>
                   ) : null}
                   {item.type === TicketType.WarrantyService ? (
                     <View className='flex-row items-center gap-2'>
                       <View className='w-2 h-2 rounded-full bg-emerald-500' />
-                      <Text className='text-xs font-inter-medium'>Hỗ Trợ Bảo Hành</Text>
+                      <Text className='text-xs font-inter-medium'>Hỗ trợ bảo hành</Text>
                     </View>
                   ) : null}
                   {item.type === TicketType.Other ? (
                     <View className='flex-row items-center gap-2'>
                       <View className='w-2 h-2 rounded-full bg-amber-500' />
-                      <Text className='text-xs font-inter-medium'>Hỗ Trợ Khác</Text>
+                      <Text className='text-xs font-inter-medium'>Hỗ trợ khác</Text>
                     </View>
                   ) : null}
                 </View>

@@ -44,11 +44,11 @@ export default function AppointmentCard({ appointment }: AppointmentCardProps) {
               <View className='flex-row items-center gap-1.5'>
                 <MaterialIcons name='event-note' size={14} color='black' />
                 <Text className='text-xs'>
-                  Note:{' '}
+                  Ghi chú:{' '}
                   {appointment.note ? (
                     <Text className='text-xs text-muted-foreground'>{appointment.note}</Text>
                   ) : (
-                    <Text className='text-xs text-muted-foreground'>No note</Text>
+                    <Text className='text-xs text-muted-foreground'>trống</Text>
                   )}
                 </Text>
               </View>

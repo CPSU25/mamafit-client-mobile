@@ -24,20 +24,11 @@ export default function PreviewDiaryCard({ diary, isLoading, onPress }: PreviewD
             {diary?.name} <Text className='text-xs text-muted-foreground'>({diary?.age} tuổi)</Text>
           </Text>
           <View className='flex-row items-center gap-2'>
-            <Text className='text-xs text-muted-foreground'>Cân Nặng: {diary?.weight}kg</Text>
+            <Text className='text-xs text-muted-foreground'>Cân nặng: {diary?.weight}kg</Text>
             <Separator orientation='vertical' className='h-4' />
-            <Text className='text-xs text-muted-foreground'>Chiều Cao: {diary?.height}cm</Text>
+            <Text className='text-xs text-muted-foreground'>Chiều cao: {diary?.height}cm</Text>
             <Separator orientation='vertical' className='h-4' />
-            <Text className='text-xs text-muted-foreground'>
-              Thai Kỳ: {diary?.numberOfPregnancy}
-              {diary?.numberOfPregnancy === 1
-                ? 'st'
-                : diary?.numberOfPregnancy === 2
-                  ? 'nd'
-                  : diary?.numberOfPregnancy === 3
-                    ? 'rd'
-                    : 'th'}
-            </Text>
+            <Text className='text-xs text-muted-foreground'>Thai kỳ: Lần {diary?.numberOfPregnancy}</Text>
           </View>
         </View>
         <Feather name='chevron-right' size={20} color='lightgray' />
