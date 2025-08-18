@@ -99,14 +99,6 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
   },
   {
     id: 9,
-    label: 'Đang giao hàng',
-    value: OrderStatus.Delevering,
-    urlValue: 'to-deliver',
-    title: 'Đang giao hàng',
-    description: 'Đơn hàng đã được đóng gói và đang trên đường giao tới địa chỉ của bạn.'
-  },
-  {
-    id: 10,
     label: 'Đang lấy hàng',
     value: OrderStatus.PickUpInProgress,
     urlValue: 'pick-up-in-progress',
@@ -114,12 +106,20 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
     description: 'Đơn hàng của bạn đang được chuẩn bị để gửi đến nhà máy cho dịch vụ bảo hành.'
   },
   {
-    id: 11,
+    id: 10,
     label: 'Chờ lấy hàng',
     value: OrderStatus.ReceivedAtBranch,
     urlValue: 'received-at-branch',
     title: 'Chờ lấy hàng',
     description: 'Đơn hàng đã đến chi nhánh và sẵn sàng để bạn nhận theo thời gian thuận tiện.'
+  },
+  {
+    id: 11,
+    label: 'Đang giao hàng',
+    value: OrderStatus.Delevering,
+    urlValue: 'to-deliver',
+    title: 'Đang giao hàng',
+    description: 'Đơn hàng đã được đóng gói và đang trên đường giao tới địa chỉ của bạn.'
   },
   {
     id: 12,

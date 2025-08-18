@@ -44,9 +44,12 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
       style={{ paddingBottom: bottom, boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
     >
       {status === OrderStatus.Completed ? (
-        <TouchableOpacity className='flex-row items-center gap-2 flex-1 justify-center p-2 rounded-xl border border-indigo-100 bg-indigo-50'>
+        <TouchableOpacity
+          onPress={() => router.push({ pathname: '/order/[orderId]/rate', params: { orderId } })}
+          className='flex-row items-center gap-2 flex-1 justify-center p-2 rounded-xl border border-indigo-100 bg-indigo-50'
+        >
           <MaterialCommunityIcons name='star-circle' size={16} color='#4f46e5' />
-          <Text className='font-inter-medium text-sm text-indigo-600'>Đánh Giá</Text>
+          <Text className='font-inter-medium text-sm text-indigo-600'>Đánh giá</Text>
         </TouchableOpacity>
       ) : null}
 

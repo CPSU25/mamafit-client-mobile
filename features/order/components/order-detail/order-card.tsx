@@ -220,8 +220,11 @@ export default function OrderCard({ order }: OrderCardProps) {
           ) : null}
 
           {isDisplayRateButton ? (
-            <TouchableOpacity className='px-6 py-2 rounded-xl items-center border border-border'>
-              <Text className='text-sm font-inter-medium'>Đánh Giá</Text>
+            <TouchableOpacity
+              className='px-6 py-2 rounded-xl items-center border border-border'
+              onPress={() => router.push({ pathname: '/order/[orderId]/rate', params: { orderId: order.id } })}
+            >
+              <Text className='text-sm font-inter-medium'>Đánh giá</Text>
             </TouchableOpacity>
           ) : null}
         </View>
