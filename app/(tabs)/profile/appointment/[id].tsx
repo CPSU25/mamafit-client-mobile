@@ -135,7 +135,7 @@ export default function AppointmentDetailScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl text-foreground'>Chi Tiết Lịch Hẹn</Text>
+        <Text className='font-inter-medium text-xl text-foreground'>Thông tin lịch hẹn</Text>
       </View>
 
       <View className='bg-muted flex-1'>
@@ -184,13 +184,13 @@ export default function AppointmentDetailScreen() {
 
             {/* About Branch */}
             <Card className='gap-1 border-transparent p-2' style={styles.container}>
-              <Text className='font-inter-medium'>Thông Tin Chi Nhánh</Text>
+              <Text className='font-inter-medium'>Thông tin chi nhánh</Text>
               <Text className='text-sm text-muted-foreground'>{appointment?.branch.description}</Text>
             </Card>
 
             {/* Location */}
             <Card className='gap-1 border-transparent p-2' style={styles.container}>
-              <Text className='font-inter-medium mb-2'>Vị Trí</Text>
+              <Text className='font-inter-medium mb-2'>Vị trí</Text>
               <View className='overflow-hidden rounded-xl'>
                 {initialRegion ? (
                   <MapView provider={PROVIDER_GOOGLE} style={{ width: '100%', height: 120 }} region={initialRegion}>
@@ -215,7 +215,7 @@ export default function AppointmentDetailScreen() {
 
             {/* Contact Information */}
             <Card className='gap-1 border-transparent p-2' style={styles.container}>
-              <Text className='font-inter-medium mb-2'>Thông Tin Liên Hệ</Text>
+              <Text className='font-inter-medium mb-2'>Thông tin liên hệ</Text>
               <View className='flex-row items-center gap-2'>
                 <View className='flex-1 flex-row items-center gap-2'>
                   <Avatar alt='Branch Manager' className='border-2 border-primary'>
@@ -226,7 +226,7 @@ export default function AppointmentDetailScreen() {
                   </Avatar>
                   <View>
                     <Text className='font-inter-medium text-sm'>{appointment?.branch.branchManager.fullName}</Text>
-                    <Text className='text-xs text-muted-foreground'>Quản Lý Chi Nhánh</Text>
+                    <Text className='text-xs text-muted-foreground'>Quản lý chi nhánh</Text>
                   </View>
                 </View>
                 <TouchableOpacity
@@ -245,14 +245,14 @@ export default function AppointmentDetailScreen() {
 
             {/* Appointment Information */}
             <Card className='gap-1 border-transparent p-2' style={styles.container}>
-              <Text className='font-inter-medium mb-2'>Thông Tin Lịch Hẹn</Text>
+              <Text className='font-inter-medium mb-2'>Thông tin lịch hẹn</Text>
 
               <View className='flex-row items-center justify-between mb-2'>
                 <View className='flex-row items-center gap-2'>
                   <View className='w-8 h-8 bg-green-100 rounded-full items-center justify-center'>
                     <Feather name='calendar' size={14} color='#059669' />
                   </View>
-                  <Text className='text-sm text-muted-foreground'>Ngày & Giờ</Text>
+                  <Text className='text-sm text-muted-foreground'>Ngày & giờ</Text>
                 </View>
                 <Text className='text-sm'>
                   {format(new Date(appointment?.bookingTime ?? ''), "MMM dd, yyyy 'at' hh:mm a")}
@@ -264,7 +264,7 @@ export default function AppointmentDetailScreen() {
                   <View className={cn('w-8 h-8 rounded-full items-center justify-center', bgColor)}>
                     <Feather name='activity' size={14} color={iconColor} />
                   </View>
-                  <Text className='text-sm text-muted-foreground'>Trạng Thái</Text>
+                  <Text className='text-sm text-muted-foreground'>Trạng thái</Text>
                 </View>
                 <View className={cn('px-2 py-1 rounded-lg flex-row items-center gap-1.5', bgColor)}>
                   <MaterialIcons name={icon} size={16} color={iconColor} />
@@ -277,7 +277,7 @@ export default function AppointmentDetailScreen() {
                   <View className='w-8 h-8 bg-amber-100 rounded-full items-center justify-center'>
                     <Feather name='file-text' size={14} color='#d97706' />
                   </View>
-                  <Text className='text-sm text-muted-foreground'>Ghi Chú</Text>
+                  <Text className='text-sm text-muted-foreground'>Ghi chú</Text>
                 </View>
                 {appointment?.note ? (
                   <Text className='text-sm' numberOfLines={1}>
@@ -285,7 +285,7 @@ export default function AppointmentDetailScreen() {
                   </Text>
                 ) : (
                   <Text className='text-sm text-muted-foreground' numberOfLines={1}>
-                    No note
+                    trống
                   </Text>
                 )}
               </View>
@@ -294,7 +294,7 @@ export default function AppointmentDetailScreen() {
             {/* Action */}
             {appointment?.status === 'UP_COMING' ? (
               <Card className='gap-1 border-transparent p-2' style={styles.container}>
-                <Text className='font-inter-medium'>Hành Động</Text>
+                <Text className='font-inter-medium'>Hành động</Text>
                 <Text className='text-sm text-muted-foreground mb-2'>
                   Hành động này không thể hoàn tác. Vui lòng xác nhận nếu bạn muốn hủy lịch hẹn.
                 </Text>
@@ -302,7 +302,7 @@ export default function AppointmentDetailScreen() {
                   <DialogTrigger asChild>
                     <TouchableOpacity className='p-3 rounded-xl flex-row items-center justify-center gap-2 bg-rose-50'>
                       <Feather name='x' size={16} color='#e11d48' />
-                      <Text className='text-sm text-rose-600 font-inter-medium'>Cancel Appointment</Text>
+                      <Text className='text-sm text-rose-600 font-inter-medium'>Hủy lịch hẹn</Text>
                     </TouchableOpacity>
                   </DialogTrigger>
                   <DialogContent
@@ -315,7 +315,7 @@ export default function AppointmentDetailScreen() {
                   >
                     <FormProvider {...methods}>
                       <View className='gap-0.5'>
-                        <Text className='font-inter-semibold text-xl'>Hủy Lịch Hẹn</Text>
+                        <Text className='font-inter-semibold text-xl'>Hủy lịch hẹn</Text>
                         <Text className='text-sm text-muted-foreground'>
                           Hành động này không thể hoàn tác. Vui lòng xác nhận nếu bạn muốn hủy lịch hẹn.
                         </Text>
@@ -328,7 +328,7 @@ export default function AppointmentDetailScreen() {
                       >
                         <Feather name='x' size={16} color='#e11d48' />
                         <Text className='text-sm text-rose-600 font-inter-medium'>
-                          {cancelAppointmentMutation.isPending ? 'Đang Hủy...' : 'Hủy Lịch Hẹn'}
+                          {cancelAppointmentMutation.isPending ? 'Đang hủy...' : 'Hủy lịch hẹn'}
                         </Text>
                       </TouchableOpacity>
                     </FormProvider>
@@ -338,14 +338,14 @@ export default function AppointmentDetailScreen() {
             ) : null}
             {isCanceled ? (
               <Card className='gap-1 border-transparent p-2' style={styles.container}>
-                <Text className='font-inter-medium mb-2'>Tóm Tắt Hủy Lịch Hẹn</Text>
+                <Text className='font-inter-medium mb-2'>Tóm tắt hủy lịch hẹn</Text>
 
                 <View className='flex-row items-center justify-between mb-2'>
                   <View className='flex-row items-center gap-2'>
                     <View className='w-8 h-8 bg-rose-100 rounded-full items-center justify-center'>
                       <Feather name='calendar' size={14} color='#e11d48' />
                     </View>
-                    <Text className='text-sm text-muted-foreground'>Đã Hủy Lúc</Text>
+                    <Text className='text-sm text-muted-foreground'>Đã hủy lúc</Text>
                   </View>
                   <Text className='text-sm'>
                     {format(new Date(appointment?.canceledAt ?? ''), "MMM dd, yyyy 'at' hh:mm a")}
@@ -357,7 +357,7 @@ export default function AppointmentDetailScreen() {
                     <View className='w-8 h-8 bg-rose-100 rounded-full items-center justify-center'>
                       <Feather name='file-text' size={14} color='#e11d48' />
                     </View>
-                    <Text className='text-sm text-muted-foreground'>Lý Do</Text>
+                    <Text className='text-sm text-muted-foreground'>Lý do</Text>
                   </View>
                   <Text className='text-sm' numberOfLines={1}>
                     {appointment.canceledReason}{' '}

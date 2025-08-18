@@ -72,7 +72,7 @@ export default function OrderCard({ order }: OrderCardProps) {
             {order.type === OrderType.Warranty ? (
               <View className='px-3 py-1.5 bg-blue-50 rounded-lg flex-row items-center gap-1.5'>
                 <MaterialIcons name='safety-check' size={14} color='#2563eb' />
-                <Text className='text-xs text-blue-600 font-inter-medium'>Đơn Bảo Hành</Text>
+                <Text className='text-xs text-blue-600 font-inter-medium'>Đơn bảo hành</Text>
               </View>
             ) : null}
 
@@ -147,7 +147,7 @@ export default function OrderCard({ order }: OrderCardProps) {
                 })
               }
             >
-              <Text className='text-sm font-inter-medium'>Xem Chi Tiết</Text>
+              <Text className='text-sm font-inter-medium'>Xem chi tiết</Text>
             </TouchableOpacity>
           ) : null}
 
@@ -157,7 +157,7 @@ export default function OrderCard({ order }: OrderCardProps) {
               onPress={() => mutate(order?.id)}
               disabled={isPending}
             >
-              <Text className='text-sm font-inter-medium'>{isPending ? 'Đang Nhận...' : 'Nhận Hàng'}</Text>
+              <Text className='text-sm font-inter-medium'>{isPending ? 'Đang Nhận...' : 'Nhận hàng'}</Text>
             </TouchableOpacity>
           ) : null}
 
@@ -166,7 +166,7 @@ export default function OrderCard({ order }: OrderCardProps) {
               <DialogTrigger asChild>
                 <TouchableOpacity className='px-6 py-2 rounded-xl items-center border border-border'>
                   <Text className='text-sm font-inter-medium text-rose-600'>
-                    {cancelOrderMutation.isPending ? 'Đang Hủy...' : 'Hủy Đơn'}
+                    {cancelOrderMutation.isPending ? 'Đang hủy...' : 'Hủy đơn'}
                   </Text>
                 </TouchableOpacity>
               </DialogTrigger>
@@ -180,7 +180,7 @@ export default function OrderCard({ order }: OrderCardProps) {
               >
                 <FormProvider {...methods}>
                   <View className='gap-2'>
-                    <Text className='font-inter-semibold text-xl'>Hủy Đơn #{order?.code}</Text>
+                    <Text className='font-inter-semibold text-xl'>Hủy đơn #{order?.code}</Text>
                     <Text className='text-sm text-muted-foreground'>
                       Hành động này không thể hoàn tác. Vui lòng xác nhận nếu bạn muốn hủy đơn hàng.
                     </Text>
@@ -195,7 +195,7 @@ export default function OrderCard({ order }: OrderCardProps) {
                   >
                     <Feather name='x' size={16} color='#e11d48' />
                     <Text className='text-sm text-rose-600 font-inter-medium'>
-                      {cancelOrderMutation.isPending ? 'Đang Hủy...' : 'Hủy Đơn'}
+                      {cancelOrderMutation.isPending ? 'Đang hủy...' : 'Hủy đơn'}
                     </Text>
                   </TouchableOpacity>
                 </FormProvider>
@@ -215,7 +215,7 @@ export default function OrderCard({ order }: OrderCardProps) {
                 })
               }
             >
-              <Text className='text-sm font-inter-medium'>Thanh Toán Ngay</Text>
+              <Text className='text-sm font-inter-medium'>Trả tiền</Text>
             </TouchableOpacity>
           ) : null}
 

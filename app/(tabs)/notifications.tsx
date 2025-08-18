@@ -22,25 +22,25 @@ interface NotificationFilter {
 const notificationFilters: NotificationFilter[] = [
   {
     id: 1,
-    name: 'Khuyến Mãi',
+    name: 'Khuyến mãi',
     description: 'Khuyến mãi và ưu đãi mới nhất.',
     icon: SvgIcon.promotions({ size: ICON_SIZE.MEDIUM })
   },
   {
     id: 2,
-    name: 'Cập Nhật Đơn Hàng',
+    name: 'Cập nhật đơn hàng',
     description: 'Theo dõi đơn hàng của bạn từ đầu đến cuối.',
     icon: SvgIcon.orderUpdates({ size: ICON_SIZE.MEDIUM })
   },
   {
     id: 3,
-    name: 'Trạng Thái Thanh Toán',
+    name: 'Trạng thái thanh toán',
     description: 'Đừng quên thanh toán hóa đơn đúng hạn.',
     icon: SvgIcon.paymentStatus({ size: ICON_SIZE.MEDIUM })
   },
   {
     id: 4,
-    name: 'Nhắc Nhở Lịch Hẹn',
+    name: 'Nhắc nhở lịch hẹn',
     description: 'Đừng quên lịch hẹn của bạn.',
     icon: SvgIcon.appointmentReminders({ size: ICON_SIZE.MEDIUM })
   }
@@ -58,7 +58,7 @@ export default function NotificationsScreen() {
   return (
     <SafeView>
       <View className='flex flex-row justify-between items-center p-4'>
-        <Text className='text-xl font-inter-semibold'>Thông Báo</Text>
+        <Text className='text-xl font-inter-medium'>Thông báo</Text>
         <View className='flex flex-row items-center gap-6 mr-1.5'>
           <TouchableOpacity onPress={() => router.push('/cart')}>
             <Feather name='shopping-bag' size={24} color={PRIMARY_COLOR.LIGHT} />
@@ -84,9 +84,9 @@ export default function NotificationsScreen() {
       })}
 
       <View className='flex flex-row justify-between items-center px-4 pt-4'>
-        <Text className='text-sm font-inter-medium'>Đơn Hàng</Text>
+        <Text className='text-sm font-inter-medium'>Đơn hàng</Text>
         <TouchableOpacity onPress={() => markAllAsRead()} disabled={isPending}>
-          <Text className='text-xs text-muted-foreground'>Đọc Tất Cả</Text>
+          <Text className='text-xs text-muted-foreground'>Đọc tất cả</Text>
         </TouchableOpacity>
       </View>
       <NotificationsList />
@@ -96,7 +96,7 @@ export default function NotificationsScreen() {
 
 function NotificationCard({ notification }: { notification: NotificationFilter }) {
   return (
-    <View className='flex flex-row items-center gap-4 px-4 py-2'>
+    <View className='flex flex-row items-center gap-4 px-4 py-3'>
       <View className='border-2 border-muted rounded-full'>{notification.icon}</View>
       <View className='flex flex-col items-start flex-1'>
         <Text className='text-sm font-inter-medium'>{notification.name}</Text>

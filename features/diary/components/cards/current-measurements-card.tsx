@@ -32,19 +32,19 @@ export default function CurrentMeasurementsCard({ measurement, diaryId }: Curren
       <View className='relative flex-1 p-4 justify-between'>
         <Animated.View entering={FadeInDown.delay(300)} className='flex flex-row justify-between'>
           <View className='gap-0.5'>
-            <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Cân Nặng</Text>
+            <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Cân nặng</Text>
             <Text className='text-white text-xl font-inter-bold'>{measurement?.weight || 'N/A'}kg</Text>
           </View>
           <View className='gap-0.5'>
-            <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Vòng Ngực</Text>
+            <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Vòng ngực</Text>
             <Text className='text-white text-xl font-inter-bold'>{measurement?.bust || 'N/A'}cm</Text>
           </View>
           <View className='gap-0.5'>
-            <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Vòng Eo</Text>
+            <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Vòng eo</Text>
             <Text className='text-white text-xl font-inter-bold'>{measurement?.waist || 'N/A'}cm</Text>
           </View>
           <View className='gap-0.5'>
-            <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Vòng Mông</Text>
+            <Text className='text-white/80 text-xs font-inter-medium tracking-wide'>Vòng hông</Text>
             <Text className='text-white text-xl font-inter-bold'>{measurement?.hip || 'N/A'}cm</Text>
           </View>
         </Animated.View>
@@ -60,7 +60,7 @@ export default function CurrentMeasurementsCard({ measurement, diaryId }: Curren
               }
               className='bg-white/10 rounded-xl px-3 py-2'
             >
-              <Text className='text-white text-xs font-inter-semibold'>Thêm Số Đo</Text>
+              <Text className='text-white text-xs font-inter-semibold'>Thêm số đo</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity

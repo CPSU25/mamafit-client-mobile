@@ -31,10 +31,10 @@ export default function DiarySettingScreen() {
       description: 'Thông tin cá nhân và số đo',
       icon: SvgIcon.personalCard({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       data: [
-        { label: 'Name', value: diaryDetail?.name, icon: 'badge' },
-        { label: 'Age', value: diaryDetail?.age, suffix: ' years', icon: 'cake' },
-        { label: 'Height', value: diaryDetail?.height, suffix: ' cm', icon: 'height' },
-        { label: 'Weight', value: diaryDetail?.weight, suffix: ' kg', icon: 'monitor-weight' }
+        { label: 'Tên nhật ký', value: diaryDetail?.name, icon: 'badge' },
+        { label: 'Tuổi', value: diaryDetail?.age, suffix: ' years', icon: 'cake' },
+        { label: 'Chiều cao', value: diaryDetail?.height, suffix: ' cm', icon: 'height' },
+        { label: 'Cân nặng', value: diaryDetail?.weight, suffix: ' kg', icon: 'monitor-weight' }
       ]
     },
     {
@@ -42,9 +42,9 @@ export default function DiarySettingScreen() {
       description: 'Số đo cơ thể hiện tại',
       icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       data: [
-        { label: 'Bust', value: diaryDetail?.bust, suffix: ' cm', icon: 'straighten' },
-        { label: 'Waist', value: diaryDetail?.waist, suffix: ' cm', icon: 'straighten' },
-        { label: 'Hip', value: diaryDetail?.hip, suffix: ' cm', icon: 'straighten' }
+        { label: 'Vòng ngực', value: diaryDetail?.bust, suffix: ' cm', icon: 'straighten' },
+        { label: 'Vòng eo', value: diaryDetail?.waist, suffix: ' cm', icon: 'straighten' },
+        { label: 'Vòng hông', value: diaryDetail?.hip, suffix: ' cm', icon: 'straighten' }
       ]
     },
     {
@@ -52,24 +52,24 @@ export default function DiarySettingScreen() {
       description: 'Thông tin thai kỳ',
       icon: SvgIcon.folderFavorite({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       data: [
-        { label: 'Số Lần Thai Kỳ', value: diaryDetail?.numberOfPregnancy, icon: 'format-list-numbered' },
-        { label: 'Chu Kỳ Kinh Nguyệt', value: diaryDetail?.averageMenstrualCycle, suffix: ' ngày', icon: 'schedule' },
+        { label: 'Số lần thai kỳ', value: diaryDetail?.numberOfPregnancy, icon: 'format-list-numbered' },
+        { label: 'Chu kỳ kinh nguyệt', value: diaryDetail?.averageMenstrualCycle, suffix: ' ngày', icon: 'schedule' },
         {
-          label: 'Ngày Kỳ Kinh Cuối',
+          label: 'Ngày kỳ kinh cuối',
           value: diaryDetail?.firstDateOfLastPeriod
             ? format(new Date(diaryDetail?.firstDateOfLastPeriod), 'MMM dd, yyyy')
             : null,
           icon: 'calendar-today'
         },
         {
-          label: 'Ngày Siêu Âm',
+          label: 'Ngày siêu âm',
           value: diaryDetail?.ultrasoundDate
             ? format(new Date(diaryDetail?.ultrasoundDate), 'MMM dd, yyyy')
             : 'Không có',
           icon: 'medical-services'
         },
         {
-          label: 'Tuần Từ Siêu Âm',
+          label: 'Tuần từ siêu âm',
           value: diaryDetail?.weeksFromUltrasound ? `${diaryDetail?.weeksFromUltrasound} tuần` : 'Không có',
           suffix: ' tuần',
           icon: 'timeline'
@@ -82,12 +82,12 @@ export default function DiarySettingScreen() {
       icon: SvgIcon.timeStart({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       data: [
         {
-          label: 'Ngày Tạo',
+          label: 'Ngày tạo',
           value: diaryDetail?.createdAt ? format(new Date(diaryDetail?.createdAt), 'MMM dd, yyyy') : null,
           icon: 'add-circle'
         },
         {
-          label: 'Ngày Cập Nhật',
+          label: 'Ngày cập nhật',
           value: diaryDetail?.updatedAt ? format(new Date(diaryDetail?.updatedAt), 'MMM dd, yyyy') : null,
           icon: 'update'
         }
@@ -102,7 +102,7 @@ export default function DiarySettingScreen() {
           <TouchableOpacity onPress={handleGoBack}>
             <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
-          <Text className='font-inter-semibold text-xl'>Cài Đặt Nhật Ký</Text>
+          <Text className='font-inter-medium text-xl'>Cài đặt</Text>
         </View>
       </View>
       <View className='bg-muted h-2' />
@@ -121,7 +121,7 @@ export default function DiarySettingScreen() {
                   {section.icon}
                 </View>
                 <View className='flex-1'>
-                  <Text className='font-inter-semibold text-sm'>{section.title}</Text>
+                  <Text className='font-inter-medium text-sm'>{section.title}</Text>
                   <Text className='text-xs text-muted-foreground'>{section.description}</Text>
                 </View>
               </View>

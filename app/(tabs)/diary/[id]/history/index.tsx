@@ -24,7 +24,7 @@ export default function DiaryHistoryScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='text-xl font-inter-semibold flex-1'>Lịch Sử</Text>
+        <Text className='text-xl font-inter-medium flex-1'>Lịch sử số đo</Text>
         <TouchableOpacity onPress={() => router.push({ pathname: '/diary/[id]/create', params: { id } })}>
           <Feather name='plus' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>

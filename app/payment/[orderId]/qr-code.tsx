@@ -156,7 +156,7 @@ export default function PaymentQRCode() {
                   })
                 }
               >
-                <Text className='font-inter-medium'>Xem Đơn Hàng</Text>
+                <Text className='font-inter-medium'>Xem đơn hàng</Text>
               </Button>
               <Button className='w-full' variant='outline' onPress={handleGoHome}>
                 <Text className='font-inter-medium'>Quay Về Trang Chủ</Text>
@@ -276,21 +276,21 @@ export default function PaymentQRCode() {
               <View className='p-3 flex-row items-center gap-2'>
                 <Feather name='credit-card' size={16} color={isDarkColorScheme ? 'white' : 'black'} />
                 <Text className={cn('text-sm font-inter-medium', isDarkColorScheme ? 'text-white' : 'text-gray-900')}>
-                  Chi Tiết Thanh Toán
+                  Thông tin thanh toán
                 </Text>
               </View>
               <Separator />
               <View className='flex flex-col gap-3 p-4'>
                 <View className='flex-row justify-between items-center'>
-                  <Text className='text-xs font-inter-medium'>Tên Chủ Tài Khoản</Text>
+                  <Text className='text-xs font-inter-medium'>Tên chủ tài khoản</Text>
                   <Text className='text-xs font-inter-semibold'>LE DUC ANH</Text>
                 </View>
                 <View className='flex-row justify-between items-center'>
-                  <Text className='text-xs font-inter-medium'>Số Tài Khoản</Text>
+                  <Text className='text-xs font-inter-medium'>Số tài khoản</Text>
                   <Text className='text-xs font-inter-semibold'>{qrCodeParams.acc}</Text>
                 </View>
                 <View className='flex-row justify-between items-center'>
-                  <Text className='text-xs font-inter-medium'>Số Tiền</Text>
+                  <Text className='text-xs font-inter-medium'>Số tiền</Text>
                   <View className={cn('px-2 py-1 rounded-md', isDarkColorScheme ? 'bg-primary/30' : 'bg-primary/20')}>
                     <Text className='text-xs font-inter-bold text-primary'>
                       đ
@@ -301,7 +301,7 @@ export default function PaymentQRCode() {
                   </View>
                 </View>
                 <View className='flex-row justify-between items-center'>
-                  <Text className='text-xs font-inter-medium'>Mô Tả</Text>
+                  <Text className='text-xs font-inter-medium'>Mô tả</Text>
                   <View className={cn('px-2 py-1 rounded-md', isDarkColorScheme ? 'bg-gray-800' : 'bg-gray-100')}>
                     <Text className='text-xs font-inter-semibold'>{qrCodeParams.des}</Text>
                   </View>

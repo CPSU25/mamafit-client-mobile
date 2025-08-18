@@ -333,7 +333,7 @@ export default function ViewOrderDetailScreen() {
                     {order?.type === OrderType.Warranty ? (
                       <View className='px-3 py-1.5 bg-blue-50 rounded-lg flex-row items-center gap-1.5'>
                         <MaterialIcons name='safety-check' size={14} color='#2563eb' />
-                        <Text className='text-xs text-blue-600 font-inter-medium'>Đơn Bảo Hành</Text>
+                        <Text className='text-xs text-blue-600 font-inter-medium'>Đơn bảo hành</Text>
                       </View>
                     ) : null}
 
@@ -402,9 +402,7 @@ export default function ViewOrderDetailScreen() {
                   <Separator />
 
                   <View className='p-3 flex-row'>
-                    <Text className='text-sm font-inter-medium flex-1'>
-                      Tổng Số Sản Phẩm: {order?.items?.length || 0}
-                    </Text>
+                    <Text className='text-sm font-inter-medium flex-1'>Tổng sản phẩm: {order?.items?.length || 0}</Text>
                     <Text className='font-inter-medium text-sm'>
                       <Text className='underline font-inter-medium text-xs'>đ</Text>
                       {merchandiseTotal ? merchandiseTotal.toLocaleString('vi-VN') : '0'}

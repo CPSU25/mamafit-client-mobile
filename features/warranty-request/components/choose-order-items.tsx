@@ -111,7 +111,7 @@ const OrderCard = ({
       <Separator />
 
       <View className='flex-row items-center gap-2 p-3'>
-        <Text className='flex-1 text-xs text-muted-foreground/80'>Nhận Hàng</Text>
+        <Text className='flex-1 text-xs text-muted-foreground/80'>Nhận hàng</Text>
         <Text className='text-foreground/80 text-xs'>
           {order?.receivedAt ? format(new Date(order.receivedAt), "MMM dd, yyyy 'at' hh:mm a") : 'N/A'}
         </Text>
@@ -146,7 +146,7 @@ export default function ChooseOrderItems({
                 <Text className='text-xs text-sky-600 dark:text-sky-500'>
                   Mỗi item đơn hàng bao gồm {warrantyCount} yêu cầu bảo hành miễn phí. Các yêu cầu bổ sung có thể tính
                   phí dịch vụ{' '}
-                  <Text className='text-xs text-sky-600 font-inter-medium underline'>(nhấn để xem thêm)</Text>.
+                  <Text className='text-xs text-sky-600 font-inter-medium underline'>(nhấn để Xem thêm)</Text>.
                 </Text>
               </InfoCard>
             </TouchableOpacity>

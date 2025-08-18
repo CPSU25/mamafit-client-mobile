@@ -111,7 +111,7 @@ export default function WarrantyPresetOrderItem({
                     <Text className='native:text-xs text-muted-foreground'>({option.value})</Text>
                   )}
                 </Text>
-                <Text className='native:text-xs text-muted-foreground'>Vị Trí: {option.position.name}</Text>
+                <Text className='native:text-xs text-muted-foreground'>Vị trí: {option.position.name}</Text>
               </View>
 
               <Text className='native:text-sm font-inter-medium text-blue-600'>
@@ -139,7 +139,7 @@ export default function WarrantyPresetOrderItem({
             disabled={isLoadingWarrantyItem}
           >
             <Feather name='file-text' size={16} color='black' />
-            <Text className='text-sm font-inter-medium'>Xem Chi Tiết</Text>
+            <Text className='text-sm font-inter-medium'>Xem chi tiết</Text>
           </TouchableOpacity>
         </View>
 
@@ -149,7 +149,7 @@ export default function WarrantyPresetOrderItem({
             className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-2 bg-blue-50 border border-blue-100'
           >
             <Feather name='clock' size={16} color='#2563eb' />
-            <Text className='text-sm text-blue-600 font-inter-medium'>Xem Lịch Sử</Text>
+            <Text className='text-sm text-blue-600 font-inter-medium'>Xem lịch sử</Text>
           </TouchableOpacity>
         </View>
       </View>

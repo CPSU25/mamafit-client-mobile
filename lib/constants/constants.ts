@@ -58,52 +58,52 @@ export const ORDERED_COMPONENTS_OPTIONS = ['Neckline', 'Sleeves', 'Waist', 'Hem'
 
 export const measurementCategories = [
   {
-    title: 'Trạng Thái Thai',
-    description: 'Có lỗi xảy ra? Quay lại để chỉnh sửa',
+    title: 'Thông tin thai kỳ',
+    description: 'Có sai sót? Quay lại để chỉnh sửa',
     icon: SvgIcon.calendarOne({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
     measurements: [
-      { name: 'weekOfPregnancy' as const, label: 'Gestational age', unit: 'weeks', editable: false },
-      { name: 'bust' as const, label: 'Bust', unit: 'cm', editable: false },
-      { name: 'waist' as const, label: 'Waist', unit: 'cm', editable: false },
-      { name: 'hip' as const, label: 'Hip', unit: 'cm', editable: false }
+      { name: 'weekOfPregnancy' as const, label: 'Tuổi thai', unit: 'tuần', editable: false },
+      { name: 'bust' as const, label: 'Vòng ngực', unit: 'cm', editable: false },
+      { name: 'waist' as const, label: 'Vòng eo', unit: 'cm', editable: false },
+      { name: 'hip' as const, label: 'Vòng hông', unit: 'cm', editable: false }
     ]
   },
   {
-    title: 'Phần Trên',
-    description: 'Nhấn vào bất kỳ đo lường nào để chỉnh sửa',
+    title: 'Số đo thân trên',
+    description: 'Nhấn vào số đo để chỉnh sửa',
     icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
     measurements: [
-      { name: 'neck' as const, label: 'Neck', unit: 'cm', editable: true },
-      { name: 'coat' as const, label: 'Coat', unit: 'cm', editable: true },
-      { name: 'chestAround' as const, label: 'Chest around', unit: 'cm', editable: true },
-      { name: 'shoulderWidth' as const, label: 'Shoulder width', unit: 'cm', editable: true }
+      { name: 'neck' as const, label: 'Vòng cổ', unit: 'cm', editable: true },
+      { name: 'coat' as const, label: 'Vòng áo', unit: 'cm', editable: true },
+      { name: 'chestAround' as const, label: 'Vòng ngực', unit: 'cm', editable: true },
+      { name: 'shoulderWidth' as const, label: 'Vòng vai', unit: 'cm', editable: true }
     ]
   },
   {
-    title: 'Phần Trung & Vòng Eo',
-    description: 'Nhấn vào bất kỳ đo lường nào để chỉnh sửa',
+    title: 'Số đo thân giữa & vòng eo',
+    description: 'Nhấn vào số đo để chỉnh sửa',
     icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
     measurements: [
-      { name: 'stomach' as const, label: 'Stomach', unit: 'cm', editable: true },
-      { name: 'pantsWaist' as const, label: 'Pants waist', unit: 'cm', editable: true }
+      { name: 'stomach' as const, label: 'Vòng bụng', unit: 'cm', editable: true },
+      { name: 'pantsWaist' as const, label: 'Vòng eo quần', unit: 'cm', editable: true }
     ]
   },
   {
-    title: 'Phần Dưới',
-    description: 'Nhấn vào bất kỳ đo lường nào để chỉnh sửa',
+    title: 'Số đo thân dưới',
+    description: 'Nhấn vào số đo để chỉnh sửa',
     icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
     measurements: [
-      { name: 'thigh' as const, label: 'Thigh', unit: 'cm', editable: true },
-      { name: 'legLength' as const, label: 'Leg length', unit: 'cm', editable: true }
+      { name: 'thigh' as const, label: 'Vòng đùi', unit: 'cm', editable: true },
+      { name: 'legLength' as const, label: 'Chiều dài chân', unit: 'cm', editable: true }
     ]
   },
   {
-    title: 'Váy Bầu Tùy Chỉnh',
-    description: 'Nhấn vào bất kỳ đo lường nào để chỉnh sửa',
+    title: 'Số đo khác',
+    description: 'Nhấn vào số đo để chỉnh sửa',
     icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
     measurements: [
-      { name: 'dressLength' as const, label: 'Dress length', unit: 'cm', editable: true },
-      { name: 'sleeveLength' as const, label: 'Sleeve length', unit: 'cm', editable: true }
+      { name: 'dressLength' as const, label: 'Chiều dài váy', unit: 'cm', editable: true },
+      { name: 'sleeveLength' as const, label: 'Chiều dài tay áo', unit: 'cm', editable: true }
     ]
   }
 ]

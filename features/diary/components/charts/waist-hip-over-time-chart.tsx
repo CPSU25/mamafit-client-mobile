@@ -148,14 +148,26 @@ export default function WaistHipOverTimeChart({
       {/* Header Section */}
       <View className='flex flex-row justify-between items-start'>
         <View className='text-left'>
-          <Text className='font-inter-medium text-sm'>Eo & Mông</Text>
+          <Text className='font-inter-medium text-sm'>Tỉ lệ vòng eo & vòng hông</Text>
           <View className='flex flex-row items-baseline gap-2 mt-1'>
-            <Text className='font-inter-extrabold text-2xl' style={{ color: WAIST_HIP_CHART_COLORS.WAIST.primary }}>
-              {currentWeekData?.waist ? currentWeekData?.waist.toFixed(1) : 'N/A'} cm
-            </Text>
-            <Text className='font-inter-extrabold text-2xl' style={{ color: WAIST_HIP_CHART_COLORS.HIP.primary }}>
-              {currentWeekData?.hip ? currentWeekData?.hip.toFixed(1) : 'N/A'} cm
-            </Text>
+            {currentWeekData?.waist ? (
+              <Text className='font-inter-extrabold text-2xl' style={{ color: WAIST_HIP_CHART_COLORS.WAIST.primary }}>
+                {currentWeekData?.waist.toFixed(1)} cm
+              </Text>
+            ) : (
+              <Text className='font-inter-extrabold text-2xl' style={{ color: WAIST_HIP_CHART_COLORS.WAIST.primary }}>
+                N/A
+              </Text>
+            )}
+            {currentWeekData?.hip ? (
+              <Text className='font-inter-extrabold text-2xl' style={{ color: WAIST_HIP_CHART_COLORS.HIP.primary }}>
+                {currentWeekData?.hip.toFixed(1)} cm
+              </Text>
+            ) : (
+              <Text className='font-inter-extrabold text-2xl' style={{ color: WAIST_HIP_CHART_COLORS.HIP.primary }}>
+                N/A
+              </Text>
+            )}
           </View>
           <Text className='text-xs text-muted-foreground'>Số đo tuần này</Text>
         </View>
@@ -211,7 +223,7 @@ export default function WaistHipOverTimeChart({
           </View>
           <View className='flex flex-row items-center gap-2'>
             <View className='w-3 h-3 rounded-full' style={{ backgroundColor: WAIST_HIP_CHART_COLORS.HIP.primary }} />
-            <Text className='text-xs font-inter-medium text-muted-foreground'>Vòng Mông</Text>
+            <Text className='text-xs font-inter-medium text-muted-foreground'>Vòng Hông</Text>
           </View>
         </View>
 

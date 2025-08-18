@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
-import { getShadowStyles, ICON_SIZE, styles } from '~/lib/constants/constants'
+import { ICON_SIZE } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { Diary } from '~/types/diary.type'
 
@@ -21,17 +21,14 @@ export default function DiaryCard({ diary }: DiaryCardProps) {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
       className='rounded-2xl overflow-hidden'
-      style={[styles.container, getShadowStyles()]}
+      style={{
+        boxShadow: '0px 0px 6px 0px rgba(0, 0, 0, 0.3)'
+      }}
     >
       <Text className='text-xs text-white text-right lowercase font-inter-semibold pr-4 my-1'>
         Updated {formatDistanceToNow(diary.updatedAt, { addSuffix: true })}
       </Text>
-      <View
-        className='flex flex-col gap-2 p-2 bg-card rounded-2xl'
-        style={{
-          boxShadow: '0 12px 22px 8px rgba(0, 0, 0, 0.6)'
-        }}
-      >
+      <View className='flex flex-col gap-2 p-2 bg-card rounded-2xl'>
         <View className='flex flex-row items-center gap-3'>
           <View className={`${isDarkColorScheme ? 'bg-primary/15' : 'bg-primary/10'} p-1.5 rounded-lg`}>
             {SvgIcon.diary({ size: ICON_SIZE.EXTRA_SMALL, color: 'PRIMARY' })}
@@ -40,7 +37,7 @@ export default function DiaryCard({ diary }: DiaryCardProps) {
             <Text className='font-inter-medium' numberOfLines={1}>
               {diary.name}
             </Text>
-            <Text className='text-xs text-muted-foreground'>Tạo: {format(diary.createdAt, 'dd/MM/yyyy')}</Text>
+            <Text className='text-xs text-muted-foreground'>Ngày tạo: {format(diary.createdAt, 'dd/MM/yyyy')}</Text>
           </View>
         </View>
 
@@ -76,14 +73,7 @@ export default function DiaryCard({ diary }: DiaryCardProps) {
               Thai Kỳ
             </Text>
             <Text className={`text-sm font-inter-medium ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
-              {diary.numberOfPregnancy}
-              {diary.numberOfPregnancy === 1
-                ? 'st'
-                : diary.numberOfPregnancy === 2
-                  ? 'nd'
-                  : diary.numberOfPregnancy === 3
-                    ? 'rd'
-                    : 'th'}
+              Lần {diary.numberOfPregnancy}
             </Text>
           </View>
         </View>

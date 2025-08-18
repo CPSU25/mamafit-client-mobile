@@ -20,9 +20,9 @@ const SectionHeader = ({ dateRange }: { dateRange: DateRange }) => {
 
   return (
     <View className='px-4 pt-4 pb-2 bg-background'>
-      <Text className='text-lg font-inter-semibold text-foreground'>{dateRange.date}</Text>
+      <Text className='text-sm font-inter-medium text-foreground'>{dateRange.date}</Text>
       {isRangeDisplay ? (
-        <Text className='text-sm font-inter-regular text-muted-foreground'>
+        <Text className='text-xs text-muted-foreground'>
           {format(dateRange.from, 'MMM d, yyyy')} - {format(dateRange.to, 'MMM d, yyyy')}
         </Text>
       ) : null}
@@ -118,7 +118,7 @@ export default function AppointmentHistoryScreen() {
         <TouchableOpacity onPress={handleGoBack} className='p-1'>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl text-foreground'>Lịch Sử Lịch Hẹn</Text>
+        <Text className='font-inter-medium text-xl text-foreground'>Lịch sử lịch hẹn</Text>
       </View>
 
       <View className='h-2 bg-muted' />

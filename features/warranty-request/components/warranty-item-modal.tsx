@@ -43,7 +43,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
             <View className='gap-2'>
               <View className='flex-row items-center gap-4'>
                 <View className='flex-1'>
-                  <Text className='font-inter-semibold'>Chi Tiết Đơn Hàng</Text>
+                  <Text className='font-inter-semibold'>Chi tiết đơn hàng</Text>
                   <Text className='text-muted-foreground text-xs' numberOfLines={1}>
                     Tham Chiếu Đến Đơn Hàng Gốc
                   </Text>
@@ -119,7 +119,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                   <View className='flex-1 gap-1 p-3 rounded-2xl border border-border bg-muted/20'>
                     <View className='flex-row items-center gap-2'>
                       <MaterialCommunityIcons name='truck-fast-outline' size={16} color='#6b7280' />
-                      <Text className='text-xs text-muted-foreground'>Mã Vận Đơn</Text>
+                      <Text className='text-xs text-muted-foreground'>Mã vận đơn</Text>
                     </View>
                     <Text className='text-sm font-inter-medium'>
                       {warrantyItem?.warrantyRequestItems?.trackingCode}

@@ -243,7 +243,7 @@ export default function CreateDiaryScreen() {
         <TouchableOpacity onPress={handleGoBack} className='absolute left-3 z-10'>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl text-center flex-1'>Tạo Nhật Ký Mới</Text>
+        <Text className='font-inter-medium text-xl text-center flex-1'>Tạo nhật ký mới</Text>
       </View>
 
       <View className='px-4'>
@@ -291,7 +291,7 @@ export default function CreateDiaryScreen() {
           >
             {stepOneRootMsg && <FieldError message={stepOneRootMsg} />}
             <Button onPress={handleSubmitStepOne(onSubmitStepOne)}>
-              <Text className='font-inter-medium'>Tiếp Theo</Text>
+              <Text className='font-inter-medium'>Tiếp theo</Text>
             </Button>
           </Animated.View>
         </View>
@@ -321,7 +321,7 @@ export default function CreateDiaryScreen() {
                 disabled={previewDiaryMutation.isPending}
               >
                 <Text className='font-inter-medium'>
-                  {previewDiaryMutation.isPending ? 'Đang Tính...' : 'Tiếp Theo'}
+                  {previewDiaryMutation.isPending ? 'Đang tính toán...' : 'Tiếp theo'}
                 </Text>
               </Button>
             </View>
@@ -350,7 +350,9 @@ export default function CreateDiaryScreen() {
                 onPress={handleSubmitMeasurements(onSubmitStepThree)}
                 disabled={createDiaryMutation.isPending}
               >
-                <Text className='font-inter-medium'>{createDiaryMutation.isPending ? 'Đang Gửi...' : 'Gửi'}</Text>
+                <Text className='font-inter-medium'>
+                  {createDiaryMutation.isPending ? 'Đang lưu...' : 'Lưu thay đổi'}
+                </Text>
               </Button>
             </View>
           </Animated.View>

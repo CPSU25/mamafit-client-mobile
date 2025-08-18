@@ -51,56 +51,55 @@ export default function DiaryHistoryDetailScreen() {
 
   const mainData = [
     {
-      title: 'Trạng Thái Thai Kỳ',
+      title: 'Thông tin thai kỳ',
       description: 'Chạm để cập nhật số đo',
       icon: SvgIcon.calendarOne({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       measurements: [
-        { name: 'weekOfPregnancy' as const, label: 'Tuần Thai', unit: 'tuần', editable: false },
-        { name: 'weight' as const, label: 'Cân Nặng', unit: 'kg', editable: isEditable },
-        { name: 'bust' as const, label: 'Vòng Ngực', unit: 'cm', editable: isEditable },
-        { name: 'waist' as const, label: 'Vòng Eo', unit: 'cm', editable: isEditable },
-        { name: 'hip' as const, label: 'Vòng Hông', unit: 'cm', editable: isEditable }
+        { name: 'weekOfPregnancy' as const, label: 'Tuổi thai', unit: 'tuần', editable: false },
+        { name: 'bust' as const, label: 'Vòng ngực', unit: 'cm', editable: false },
+        { name: 'waist' as const, label: 'Vòng eo', unit: 'cm', editable: false },
+        { name: 'hip' as const, label: 'Vòng hông', unit: 'cm', editable: false }
       ]
     }
   ]
 
   const calculatedData = [
     {
-      title: 'Thân Trên',
-      description: 'Chạm để chỉnh sửa',
+      title: 'Số đo thân trên',
+      description: 'Nhấn vào số đo để chỉnh sửa',
       icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       measurements: [
-        { name: 'neck' as const, label: 'Cổ', unit: 'cm', editable: isEditable },
-        { name: 'coat' as const, label: 'Áo', unit: 'cm', editable: isEditable },
-        { name: 'chestAround' as const, label: 'Ngực', unit: 'cm', editable: isEditable },
-        { name: 'shoulderWidth' as const, label: 'Vai', unit: 'cm', editable: isEditable }
+        { name: 'neck' as const, label: 'Vòng cổ', unit: 'cm', editable: true },
+        { name: 'coat' as const, label: 'Vòng áo', unit: 'cm', editable: true },
+        { name: 'chestAround' as const, label: 'Vòng ngực', unit: 'cm', editable: true },
+        { name: 'shoulderWidth' as const, label: 'Vòng vai', unit: 'cm', editable: true }
       ]
     },
     {
-      title: 'Thân & Eo',
-      description: 'Chạm để chỉnh sửa',
+      title: 'Số đo thân giữa & vòng eo',
+      description: 'Nhấn vào số đo để chỉnh sửa',
       icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       measurements: [
-        { name: 'stomach' as const, label: 'Bụng', unit: 'cm', editable: isEditable },
-        { name: 'pantsWaist' as const, label: 'Eo Quần', unit: 'cm', editable: isEditable }
+        { name: 'stomach' as const, label: 'Vòng bụng', unit: 'cm', editable: true },
+        { name: 'pantsWaist' as const, label: 'Vòng eo quần', unit: 'cm', editable: true }
       ]
     },
     {
-      title: 'Thân Dưới',
-      description: 'Chạm để chỉnh sửa',
+      title: 'Số đo thân dưới',
+      description: 'Nhấn vào số đo để chỉnh sửa',
       icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       measurements: [
-        { name: 'thigh' as const, label: 'Đùi', unit: 'cm', editable: isEditable },
-        { name: 'legLength' as const, label: 'Dài Chân', unit: 'cm', editable: isEditable }
+        { name: 'thigh' as const, label: 'Vòng đùi', unit: 'cm', editable: true },
+        { name: 'legLength' as const, label: 'Chiều dài chân', unit: 'cm', editable: true }
       ]
     },
     {
-      title: 'Trang Phục',
-      description: 'Chạm để chỉnh sửa',
+      title: 'Số đo khác',
+      description: 'Nhấn vào số đo để chỉnh sửa',
       icon: SvgIcon.ruler({ size: ICON_SIZE.SMALL, color: 'PRIMARY' }),
       measurements: [
-        { name: 'dressLength' as const, label: 'Dài Váy', unit: 'cm', editable: isEditable },
-        { name: 'sleeveLength' as const, label: 'Dài Tay', unit: 'cm', editable: isEditable }
+        { name: 'dressLength' as const, label: 'Chiều dài váy', unit: 'cm', editable: true },
+        { name: 'sleeveLength' as const, label: 'Chiều dài tay áo', unit: 'cm', editable: true }
       ]
     }
   ]
@@ -138,8 +137,8 @@ export default function DiaryHistoryDetailScreen() {
               <TouchableOpacity onPress={handleGoBack}>
                 <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
               </TouchableOpacity>
-              <Text className='text-xl font-inter-semibold flex-1'>
-                Week {measurementDetail?.weekOfPregnancy} measurements
+              <Text className='text-xl font-inter-medium flex-1'>
+                Số đo tuần thứ {measurementDetail?.weekOfPregnancy}
               </Text>
             </View>
           </View>
@@ -153,12 +152,12 @@ export default function DiaryHistoryDetailScreen() {
               />
             ) : (
               <InfoCard
-                title={Boolean(measurementDetail?.isLocked) ? 'Thông Tin Đã Khóa' : 'Chỉ Đọc'}
+                title={Boolean(measurementDetail?.isLocked) ? 'Thông tin đã khóa' : 'Chỉ đọc'}
                 delay={100}
                 description={
                   Boolean(measurementDetail?.isLocked)
-                    ? 'Thông tin đã khóa, không thể chỉnh sửa.'
-                    : 'Thông tin chỉ đọc, không phải tuần thai hiện tại.'
+                    ? 'Thông tin đã khóa, không thể chỉnh sửa vì hiện tại số đo này đang được sử dụng cho đơn hàng.'
+                    : 'Thông tin chỉ đọc, không phải tuần thai hiện tại. Bạn chỉ có thể chỉnh sửa số đo trong tuần thai hiện tại.'
                 }
               />
             )}
@@ -166,7 +165,7 @@ export default function DiaryHistoryDetailScreen() {
             {mainData.map((category, categoryIndex) => (
               <Animated.View
                 key={category.title}
-                entering={FadeInDown.delay(200 + categoryIndex * 100)}
+                entering={FadeInDown.delay(200 + categoryIndex * 50)}
                 className='rounded-2xl'
               >
                 <Card className='p-2'>
@@ -180,7 +179,7 @@ export default function DiaryHistoryDetailScreen() {
                       {category.icon}
                     </View>
                     <View>
-                      <Text className='font-inter-semibold text-sm uppercase'>{category.title}</Text>
+                      <Text className='font-inter-medium text-sm'>{category.title}</Text>
                       <Text className='text-xs text-muted-foreground'>{category.description}</Text>
                     </View>
                   </View>
@@ -201,17 +200,10 @@ export default function DiaryHistoryDetailScreen() {
               </Animated.View>
             ))}
 
-            <Animated.View entering={FadeInDown.delay(300)}>
-              <View className='flex flex-col gap-1'>
-                <Text className='font-inter-semibold'>Ước Tính</Text>
-                <Text className='text-muted-foreground text-xs'>Dựa trên tình trạng thai kỳ hiện tại.</Text>
-              </View>
-            </Animated.View>
-
             {calculatedData.map((category, categoryIndex) => (
               <Animated.View
                 key={category.title}
-                entering={FadeInDown.delay(400 + categoryIndex * 100)}
+                entering={FadeInDown.delay(300 + categoryIndex * 50)}
                 className='rounded-2xl'
               >
                 <Card className='p-2'>
@@ -225,7 +217,7 @@ export default function DiaryHistoryDetailScreen() {
                       {category.icon}
                     </View>
                     <View>
-                      <Text className='font-inter-semibold text-sm uppercase'>{category.title}</Text>
+                      <Text className='font-inter-medium text-sm'>{category.title}</Text>
                       <Text className='text-xs text-muted-foreground'>{category.description}</Text>
                     </View>
                   </View>

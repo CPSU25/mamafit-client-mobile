@@ -41,7 +41,7 @@ export default function BookAppointmentForm({ availableSlots, bookingDate, isLoa
   return (
     <View className='gap-4'>
       <InfoCard
-        title='Thời Gian Dự Kiến'
+        title='Thời gian dự kiến'
         description='Bạn có thể cần phải chờ một chút nếu khách hàng trước đó mất thời gian hơn dự kiến. Cảm ơn bạn đã hiểu.'
         delay={100}
       />
@@ -75,7 +75,7 @@ export default function BookAppointmentForm({ availableSlots, bookingDate, isLoa
           render={({ field: { onChange, value } }) => (
             <Animated.View entering={FadeInDown.delay(400)} className='gap-2 pb-1'>
               <View className='mb-2'>
-                <Text className='font-inter-medium'>Giờ Còn Trống</Text>
+                <Text className='font-inter-medium'>Giờ còn trống</Text>
                 <Text className='text-xs text-muted-foreground'>{validSlots?.length} giờ còn trống</Text>
               </View>
               <BottomSheetScrollView showsVerticalScrollIndicator={false} className='h-64'>

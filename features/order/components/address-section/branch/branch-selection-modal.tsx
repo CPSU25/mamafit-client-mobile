@@ -34,7 +34,7 @@ const BranchSelectionModal = forwardRef<BottomSheetModal, BranchSelectionModalPr
           />
         )}
       >
-        <Text className='text-xl font-inter-semibold text-center'>Chọn Chi Nhánh</Text>
+        <Text className='text-xl font-inter-medium text-center'>Chọn Chi Nhánh</Text>
         <BottomSheetFlatList
           data={branches}
           keyExtractor={(address) => address.id}

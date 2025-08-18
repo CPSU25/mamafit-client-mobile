@@ -189,7 +189,7 @@ function SendCode({ control, errors, isSendingCode, next, bottom }: SendCodeProp
             {...field}
             value={value}
             onChangeText={onChange}
-            placeholder='Số Điện Thoại'
+            placeholder='Số điện thoại'
             keyboardType='phone-pad'
             StartIcon={<Feather name='phone' size={20} color={PRIMARY_COLOR.LIGHT} />}
             autoFocus

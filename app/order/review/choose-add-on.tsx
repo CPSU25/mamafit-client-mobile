@@ -132,7 +132,7 @@ export default function ChooseAddOnScreen() {
       return optionDetail.name
     }
 
-    return 'Select MamaFit Add-Ons'
+    return 'Chọn dịch vụ thêm'
   }
 
   const onPressAddOn = (addOn: AddOnMap) => {
@@ -165,7 +165,7 @@ export default function ChooseAddOnScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-semibold text-xl'>{getScreenTitle()}</Text>
+        <Text className='font-inter-medium text-xl'>{getScreenTitle()}</Text>
       </View>
 
       <View className='h-2 bg-muted' />
@@ -180,7 +180,7 @@ export default function ChooseAddOnScreen() {
         <FormProvider {...methods}>
           <AddOptionForm optionDetail={optionDetail} />
           <Button className='mx-4 mt-4' onPress={methods.handleSubmit(onSubmit)}>
-            <Text className='font-inter-medium'>Áp Dụng</Text>
+            <Text className='font-inter-medium'>Áp dụng</Text>
           </Button>
         </FormProvider>
       ) : null}
