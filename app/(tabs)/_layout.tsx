@@ -12,8 +12,8 @@ const TabIcon = ({ focused, icon, title }: { focused: boolean; icon: React.React
       {icon}
       <Text
         className={cn(
-          'text-xs w-full text-center mt-0.5',
-          focused ? 'text-primary font-inter-semibold' : 'text-muted-foreground'
+          'text-xs w-full text-center mt-0.5 font-inter-medium',
+          focused ? 'text-primary' : 'text-muted-foreground'
         )}
       >
         {title}
@@ -27,31 +27,31 @@ const navigationOptions = [
     id: 1,
     name: 'index',
     title: 'Trang chủ',
-    icon: (focused: boolean) => SvgIcon.home({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
+    icon: (focused: boolean) => SvgIcon.home({ size: 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 2,
     name: 'diary',
     title: 'Nhật ký',
-    icon: (focused: boolean) => SvgIcon.diary({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
+    icon: (focused: boolean) => SvgIcon.diary({ size: 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 3,
     name: 'canvas',
     title: 'Thiết kế',
-    icon: (focused: boolean) => SvgIcon.penTool({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
+    icon: (focused: boolean) => SvgIcon.penTool({ size: 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 4,
     name: 'notifications',
     title: 'Thông báo',
-    icon: (focused: boolean) => SvgIcon.notification({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
+    icon: (focused: boolean) => SvgIcon.notification({ size: 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
     id: 5,
     name: 'profile',
     title: 'Tôi',
-    icon: (focused: boolean) => SvgIcon.user({ size: focused ? 28 : 26, color: focused ? 'PRIMARY' : 'GRAY' })
+    icon: (focused: boolean) => SvgIcon.user({ size: 26, color: focused ? 'PRIMARY' : 'GRAY' })
   }
 ]
 

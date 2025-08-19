@@ -123,7 +123,7 @@ export default function CreateWarrantyRequestForm({ index, orderItem }: CreateWa
               >
                 {SvgIcon.galleryImport({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
                 <Text className='text-xs text-muted-foreground'>
-                  {isImageUploading ? 'Đang Tải Lên...' : 'Thêm Ảnh'}
+                  {isImageUploading ? 'Đang tải lên...' : 'Thêm ảnh'}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -135,7 +135,7 @@ export default function CreateWarrantyRequestForm({ index, orderItem }: CreateWa
               >
                 {SvgIcon.videoPlay({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
                 <Text className='text-xs text-muted-foreground'>
-                  {isVideoUploading ? 'Đang Tải Lên...' : 'Thêm Video'}
+                  {isVideoUploading ? 'Đang tải lên...' : 'Thêm video'}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -222,7 +222,7 @@ export default function CreateWarrantyRequestForm({ index, orderItem }: CreateWa
               onChangeText={onChange}
               onBlur={onBlur}
               placeholder='Mô tả lỗi và vị trí xuất hiện'
-              className={cn('rounded-xl native:text-base', itemErrors?.description && className)}
+              className={cn('rounded-2xl native:text-base', itemErrors?.description && className)}
             />
           )}
         />

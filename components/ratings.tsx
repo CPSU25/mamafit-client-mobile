@@ -6,23 +6,24 @@ interface RatingsProps {
   rating: number
   ratingCount?: number
   displayCount?: boolean
+  size?: number
 }
 
-export default function Ratings({ rating, ratingCount, displayCount = true }: RatingsProps) {
+export default function Ratings({ rating, ratingCount, displayCount = true, size = 12 }: RatingsProps) {
   const fullStars = Math.floor(rating)
   const hasHalfStar = rating - fullStars >= 0.25 && rating - fullStars < 0.75
   const totalStars = 5
 
   return (
-    <View className='flex-row items-center gap-2'>
-      <View className='flex-row items-center gap-0.5 flex-1'>
+    <View className='flex-row items-center gap-2 justify-between'>
+      <View className='flex-row items-center gap-0.5'>
         {Array.from({ length: totalStars }).map((_, index) => {
           if (index < fullStars) {
-            return <FontAwesome key={index} name='star' size={12} color='#f59e0b' />
+            return <FontAwesome key={index} name='star' size={size} color='#f59e0b' />
           } else if (index === fullStars && hasHalfStar) {
-            return <FontAwesome key={index} name='star-half-full' size={12} color='#f59e0b' />
+            return <FontAwesome key={index} name='star-half-full' size={size} color='#f59e0b' />
           } else {
-            return <FontAwesome key={index} name='star-o' size={12} color='#f59e0b' />
+            return <FontAwesome key={index} name='star-o' size={size} color='#f59e0b' />
           }
         })}
       </View>

@@ -6,7 +6,9 @@ import { Image, TouchableOpacity, useWindowDimensions, View } from 'react-native
 import { Card } from '~/components/ui/card'
 import { Dialog, DialogContent, DialogTrigger } from '~/components/ui/dialog'
 import { Separator } from '~/components/ui/separator'
+import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
+import { useGetFeedbackStatus } from '~/features/feedback/hooks/use-get-feedback-status'
 import { useKeyboardOffset } from '~/hooks/use-keyboard-offset'
 import { cn } from '~/lib/utils'
 import { Order, OrderItem, OrderItemType, OrderStatus, OrderType } from '~/types/order.type'
@@ -28,6 +30,7 @@ export default function OrderCard({ order }: OrderCardProps) {
 
   const { methods, cancelOrderMutation } = useCancelOrder()
   const { mutate, isPending } = useReceiveOrder()
+  const { data: feedbackStatus, isLoading: isLoadingFeedbackStatus } = useGetFeedbackStatus(order.id)
 
   const orderItemTypeSet = [...new Set(order.items.map((item) => item.itemType))]
 
@@ -39,8 +42,9 @@ export default function OrderCard({ order }: OrderCardProps) {
     order.status === OrderStatus.AwaitingPaidWarranty
   const isDisplayRateButton = order.status === OrderStatus.Completed
   const isDisplayCancelButton = order.status === OrderStatus.Created
-  const isHiddenViewDetailsButton = order.status === OrderStatus.Created || order.status === OrderStatus.Completed
-  const isDisplayReceiveButton = order.status === OrderStatus.Delevering
+  const isDisplayViewDetailsButton = order.status !== OrderStatus.Created
+  const isDisplayReceiveButton =
+    order.status === OrderStatus.Delevering && orderItemTypeSet[0] !== OrderItemType.DesignRequest
 
   const onSubmit: SubmitHandler<CancelOrderFormSchema> = (data) => {
     if (!order?.id) return
@@ -126,7 +130,7 @@ export default function OrderCard({ order }: OrderCardProps) {
 
         <View className='mx-2 mt-3 mb-2 items-end'>
           <Text className='text-xs'>
-            Tổng {order.items?.length} Item{order.items?.length > 1 ? 's' : ''}:{' '}
+            Tổng {order.items?.length} sản phẩm:{' '}
             <Text className='text-sm font-inter-semibold'>
               <Text className='text-xs font-inter-semibold underline'>đ</Text>
               {totalPrice.toLocaleString('vi-VN')}
@@ -134,97 +138,106 @@ export default function OrderCard({ order }: OrderCardProps) {
           </Text>
         </View>
 
-        <View className='px-2 pb-2 flex-row justify-end gap-2 mt-2'>
-          {!isHiddenViewDetailsButton ? (
-            <TouchableOpacity
-              className='px-6 py-2 border border-border rounded-xl items-center'
-              onPress={() =>
-                router.push({
-                  pathname: '/order/[orderId]',
-                  params: {
-                    orderId: order.id
-                  }
-                })
-              }
-            >
-              <Text className='text-sm font-inter-medium'>Xem chi tiết</Text>
-            </TouchableOpacity>
-          ) : null}
-
-          {isDisplayReceiveButton ? (
-            <TouchableOpacity
-              className='px-6 py-2 border border-border rounded-xl items-center'
-              onPress={() => mutate(order?.id)}
-              disabled={isPending}
-            >
-              <Text className='text-sm font-inter-medium'>{isPending ? 'Đang Nhận...' : 'Nhận hàng'}</Text>
-            </TouchableOpacity>
-          ) : null}
-
-          {isDisplayCancelButton ? (
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <TouchableOpacity className='px-6 py-2 rounded-xl items-center border border-border'>
-                  <Text className='text-sm font-inter-medium text-rose-600'>
-                    {cancelOrderMutation.isPending ? 'Đang hủy...' : 'Hủy đơn'}
-                  </Text>
-                </TouchableOpacity>
-              </DialogTrigger>
-              <DialogContent
-                displayCloseButton={false}
-                style={{
-                  marginBottom: keyboardHeight / 2.5,
-                  width: width - 30,
-                  padding: 16
-                }}
+        {isLoadingFeedbackStatus ? (
+          <View className='p-2'>
+            <Skeleton className='h-11 rounded-xl' />
+          </View>
+        ) : (
+          <View className='p-2 flex-row justify-end gap-2'>
+            {isDisplayViewDetailsButton ? (
+              <TouchableOpacity
+                className='px-6 py-2 border border-border rounded-xl items-center'
+                onPress={() =>
+                  router.push({
+                    pathname: '/order/[orderId]',
+                    params: {
+                      orderId: order.id
+                    }
+                  })
+                }
               >
-                <FormProvider {...methods}>
-                  <View className='gap-2'>
-                    <Text className='font-inter-semibold text-xl'>Hủy đơn #{order?.code}</Text>
-                    <Text className='text-sm text-muted-foreground'>
-                      Hành động này không thể hoàn tác. Vui lòng xác nhận nếu bạn muốn hủy đơn hàng.
-                    </Text>
-                  </View>
+                <Text className='text-sm font-inter-medium'>Xem chi tiết</Text>
+              </TouchableOpacity>
+            ) : null}
 
-                  <CancelOrderForm />
+            {isDisplayReceiveButton ? (
+              <TouchableOpacity
+                className='px-6 py-2 border border-border rounded-xl items-center'
+                onPress={() => mutate(order?.id)}
+                disabled={isPending}
+              >
+                <Text className='text-sm font-inter-medium'>{isPending ? 'Đang Nhận...' : 'Nhận hàng'}</Text>
+              </TouchableOpacity>
+            ) : null}
 
-                  <TouchableOpacity
-                    className='p-3 rounded-xl flex-row items-center justify-center gap-2 bg-rose-50'
-                    onPress={methods.handleSubmit(onSubmit)}
-                    disabled={cancelOrderMutation.isPending}
-                  >
-                    <Feather name='x' size={16} color='#e11d48' />
-                    <Text className='text-sm text-rose-600 font-inter-medium'>
+            {isDisplayCancelButton ? (
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <TouchableOpacity className='px-6 py-2 rounded-xl items-center border border-border'>
+                    <Text className='text-sm font-inter-medium text-rose-600'>
                       {cancelOrderMutation.isPending ? 'Đang hủy...' : 'Hủy đơn'}
                     </Text>
                   </TouchableOpacity>
-                </FormProvider>
-              </DialogContent>
-            </Dialog>
-          ) : null}
+                </DialogTrigger>
+                <DialogContent
+                  displayCloseButton={false}
+                  style={{
+                    marginBottom: keyboardHeight / 2.5,
+                    width: width - 30,
+                    padding: 16
+                  }}
+                >
+                  <FormProvider {...methods}>
+                    <View className='gap-2'>
+                      <Text className='font-inter-semibold text-xl'>Hủy đơn #{order?.code}</Text>
+                      <Text className='text-sm text-muted-foreground'>
+                        Hành động này không thể hoàn tác. Vui lòng xác nhận nếu bạn muốn hủy đơn hàng.
+                      </Text>
+                    </View>
 
-          {isDisplayPayButton ? (
-            <TouchableOpacity
-              className='px-6 py-2 rounded-xl items-center border border-border'
-              onPress={() =>
-                router.push({
-                  pathname: '/payment/[orderId]/qr-code',
-                  params: {
-                    orderId: order.id
-                  }
-                })
-              }
-            >
-              <Text className='text-sm font-inter-medium'>Trả tiền</Text>
-            </TouchableOpacity>
-          ) : null}
+                    <CancelOrderForm />
 
-          {isDisplayRateButton ? (
-            <TouchableOpacity className='px-6 py-2 rounded-xl items-center border border-border'>
-              <Text className='text-sm font-inter-medium'>Đánh Giá</Text>
-            </TouchableOpacity>
-          ) : null}
-        </View>
+                    <TouchableOpacity
+                      className='p-3 rounded-xl flex-row items-center justify-center gap-2 bg-rose-50'
+                      onPress={methods.handleSubmit(onSubmit)}
+                      disabled={cancelOrderMutation.isPending}
+                    >
+                      <Feather name='x' size={16} color='#e11d48' />
+                      <Text className='text-sm text-rose-600 font-inter-medium'>
+                        {cancelOrderMutation.isPending ? 'Đang hủy...' : 'Hủy đơn'}
+                      </Text>
+                    </TouchableOpacity>
+                  </FormProvider>
+                </DialogContent>
+              </Dialog>
+            ) : null}
+
+            {isDisplayPayButton ? (
+              <TouchableOpacity
+                className='px-6 py-2 rounded-xl items-center border border-border'
+                onPress={() =>
+                  router.push({
+                    pathname: '/payment/[orderId]/qr-code',
+                    params: {
+                      orderId: order.id
+                    }
+                  })
+                }
+              >
+                <Text className='text-sm font-inter-medium'>Trả tiền</Text>
+              </TouchableOpacity>
+            ) : null}
+
+            {isDisplayRateButton && !feedbackStatus ? (
+              <TouchableOpacity
+                className='px-6 py-2 rounded-xl items-center border border-border'
+                onPress={() => router.push({ pathname: '/order/[orderId]/rate', params: { orderId: order.id } })}
+              >
+                <Text className='text-sm font-inter-medium'>Đánh giá</Text>
+              </TouchableOpacity>
+            ) : null}
+          </View>
+        )}
       </Card>
     </TouchableOpacity>
   )

@@ -72,7 +72,7 @@ export default function SignInForm() {
       <View className='flex flex-col gap-2' style={{ paddingBottom: bottom }}>
         {rootMsg && <FieldError message={rootMsg} />}
         <Button onPress={handleSubmit(onSubmit)} disabled={isSigningIn}>
-          <Text className='font-inter-medium text-white'>{isSigningIn ? 'Đang đăng nhập...' : 'Đăng Nhập'}</Text>
+          <Text className='font-inter-medium text-white'>{isSigningIn ? 'Đang đăng nhập...' : 'Đăng nhập'}</Text>
         </Button>
         <GoogleAuthButton />
       </View>
