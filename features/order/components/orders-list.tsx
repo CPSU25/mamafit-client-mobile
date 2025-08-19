@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { ActivityIndicator, FlatList, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { CurrentStatus } from '~/app/order/status/[orderStatus]'
@@ -13,6 +14,7 @@ interface OrdersListProps {
 }
 
 export default function OrdersList({ currentStatus }: OrdersListProps) {
+  const queryClient = useQueryClient()
   const {
     data: orders,
     isLoading,
@@ -21,7 +23,12 @@ export default function OrdersList({ currentStatus }: OrdersListProps) {
     fetchNextPage,
     refetch
   } = useGetOrders(currentStatus.value)
-  const { refreshControl } = useRefreshs([refetch])
+
+  const invalidateFeedbackStatus = () => {
+    queryClient.invalidateQueries({ queryKey: ['feedback-status'] })
+  }
+
+  const { refreshControl } = useRefreshs([refetch, invalidateFeedbackStatus])
 
   return (
     <FlatList

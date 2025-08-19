@@ -50,103 +50,114 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
     label: 'Chờ thanh toán',
     value: OrderStatus.Created,
     urlValue: 'to-pay',
-    title: 'Đang chờ thanh toán',
+    title: 'Đơn hàng đang chờ thanh toán',
     description:
-      'Đơn hàng của bạn đã được đặt thành công và đang chờ bạn hoàn tất thanh toán để chúng tôi bắt đầu chuẩn bị.'
+      'Đơn hàng của bạn đã được ghi nhận. Vui lòng hoàn tất thanh toán để chúng tôi bắt đầu chuẩn bị hoặc tiến hành thiết kế sản phẩm.'
   },
   {
     id: 2,
     label: 'Xác nhận',
     value: OrderStatus.Confirmed,
     urlValue: 'confirmed',
-    title: 'Đơn hàng đã xác nhận',
+    title: 'Đơn hàng đã được xác nhận',
     description:
-      'Chúng tôi đã nhận được thanh toán của bạn và xác nhận đơn hàng. Đội ngũ của chúng tôi đang chuẩn bị mọi thứ để tiến hành sản xuất.'
+      'Thanh toán đã thành công và đơn hàng được xác nhận. Chúng tôi đang chuẩn bị hàng có sẵn hoặc khởi động quy trình thiết kế theo yêu cầu.'
   },
   {
     id: 4,
     label: 'Đang xử lý',
     value: OrderStatus.InProgress,
     urlValue: 'in-progress',
-    title: 'Đang xử lý',
+    title: 'Đơn hàng đang được xử lý',
     description:
-      'Đơn hàng của bạn đang được xử lý. Đội ngũ của chúng tôi đang làm việc cẩn thận để đảm bảo mọi thứ đạt chuẩn chất lượng.'
+      'Đơn hàng của bạn đang trong quá trình xử lý. Với hàng có sẵn chúng tôi kiểm tra chất lượng, với thiết kế chúng tôi tiến hành sản xuất theo yêu cầu.'
   },
   {
     id: 6,
     label: 'Thanh toán cọc',
     value: OrderStatus.AwaitingPaidRest,
     urlValue: 'to-pay-rest',
-    title: 'Đang chờ thanh toán còn lại',
+    title: 'Chờ thanh toán phần còn lại',
     description:
-      'Đơn hàng của bạn đã vượt qua tất cả kiểm tra chất lượng. Vui lòng thanh toán phần còn lại để chúng tôi chuẩn bị giao hàng cho bạn.'
+      'Đơn hàng đã hoàn tất các khâu chính. Vui lòng thanh toán số tiền còn lại để chúng tôi sắp xếp giao hàng cho bạn.'
   },
   {
     id: 7,
     label: 'Thanh toán bảo hành',
     value: OrderStatus.AwaitingPaidWarranty,
     urlValue: 'to-pay-warranty',
-    title: 'Đang chờ thanh toán bảo hành',
-    description: 'Vui lòng hoàn tất thanh toán để chúng tôi tiếp tục quy trình bảo hành.'
+    title: 'Chờ thanh toán phí bảo hành',
+    description:
+      'Để tiếp tục xử lý yêu cầu bảo hành, vui lòng hoàn tất phí cần thiết. Sau khi xác nhận chúng tôi sẽ tiến hành ngay.'
   },
   {
     id: 8,
     label: 'Đang đóng gói',
     value: OrderStatus.Packaging,
     urlValue: 'packaging',
-    title: 'Đang đóng gói',
-    description: 'Đơn hàng của bạn đang được đóng gói cẩn thận để đảm bảo đến tay bạn an toàn và nguyên vẹn.'
+    title: 'Đơn hàng đang được đóng gói',
+    description: 'Sản phẩm của bạn đang được kiểm tra và đóng gói cẩn thận để chuẩn bị vận chuyển.'
   },
   {
     id: 9,
-    label: 'Đang lấy hàng',
+    label: 'Đến nhà máy',
     value: OrderStatus.PickUpInProgress,
     urlValue: 'pick-up-in-progress',
-    title: 'Đang chuẩn bị lấy hàng',
-    description: 'Đơn hàng của bạn đang được chuẩn bị để gửi đến nhà máy cho dịch vụ bảo hành.'
+    title: 'Shipper đang đến lấy hàng',
+    description: 'Nhân viên vận chuyển đang đến địa chỉ của bạn để nhận sản phẩm và gửi về xưởng xử lý hoặc bảo hành.'
   },
   {
     id: 10,
-    label: 'Chờ lấy hàng',
+    label: 'Tại chi nhánh',
     value: OrderStatus.ReceivedAtBranch,
     urlValue: 'received-at-branch',
-    title: 'Chờ lấy hàng',
-    description: 'Đơn hàng đã đến chi nhánh và sẵn sàng để bạn nhận theo thời gian thuận tiện.'
+    title: 'Đơn hàng đã có tại chi nhánh',
+    description: 'Đơn hàng của bạn đã được chuyển đến chi nhánh gần nhất và sẵn sàng bàn giao.'
   },
   {
     id: 11,
     label: 'Đang giao hàng',
     value: OrderStatus.Delevering,
     urlValue: 'to-deliver',
-    title: 'Đang giao hàng',
-    description: 'Đơn hàng đã được đóng gói và đang trên đường giao tới địa chỉ của bạn.'
+    title: 'Đơn hàng đang trong quá trình giao',
+    description: 'Đơn hàng đã được bàn giao cho đơn vị vận chuyển và đang trên đường đến địa chỉ của bạn.'
   },
   {
     id: 12,
     label: 'Đã nhận hàng',
     value: OrderStatus.Completed,
     urlValue: 'to-rate',
-    title: 'Đã hoàn thành đơn hàng',
-    description:
-      'Đơn hàng của bạn đã được giao thành công. Vui lòng xác nhận đã nhận và chia sẻ phản hồi với chúng tôi.'
+    title: 'Đơn hàng đã hoàn tất',
+    description: 'Bạn đã nhận thành công đơn hàng. Vui lòng xác nhận và để lại đánh giá của bạn.'
   },
   {
     id: 13,
     label: 'Đã hủy',
     value: OrderStatus.Cancelled,
     urlValue: 'cancelled',
-    title: 'Đơn hàng đã hủy',
-    description:
-      'Đơn hàng của bạn đã bị hủy. Nếu cần hỗ trợ hoặc muốn đặt lại, vui lòng liên hệ bộ phận chăm sóc khách hàng.'
+    title: 'Đơn hàng đã được hủy',
+    description: 'Đơn hàng đã bị hủy. Nếu bạn muốn đặt lại hoặc cần hỗ trợ, vui lòng liên hệ CSKH.'
   },
   {
     id: 14,
     label: 'Đã trả hàng',
     value: OrderStatus.Returned,
     urlValue: 'returned',
-    title: 'Đơn hàng đã trả',
-    description:
-      'Đơn hàng của bạn đã được trả lại cho chúng tôi. Vui lòng liên hệ bộ phận hỗ trợ nếu cần trợ giúp hoặc thêm thông tin.'
+    title: 'Đơn hàng đã được trả lại',
+    description: 'Đơn hàng đã được hoàn tất thủ tục trả lại. Vui lòng liên hệ CSKH nếu bạn cần thêm hỗ trợ.'
+  }
+]
+
+export const FEEDBACK_STATUS_TYPES = [
+  {
+    id: 1,
+    label: 'Chưa đánh giá',
+    urlValue: 'unrated'
+  },
+  {
+    id: 2,
+    label: 'Đã đánh giá',
+    urlValue: 'rated'
   }
 ]
 

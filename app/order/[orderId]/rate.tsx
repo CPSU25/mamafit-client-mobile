@@ -17,7 +17,7 @@ import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function RateOrderScreen() {
   const router = useRouter()
-  const { methods } = useRateOrder()
+  const { methods, rateOrderMutation } = useRateOrder()
   const { orderId } = useLocalSearchParams<{ orderId: string }>()
 
   const { data: order, isLoading: isLoadingOrder } = useGetOrder(orderId)
@@ -41,7 +41,9 @@ export default function RateOrderScreen() {
   }, [order?.items, fields.length, append])
 
   const onSubmit: SubmitHandler<RateOrderFormSchema> = (data) => {
-    console.log(data)
+    console.log(data.ratings)
+
+    rateOrderMutation.mutate(data.ratings)
   }
 
   const handleGoBack = () => {
@@ -83,8 +85,8 @@ export default function RateOrderScreen() {
           </KeyboardAwareScrollView>
 
           <View className='px-2 pt-4'>
-            <Button onPress={methods.handleSubmit(onSubmit)}>
-              <Text className='font-inter-medium'>Gửi đánh giá</Text>
+            <Button onPress={methods.handleSubmit(onSubmit)} disabled={rateOrderMutation.isPending}>
+              <Text className='font-inter-medium'>{rateOrderMutation.isPending ? 'Đang gửi...' : 'Gửi đánh giá'}</Text>
             </Button>
           </View>
         </FormProvider>
