@@ -133,7 +133,7 @@ export default function CreateTicketForm({
               >
                 {SvgIcon.galleryImport({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
                 <Text className='text-xs text-muted-foreground'>
-                  {isImageUploading ? 'Đang Tải Lên...' : 'Thêm Ảnh'}
+                  {isImageUploading ? 'Đang tải lên...' : 'Thêm ảnh'}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -145,7 +145,7 @@ export default function CreateTicketForm({
               >
                 {SvgIcon.videoPlay({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
                 <Text className='text-xs text-muted-foreground'>
-                  {isVideoUploading ? 'Đang Tải Lên...' : 'Thêm Video'}
+                  {isVideoUploading ? 'Đang tải lên...' : 'Thêm video'}
                 </Text>
               </TouchableOpacity>
             </View>

@@ -10,6 +10,7 @@ import { Switch } from '~/components/ui/switch'
 import { Text } from '~/components/ui/text'
 import CurrentUser from '~/features/auth/components/current-user'
 import { useGetCurrentUser } from '~/features/auth/hooks/use-get-current-user'
+import { useGetUnratedOrder } from '~/features/feedback/hooks/use-get-unrated-orders'
 import { useGetOrdersCount } from '~/features/order/hooks/use-get-orders-count'
 import { useAuth } from '~/hooks/use-auth'
 import { useColorScheme } from '~/hooks/use-color-scheme'
@@ -52,7 +53,7 @@ const statuses: OrderStatusUI[] = [
   {
     id: 4,
     name: 'Đánh giá',
-    url: '/order/status/to-rate',
+    url: '/order/feedback/rated',
     value: OrderStatus.Completed,
     icon: SvgIcon.toRate({ size: ICON_SIZE.LARGE, color: 'PRIMARY' })
   }
@@ -66,10 +67,12 @@ const getOrderCount = (status: OrderStatusUI, ordersCount: OrderStatusCount[] | 
 
 function OrderStage({
   status,
-  ordersCount
+  ordersCount,
+  unratedOrders
 }: {
   status: OrderStatusUI
   ordersCount: OrderStatusCount[] | null | undefined
+  unratedOrders: number
 }) {
   const orderCount = getOrderCount(status, ordersCount)
 
@@ -85,7 +88,7 @@ function OrderStage({
             status.id === 4 && 'top-1 -right-1'
           )}
         >
-          <Text className='text-xs text-white font-inter-medium'>{orderCount}</Text>
+          <Text className='text-xs text-white font-inter-medium'>{status.id === 4 ? unratedOrders : orderCount}</Text>
         </View>
       ) : null}
       {status.icon}
@@ -101,9 +104,14 @@ export default function ProfileScreen() {
 
   const { isLoading: isLoadingAuth, isAuthenticated } = useAuth()
   const { data: ordersCount, isLoading: isLoadingOrdersCount, refetch: refetOrdersCount } = useGetOrdersCount()
+  const {
+    data: unratedOrders,
+    isLoading: isLoadingUnratedOrders,
+    refetch: refetchUnratedOrders
+  } = useGetUnratedOrder(true)
   const { data: currentUser, isLoading: isLoadingCurrentUser, refetch: refetchCurrentUser } = useGetCurrentUser()
 
-  const { refreshControl } = useRefreshs([refetOrdersCount, refetchCurrentUser])
+  const { refreshControl } = useRefreshs([refetOrdersCount, refetchCurrentUser, refetchUnratedOrders])
 
   const toggleColorScheme = () => {
     const newTheme = isDarkColorScheme ? 'light' : 'dark'
@@ -111,7 +119,7 @@ export default function ProfileScreen() {
     setChecked((prev) => !prev)
   }
 
-  const isLoading = isLoadingAuth || isLoadingOrdersCount || isLoadingCurrentUser
+  const isLoading = isLoadingAuth || isLoadingOrdersCount || isLoadingCurrentUser || isLoadingUnratedOrders
 
   if (isLoading) return <Loading />
 
@@ -154,7 +162,7 @@ export default function ProfileScreen() {
         <View className='flex flex-row items-center justify-around mb-6'>
           {statuses.map((status) => (
             <TouchableOpacity key={status.id} onPress={() => router.push(status.url as any)}>
-              <OrderStage status={status} ordersCount={ordersCount} />
+              <OrderStage status={status} ordersCount={ordersCount} unratedOrders={unratedOrders?.length ?? 0} />
             </TouchableOpacity>
           ))}
         </View>
@@ -168,7 +176,7 @@ export default function ProfileScreen() {
           <View className='p-2 bg-primary/10 rounded-full'>
             <Feather name='calendar' size={18} color={PRIMARY_COLOR.LIGHT} />
           </View>
-          <View className='ml-3 flex-1'>
+          <View className='ml-3.5 flex-1'>
             <Text className='font-inter-medium text-sm'>Lịch hẹn</Text>
             <Text className='text-xs text-muted-foreground'>Đặt lịch hẹn tại chi nhánh gần nhất</Text>
           </View>
@@ -184,7 +192,7 @@ export default function ProfileScreen() {
           <View className='p-2 bg-primary/10 rounded-full'>
             <Feather name='shield' size={18} color={PRIMARY_COLOR.LIGHT} />
           </View>
-          <View className='ml-3 flex-1'>
+          <View className='ml-3.5 flex-1'>
             <Text className='font-inter-medium text-sm'>Dịch vụ bảo hành</Text>
             <Text className='text-xs text-muted-foreground'>Báo lỗi sản phẩm và gửi bảo hành</Text>
           </View>
@@ -197,7 +205,7 @@ export default function ProfileScreen() {
           <View className='p-2 bg-primary/10 rounded-full'>
             <Feather name='alert-triangle' size={18} color={PRIMARY_COLOR.LIGHT} />
           </View>
-          <View className='ml-3 flex-1'>
+          <View className='ml-3.5 flex-1'>
             <Text className='font-inter-medium text-sm'>Yêu cầu hỗ trợ</Text>
             <Text className='text-xs text-muted-foreground'>Gửi yêu cầu hỗ trợ tới hệ thống</Text>
           </View>
@@ -210,7 +218,7 @@ export default function ProfileScreen() {
           <View className='p-2 bg-primary/10 rounded-full'>
             <Feather name='moon' size={18} color={PRIMARY_COLOR.LIGHT} />
           </View>
-          <Text className='font-inter-medium text-sm ml-3 flex-1'>Chế độ tối</Text>
+          <Text className='font-inter-medium text-sm ml-3.5 flex-1'>Chế độ tối</Text>
           <Switch checked={checked} onCheckedChange={toggleColorScheme} />
         </Pressable>
       </ScrollView>

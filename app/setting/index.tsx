@@ -23,7 +23,7 @@ export default function SettingScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-medium text-xl'>Cài Đặt</Text>
+        <Text className='font-inter-medium text-xl'>Cài đặt</Text>
       </View>
       <View className='bg-muted h-2' />
 

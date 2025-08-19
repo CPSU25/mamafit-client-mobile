@@ -11,12 +11,12 @@ interface Props extends AnimatedProps<ViewProps> {
 }
 
 export const IMAGES = [
-  require('~/assets/images/mamafit-app-icon.png'),
-  require('~/assets/images/mamafit-app-icon.png'),
-  require('~/assets/images/mamafit-app-icon.png'),
-  require('~/assets/images/mamafit-app-icon.png'),
-  require('~/assets/images/mamafit-app-icon.png'),
-  require('~/assets/images/mamafit-app-icon.png')
+  require('~/assets/images/mamafit-banner-1.png'),
+  require('~/assets/images/mamafit-banner-2.png'),
+  require('~/assets/images/mamafit-banner-3.jpg'),
+  require('~/assets/images/mamafit-banner-2.png'),
+  require('~/assets/images/mamafit-banner-2.png'),
+  require('~/assets/images/mamafit-banner-2.png')
 ]
 
 export const SlideItem: React.FC<Props> = (props) => {
