@@ -216,7 +216,7 @@ function SendCode({ control, errors, isSendingCode, next, bottom }: SendCodeProp
       {isFormError(errors, 'email') && <FieldError message={errors.email?.message || ''} />}
       <View className='flex-1' />
       <Button onPress={next} disabled={isSendingCode} style={{ marginBottom: bottom }}>
-        <Text className='font-inter-medium'>{isSendingCode ? 'Đang Gửi...' : 'Tiếp Tục'}</Text>
+        <Text className='font-inter-medium'>{isSendingCode ? 'Đang gửi...' : 'Tiếp tục'}</Text>
       </Button>
     </View>
   )

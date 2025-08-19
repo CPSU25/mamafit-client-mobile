@@ -67,7 +67,6 @@ export default function SignInForm() {
           )}
         />
       </View>
-      <Text className='text-right text-sm text-primary font-inter-semibold mt-2.5'>Quên mật khẩu?</Text>
       <View className='flex-1' />
       <View className='flex flex-col gap-2' style={{ paddingBottom: bottom }}>
         {rootMsg && <FieldError message={rootMsg} />}
