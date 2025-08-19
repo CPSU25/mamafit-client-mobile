@@ -24,7 +24,11 @@ export default function CreateCanvasScreen() {
 
   const handleSubmit: SubmitHandler<DressBuilderFormSchema> = async (data) => {
     const filteredData = keysToExtract.map((key) => data[key])
-    const preset = await getPresetMutation.mutateAsync(filteredData)
+    const preset = await getPresetMutation.mutateAsync({
+      styleId: data.styleId,
+      componentOptionIds: filteredData
+    })
+
     if (preset) {
       addToCartMethods.setValue('itemId', preset.id)
       addToCartMethods.setValue('type', OrderItemType.Preset)

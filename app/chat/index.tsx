@@ -2,6 +2,7 @@ import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import * as React from 'react'
 import { FlatList, TouchableOpacity, View } from 'react-native'
+import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
@@ -13,7 +14,7 @@ import { PRIMARY_COLOR } from '~/lib/constants/constants'
 export default function ChatScreen() {
   const router = useRouter()
 
-  const { data: rooms, refetch } = useGetRooms()
+  const { data: rooms, refetch, isLoading } = useGetRooms()
   const { refreshControl } = useRefreshs([refetch])
 
   const handleGoBack = () => {
@@ -40,6 +41,15 @@ export default function ChatScreen() {
 
         <FlatList
           data={rooms}
+          ListEmptyComponent={
+            isLoading ? (
+              <Loading />
+            ) : (
+              <View className='flex items-center px-4 mt-10'>
+                <Text className='text-muted-foreground text-sm mt-2'>Không tìm thấy trò chuyện</Text>
+              </View>
+            )
+          }
           renderItem={({ item, index }) => (
             <>
               <TouchableOpacity

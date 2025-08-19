@@ -132,7 +132,7 @@ export default function ChooseOrderItem({
       {orderRequests && Array.isArray(orderRequests) && orderRequests.length > 0 ? (
         <View className='px-4 pt-4'>
           <Button onPress={handleNext} disabled={isDisabled}>
-            <Text className='font-inter-medium'>Tiếp Tục</Text>
+            <Text className='font-inter-medium'>Tiếp tục</Text>
           </Button>
         </View>
       ) : null}
