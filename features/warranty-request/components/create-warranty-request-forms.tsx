@@ -72,7 +72,7 @@ export default function CreateWarrantyRequestForms({
         style={{ boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
       >
         <Button onPress={onSubmitPress} disabled={isSubmitting}>
-          <Text className='font-inter-medium'>{isSubmitting ? 'Đang Gửi...' : 'Gửi Yêu Cầu'}</Text>
+          <Text className='font-inter-medium'>{isSubmitting ? 'Đang gửi...' : 'Gửi yêu cầu'}</Text>
         </Button>
       </View>
 

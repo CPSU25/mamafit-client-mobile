@@ -99,7 +99,7 @@ export default function ProductDetailScreen() {
           <Feedback />
           <View className='bg-muted h-2' />
           <View className='px-4'>
-            <Text className='font-inter-medium text-sm'>Mô Tả</Text>
+            <Text className='font-inter-medium text-sm'>Mô tả</Text>
             <Text className='text-muted-foreground text-sm my-2' numberOfLines={isDescriptionExpanded ? undefined : 3}>
               THÔNG TIN SẢN PHẨM: Chất liệu: 100% Cotton Màu sắc: Đen Size áo: S/ M Video HƯỚNG DẪN BẢO QUẢN SẢN PHẨM: -
               Khuyển khích giặt bằng tay để giữ được form - Không giặt chung với quần áo sáng màu Không sử dụng nước tẩy

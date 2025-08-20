@@ -19,13 +19,13 @@ import { WarrantyRequestItemStatus } from '~/types/warranty.type'
 const getStatusText = (status: WarrantyRequestItemStatus) => {
   switch (status) {
     case WarrantyRequestItemStatus.Approved:
-      return 'Đã Duyệt'
+      return 'Chấp nhận bảo hành'
     case WarrantyRequestItemStatus.InTransit:
-      return 'Đang Vận Chuyển'
+      return 'Đang vận chuyển'
     case WarrantyRequestItemStatus.Rejected:
-      return 'Từ Chối'
+      return 'Từ chối'
     default:
-      return 'Đang Chờ'
+      return 'Đang chờ'
   }
 }
 
@@ -36,7 +36,7 @@ const getStatusBadge = (status: WarrantyRequestItemStatus) => {
         text: 'text-emerald-800',
         textLight: 'text-emerald-600',
         bgLight: 'bg-emerald-100',
-        activeBorder: '-2 border-emerald-200',
+        activeBorder: 'border border-emerald-100',
         gradientColors: ['#f3fbf6', '#d1fae5', '#6ee7b7']
       }
     case WarrantyRequestItemStatus.Rejected:
@@ -44,7 +44,7 @@ const getStatusBadge = (status: WarrantyRequestItemStatus) => {
         text: 'text-rose-800',
         textLight: 'text-rose-600',
         bgLight: 'bg-rose-100',
-        activeBorder: 'border-2 border-rose-200',
+        activeBorder: 'border border-rose-100',
         gradientColors: ['#fff5f5', '#ffe4e6', '#fda4af']
       }
     case WarrantyRequestItemStatus.InTransit:
@@ -52,7 +52,7 @@ const getStatusBadge = (status: WarrantyRequestItemStatus) => {
         text: 'text-blue-800',
         textLight: 'text-blue-600',
         bgLight: 'bg-blue-100',
-        activeBorder: 'border-2 border-blue-200',
+        activeBorder: 'border border-blue-100',
         gradientColors: ['#f0f9ff', '#bae6fd', '#93c5fd']
       }
     case WarrantyRequestItemStatus.Pending:
@@ -61,7 +61,7 @@ const getStatusBadge = (status: WarrantyRequestItemStatus) => {
         text: 'text-amber-800',
         textLight: 'text-amber-600',
         bgLight: 'bg-amber-100',
-        activeBorder: 'border-2 border-amber-200',
+        activeBorder: 'border border-amber-100',
         gradientColors: ['#fffaeb', '#fef3c7', '#fde68a']
       }
   }
@@ -138,7 +138,7 @@ export default function ViewWarrantyHistory() {
         <TouchableOpacity onPress={handleGoBack} className='p-1'>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-medium text-xl text-foreground'>Lịch Sử Bảo Hành</Text>
+        <Text className='font-inter-medium text-xl text-foreground'>Lịch sử bảo hành</Text>
       </View>
 
       <View className='flex-1'>
@@ -163,7 +163,7 @@ export default function ViewWarrantyHistory() {
                       </View>
                       <View>
                         <Text className='font-inter-medium text-white text-sm'>
-                          Đơn Hàng Gốc{' '}
+                          Đơn hàng gốc{' '}
                           {generalStats.parentOrder?.order.code ? `#${generalStats.parentOrder.order.code}` : ''}
                         </Text>
                         <Text className='text-[9px] text-white/80'>
@@ -225,7 +225,7 @@ export default function ViewWarrantyHistory() {
                           <View className='p-2 rounded-full bg-blue-600'>
                             <MaterialCommunityIcons name='inbox-multiple' size={14} color='white' />
                           </View>
-                          <Text className='text-sm font-inter-medium text-blue-600'>Tổng Số Yêu Cầu</Text>
+                          <Text className='text-sm font-inter-medium text-blue-600'>Tổng yêu cầu</Text>
                         </View>
                         <Text className='text-blue-600 font-inter-semibold text-lg'>{generalStats.count}</Text>
                       </View>
@@ -234,7 +234,7 @@ export default function ViewWarrantyHistory() {
                           <View className='p-2 rounded-full bg-emerald-600'>
                             <MaterialCommunityIcons name='cash-register' size={14} color='white' />
                           </View>
-                          <Text className='text-sm font-inter-medium text-emerald-600'>Tổng Phí</Text>
+                          <Text className='text-sm font-inter-medium text-emerald-600'>Tổng phí</Text>
                         </View>
                         <Text className='text-emerald-600 font-inter-semibold text-lg'>
                           <Text className='text-emerald-600 font-inter-semibold'>đ</Text>
@@ -264,8 +264,7 @@ export default function ViewWarrantyHistory() {
                   <Text className='font-inter-semibold'>Yêu cầu gần nhất</Text>
                 </View>
                 <Text className='text-muted-foreground text-xs'>
-                  Xem lịch sử yêu cầu bảo hành cho sản phẩm này, bao gồm cả dịch vụ miễn phí và có phí, để xem sản phẩm
-                  đã được sửa chữa bao nhiêu lần.
+                  Xem lịch sử yêu cầu bảo hành cho sản phẩm này, để xem sản phẩm đã được sửa chữa bao nhiêu lần.
                 </Text>
               </View>
             </>
@@ -310,7 +309,7 @@ export default function ViewWarrantyHistory() {
                         <Text className={cn('font-inter-semibold text-sm', text)}>
                           Request #{item.warrantyRequestItems.warrantyRequest.sku}
                         </Text>
-                        <Text className={cn('font-inter-medium text-xs', textLight)}>
+                        <Text className={cn('text-xs', textLight)}>
                           {getStatusText(item.warrantyRequestItems.status)}
                         </Text>
                       </View>
@@ -322,7 +321,7 @@ export default function ViewWarrantyHistory() {
                       <View className='flex-1 gap-1 px-2 py-1 rounded-xl border border-border bg-muted/50'>
                         <View className='flex-row items-center gap-1.5'>
                           <MaterialCommunityIcons name='package-variant' size={14} color='#6b7280' />
-                          <Text className='text-xs text-muted-foreground'>Số Đơn Hàng</Text>
+                          <Text className='text-xs text-muted-foreground'>Mã đơn</Text>
                         </View>
                         <Text className='text-xs font-inter-semibold'>#{item.order.code}</Text>
                       </View>
@@ -353,7 +352,7 @@ export default function ViewWarrantyHistory() {
                       <View className='flex-1 gap-1 px-2 py-1 rounded-xl bg-orange-50 border border-orange-100'>
                         <View className='flex-row items-center gap-1.5'>
                           <MaterialCommunityIcons name='clock-outline' size={14} color='#ea580c' />
-                          <Text className='text-xs text-orange-600'>Dự Kiến</Text>
+                          <Text className='text-xs text-orange-600'>Dự kiến</Text>
                         </View>
                         <Text className='text-xs font-inter-medium text-orange-600'>
                           <Text className='text-sm font-inter-medium text-orange-600'>
@@ -368,30 +367,46 @@ export default function ViewWarrantyHistory() {
                     <View className='gap-1 px-2 py-1 rounded-xl border border-border bg-muted/50'>
                       <View className='flex-row items-center gap-1.5'>
                         <MaterialCommunityIcons name='card-text-outline' size={14} color='#6b7280' />
-                        <Text className='text-xs text-muted-foreground'>Mô Tả</Text>
+                        <Text className='text-xs text-muted-foreground'>Mô tả</Text>
                       </View>
                       <Text className='text-xs'>{item.warrantyRequestItems.description || 'N/A'}</Text>
                     </View>
 
                     <View className='gap-1 mb-1'>
                       <Text className='text-sm font-inter-semibold'>
-                        Ảnh Đính Kèm{' '}
+                        Ảnh đính kèm{' '}
                         <Text className='text-xs text-muted-foreground'>
-                          ({item.warrantyRequestItems.images?.length})
+                          {item.warrantyRequestItems.images &&
+                          Array.isArray(item.warrantyRequestItems.images) &&
+                          item.warrantyRequestItems.images.length > 0
+                            ? `(${item.warrantyRequestItems.images.length})`
+                            : '(0)'}
                         </Text>
                       </Text>
-                      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                        <View className='flex-row items-center gap-2'>
-                          {item.warrantyRequestItems.images.map((image: string, index: number) => (
-                            <Image key={`${image}-${index}`} source={{ uri: image }} className='w-24 h-24 rounded-xl' />
-                          ))}
+                      {item.warrantyRequestItems.images &&
+                      Array.isArray(item.warrantyRequestItems.images) &&
+                      item.warrantyRequestItems.images.length > 0 ? (
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                          <View className='flex-row items-center gap-2'>
+                            {item.warrantyRequestItems.images.map((image: string, index: number) => (
+                              <Image
+                                key={`${image}-${index}`}
+                                source={{ uri: image }}
+                                className='w-24 h-24 rounded-xl'
+                              />
+                            ))}
+                          </View>
+                        </ScrollView>
+                      ) : (
+                        <View className='px-2 py-1 rounded-xl border border-border bg-muted/50'>
+                          <Text className='text-center text-xs text-muted-foreground my-4'>Không có ảnh</Text>
                         </View>
-                      </ScrollView>
+                      )}
                     </View>
 
                     <View className='gap-1 mb-1'>
                       <Text className='text-sm font-inter-semibold'>
-                        Video Đính Kèm{' '}
+                        Video đính kèm{' '}
                         <Text className='text-xs text-muted-foreground'>
                           {item.warrantyRequestItems.videos &&
                           Array.isArray(item.warrantyRequestItems.videos) &&
@@ -427,7 +442,7 @@ export default function ViewWarrantyHistory() {
                       className='bg-primary/10 border border-primary/20 rounded-xl p-2 flex-row justify-center items-center gap-2'
                     >
                       <Feather name='link' size={16} color={PRIMARY_COLOR.LIGHT} />
-                      <Text className='text-primary font-inter-medium text-sm'>Xem đơn hàng Hàng</Text>
+                      <Text className='text-primary font-inter-medium text-sm'>Xem đơn hàng</Text>
                     </TouchableOpacity>
                   </View>
                 </Card>

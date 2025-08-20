@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { Control, Controller, FieldValues, Path, UseFormSetValue } from 'react-hook-form'
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
 import { Text } from '~/components/ui/text'
-import { useGetCategoryDetail } from '~/features/category/hooks/use-get-category-detail'
 import { cn } from '~/lib/utils'
+import { useGetCategoryDetail } from '../hooks/use-get-category-detail'
 
 interface StyleSectionProps<T extends FieldValues> {
   categoryId: string
@@ -36,7 +36,7 @@ export default function StyleSection<T extends FieldValues>({
             {stylesByCategory?.styles?.map((style) => (
               <TouchableOpacity
                 key={style.id}
-                className={cn('gap-2 w-20', value === style.id ? 'opacity-100' : 'opacity-40')}
+                className={cn('gap-2 w-28', value === style.id ? 'opacity-100' : 'opacity-40')}
                 onPress={() => onChange(style.id)}
               >
                 <Image source={{ uri: style.images[0] }} className='w-full h-40' />

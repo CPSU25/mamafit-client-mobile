@@ -2,50 +2,25 @@ import Feather from '@expo/vector-icons/Feather'
 import { BlurView } from 'expo-blur'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
-import { useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FlatList, Pressable, TouchableOpacity, View } from 'react-native'
-import DressCard from '~/components/card/dress-card'
-import HomeCarousel from '~/components/home-carousel'
 import SafeView from '~/components/safe-view'
 import { Text } from '~/components/ui/text'
+import DressesList from '~/features/dress/components/dresses-list'
+import { useGetStyles } from '~/features/dress/hooks/use-get-styles'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { cn } from '~/lib/utils'
 
-// Sample data for dresses
-const dresses = Array(30)
-  .fill(null)
-  .map((_, index) => ({
-    id: index.toString()
-  }))
-
-const dressStyles = ['All', 'Maxi', 'Wrap', 'Bodycon', 'A-Line', 'Midi', 'Shirt', 'Boho', 'Smocked', 'Shift', 'Tiered']
-
 export default function HomeScreen() {
   const router = useRouter()
-  const [currentStyle, setCurrentStyle] = useState('All')
+  const [currentStyle, setCurrentStyle] = useState('all')
 
-  const renderDressCard = ({ item }: { item: { id: string } }) => (
-    <TouchableOpacity
-      className='flex-1'
-      onPress={() =>
-        router.push({
-          pathname: '/product/[id]',
-          params: { id: item.id }
-        })
-      }
-    >
-      <DressCard />
-    </TouchableOpacity>
-  )
+  const { data: styles } = useGetStyles()
 
-  const ListHeaderComponent = () => (
-    <View className='mb-2'>
-      {/* Carousel */}
-      <HomeCarousel />
-
-      {/* Quick Buttons */}
-      <View className='px-4 pt-2 pb-4 bg-background gap-4'>
-        <View className='flex-row gap-4'>
+  const ListHeaderComponent = useCallback(
+    () => (
+      <View className='px-4 pt-2 pb-6 bg-background gap-3 mb-2'>
+        <View className='flex-row gap-2'>
           <TouchableOpacity className='relative flex-1' onPress={() => router.push('/diary/create')}>
             <LinearGradient
               colors={['#60a5fa', '#3b82f6', '#1d4ed8']}
@@ -94,7 +69,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        <View className='flex-row gap-4'>
+        <View className='flex-row gap-2'>
           <TouchableOpacity className='relative flex-1' onPress={() => router.push('/design-request/create')}>
             <LinearGradient
               colors={['#f472b6', '#ec4899', '#db2777']}
@@ -144,40 +119,29 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
       </View>
-
-      <View className='px-4 pb-4 pt-2 bg-background'>
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ gap: 8 }}
-          data={dressStyles}
-          keyExtractor={(item) => item}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              className={cn(
-                'px-4 py-1 bg-muted rounded-lg border border-border',
-                currentStyle === item && 'bg-primary/10 border-primary/20'
-              )}
-              onPress={() => setCurrentStyle(item)}
-            >
-              <Text
-                className={cn(
-                  'text-sm font-inter-medium opacity-70',
-                  currentStyle === item && 'text-primary opacity-100'
-                )}
-              >
-                {item}
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
-      </View>
-    </View>
+    ),
+    [router]
   )
+
+  const stylesData = useMemo(
+    () => [{ id: 'all', name: 'Tất cả' }, ...(styles?.pages.flatMap((page) => page.items) ?? [])],
+    [styles]
+  )
+
+  const stylesListRef = useRef<FlatList<any>>(null)
+  const selectedIndex = useMemo(
+    () => stylesData.findIndex((item) => item.id === currentStyle),
+    [stylesData, currentStyle]
+  )
+
+  useEffect(() => {
+    if (selectedIndex > -1) {
+      stylesListRef.current?.scrollToIndex({ index: selectedIndex, animated: true, viewPosition: 0.5 })
+    }
+  }, [selectedIndex])
 
   return (
     <SafeView>
-      {/* Header */}
       <View className='flex flex-row items-center gap-4 px-4 py-2 bg-background'>
         <Pressable
           onPress={() => router.push('/search?autoFocus=true')}
@@ -198,22 +162,49 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      <FlatList
-        data={dresses}
-        renderItem={renderDressCard}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponent={ListHeaderComponent}
-        ListFooterComponent={() => (
-          <View className='p-4'>
-            <Text className='text-center text-muted-foreground text-xs'>Không còn sản phẩm</Text>
-          </View>
-        )}
-        className='bg-muted'
-        columnWrapperClassName='px-4 gap-2'
-        contentContainerClassName='pb-20 gap-2'
-      />
+      <View className='px-4 pt-1 pb-2 bg-background'>
+        <FlatList
+          ref={stylesListRef}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ gap: 8 }}
+          data={stylesData}
+          keyExtractor={(item) => item.id}
+          initialScrollIndex={selectedIndex > -1 ? selectedIndex : 0}
+          onScrollToIndexFailed={(info) => {
+            setTimeout(() => {
+              stylesListRef.current?.scrollToIndex({ index: info.index, animated: true })
+            }, 100)
+          }}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              className={cn(
+                'px-4 py-1 bg-muted rounded-lg border border-border',
+                currentStyle === item.id && 'bg-primary/10 border-primary/20'
+              )}
+              onPress={() =>
+                setCurrentStyle((prev) => {
+                  if (prev === item.id) {
+                    return 'all'
+                  }
+                  return item.id
+                })
+              }
+            >
+              <Text
+                className={cn(
+                  'text-sm font-inter-medium opacity-70',
+                  currentStyle === item.id && 'text-primary opacity-100'
+                )}
+              >
+                {item.name}
+              </Text>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
+
+      <DressesList headerComponent={ListHeaderComponent} styleId={currentStyle === 'all' ? undefined : currentStyle} />
     </SafeView>
   )
 }

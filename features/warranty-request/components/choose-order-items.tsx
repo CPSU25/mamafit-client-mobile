@@ -82,7 +82,8 @@ const OrderCard = ({
   return (
     <Card style={styles.container}>
       <View className='flex-row items-center gap-2 p-2'>
-        <Text className='native:text-sm font-inter-medium flex-1 pl-1'>Đơn Hàng #{order.code}</Text>
+        <Text className='native:text-sm font-inter-medium flex-1 pl-1'>Đơn hàng #{order.code}</Text>
+        {/* FIXME: refactor the logic to prevent mix free and fee warranty service */}
         <WarrantyStatusBadge receivedAt={order.receivedAt ?? ''} warrantyPeriod={warrantyPeriod} />
       </View>
 

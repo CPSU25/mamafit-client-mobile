@@ -48,7 +48,7 @@ export default function DiaryCard({ diary }: DiaryCardProps) {
             <Text
               className={`text-xs ${isDarkColorScheme ? 'text-muted-foreground/80' : 'text-muted-foreground'} font-inter-medium mb-1`}
             >
-              Cân Nặng
+              Cân nặng
             </Text>
             <Text className={`text-sm font-inter-medium ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
               {diary.weight} kg
@@ -59,7 +59,7 @@ export default function DiaryCard({ diary }: DiaryCardProps) {
             <Text
               className={`text-xs ${isDarkColorScheme ? 'text-muted-foreground/80' : 'text-muted-foreground'} font-inter-medium mb-1`}
             >
-              Chiều Cao
+              Chiều cao
             </Text>
             <Text className={`text-sm font-inter-medium ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
               {diary.height} cm
@@ -70,7 +70,7 @@ export default function DiaryCard({ diary }: DiaryCardProps) {
             <Text
               className={`text-xs ${isDarkColorScheme ? 'text-muted-foreground/80' : 'text-muted-foreground'} font-inter-medium mb-1`}
             >
-              Thai Kỳ
+              Thai kỳ
             </Text>
             <Text className={`text-sm font-inter-medium ${isDarkColorScheme ? 'text-white' : 'text-foreground'}`}>
               Lần {diary.numberOfPregnancy}

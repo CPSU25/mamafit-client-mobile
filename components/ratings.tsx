@@ -15,7 +15,7 @@ export default function Ratings({ rating, ratingCount, displayCount = true, size
   const totalStars = 5
 
   return (
-    <View className='flex-row items-center gap-2 justify-between'>
+    <View className='flex-row items-center gap-1'>
       <View className='flex-row items-center gap-0.5'>
         {Array.from({ length: totalStars }).map((_, index) => {
           if (index < fullStars) {
@@ -29,8 +29,8 @@ export default function Ratings({ rating, ratingCount, displayCount = true, size
       </View>
       {displayCount ? (
         <View className='flex-row items-baseline gap-0.5'>
-          <Text className='text-[9px] font-inter-medium'>{rating}</Text>
-          <Text className='text-[8px] text-muted-foreground'>({ratingCount})</Text>
+          {rating > 0 ? <Text className='text-[9px] font-inter-medium'>{rating.toFixed(1)}</Text> : null}
+          <Text className='text-[8px] text-muted-foreground'>({ratingCount} đánh giá)</Text>
         </View>
       ) : null}
     </View>

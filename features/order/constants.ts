@@ -124,7 +124,7 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
   },
   {
     id: 12,
-    label: 'Đã nhận hàng',
+    label: 'Đã hoàn tất',
     value: OrderStatus.Completed,
     urlValue: 'to-rate',
     title: 'Đơn hàng đã hoàn tất',

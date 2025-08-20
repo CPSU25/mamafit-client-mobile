@@ -163,7 +163,7 @@ export default function CreateTicketScreen() {
               <View className='px-4 pt-4'>
                 <Button onPress={methods.handleSubmit(onSubmit)} disabled={createTicketMutation.isPending}>
                   <Text className='font-inter-medium'>
-                    {createTicketMutation.isPending ? 'Đang Gửi...' : 'Gửi Yêu Cầu'}
+                    {createTicketMutation.isPending ? 'Đang gửi...' : 'Gửi yêu cầu'}
                   </Text>
                 </Button>
               </View>
