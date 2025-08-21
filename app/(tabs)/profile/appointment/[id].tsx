@@ -255,7 +255,7 @@ export default function AppointmentDetailScreen() {
                   <Text className='text-sm text-muted-foreground'>Ngày & giờ</Text>
                 </View>
                 <Text className='text-sm'>
-                  {format(new Date(appointment?.bookingTime ?? ''), "MMM dd, yyyy 'at' hh:mm a")}
+                  {format(new Date(appointment?.bookingTime ?? ''), "MMM dd, yyyy 'lúc' hh:mm a")}
                 </Text>
               </View>
 
@@ -348,7 +348,7 @@ export default function AppointmentDetailScreen() {
                     <Text className='text-sm text-muted-foreground'>Đã hủy lúc</Text>
                   </View>
                   <Text className='text-sm'>
-                    {format(new Date(appointment?.canceledAt ?? ''), "MMM dd, yyyy 'at' hh:mm a")}
+                    {format(new Date(appointment?.canceledAt ?? ''), "MMM dd, yyyy 'lúc' hh:mm a")}
                   </Text>
                 </View>
 

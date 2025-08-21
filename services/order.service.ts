@@ -75,6 +75,12 @@ class OrderService {
     return data.data
   }
 
+  async getOrderForFeedback(orderId: string) {
+    const { data } = await api.get<BaseResponse<OrderDetail>>(`order/for-feedback/${orderId}`)
+
+    return data.data
+  }
+
   async getOrdersCount() {
     const { data } = await api.get<BaseResponse<OrderStatusCount[]>>('order/my-order-status-counts')
 

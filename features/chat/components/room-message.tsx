@@ -164,7 +164,7 @@ export default function RoomMessage({ message }: RoomMessageProps) {
                   <View>
                     <Text className='text-primary/70 text-[8px] font-inter-medium uppercase'>Đặt</Text>
                     <Text className='text-foreground/80 text-xs font-inter-medium'>
-                      {format(designRequest.createdAt, "MMM dd, yyyy 'at' hh:mm a")}
+                      {format(designRequest.createdAt, "MMM dd, yyyy 'lúc' hh:mm a")}
                     </Text>
                   </View>
                 ) : null}
@@ -232,7 +232,7 @@ export default function RoomMessage({ message }: RoomMessageProps) {
 
             {preset?.createdAt ? (
               <Text className='text-foreground/80 text-xs font-inter-medium'>
-                {format(preset.createdAt, "MMM dd, yyyy 'at' hh:mm a")}
+                {format(preset.createdAt, "MMM dd, yyyy 'lúc' hh:mm a")}
               </Text>
             ) : null}
           </View>

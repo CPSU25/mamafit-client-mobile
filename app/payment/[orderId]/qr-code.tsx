@@ -185,10 +185,10 @@ export default function PaymentQRCode() {
             <Text
               className={cn('text-xl font-inter-semibold', isDarkColorScheme ? 'text-emerald-400' : 'text-emerald-600')}
             >
-              Đơn Hàng Đã Xác Nhận!
+              Đơn hàng đã xác nhận!
             </Text>
             <Text className={cn('text-xs', isDarkColorScheme ? 'text-emerald-300/80' : 'text-emerald-600')}>
-              Số Đơn Hàng: #{qrCodeData?.orderWithItem?.code}
+              Mã đơn: #{qrCodeData?.orderWithItem?.code}
             </Text>
           </View>
         </Animated.View>
@@ -204,7 +204,7 @@ export default function PaymentQRCode() {
               <Text
                 className={cn('text-sm font-inter-medium flex-1', isDarkColorScheme ? 'text-white' : 'text-gray-900')}
               >
-                Trạng Thái Thanh Toán
+                Trạng thái
               </Text>
               <Text
                 className={cn(
@@ -249,8 +249,8 @@ export default function PaymentQRCode() {
               <Image source={{ uri: qrCodeData?.qrUrl }} className='w-full h-96 mt-4 rounded-2xl' />
               <View className='p-1 gap-2 mt-2'>
                 <WarningCard
-                  title='Lưu Ý Thanh Toán'
-                  description='Vui lòng giữ nguyên mô tả chuyển khoản để xác nhận thanh toán tự động.'
+                  title='Lưu ý'
+                  description='Vui lòng giữ nguyên mô tả chuyển khoản để hệ thống có thể xác nhận thanh toán tự động.'
                   delay={400}
                 />
                 <Button
@@ -264,7 +264,7 @@ export default function PaymentQRCode() {
                 >
                   <Feather name='download' size={16} color={PRIMARY_COLOR.LIGHT} />
                   <Text className='native:text-sm font-inter-medium text-primary'>
-                    {downloading ? 'Đang Tải...' : 'Tải QR Code'}
+                    {downloading ? 'Đang tải...' : 'Tải xuống QR'}
                   </Text>
                 </Button>
               </View>

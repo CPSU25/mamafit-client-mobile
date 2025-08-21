@@ -434,6 +434,7 @@ export default function ViewOrderDetailScreen() {
                   discountSubtotal={order?.discountSubtotal}
                   isViewMoreOrderDetails={toggleViewMoreStates}
                   orderCode={order?.code}
+                  orderReceivedAt={order?.receivedAt}
                   orderPlacedAt={order?.createdAt}
                   toggleViewMore={toggleViewMore}
                   totalAmount={order?.totalAmount}

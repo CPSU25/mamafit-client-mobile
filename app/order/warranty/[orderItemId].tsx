@@ -24,6 +24,8 @@ const getStatusText = (status: WarrantyRequestItemStatus) => {
       return 'Đang vận chuyển'
     case WarrantyRequestItemStatus.Rejected:
       return 'Từ chối'
+    case WarrantyRequestItemStatus.Completed:
+      return 'Hoàn thành'
     default:
       return 'Đang chờ'
   }
@@ -169,7 +171,7 @@ export default function ViewWarrantyHistory() {
                         <Text className='text-[9px] text-white/80'>
                           Đặt:{' '}
                           {generalStats.parentOrder?.order?.createdAt
-                            ? format(new Date(generalStats.parentOrder.order.createdAt), "MMM dd, yyyy 'at' hh:mm a")
+                            ? format(new Date(generalStats.parentOrder.order.createdAt), "MMM dd, yyyy 'lúc' hh:mm a")
                             : 'N/A'}
                         </Text>
                       </View>

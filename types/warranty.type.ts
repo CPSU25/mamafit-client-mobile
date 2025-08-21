@@ -14,7 +14,8 @@ export enum WarrantyRequestItemStatus {
   Pending = 'PENDING',
   Approved = 'APPROVED',
   Rejected = 'REJECTED',
-  InTransit = 'IN_TRANSIT'
+  InTransit = 'IN_TRANSIT',
+  Completed = 'COMPLETED'
 }
 
 export interface WarrantyRequest {

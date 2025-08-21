@@ -1,6 +1,6 @@
 import { api } from '~/lib/axios/axios'
-import { BasePaginationResponse, Style } from '~/types/common'
-import { Dress } from '~/types/dress.type'
+import { BasePaginationResponse, BaseResponse, Style } from '~/types/common'
+import { Dress, DressDetail } from '~/types/dress.type'
 
 class DressService {
   async getDresses(page: number = 1, pageSize: number = 4, search?: string, styleId?: string) {
@@ -9,6 +9,12 @@ class DressService {
     if (styleId) baseUrl += `&styleId=${styleId}`
 
     const { data } = await api.get<BasePaginationResponse<Dress>>(baseUrl)
+
+    return data.data
+  }
+
+  async getDress(dressId: string) {
+    const { data } = await api.get<BaseResponse<DressDetail>>(`maternity-dress/${dressId}`)
 
     return data.data
   }

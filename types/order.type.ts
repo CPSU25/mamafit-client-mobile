@@ -2,6 +2,7 @@ import { AddOnOption } from './add-on.type'
 import { Address } from './address.type'
 import { DirectionResponse, User } from './common'
 import { DiaryDetail } from './diary.type'
+import { DressVariant } from './dress.type'
 import { Preset } from './preset.type'
 
 export interface QRCodeResponse {
@@ -98,18 +99,19 @@ export interface OrderItem {
   updatedBy: string | null
   createdAt: string
   updatedAt: string
-  maternityDressDetail: any | null
+  maternityDressDetail: DressVariant | null
   parentOrderItemId: string | null
   preset: Preset | null
   designRequest: DesignRequest | null
   orderId: string
-  maternityDressDetailId: null
+  maternityDressDetailId: string | null
   presetId: null
   itemType: OrderItemType
   price: number
   quantity: number
   warrantyDate: string | null
   addOnOptions: AddOnOption[]
+  warrantyRound: number
 }
 
 export enum OrderType {

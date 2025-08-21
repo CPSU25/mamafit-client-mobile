@@ -72,7 +72,7 @@ export default function RateOrderForm({ orderItem, index }: RateOrderFormProps) 
     setValue(imagesPath, updatedImages, { shouldDirty: true, shouldValidate: true })
   }
 
-  if (orderItem.itemType === OrderItemType.Preset || orderItem.itemType === OrderItemType.Warranty) {
+  if (orderItem.itemType === OrderItemType.Preset) {
     return (
       <Card style={styles.container}>
         <View className='gap-1 px-3 py-2'>
@@ -183,6 +183,136 @@ export default function RateOrderForm({ orderItem, index }: RateOrderFormProps) 
                     onChangeText={onChange}
                     onBlur={onBlur}
                     placeholder='Hãy chia sẻ trải nghiệm của bạn về sản phẩm này...'
+                    className={cn(
+                      'rounded-xl native:text-base min-h-[100px] bg-card/50 border-border/50 text-foreground',
+                      itemErrors?.description && 'border-destructive'
+                    )}
+                    multiline
+                  />
+                  <View className='absolute bottom-3 right-3'>
+                    <Text className='text-xs text-muted-foreground'>{value?.length || 0}/500</Text>
+                  </View>
+                </View>
+              )}
+            />
+            {!!itemErrors?.description?.message && <FieldError message={String(itemErrors.description.message)} />}
+          </View>
+        </View>
+      </Card>
+    )
+  }
+
+  if (orderItem.itemType === OrderItemType.Warranty) {
+    return (
+      <Card style={styles.container}>
+        <View className='gap-1 px-3 py-2'>
+          <View className='flex-row items-center gap-4'>
+            <Text className='text-sm font-inter-medium flex-1'>
+              {getRatingLabel(currentRating, 'Đánh giá dịch vụ bảo hành')}
+            </Text>
+            <Controller
+              control={control}
+              name={ratingPath}
+              render={({ field: { value, onChange } }) => (
+                <StarRating rating={value || 0} size={18} onRatingChange={onChange} />
+              )}
+            />
+          </View>
+          {!!itemErrors?.rated?.message && <FieldError message={String(itemErrors.rated.message)} />}
+        </View>
+
+        <Separator />
+
+        <View className='gap-2 p-2'>
+          <Card className='flex-row items-start gap-2 p-2 rounded-xl'>
+            <View className='w-20 h-20 rounded-lg overflow-hidden bg-muted/50'>
+              <Image source={{ uri: orderItem?.preset?.images?.[0] }} className='w-full h-full' resizeMode='contain' />
+            </View>
+            <View className='flex-1 h-20 justify-between'>
+              <View>
+                <Text className='text-sm font-inter-medium' numberOfLines={1}>
+                  {orderItem?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
+                </Text>
+
+                <View className='flex-row items-center gap-2'>
+                  <Text className='text-xs text-muted-foreground flex-1'>
+                    {orderItem?.preset?.sku ? `SKU: ${orderItem?.preset?.sku}` : ''}
+                  </Text>
+                  <Text className='text-xs text-muted-foreground'>x{orderItem?.quantity || 1}</Text>
+                </View>
+              </View>
+              <View className='items-end'>
+                <Text className='text-xs'>
+                  <Text className='text-xs underline'>đ</Text>
+                  {orderItem?.price?.toLocaleString('vi-VN') || '0'}
+                </Text>
+              </View>
+            </View>
+          </Card>
+
+          <View className='gap-1'>
+            {currentImages.length === 0 ? (
+              <TouchableOpacity
+                onPress={handlePickImages}
+                disabled={isImageUploading}
+                className='py-3 rounded-xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
+              >
+                {SvgIcon.galleryImport({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
+                <Text className='text-xs text-muted-foreground'>
+                  {isImageUploading ? 'Đang tải lên...' : 'Thêm ảnh'}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <View className='flex-row items-center gap-2'>
+                  {currentImages.length < imagesMaxReached ? (
+                    <>
+                      {currentImages.map((img, imageIndex) => (
+                        <ImageThumbnail
+                          key={`${img}-${imageIndex}`}
+                          uri={img}
+                          onRemove={() => handleRemoveImage(imageIndex)}
+                          className='w-28 h-28 bg-transparent border-transparent p-0'
+                        />
+                      ))}
+                      <TouchableOpacity
+                        onPress={handlePickImages}
+                        disabled={isImageUploading}
+                        className='w-28 h-28 rounded-2xl border border-input bg-muted/20 border-dashed gap-2 justify-center items-center'
+                      >
+                        {SvgIcon.galleryImport({ size: ICON_SIZE.MEDIUM, color: 'GRAY' })}
+                        <Text className='text-sm text-muted-foreground font-inter-medium'>
+                          {imagesMaxReached - currentImages.length}/{imagesMaxReached}
+                        </Text>
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    currentImages.map((img, imageIndex) => (
+                      <ImageThumbnail
+                        key={`${img}-${imageIndex}`}
+                        uri={img}
+                        onRemove={() => handleRemoveImage(imageIndex)}
+                        className='w-28 h-28 bg-transparent border-transparent p-0'
+                      />
+                    ))
+                  )}
+                </View>
+              </ScrollView>
+            )}
+            {!!itemErrors?.images?.message && <FieldError message={String(itemErrors.images.message)} />}
+          </View>
+
+          <View className='gap-1'>
+            <Controller
+              control={control}
+              name={descriptionPath}
+              render={({ field: { value, onChange, onBlur } }) => (
+                <View className='relative'>
+                  <Textarea
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder='Hãy chia sẻ trải nghiệm của bạn về dịch vụ bảo hành này...'
                     className={cn(
                       'rounded-xl native:text-base min-h-[100px] bg-card/50 border-border/50 text-foreground',
                       itemErrors?.description && 'border-destructive'

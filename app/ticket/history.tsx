@@ -71,7 +71,7 @@ export default function ViewTicketHistoryScreen() {
                   ) : null}
                 </View>
                 <Text className='text-[9px] text-muted-foreground'>
-                  {format(new Date(item.createdAt), "MMM dd, yyyy 'at' hh:mm a")}
+                  {format(new Date(item.createdAt), "MMM dd, yyyy 'lúc' hh:mm a")}
                 </Text>
               </View>
 
@@ -112,7 +112,7 @@ export default function ViewTicketHistoryScreen() {
         contentContainerClassName='gap-4 p-4'
         ListEmptyComponent={
           <View className='flex-1 items-center justify-center p-8'>
-            <Text className='text-center text-muted-foreground'>Không tìm thấy lịch sử hỗ trợ</Text>
+            <Text className='text-center text-muted-foreground text-sm'>Không tìm thấy lịch sử hỗ trợ</Text>
           </View>
         }
       />

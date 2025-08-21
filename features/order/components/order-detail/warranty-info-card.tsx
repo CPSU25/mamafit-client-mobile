@@ -25,10 +25,10 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
 
   const formatWarrantyDate = (date: string | undefined) => {
     if (!date) return 'N/A'
-    return format(new Date(date), "MMM dd, yyyy 'at' hh:mm a")
+    return format(new Date(date), "MMM dd, yyyy 'lúc' hh:mm a")
   }
 
-  const { text, color, backgroundColor } = getWarrantyRequestStatus(warrantyRequestDetail?.warrantyRequest.status)
+  const { text, color, backgroundColor } = getWarrantyRequestStatus(warrantyRequestDetail?.warrantyRequest?.status)
 
   return (
     <Card style={styles.container}>
@@ -82,7 +82,7 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
           <View className='flex-row items-center gap-2'>
             <Text className='flex-1 text-xs text-muted-foreground/80'>Ngày gửi</Text>
             <Text className='text-foreground/80 text-xs'>
-              {formatWarrantyDate(warrantyRequestDetail?.warrantyRequest.createdAt)}
+              {formatWarrantyDate(warrantyRequestDetail?.warrantyRequest?.createdAt)}
             </Text>
           </View>
         </View>

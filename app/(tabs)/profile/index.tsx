@@ -74,7 +74,7 @@ function OrderStage({
   ordersCount: OrderStatusCount[] | null | undefined
   unratedOrders: number
 }) {
-  const orderCount = getOrderCount(status, ordersCount)
+  const orderCount = status.id === 4 ? unratedOrders : getOrderCount(status, ordersCount)
 
   return (
     <View className='flex-col gap-1.5 items-center relative'>

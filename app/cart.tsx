@@ -1,7 +1,7 @@
 import { Feather } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Redirect, useRouter } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
@@ -16,7 +16,7 @@ import { useAuth } from '~/hooks/use-auth'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
-import { PresetInStorage } from '~/types/order-item.type'
+import { PresetInStorage, ReadyToBuyInStorage } from '~/types/order-item.type'
 import { OrderItemType } from '~/types/order.type'
 
 export interface SelectedItem {
@@ -38,6 +38,8 @@ export default function CartScreen() {
   const { refreshControl } = useRefreshs([refetchCart])
 
   const isLoading = isLoadingCart || isLoadingAuth
+
+  const orderItemTypeSet = useMemo(() => [...new Set(cart?.map((item) => item.type) || [])], [cart])
 
   useEffect(() => {
     if (cart && Array.isArray(cart) && cart.length > 0) {
@@ -69,7 +71,8 @@ export default function CartScreen() {
               itemId: item.itemId,
               type: item.type,
               quantity: item.quantity,
-              price: item.preset?.price || 0
+              price:
+                item.type === OrderItemType.Preset ? item.preset?.price || 0 : item.maternityDressDetail?.price || 0
             }))
           )
         }
@@ -79,23 +82,47 @@ export default function CartScreen() {
   }
 
   const handleCheckOut = async () => {
-    await AsyncStorage.setItem(
-      'order-items',
-      JSON.stringify({
-        type: OrderItemType.Preset,
-        items: selectedItems.reduce(
-          (acc, item) => {
-            acc[item.itemId] = {
-              presetId: item.itemId,
-              quantity: item.quantity,
-              options: []
-            }
-            return acc
-          },
-          {} as Record<string, PresetInStorage>
-        )
-      })
-    )
+    if (orderItemTypeSet.length > 1) return
+
+    if (orderItemTypeSet[0] === OrderItemType.Preset) {
+      await AsyncStorage.setItem(
+        'order-items',
+        JSON.stringify({
+          type: OrderItemType.Preset,
+          items: selectedItems.reduce(
+            (acc, item) => {
+              acc[item.itemId] = {
+                presetId: item.itemId,
+                quantity: item.quantity,
+                options: []
+              }
+              return acc
+            },
+            {} as Record<string, PresetInStorage>
+          )
+        })
+      )
+    }
+
+    if (orderItemTypeSet[0] === OrderItemType.ReadyToBuy) {
+      await AsyncStorage.setItem(
+        'order-items',
+        JSON.stringify({
+          type: OrderItemType.ReadyToBuy,
+          items: selectedItems.reduce(
+            (acc, item) => {
+              acc[item.itemId] = {
+                maternityDressDetailId: item.itemId,
+                quantity: item.quantity,
+                options: []
+              }
+              return acc
+            },
+            {} as Record<string, ReadyToBuyInStorage>
+          )
+        })
+      )
+    }
 
     router.push('/order/review')
   }
@@ -136,7 +163,7 @@ export default function CartScreen() {
             ) : (
               <View className='flex-1 items-center mt-48'>
                 {SvgIcon.cart({ size: ICON_SIZE.EXTRA_LARGE, color: 'GRAY' })}
-                <Text className='text-muted-foreground text-sm mt-2'>Giỏ Hàng Trống</Text>
+                <Text className='text-muted-foreground text-sm mt-2'>Giỏ hàng trống</Text>
               </View>
             )
           }
@@ -159,7 +186,11 @@ export default function CartScreen() {
         <Separator />
         <View className='flex flex-row justify-between items-center p-4'>
           <View className='flex flex-row items-center gap-4'>
-            <Checkbox checked={checkAll} onCheckedChange={toggleCheckAll} disabled={!cart?.length} />
+            <Checkbox
+              checked={checkAll}
+              onCheckedChange={toggleCheckAll}
+              disabled={!cart?.length || orderItemTypeSet.length > 1}
+            />
             <Text className='text-sm font-inter-medium'>Chọn tất cả</Text>
           </View>
           <Button onPress={handleCheckOut} disabled={selectedItems.length === 0}>

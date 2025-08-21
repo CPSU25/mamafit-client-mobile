@@ -3,7 +3,7 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-import { TipCard } from '~/components/ui/alert-card'
+import { TipCard, WarningCard } from '~/components/ui/alert-card'
 import { Button } from '~/components/ui/button'
 import { Text } from '~/components/ui/text'
 import AddressSelectionModal from '~/features/order/components/address-section/address/address-selection-modal'
@@ -41,18 +41,26 @@ export default function CreateWarrantyRequestForms({
     <BottomSheetModalProvider>
       <KeyboardAwareScrollView bottomOffset={50} className='flex-1' showsVerticalScrollIndicator={false}>
         <View className='flex-1'>
-          <Animated.View entering={FadeInDown.delay(100)} className='p-2'>
+          <View className='px-2 pt-2'>
+            <WarningCard
+              delay={100}
+              title='Lưu ý'
+              description='Phí vận chuyển sẽ được tính toán dựa trên địa chỉ bạn chọn và sẽ được cộng vào tổng phí bảo hành.'
+            />
+          </View>
+
+          <Animated.View entering={FadeInDown.delay(200)} className='p-2'>
             {renderAddressContent()}
           </Animated.View>
 
           <View className='gap-2 px-2 pb-4'>
             {fields.map((field, index) => (
-              <Animated.View key={field.id} entering={FadeInDown.delay(200 + index * 50)}>
+              <Animated.View key={field.id} entering={FadeInDown.delay(300 + index * 50)}>
                 <CreateWarrantyRequestForm index={index} orderItem={selectedOrderItems[index]} />
               </Animated.View>
             ))}
 
-            <TipCard title='Tips' delay={300 + fields.length * 50}>
+            <TipCard title='Tips' delay={400 + fields.length * 50}>
               <View className='flex flex-col gap-1'>
                 <Text className='text-xs text-emerald-600 dark:text-emerald-500'>• Mô tả lỗi và vị trí xuất hiện.</Text>
                 <Text className='text-xs text-emerald-600 dark:text-emerald-500'>
