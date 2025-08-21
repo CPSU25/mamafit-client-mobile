@@ -159,7 +159,7 @@ export default function CreateMeasurementScreen() {
         <TouchableOpacity onPress={handleGoBack} className='absolute left-3 z-10'>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-medium text-xl text-center flex-1'>Thêm số đo mới</Text>
+        <Text className='font-inter-medium text-xl text-center flex-1'>Thêm số đo</Text>
       </View>
 
       <View className='px-4'>

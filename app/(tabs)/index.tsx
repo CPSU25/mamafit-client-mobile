@@ -19,7 +19,7 @@ export default function HomeScreen() {
 
   const ListHeaderComponent = useCallback(
     () => (
-      <View className='px-4 pt-2 pb-6 bg-background gap-4 mb-2'>
+      <View className='px-4 pt-2 pb-4 bg-background gap-4 mb-2'>
         <View className='flex-row gap-3'>
           <TouchableOpacity className='relative flex-1' onPress={() => router.push('/diary/create')}>
             <LinearGradient
@@ -37,7 +37,7 @@ export default function HomeScreen() {
               <View className='absolute top-2 left-2 w-3 h-3 bg-white/10 rounded-full' />
               <View className='absolute bottom-2 right-6 w-5 h-5 bg-white/5 rounded-full' />
               <View className='z-10'>
-                <Text className='font-inter-semibold text-white text-sm'>Tạo Nhật Ký</Text>
+                <Text className='font-inter-semibold text-white text-sm'>Tạo nhật ký</Text>
                 <Text className='text-white text-[10px] relative z-10'>Ghi lại số đo của bạn</Text>
               </View>
             </LinearGradient>
@@ -61,7 +61,7 @@ export default function HomeScreen() {
               <View className='absolute top-7 right-7 w-6 h-6 bg-white/10 rounded-full' />
               <View className='absolute bottom-3 left-1 w-4 h-4 bg-white/5 rounded-full' />
               <View className='z-10'>
-                <Text className='font-inter-semibold text-white text-sm'>Lịch Hẹn</Text>
+                <Text className='font-inter-semibold text-white text-sm'>Lịch hẹn của tôi</Text>
                 <Text className='text-white text-[10px] relative z-10'>Đặt lịch đo tại chi nhánh</Text>
               </View>
             </LinearGradient>
@@ -86,7 +86,7 @@ export default function HomeScreen() {
               <View className='absolute bottom-2 left-2 w-5 h-5 bg-white/20 rounded-full' />
               <View className='absolute top-1 right-8 w-3 h-3 bg-white/10 rounded-full' />
               <View className='z-10'>
-                <Text className='font-inter-semibold text-white text-sm'>Yêu Cầu Thiết Kế</Text>
+                <Text className='font-inter-semibold text-white text-sm'>Yêu cầu thiết kế</Text>
                 <Text className='text-white text-[10px] relative z-10'>Gửi ý tưởng thiết kế</Text>
               </View>
             </LinearGradient>
@@ -111,7 +111,7 @@ export default function HomeScreen() {
               <View className='absolute bottom-1 left-7 w-4 h-4 bg-white/10 rounded-full' />
 
               <View className='z-10'>
-                <Text className='font-inter-semibold text-white text-sm'>Xem đơn hàng</Text>
+                <Text className='font-inter-semibold text-white text-sm'>Theo dõi đơn hàng</Text>
                 <Text className='text-white text-[10px] relative z-10'>Trạng thái đơn chi tiết</Text>
               </View>
             </LinearGradient>

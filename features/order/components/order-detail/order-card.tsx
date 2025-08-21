@@ -321,7 +321,9 @@ const ReadyToBuyOrderItem = ({ item }: { item: OrderItem }) => {
 
       <View className='flex-1 h-20 justify-between'>
         <View>
-          <Text className='native:text-sm font-inter-medium'>{maternityDressDetail?.name || 'Không có tên'}</Text>
+          <Text className='native:text-sm font-inter-medium' numberOfLines={1}>
+            {maternityDressDetail?.name || 'Không có tên'}
+          </Text>
           <View className='flex-row items-center justify-between'>
             <Text className='native:text-xs text-muted-foreground'>
               Phân loại: {maternityDressDetail?.color} - {maternityDressDetail?.size}

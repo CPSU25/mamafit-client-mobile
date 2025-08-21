@@ -63,15 +63,9 @@ export const useCreateMeasurement = (measurementDiaryId: string, onSuccess: () =
       }
     },
     onError: (error) => {
-      if (error.response?.status === 400) {
-        previewMeasurementMethods.setError('root', {
-          message: ERROR_MESSAGES.ALREADY_HAVE_MEASUREMENT
-        })
-      } else {
-        previewMeasurementMethods.setError('root', {
-          message: error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG
-        })
-      }
+      previewMeasurementMethods.setError('root', {
+        message: error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG
+      })
     }
   })
 

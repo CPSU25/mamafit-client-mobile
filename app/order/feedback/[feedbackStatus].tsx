@@ -121,7 +121,7 @@ export default function FeedbackHistoryScreen() {
                   ) : null}
                   <View className='bg-muted/50 rounded-2xl overflow-hidden'>
                     {item.itemType === OrderItemType.Preset || item.itemType === OrderItemType.Warranty ? (
-                      <View className='flex-row items-center gap-3'>
+                      <View className='flex-row items-center gap-3 p-1'>
                         <View className='w-[60px] h-[60px]'>
                           <Image
                             source={{ uri: item.preset?.images?.[0] }}
@@ -147,6 +147,29 @@ export default function FeedbackHistoryScreen() {
                         <View className='flex-1'>
                           <Text className='text-sm font-inter-medium'>Yêu cầu thiết kế</Text>
                           <Text className='text-xs text-muted-foreground'>{item.designRequest?.description}</Text>
+                        </View>
+                      </View>
+                    ) : null}
+                    {item.itemType === OrderItemType.ReadyToBuy ? (
+                      <View className='flex-row items-center gap-3 p-1'>
+                        <View className='w-[60px] h-[60px] overflow-hidden relative rounded-xl'>
+                          <Image
+                            source={{ uri: item.maternityDressDetail?.image[0] }}
+                            style={{
+                              width: '100%',
+                              height: '180%',
+                              position: 'absolute',
+                              top: 0,
+                              left: 0
+                            }}
+                            resizeMode='cover'
+                          />
+                        </View>
+                        <View className='flex-1'>
+                          <Text className='text-sm font-inter-medium' numberOfLines={1}>
+                            {item.maternityDressDetail?.name}
+                          </Text>
+                          <Text className='text-xs text-muted-foreground'>{item.maternityDressDetail?.sku}</Text>
                         </View>
                       </View>
                     ) : null}

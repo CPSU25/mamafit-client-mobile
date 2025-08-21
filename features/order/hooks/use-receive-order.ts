@@ -12,8 +12,10 @@ export const useReceiveOrder = () => {
       queryClient.invalidateQueries({ queryKey: ['order'] })
       queryClient.invalidateQueries({ queryKey: ['orders'] })
       queryClient.invalidateQueries({ queryKey: ['orders-count'] })
-      queryClient.invalidateQueries({ queryKey: ['order-items-milestones'] })
-      queryClient.invalidateQueries({ queryKey: ['designer-info'] })
+      queryClient.invalidateQueries({ queryKey: ['unrated-orders'] })
+      queryClient.invalidateQueries({ queryKey: ['feedbacks'] })
+      queryClient.invalidateQueries({ queryKey: ['dresses'] })
+      queryClient.invalidateQueries({ queryKey: ['dress'] })
     },
     onError: (error) => {
       return toast.error(error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG)

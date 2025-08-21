@@ -35,7 +35,9 @@ export default function DressOrderItem({ orderItem, dress, dressOptions, quantit
 
         <View className='flex-1 h-20 justify-between'>
           <View>
-            <Text className='native:text-sm font-inter-medium'>{dress?.name || 'Váy có sẵn'}</Text>
+            <Text className='native:text-sm font-inter-medium' numberOfLines={1}>
+              {dress?.name || 'Váy có sẵn'}
+            </Text>
             <View className='flex-row items-center justify-between'>
               <Text className='native:text-xs text-muted-foreground'>
                 Phân loại: {dress?.color} - {dress?.size}
