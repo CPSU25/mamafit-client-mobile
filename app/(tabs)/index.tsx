@@ -19,8 +19,8 @@ export default function HomeScreen() {
 
   const ListHeaderComponent = useCallback(
     () => (
-      <View className='px-4 pt-2 pb-6 bg-background gap-3 mb-2'>
-        <View className='flex-row gap-2'>
+      <View className='px-4 pt-2 pb-6 bg-background gap-4 mb-2'>
+        <View className='flex-row gap-3'>
           <TouchableOpacity className='relative flex-1' onPress={() => router.push('/diary/create')}>
             <LinearGradient
               colors={['#60a5fa', '#3b82f6', '#1d4ed8']}
@@ -69,7 +69,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        <View className='flex-row gap-2'>
+        <View className='flex-row gap-3'>
           <TouchableOpacity className='relative flex-1' onPress={() => router.push('/design-request/create')}>
             <LinearGradient
               colors={['#f472b6', '#ec4899', '#db2777']}

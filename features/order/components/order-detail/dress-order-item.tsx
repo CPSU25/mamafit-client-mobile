@@ -17,17 +17,14 @@ export default function DressOrderItem({ orderItem, dress, dressOptions, quantit
 
   return (
     <View className='p-3 gap-3'>
-      <View className='flex-row items-center gap-4'>
+      <View className='flex-row items-center gap-3'>
         <View className='w-20 h-20 overflow-hidden relative rounded-xl'>
           <Image
             source={{ uri: dress?.image[0] }}
             style={{
               width: '100%',
               height: '180%',
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-              borderBottomLeftRadius: 8,
-              borderBottomRightRadius: 8,
+              borderRadius: 12,
               position: 'absolute',
               top: 0,
               left: 0
@@ -38,7 +35,7 @@ export default function DressOrderItem({ orderItem, dress, dressOptions, quantit
 
         <View className='flex-1 h-20 justify-between'>
           <View>
-            <Text className='native:text-sm font-inter-medium'>{dress?.name || 'Không có tên'}</Text>
+            <Text className='native:text-sm font-inter-medium'>{dress?.name || 'Váy có sẵn'}</Text>
             <View className='flex-row items-center justify-between'>
               <Text className='native:text-xs text-muted-foreground'>
                 Phân loại: {dress?.color} - {dress?.size}
@@ -68,7 +65,7 @@ export default function DressOrderItem({ orderItem, dress, dressOptions, quantit
               {option.itemServiceType === 'PATTERN' && (
                 <Image source={require('~/assets/icons/pattern.png')} className='w-8 h-8' />
               )}
-              <View className='flex-1'>
+              <View className='flex-1 ml-1'>
                 <Text className='native:text-sm font-inter-medium' numberOfLines={1}>
                   {option.name}{' '}
                   {option.itemServiceType === 'TEXT' && (

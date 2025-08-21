@@ -25,7 +25,6 @@ export default function PresetOrderItem({
   quantity
 }: PresetOrderItemProps) {
   const router = useRouter()
-  const presetImage = preset.images && Array.isArray(preset.images) && preset.images.length > 0 ? preset.images[0] : ''
   const componentOptions =
     preset.componentOptions && Array.isArray(preset.componentOptions) ? preset.componentOptions : []
 
@@ -33,22 +32,24 @@ export default function PresetOrderItem({
 
   return (
     <View className='p-3 gap-3'>
-      <View className='flex-row items-center gap-4'>
+      <View className='flex-row items-start gap-3'>
         <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
-          <Image source={{ uri: presetImage }} className='w-full h-full' resizeMode='contain' />
+          <Image source={{ uri: preset?.images?.[0] }} className='w-full h-full' resizeMode='contain' />
         </View>
-
         <View className='flex-1 h-20 justify-between'>
           <View>
-            <Text className='native:text-sm font-inter-medium'>{preset?.name || 'Váy bầu tùy chỉnh'}</Text>
-            <View className='flex-row items-center justify-between'>
-              <Text className='native:text-xs text-muted-foreground'>{preset?.styleName || 'Không có kiểu'}</Text>
-              <Text className='native:text-xs text-muted-foreground'>x{quantity || 1}</Text>
+            <Text className='text-sm font-inter-medium' numberOfLines={1}>
+              {preset?.name || 'Váy bầu tùy chỉnh'}
+            </Text>
+
+            <View className='flex-row items-center gap-2'>
+              <Text className='text-xs text-muted-foreground flex-1'>{preset?.sku ? `SKU: ${preset?.sku}` : ''}</Text>
+              <Text className='text-xs text-muted-foreground'>x{quantity || 1}</Text>
             </View>
           </View>
           <View className='items-end'>
-            <Text className='native:text-xs'>
-              <Text className='native:text-xs underline'>đ</Text>
+            <Text className='text-xs'>
+              <Text className='text-xs underline'>đ</Text>
               {preset?.price?.toLocaleString('vi-VN') || '0'}
             </Text>
           </View>
@@ -106,7 +107,7 @@ export default function PresetOrderItem({
               >
                 <Feather name='plus' size={iconSize} color='#2563eb' />
                 <Text className='native:text-sm text-blue-600 font-inter-medium'>
-                  Thêm dịch vụ({presetOptions.length})
+                  Thêm dịch vụ ({presetOptions.length})
                 </Text>
               </TouchableOpacity>
             </>

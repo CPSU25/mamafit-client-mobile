@@ -140,13 +140,13 @@ export default function PaymentQRCode() {
                 loop={false}
                 style={{ width: 300, height: 300 }}
               />
-              <Text className='text-2xl font-inter-semibold mt-10'>Thanh Toán Thành Công!</Text>
-              <Text className='text-sm text-muted-foreground mt-2 mx-10 text-center'>
-                Giao dịch của bạn đã hoàn tất. Cảm ơn bạn đã mua hàng!
+              <Text className='text-2xl font-inter-bold mt-10'>Thanh Toán Thành Công!</Text>
+              <Text className='text-sm text-muted-foreground mx-10 text-center'>
+                Giao dịch của bạn đã hoàn tất. Cảm ơn bạn đã tin tưởng và mua hàng!
               </Text>
             </View>
 
-            <View className='flex flex-col gap-2 w-full mt-32'>
+            <View className='flex flex-col gap-2 w-full mt-36'>
               <Button
                 className='w-full'
                 onPress={() =>
@@ -156,10 +156,10 @@ export default function PaymentQRCode() {
                   })
                 }
               >
-                <Text className='font-inter-medium'>Xem đơn hàng</Text>
+                <Text className='native:text-sm font-inter-medium'>Xem đơn hàng</Text>
               </Button>
               <Button className='w-full' variant='outline' onPress={handleGoHome}>
-                <Text className='font-inter-medium'>Quay Về Trang Chủ</Text>
+                <Text className='native:text-sm font-inter-medium'>Về trang chủ</Text>
               </Button>
             </View>
           </View>

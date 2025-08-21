@@ -339,7 +339,7 @@ export default function ViewOrderDetailScreen() {
                     {order?.type === OrderType.Warranty ? (
                       <View className='px-3 py-1.5 bg-blue-50 rounded-lg flex-row items-center gap-1.5'>
                         <MaterialIcons name='safety-check' size={14} color='#2563eb' />
-                        <Text className='text-xs text-blue-600 font-inter-medium'>Đơn bảo hành</Text>
+                        <Text className='text-xs text-blue-600 font-inter-medium'>Bảo hành</Text>
                       </View>
                     ) : null}
 
@@ -374,7 +374,7 @@ export default function ViewOrderDetailScreen() {
                   ) : null}
 
                   {isPresetOrder || isWarrantyOrder ? (
-                    <View className='gap-2'>
+                    <>
                       {isWarrantyOrder
                         ? order?.items?.map((orderItem, index) => (
                             <View key={orderItem.id}>
@@ -402,11 +402,11 @@ export default function ViewOrderDetailScreen() {
                               {index !== order?.items?.length - 1 ? <Separator /> : null}
                             </View>
                           ))}
-                    </View>
+                    </>
                   ) : null}
 
                   {isReadyToBuyOrder ? (
-                    <View className='gap-2'>
+                    <>
                       {order?.items?.map((orderItem, index) => (
                         <View key={orderItem.id}>
                           <DressOrderItem
@@ -418,13 +418,16 @@ export default function ViewOrderDetailScreen() {
                           {index !== order?.items?.length - 1 ? <Separator /> : null}
                         </View>
                       ))}
-                    </View>
+                    </>
                   ) : null}
 
                   <Separator />
 
                   <View className='p-3 flex-row'>
-                    <Text className='text-sm font-inter-medium flex-1'>Tổng sản phẩm: {order?.items?.length || 0}</Text>
+                    <Text className='text-sm font-inter-medium flex-1'>
+                      Tổng sản phẩm:{' '}
+                      {order?.items?.map((item) => item.quantity).reduce((acc, curr) => acc + curr, 0) || 0}
+                    </Text>
                     <Text className='font-inter-medium text-sm'>
                       <Text className='underline font-inter-medium text-xs'>đ</Text>
                       {merchandiseTotal ? merchandiseTotal.toLocaleString('vi-VN') : '0'}

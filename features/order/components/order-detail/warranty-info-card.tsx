@@ -57,12 +57,12 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
           ) : null}
 
           <View className='flex-row items-center gap-2'>
-            <Text className='flex-1 text-xs text-muted-foreground/80'>Mã yêu cầu</Text>
+            <Text className='flex-1 text-xs text-muted-foreground/80'>Mã yêu cầu bảo hành</Text>
             <Text className='text-foreground/80 text-xs'>#{warrantyRequestDetail?.warrantyRequest?.sku}</Text>
           </View>
 
           <View className='flex-row items-center gap-2'>
-            <Text className='flex-1 text-xs text-muted-foreground/80'>Trạng thái</Text>
+            <Text className='flex-1 text-xs text-muted-foreground/80'>Trạng thái bảo hành</Text>
             <Text className='text-xs px-2 py-0.5 font-inter-medium rounded-lg' style={{ color, backgroundColor }}>
               {text}
             </Text>
@@ -71,7 +71,7 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
           {warrantyRequestDetail?.warrantyRequest?.requestType === 'FEE' ? (
             <View className='flex-row items-center gap-2'>
               <Text className='flex-1 text-xs text-muted-foreground/80'>Tổng phí</Text>
-              <Text className='text-xs px-2 py-0.5 font-inter-medium rounded-lg'>
+              <Text className='text-xs py-0.5 font-inter-medium rounded-lg'>
                 {warrantyRequestDetail?.warrantyRequest?.totalFee
                   ? `đ${warrantyRequestDetail?.warrantyRequest?.totalFee.toLocaleString('vi-VN')}`
                   : 'N/A'}

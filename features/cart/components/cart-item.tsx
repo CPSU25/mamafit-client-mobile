@@ -205,10 +205,7 @@ export default function CartItem({ item, setSelectedItems, selectedItems }: Cart
             style={{
               width: '100%',
               height: '180%',
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-              borderBottomLeftRadius: 8,
-              borderBottomRightRadius: 8,
+              borderRadius: 12,
               position: 'absolute',
               top: 0,
               left: 0

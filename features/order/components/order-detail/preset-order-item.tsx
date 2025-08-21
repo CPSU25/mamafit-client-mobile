@@ -40,7 +40,7 @@ export default function PresetOrderItem({
 
   return (
     <View className='gap-3 p-3'>
-      <View className='flex-row items-start gap-2'>
+      <View className='flex-row items-start gap-3'>
         <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
           <Image source={{ uri: preset?.images?.[0] }} className='w-full h-full' resizeMode='contain' />
         </View>
@@ -77,7 +77,7 @@ export default function PresetOrderItem({
               {option.itemServiceType === 'PATTERN' && (
                 <Image source={require('~/assets/icons/pattern.png')} className='w-8 h-8' />
               )}
-              <View className='flex-1'>
+              <View className='flex-1 ml-1'>
                 <Text className='native:text-sm font-inter-medium' numberOfLines={1}>
                   {option.name}{' '}
                   {option.itemServiceType === 'TEXT' && (
