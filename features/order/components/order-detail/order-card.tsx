@@ -73,35 +73,32 @@ export default function OrderCard({ order }: OrderCardProps) {
     >
       <Card className='overflow-hidden'>
         {/* Tag Section */}
-        <View className='p-2 flex-row items-center gap-2'>
-          <Text className='text-sm font-inter-medium flex-1 pl-1'>#{order?.code}</Text>
-          <View className='flex-row items-center gap-2 flex-wrap'>
-            {order.type === OrderType.Warranty ? (
-              <View className='px-3 py-1.5 bg-blue-50 rounded-lg flex-row items-center gap-1.5'>
-                <MaterialIcons name='safety-check' size={14} color='#2563eb' />
-                <Text className='text-xs text-blue-600 font-inter-medium'>Đơn bảo hành</Text>
-              </View>
-            ) : null}
+        <View className='flex-row items-center gap-2 flex-wrap p-2'>
+          {order.type === OrderType.Warranty ? (
+            <View className='px-3 py-1.5 bg-blue-50 rounded-lg flex-row items-center gap-1.5'>
+              <MaterialIcons name='safety-check' size={14} color='#2563eb' />
+              <Text className='text-xs text-blue-600 font-inter-medium'>Bảo hành</Text>
+            </View>
+          ) : null}
 
-            {orderItemTypeSet.map((type, index) => (
-              <View
-                key={index}
-                className={cn(
-                  'px-3 py-1.5 rounded-lg flex-row items-center gap-1.5',
-                  getOrderItemTypeStyle(type).tagColor
-                )}
-              >
-                <MaterialIcons
-                  name={getOrderItemTypeStyle(type).icon}
-                  size={14}
-                  color={getOrderItemTypeStyle(type).iconColor}
-                />
-                <Text className={cn('text-xs font-inter-medium', getOrderItemTypeStyle(type).textColor)}>
-                  {getOrderItemTypeStyle(type).text}
-                </Text>
-              </View>
-            ))}
-          </View>
+          {orderItemTypeSet.map((type, index) => (
+            <View
+              key={index}
+              className={cn(
+                'px-3 py-1.5 rounded-lg flex-row items-center gap-1.5',
+                getOrderItemTypeStyle(type).tagColor
+              )}
+            >
+              <MaterialIcons
+                name={getOrderItemTypeStyle(type).icon}
+                size={14}
+                color={getOrderItemTypeStyle(type).iconColor}
+              />
+              <Text className={cn('text-xs font-inter-medium', getOrderItemTypeStyle(type).textColor)}>
+                {getOrderItemTypeStyle(type).text}
+              </Text>
+            </View>
+          ))}
         </View>
 
         <Separator />
@@ -131,7 +128,7 @@ export default function OrderCard({ order }: OrderCardProps) {
           })}
         </View>
 
-        <View className='mx-2 mt-3 mb-2 items-end'>
+        <View className='mx-2 mt-5 mb-1 items-end'>
           <Text className='text-xs'>
             Tổng {order.items?.map((item) => item.quantity).reduce((acc, curr) => acc + curr, 0)} sản phẩm:{' '}
             <Text className='text-sm font-inter-semibold'>
@@ -245,24 +242,25 @@ const PresetOrderItem = ({ item }: { item: OrderItem }) => {
   const itemPrice = price * quantity
 
   return (
-    <View className='flex-row items-start gap-3 px-2'>
-      <View className='w-20 h-20 rounded-xl overflow-hidden bg-gray-50'>
-        <Image source={{ uri: preset?.images[0] }} className='w-full h-full' resizeMode='contain' />
+    <View className='flex-row items-start gap-2 px-2'>
+      <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
+        <Image source={{ uri: preset?.images?.[0] }} className='w-full h-full' resizeMode='contain' />
       </View>
       <View className='flex-1 h-20 justify-between'>
         <View>
-          <Text className='text-sm font-inter-medium'>{preset?.name || 'Váy bầu tùy chỉnh'}</Text>
-          <View className='flex-row items-center justify-between'>
-            <Text className='text-xs text-muted-foreground flex-1' numberOfLines={2}>
-              {preset?.styleName || 'Không có kiểu'}
-            </Text>
-            <Text className='text-xs text-muted-foreground'>x{quantity}</Text>
+          <Text className='text-sm font-inter-medium' numberOfLines={1}>
+            {preset?.name || 'Váy bầu tùy chỉnh'}
+          </Text>
+
+          <View className='flex-row items-center gap-2'>
+            <Text className='text-xs text-muted-foreground flex-1'>{preset?.sku ? `SKU: ${preset?.sku}` : ''}</Text>
+            <Text className='text-xs text-muted-foreground'>x{quantity || 1}</Text>
           </View>
         </View>
         <View className='items-end'>
           <Text className='text-xs'>
             <Text className='text-xs underline'>đ</Text>
-            {itemPrice.toLocaleString('vi-VN')}
+            {itemPrice?.toLocaleString('vi-VN') || '0'}
           </Text>
         </View>
       </View>
@@ -305,17 +303,14 @@ const ReadyToBuyOrderItem = ({ item }: { item: OrderItem }) => {
   const itemPrice = price * quantity
 
   return (
-    <View className='flex-row items-start gap-3 px-2'>
+    <View className='flex-row items-center gap-2 px-2'>
       <View className='w-20 h-20 overflow-hidden relative rounded-xl'>
         <Image
-          source={{ uri: item.maternityDressDetail?.image[0] }}
+          source={{ uri: maternityDressDetail?.image[0] }}
           style={{
             width: '100%',
             height: '180%',
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
-            borderBottomLeftRadius: 8,
-            borderBottomRightRadius: 8,
+            borderRadius: 12,
             position: 'absolute',
             top: 0,
             left: 0

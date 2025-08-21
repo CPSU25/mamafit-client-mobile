@@ -91,7 +91,7 @@ export default function OrderCard({
         {order.type === OrderType.Warranty ? (
           <View className='px-3 py-1.5 bg-blue-50 rounded-lg flex-row items-center gap-1.5'>
             <MaterialIcons name='safety-check' size={14} color='#2563eb' />
-            <Text className='text-xs text-blue-600 font-inter-medium'>Đơn bảo hành</Text>
+            <Text className='text-xs text-blue-600 font-inter-medium'>Bảo hành</Text>
           </View>
         ) : null}
 

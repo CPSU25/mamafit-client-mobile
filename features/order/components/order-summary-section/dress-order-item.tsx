@@ -28,17 +28,14 @@ export default function DressOrderItem({
 
   return (
     <View className='p-3 gap-3'>
-      <View className='flex-row items-center gap-4'>
+      <View className='flex-row items-center gap-3'>
         <View className='w-20 h-20 overflow-hidden relative rounded-xl'>
           <Image
             source={{ uri: dress?.image[0] }}
             style={{
               width: '100%',
               height: '180%',
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-              borderBottomLeftRadius: 8,
-              borderBottomRightRadius: 8,
+              borderRadius: 12,
               position: 'absolute',
               top: 0,
               left: 0
@@ -49,7 +46,7 @@ export default function DressOrderItem({
 
         <View className='flex-1 h-20 justify-between'>
           <View>
-            <Text className='native:text-sm font-inter-medium'>{dress?.name || 'Không có tên'}</Text>
+            <Text className='native:text-sm font-inter-medium'>{dress?.name || 'Váy có sẵn'}</Text>
             <View className='flex-row items-center justify-between'>
               <Text className='native:text-xs text-muted-foreground'>
                 Phân loại: {dress?.color} - {dress?.size}
@@ -103,7 +100,7 @@ export default function DressOrderItem({
             >
               <Feather name='plus' size={iconSize} color='#2563eb' />
               <Text className='native:text-sm text-blue-600 font-inter-medium'>
-                Thêm dịch vụ({dressOptions.length})
+                Thêm dịch vụ ({dressOptions.length})
               </Text>
             </TouchableOpacity>
           </>

@@ -126,6 +126,7 @@ export default function CartScreen() {
       )
     }
 
+    setSelectedItems([])
     router.push('/order/review')
   }
 

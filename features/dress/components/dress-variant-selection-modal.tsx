@@ -114,8 +114,12 @@ const DressVariantSelectionModal = forwardRef<BottomSheetModal, DressVariantSele
       })
 
       setTimeout(() => {
+        setSelectedVariant(null)
+        setSelectedQuantity(1)
+        setSelectedColor(null)
+        setSelectedSize(null)
         handleDismissVariantModal()
-      }, 1000)
+      }, 500)
     }
 
     const handleIncreaseQuantity = () => {
@@ -157,7 +161,12 @@ const DressVariantSelectionModal = forwardRef<BottomSheetModal, DressVariantSele
                 />
               </View>
               <View className='gap-3'>
-                {hasMultiplePrices && minPrice !== maxPrice ? (
+                {selectedVariant ? (
+                  <Text className='text-primary font-inter-medium'>
+                    <Text className='text-primary underline font-inter-medium text-sm'>đ</Text>
+                    {selectedVariant?.price?.toLocaleString('vi-VN')}
+                  </Text>
+                ) : hasMultiplePrices && minPrice !== maxPrice ? (
                   <View className='flex-row items-center gap-1'>
                     <Text className='text-primary font-inter-medium'>
                       <Text className='text-primary underline font-inter-medium text-sm'>đ</Text>
@@ -174,6 +183,7 @@ const DressVariantSelectionModal = forwardRef<BottomSheetModal, DressVariantSele
                     {minPrice?.toLocaleString('vi-VN')}
                   </Text>
                 )}
+
                 {selectedVariant ? (
                   <Text className='text-muted-foreground text-sm'>Kho: {selectedVariant?.quantity}</Text>
                 ) : null}
