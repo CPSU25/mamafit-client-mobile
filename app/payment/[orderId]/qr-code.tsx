@@ -242,7 +242,7 @@ export default function PaymentQRCode() {
                     Quét mã QR
                   </Text>
                   <Text className={cn('text-xs', isDarkColorScheme ? 'text-primary-foreground/70' : 'text-primary/70')}>
-                    Thanh toán với ứng dụng ngân hàng của bạn để xác nhận đơn hàng
+                    Thanh toán với ứng dụng ngân hàng của bạn
                   </Text>
                 </View>
               </View>

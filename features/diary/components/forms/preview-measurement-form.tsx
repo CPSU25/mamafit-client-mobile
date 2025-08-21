@@ -30,14 +30,14 @@ export default function PreviewMeasurementForm() {
         <Animated.View entering={FadeInDown.delay(100)} className='gap-2'>
           <View>
             <Text className='font-inter-medium'>Cân nặng</Text>
-            <Text className='text-muted-foreground text-xs'>Theo dõi các thay đổi về cân nặng trong suốt thai kỳ</Text>
+            <Text className='text-muted-foreground text-xs'>Nhập cân nặng hiện tại của bạn</Text>
           </View>
           <Controller
             control={control}
             name='weight'
             render={({ field: { onChange, value, ...field } }) => (
               <Input
-                placeholder='Nhập cân nặng hiện tại'
+                placeholder='Cân nặng'
                 keyboardType='numeric'
                 StartIcon={<Feather name='activity' size={20} color={PRIMARY_COLOR.LIGHT} />}
                 {...field}
@@ -56,7 +56,7 @@ export default function PreviewMeasurementForm() {
           <View>
             <Text className='font-inter-medium text-sm'>Số đo 3 vòng</Text>
             <Text className='text-muted-foreground text-xs'>
-              Theo dõi các thay đổi về hình dạng cơ thể trong suốt thai kỳ
+              Thông tin này giúp chúng tôi tính toán các số đo cần thiết.
             </Text>
           </View>
 
@@ -68,7 +68,7 @@ export default function PreviewMeasurementForm() {
                 name='bust'
                 render={({ field: { onChange, value, ...field } }) => (
                   <Input
-                    placeholder='Vòng eo'
+                    placeholder='Vòng ngực'
                     keyboardType='numeric'
                     StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                     {...field}
@@ -89,7 +89,7 @@ export default function PreviewMeasurementForm() {
                 name='waist'
                 render={({ field: { onChange, value, ...field } }) => (
                   <Input
-                    placeholder='Vòng hông'
+                    placeholder='Vòng eo'
                     keyboardType='numeric'
                     StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
                     {...field}

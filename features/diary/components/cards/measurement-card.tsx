@@ -49,20 +49,20 @@ export default function MeasurementCard({ measurement, diaryId }: MeasurementCar
       </View>
       <View className='flex-1 gap-0.5'>
         <Text className='text-sm'>
-          Cân Nặng: <Text className='text-sm font-inter-medium'>{measurement?.weight || 'N/A'} kg</Text>
+          Cân nặng: <Text className='text-sm font-inter-medium'>{measurement?.weight || 'N/A'} kg</Text>
         </Text>
         <View className='flex-row items-center justify-between gap-2'>
-          <View className='flex-row items-center gap-1.5'>
+          <View className='flex-row items-center gap-2'>
             <View className='w-2 h-2 rounded-full bg-sky-400' />
             <Text className='text-sm font-inter-medium'>{measurement?.bust || 'N/A'} cm</Text>
           </View>
           <Separator orientation='vertical' className='h-3' />
-          <View className='flex-row items-center gap-1.5'>
+          <View className='flex-row items-center gap-2'>
             <View className='w-2 h-2 rounded-full bg-rose-400' />
             <Text className='text-sm font-inter-medium'>{measurement?.waist || 'N/A'} cm</Text>
           </View>
           <Separator orientation='vertical' className='h-3' />
-          <View className='flex-row items-center gap-1.5'>
+          <View className='flex-row items-center gap-2'>
             <View className='w-2 h-2 rounded-full bg-amber-400' />
             <Text className='text-sm font-inter-medium'>{measurement?.hip || 'N/A'} cm</Text>
           </View>

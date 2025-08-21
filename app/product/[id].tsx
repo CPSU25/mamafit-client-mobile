@@ -1,8 +1,8 @@
 import { AntDesign, Feather } from '@expo/vector-icons'
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useCallback, useRef, useState } from 'react'
-import { FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native'
+import { useCallback, useRef } from 'react'
+import { Dimensions, FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
 import Ratings from '~/components/ratings'
@@ -16,12 +16,7 @@ import { useGetFeedbacks } from '~/features/dress/hooks/use-get-feedbacks'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { Feedback } from '~/types/feedback.type'
-
-const variations = Array(10)
-  .fill(null)
-  .map((_, index) => ({
-    id: index.toString()
-  }))
+import RenderHtml from 'react-native-render-html'
 
 export default function ProductDetailScreen() {
   const router = useRouter()
@@ -39,7 +34,6 @@ export default function ProductDetailScreen() {
     ? Math.max(...dress.details.map((detail) => detail.price))
     : dress?.details[0].price
 
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
   const { bottom } = useSafeAreaInsets()
 
   const variantSelectionModalRef = useRef<BottomSheetModal>(null)
@@ -60,9 +54,9 @@ export default function ProductDetailScreen() {
     }
   }
 
-  const toggleDescription = () => {
-    setIsDescriptionExpanded((prev) => !prev)
-  }
+  // const toggleDescription = () => {
+  //   setIsDescriptionExpanded((prev) => !prev)
+  // }
 
   const { refreshControl } = useRefreshs([refetchDress, refetchFeedbacks])
 
@@ -86,7 +80,7 @@ export default function ProductDetailScreen() {
             <Feather name='shopping-bag' size={24} color='white' />
           </TouchableOpacity>
 
-          <View className='flex flex-col gap-2'>
+          <View className='flex flex-col gap-2 mb-28'>
             <View className='flex flex-row items-center justify-between px-4 pt-4'>
               {hasMultiplePrices && minPrice !== maxPrice ? (
                 <View className='flex-row items-center gap-1'>
@@ -115,45 +109,94 @@ export default function ProductDetailScreen() {
             <View className='bg-muted h-2' />
 
             <TouchableOpacity className='flex flex-row items-center gap-1 px-4'>
-              <Text className='font-inter-medium'>5.0</Text>
+              <Text className='font-inter-medium text-sm'>{feedbacks?.averageRating?.toFixed(1)}</Text>
               <AntDesign name='star' size={14} color='orange' />
-              <Text className='ml-2 font-inter-medium text-[11px] flex-1'>
-                Đánh giá sản phẩm <Text className='text-muted-foreground text-[8px]'>({feedbacks?.length})</Text>
+              <Text className='ml-2 font-inter-medium text-sm flex-1'>
+                Đánh giá sản phẩm{' '}
+                <Text className='text-muted-foreground text-[10px]'>({feedbacks?.totalFeedbacks})</Text>
               </Text>
               <Text className='text-muted-foreground text-xs'>Xem tất cả</Text>
               <Feather name='chevron-right' size={16} color='lightgray' />
             </TouchableOpacity>
             <Separator />
 
-            {/* FIXME: apply UI when have data */}
-            {feedbacks?.map((feedback) => (
+            {feedbacks?.feedbacks?.map((feedback) => (
               <FeedbackItem key={feedback.id} feedback={feedback} />
             ))}
 
             <View className='bg-muted h-2' />
             <View className='px-4'>
               <Text className='font-inter-medium text-sm'>Mô tả</Text>
-              <Text
-                className='text-muted-foreground text-sm my-2'
-                numberOfLines={isDescriptionExpanded ? undefined : 3}
-              >
-                THÔNG TIN SẢN PHẨM: Chất liệu: 100% Cotton Màu sắc: Đen Size áo: S/ M Video HƯỚNG DẪN BẢO QUẢN SẢN PHẨM:
-                - Khuyển khích giặt bằng tay để giữ được form - Không giặt chung với quần áo sáng màu Không sử dụng nước
-                tẩy lên sản phẩm Phơi mặt trong của sản phẩm để giữ được độ bển màu CHÍNH SÁCH ĐỔI SẢN PHẨM: 1. Thời hạn
-                đổi sản phẩm: - Victim hỗ trợ đổi sản phẩm trong vòng 7 ngày kể từ khi nhận hàng (bao gồm thời gian
-                thông báo đổi với shop và thời gian gửi lại sản phẩm) - Mỗi hóa đơn chỉ được áp dụng tối đa 1 lần đổi
-                sản phẩm 2. Điều kiện đổi sản phẩm: Chỉ áp dụng đổi hàng đối với sản phẩm nguyên giá - Sản phẩm phải
-                chưa qua sử dụng, còn nguyên tag, bao bì và hóa đơn
-              </Text>
+              <RenderHtml
+                tagsStyles={{
+                  p: {
+                    color: '#6B7280',
+                    fontSize: 12,
+                    marginVertical: 4,
+                    lineHeight: 16
+                  },
+                  strong: {
+                    fontSize: 12,
+                    fontWeight: 'bold',
+                    marginTop: 1,
+                    marginBottom: 2
+                  },
+                  ul: {
+                    marginVertical: 3,
+                    paddingLeft: 16
+                  },
+                  ol: {
+                    marginVertical: 3,
+                    paddingLeft: 16
+                  },
+                  li: {
+                    color: '#6B7280',
+                    fontSize: 12,
+                    lineHeight: 16,
+                    paddingLeft: 6
+                  }
+                }}
+                renderersProps={{
+                  ul: {
+                    markerTextStyle: {
+                      color: '#6B7280',
+                      fontSize: 12,
+                      lineHeight: 16,
+                      includeFontPadding: false,
+                      textAlignVertical: 'center'
+                    },
+                    markerBoxStyle: {
+                      paddingTop: 0,
+                      transform: [{ translateY: 4.5 }]
+                    }
+                  },
+                  ol: {
+                    markerTextStyle: {
+                      color: '#6B7280',
+                      fontSize: 12,
+                      lineHeight: 16,
+                      includeFontPadding: false,
+                      textAlignVertical: 'center'
+                    },
+                    markerBoxStyle: {
+                      paddingTop: 0,
+                      transform: [{ translateY: 4.5 }]
+                    }
+                  }
+                }}
+                enableExperimentalMarginCollapsing={true}
+                contentWidth={Dimensions.get('window').width}
+                source={{ html: dress?.description ?? '' }}
+              />
             </View>
-            <Separator />
-            <TouchableOpacity
+            {/* <Separator /> */}
+            {/* <TouchableOpacity
               onPress={toggleDescription}
               className='flex flex-row justify-center items-end gap-1 w-full mb-28'
             >
               <Text className='text-xs text-muted-foreground'>{isDescriptionExpanded ? 'Thu gọn' : 'Xem thêm'}</Text>
               <Feather name={isDescriptionExpanded ? 'chevron-up' : 'chevron-down'} size={16} color='gray' />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </ScrollView>
         <View
@@ -195,20 +238,20 @@ function FeedbackItem({ feedback }: { feedback: Feedback }) {
             <Text>ZN</Text>
           </AvatarFallback>
         </Avatar>
-        <Text className='font-inter-medium text-xs'>9u4aclg24u</Text>
+        <Text className='font-inter-medium text-xs'>cần thêm người feedback</Text>
       </View>
-      <Ratings rating={5} displayCount={false} />
+      <Ratings rating={feedback.rated} displayCount={false} />
       <Text className='text-muted-foreground text-xs'>Phân loại: Trắng, S</Text>
       <Text numberOfLines={2} className='text-xs'>
-        Áo mềm chất ổn, form rộng nha, phù hợp với các bạn cao to mặc vừa che khuyết điểm tốt vừa có gu
+        {feedback.description}
       </Text>
       <FlatList
-        data={variations}
+        data={feedback.images}
         renderItem={({ item }) => (
           <TouchableOpacity>
             <Image
               source={{
-                uri: 'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDRydmdvZ2ltbHUycTQwc21lODh1anVmY2Exb3VmMXhrbDE1bGZ4ciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Dg4TxjYikCpiGd7tYs/giphy.gif'
+                uri: item
               }}
               className='size-32 rounded-xl'
             />
