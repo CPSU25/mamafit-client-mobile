@@ -12,8 +12,10 @@ import { Text } from '~/components/ui/text'
 import DressCarousel from '~/features/dress/components/dress-carousel'
 import DressVariantSelectionModal from '~/features/dress/components/dress-variant-selection-modal'
 import { useGetDress } from '~/features/dress/hooks/use-get-dress'
+import { useGetFeedbacks } from '~/features/dress/hooks/use-get-feedbacks'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
+import { Feedback } from '~/types/feedback.type'
 
 const variations = Array(10)
   .fill(null)
@@ -26,6 +28,7 @@ export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
 
   const { data: dress, isLoading: isLoadingDress, refetch: refetchDress } = useGetDress(id)
+  const { data: feedbacks, isLoading: isLoadingFeedbacks, refetch: refetchFeedbacks } = useGetFeedbacks(id)
 
   const hasMultiplePrices = dress?.details?.length && dress.details.length > 1
 
@@ -61,9 +64,9 @@ export default function ProductDetailScreen() {
     setIsDescriptionExpanded((prev) => !prev)
   }
 
-  const { refreshControl } = useRefreshs([refetchDress])
+  const { refreshControl } = useRefreshs([refetchDress, refetchFeedbacks])
 
-  if (isLoadingDress) {
+  if (isLoadingDress || isLoadingFeedbacks) {
     return <Loading />
   }
 
@@ -115,15 +118,18 @@ export default function ProductDetailScreen() {
               <Text className='font-inter-medium'>5.0</Text>
               <AntDesign name='star' size={14} color='orange' />
               <Text className='ml-2 font-inter-medium text-[11px] flex-1'>
-                Đánh giá sản phẩm <Text className='text-muted-foreground text-[8px]'>(100)</Text>
+                Đánh giá sản phẩm <Text className='text-muted-foreground text-[8px]'>({feedbacks?.length})</Text>
               </Text>
               <Text className='text-muted-foreground text-xs'>Xem tất cả</Text>
               <Feather name='chevron-right' size={16} color='lightgray' />
             </TouchableOpacity>
             <Separator />
-            <Feedback />
-            <Separator />
-            <Feedback />
+
+            {/* FIXME: apply UI when have data */}
+            {feedbacks?.map((feedback) => (
+              <FeedbackItem key={feedback.id} feedback={feedback} />
+            ))}
+
             <View className='bg-muted h-2' />
             <View className='px-4'>
               <Text className='font-inter-medium text-sm'>Mô tả</Text>
@@ -179,7 +185,7 @@ export default function ProductDetailScreen() {
   )
 }
 
-function Feedback() {
+function FeedbackItem({ feedback }: { feedback: Feedback }) {
   return (
     <View className='flex flex-col gap-1.5 px-4'>
       <View className='flex flex-row items-center gap-2'>
