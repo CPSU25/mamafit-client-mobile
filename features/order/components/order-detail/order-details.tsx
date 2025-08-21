@@ -11,6 +11,7 @@ import { PaymentType } from '~/types/order.type'
 interface OrderDetailsProps {
   orderCode: string | undefined
   orderPlacedAt: string | undefined
+  orderReceivedAt: string | null | undefined
   subTotalAmount: number | undefined
   serviceAmount: number | null | undefined
   voucherDiscountId: string | null | undefined
@@ -39,6 +40,7 @@ export default function OrderDetails({
   depositRate,
   shippingFee,
   totalAmount,
+  orderReceivedAt,
   toggleViewMore
 }: OrderDetailsProps) {
   const { isDarkColorScheme } = useColorScheme()
@@ -65,6 +67,15 @@ export default function OrderDetails({
 
         {isViewMoreOrderDetails ? (
           <View className='gap-1'>
+            {orderReceivedAt ? (
+              <View className='flex-row items-center gap-2'>
+                <Text className='flex-1 text-xs text-muted-foreground/80'>Ngày nhận hàng</Text>
+                <Text className='text-foreground/80 text-xs'>
+                  {format(new Date(orderReceivedAt), "MMM dd, yyyy 'lúc' hh:mm a")}
+                </Text>
+              </View>
+            ) : null}
+
             {subTotalAmount ? (
               <View className='flex-row items-center gap-2'>
                 <Text className='flex-1 text-xs text-muted-foreground/80'>Tổng hàng hóa</Text>
@@ -95,7 +106,7 @@ export default function OrderDetails({
             {paymentType === PaymentType.Deposit && depositSubtotal ? (
               <View className='flex-row items-center gap-2'>
                 <Text className='flex-1 text-xs text-muted-foreground/80'>
-                  Tiền Cọc ({depositRate && !isNaN(depositRate) ? `${depositRate * 100}%` : '0%'})
+                  Tiền đã cọc ({depositRate && !isNaN(depositRate) ? `${depositRate * 100}%` : '0%'})
                 </Text>
                 <Text className='text-foreground/80 text-xs'>
                   đ{depositSubtotal > 0 ? depositSubtotal.toLocaleString('vi-VN') : '0'}
@@ -106,7 +117,7 @@ export default function OrderDetails({
             {paymentType === PaymentType.Deposit && remainingBalance ? (
               <View className='flex-row items-center gap-2'>
                 <Text className='flex-1 text-xs text-primary font-inter-medium'>
-                  Số Còn Lại ({depositRate && !isNaN(depositRate) ? `${100 - depositRate * 100}%` : '0%'})
+                  Cần thanh toán ({depositRate && !isNaN(depositRate) ? `${100 - depositRate * 100}%` : '0%'})
                 </Text>
                 <Text className='text-primary font-inter-medium text-xs'>
                   đ{remainingBalance > 0 ? remainingBalance.toLocaleString('vi-VN') : '0'}

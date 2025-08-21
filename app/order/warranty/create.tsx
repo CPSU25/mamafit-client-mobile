@@ -179,8 +179,8 @@ export default function CreateWarrantyRequestScreen() {
           {!currentUserProfile?.phoneNumber ? (
             <TouchableOpacity onPress={() => router.push('/setting/account')}>
               <WarningCard
-                title='Oops! No phone number found'
-                description='Please add your phone number first'
+                title='Oops! Không tìm thấy số điện thoại'
+                description='Vui lòng thêm số điện thoại của bạn trước'
                 hasAnimation={false}
               />
             </TouchableOpacity>
@@ -197,8 +197,8 @@ export default function CreateWarrantyRequestScreen() {
       return (
         <TouchableOpacity onPress={() => router.push('/setting/my-addresses/create')}>
           <WarningCard
-            title='Oops! No address found'
-            description='Please add your address first to select this delivery method'
+            title='Oops! Không tìm thấy địa chỉ'
+            description='Vui lòng thêm địa chỉ của bạn trước để chọn phương thức giao hàng này'
           />
         </TouchableOpacity>
       )
@@ -206,8 +206,8 @@ export default function CreateWarrantyRequestScreen() {
   }
 
   const selectedWarrantyType = useMemo(() => {
-    return getWarrantyType(selectedOrderItems, orderRequests, config?.warrantyPeriod ?? 0)
-  }, [selectedOrderItems, orderRequests, config?.warrantyPeriod])
+    return getWarrantyType(selectedOrderItems, orderRequests, config?.warrantyPeriod ?? 0, config?.warrantyTime ?? 0)
+  }, [selectedOrderItems, orderRequests, config?.warrantyPeriod, config?.warrantyTime])
 
   if (isLoading) {
     return <Loading />

@@ -1,4 +1,5 @@
 import { JWTPayload } from 'jose'
+import { DressVariant } from './dress.type'
 import { OrderItemType } from './order.type'
 import { Preset } from './preset.type'
 
@@ -180,8 +181,37 @@ export interface AppConfig {
 
 export interface CartItem {
   preset: Preset | null
-  maternityDressDetail: any | null
+  maternityDressDetail: DressVariant | null
   quantity: number
   type: OrderItemType
   itemId: string
+}
+
+export interface Category {
+  id: string
+  name: string
+  description: string
+  status: string
+  images: string[]
+  createdBy: string
+  updatedBy: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Style {
+  id: string
+  name: string
+  isCustom: boolean
+  globalStatus: string
+  description: string
+  images: string[]
+  createdBy: string
+  updatedBy: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface StylesByCategoryResponse extends Category {
+  styles: Style[]
 }

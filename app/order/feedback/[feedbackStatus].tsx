@@ -100,7 +100,7 @@ export default function FeedbackHistoryScreen() {
                     <Ratings rating={item.feedbacks[0].rated} displayCount={false} size={14} />
                     <Text className='text-xs text-muted-foreground'>
                       {item.feedbacks[0].createdAt
-                        ? format(new Date(item.feedbacks[0].createdAt), "MMM dd, yyyy 'at' hh:mm a")
+                        ? format(new Date(item.feedbacks[0].createdAt), "MMM dd, yyyy 'lúc' hh:mm a")
                         : 'N/A'}
                     </Text>
                   </View>

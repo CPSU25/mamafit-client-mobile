@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Control, Controller, FieldValues, Path, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
 import { Text } from '~/components/ui/text'
-import { useGetCategories } from '~/features/category/hooks/use-get-categories'
 import { cn } from '~/lib/utils'
+import { useGetCategories } from '../hooks/use-get-categories'
 
 interface CategorySectionProps<T extends FieldValues> {
   control: Control<T>

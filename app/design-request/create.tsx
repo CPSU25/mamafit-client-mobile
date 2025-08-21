@@ -71,7 +71,7 @@ export default function CreateDesignRequest() {
             disabled={placeDesignRequestMutation.isPending || isUploading}
           >
             <Text className='font-inter-medium'>
-              {placeDesignRequestMutation.isPending ? 'Đang Gửi...' : 'Gửi Yêu Cầu'}
+              {placeDesignRequestMutation.isPending ? 'Đang gửi...' : 'Gửi yêu cầu'}
             </Text>
           </Button>
         </View>

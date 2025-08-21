@@ -58,7 +58,7 @@ export default function PaymentDetailsSection({
 
         {paymentType === PaymentType.Deposit && payableMerchandisePortion > 0 ? (
           <View className='flex-row items-baseline'>
-            <Text className='text-xs text-muted-foreground flex-1'>Tiền Cọc ({depositRate * 100}%)</Text>
+            <Text className='text-xs text-muted-foreground flex-1'>Tiền cần cọc ({depositRate * 100}%)</Text>
             <Text className='text-xs text-muted-foreground'>
               <Text className='underline text-xs text-muted-foreground'>đ</Text>
               {payableMerchandisePortion.toLocaleString('vi-VN')}

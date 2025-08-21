@@ -1,7 +1,5 @@
 import { api } from '~/lib/axios/axios'
-import { Category } from '~/types/category.type'
-import { BasePaginationResponse, BaseResponse } from '~/types/common'
-import { StylesByCategoryResponse } from '~/types/style.type'
+import { BasePaginationResponse, BaseResponse, Category, StylesByCategoryResponse } from '~/types/common'
 
 class CategoryService {
   async getCategories() {

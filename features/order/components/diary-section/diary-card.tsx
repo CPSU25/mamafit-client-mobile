@@ -57,7 +57,7 @@ export default function DiaryCard({ isSelected, diary }: DiaryCardProps) {
           </View>
           <View className='items-center'>
             <Text className={cn('text-xs mb-1', isSelected ? 'text-white/60' : 'text-muted-foreground')}>
-              Chiều Cao
+              Chiều cao
             </Text>
             <Text className={cn('text-xl font-inter-semibold', isSelected && 'text-white')}>
               {diary.height}
@@ -67,7 +67,7 @@ export default function DiaryCard({ isSelected, diary }: DiaryCardProps) {
             </Text>
           </View>
           <View className='items-center'>
-            <Text className={cn('text-xs mb-1', isSelected ? 'text-white/60' : 'text-muted-foreground')}>Thai Kỳ</Text>
+            <Text className={cn('text-xs mb-1', isSelected ? 'text-white/60' : 'text-muted-foreground')}>Thai kỳ</Text>
             <Text className={cn('text-xl font-inter-semibold', isSelected && 'text-white')}>
               {diary.numberOfPregnancy}
               <Text className={cn('text-sm font-inter-medium', isSelected ? 'text-white/60' : 'text-muted-foreground')}>

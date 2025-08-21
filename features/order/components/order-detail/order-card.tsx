@@ -84,7 +84,7 @@ export default function OrderCard({ order }: OrderCardProps) {
               <View
                 key={index}
                 className={cn(
-                  'px-3 py-1.5 rounded-xl flex-row items-center gap-1.5',
+                  'px-3 py-1.5 rounded-lg flex-row items-center gap-1.5',
                   getOrderItemTypeStyle(type).tagColor
                 )}
               >
@@ -238,6 +238,13 @@ export default function OrderCard({ order }: OrderCardProps) {
             ) : null}
           </View>
         )}
+
+        <Separator className='mt-1' />
+
+        <View className='flex-row items-center gap-2 p-3'>
+          <Text className='flex-1 text-xs text-muted-foreground/80'>Mã đơn</Text>
+          <Text className='text-foreground/80 text-xs'>#{order?.code}</Text>
+        </View>
       </Card>
     </TouchableOpacity>
   )

@@ -60,7 +60,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
               <View className='gap-1 p-3 rounded-2xl border border-border bg-muted/20'>
                 <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='package-variant' size={16} color='#6b7280' />
-                  <Text className='text-xs text-muted-foreground'>Mã Đơn Gốc</Text>
+                  <Text className='text-xs text-muted-foreground'>Mã đơn gốc</Text>
                 </View>
                 <Text className='text-sm font-inter-medium'>#{warrantyItem.parentOrder?.code}</Text>
               </View>
@@ -77,7 +77,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                 <View className='flex-1 gap-1 p-3 rounded-2xl border border-border'>
                   <View className='flex-row items-center gap-2'>
                     <MaterialCommunityIcons name='clock-outline' size={16} color='#6b7280' />
-                    <Text className='text-xs text-muted-foreground'>Thời Gian Ước Tính</Text>
+                    <Text className='text-xs text-muted-foreground'>Thời gian ước tính</Text>
                   </View>
                   <Text className='text-sm font-inter-medium'>
                     {warrantyItem.warrantyRequestItems?.estimateTime
@@ -131,7 +131,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
               <View className='gap-1 rounded-2xl border border-border p-3 bg-muted/20'>
                 <View className='flex-row items-center gap-2'>
                   <MaterialCommunityIcons name='card-text-outline' size={16} color='#6b7280' />
-                  <Text className='text-xs text-muted-foreground'>Mô Tả</Text>
+                  <Text className='text-xs text-muted-foreground'>Mô tả</Text>
                 </View>
                 <Text className='text-sm'>{warrantyItem.warrantyRequestItems?.description}</Text>
               </View>

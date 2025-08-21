@@ -74,7 +74,7 @@ function OrderStage({
   ordersCount: OrderStatusCount[] | null | undefined
   unratedOrders: number
 }) {
-  const orderCount = getOrderCount(status, ordersCount)
+  const orderCount = status.id === 4 ? unratedOrders : getOrderCount(status, ordersCount)
 
   return (
     <View className='flex-col gap-1.5 items-center relative'>
@@ -170,7 +170,7 @@ export default function ProfileScreen() {
         <View className='bg-muted h-2' />
 
         <TouchableOpacity
-          className='flex-row items-center px-4 py-3'
+          className='flex-row items-center px-4 py-2.5'
           onPress={() => router.push('/profile/appointment')}
         >
           <View className='p-2 bg-primary/10 rounded-full'>
@@ -186,7 +186,7 @@ export default function ProfileScreen() {
         <Separator />
 
         <TouchableOpacity
-          className='flex-row items-center px-4 py-3'
+          className='flex-row items-center px-4 py-2.5'
           onPress={() => router.push('/order/warranty/create')}
         >
           <View className='p-2 bg-primary/10 rounded-full'>
@@ -201,7 +201,7 @@ export default function ProfileScreen() {
 
         <Separator />
 
-        <TouchableOpacity className='flex-row items-center px-4 py-3' onPress={() => router.push('/ticket/create')}>
+        <TouchableOpacity className='flex-row items-center px-4 py-2.5' onPress={() => router.push('/ticket/create')}>
           <View className='p-2 bg-primary/10 rounded-full'>
             <Feather name='alert-triangle' size={18} color={PRIMARY_COLOR.LIGHT} />
           </View>
@@ -214,7 +214,7 @@ export default function ProfileScreen() {
 
         <Separator />
 
-        <Pressable className='flex-row items-center px-4 py-3' onPress={toggleColorScheme}>
+        <Pressable className='flex-row items-center px-4 py-2.5' onPress={toggleColorScheme}>
           <View className='p-2 bg-primary/10 rounded-full'>
             <Feather name='moon' size={18} color={PRIMARY_COLOR.LIGHT} />
           </View>

@@ -131,7 +131,7 @@ export default function AppointmentHistoryScreen() {
         contentContainerClassName='pb-20'
         ListEmptyComponent={
           <View className='flex-1 items-center justify-center p-8'>
-            <Text className='text-center text-muted-foreground'>Không tìm thấy lịch hẹn</Text>
+            <Text className='text-center text-muted-foreground text-sm'>Không tìm thấy lịch hẹn</Text>
           </View>
         }
         ListFooterComponent={

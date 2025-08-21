@@ -12,7 +12,7 @@ import { Text } from '~/components/ui/text'
 import RateOrderForm from '~/features/feedback/components/rate-order-form'
 import { useRateOrder } from '~/features/feedback/hooks/use-rate-order'
 import { RateOrderFormSchema } from '~/features/feedback/validations'
-import { useGetOrder } from '~/features/order/hooks/use-get-order'
+import { useGetOrderForFeedback } from '~/features/order/hooks/use-get-order-for-feedback'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function RateOrderScreen() {
@@ -20,7 +20,7 @@ export default function RateOrderScreen() {
   const { methods, rateOrderMutation } = useRateOrder()
   const { orderId } = useLocalSearchParams<{ orderId: string }>()
 
-  const { data: order, isLoading: isLoadingOrder } = useGetOrder(orderId)
+  const { data: order, isLoading: isLoadingOrder } = useGetOrderForFeedback(orderId)
 
   const { fields, append } = useFieldArray({
     control: methods.control,

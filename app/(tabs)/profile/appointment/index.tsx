@@ -319,7 +319,7 @@ export default function AppointmentScreen() {
         }}
         className='absolute top-8 left-2 right-2 z-10 bg-background/50 rounded-2xl overflow-hidden border border-primary/50'
       >
-        <View className='flex-row items-center gap-4 p-4'>
+        <View className='flex-row items-center gap-3 p-4'>
           <View className='flex-row items-center gap-3 flex-1'>
             <TouchableOpacity onPress={handleGoBack}>
               <Feather name='arrow-left' size={24} color='white' />

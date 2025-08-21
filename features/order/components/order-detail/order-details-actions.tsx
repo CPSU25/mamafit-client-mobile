@@ -60,7 +60,7 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
               <DialogTrigger asChild>
                 <TouchableOpacity className='flex-1 flex-row items-center gap-2 justify-center p-2 rounded-xl border border-rose-100 bg-rose-50'>
                   <MaterialCommunityIcons name='cancel' size={16} color='#e11d48' />
-                  <Text className='font-inter-medium text-sm text-rose-600'>G</Text>
+                  <Text className='font-inter-medium text-sm text-rose-600'>Hủy đơn</Text>
                 </TouchableOpacity>
               </DialogTrigger>
 
@@ -74,10 +74,8 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
               >
                 <FormProvider {...methods}>
                   <View className='gap-2'>
-                    <Text className='font-inter-semibold text-xl'>Cancel Order #{orderCode}</Text>
-                    <Text className='text-sm text-muted-foreground'>
-                      This action cannot be undone. Please confirm if you want to cancel the order .
-                    </Text>
+                    <Text className='font-inter-semibold text-xl'>Hủy đơn hàng #{orderCode}</Text>
+                    <Text className='text-sm text-muted-foreground'>Bạn có chắc chắn muốn hủy đơn hàng này không?</Text>
                   </View>
 
                   <CancelOrderForm />
@@ -89,7 +87,7 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
                   >
                     <Feather name='x' size={16} color='#e11d48' />
                     <Text className='text-sm text-rose-600 font-inter-medium'>
-                      {cancelOrderMutation.isPending ? 'Canceling...' : 'Cancel Order'}
+                      {cancelOrderMutation.isPending ? 'Đang hủy...' : 'Hủy đơn'}
                     </Text>
                   </TouchableOpacity>
                 </FormProvider>
@@ -108,7 +106,7 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
             }
           >
             <MaterialCommunityIcons name='credit-card' size={16} color='#059669' />
-            <Text className='text-sm font-inter-medium text-emerald-600'>Pay Now</Text>
+            <Text className='text-sm font-inter-medium text-emerald-600'>Trả tiền</Text>
           </TouchableOpacity>
         </View>
       ) : null}
@@ -126,7 +124,7 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
           }
         >
           <MaterialCommunityIcons name='credit-card' size={16} color='#059669' />
-          <Text className='text-sm font-inter-medium text-emerald-600'>Pay Now</Text>
+          <Text className='text-sm font-inter-medium text-emerald-600'>Trả tiền</Text>
         </TouchableOpacity>
       ) : null}
 
@@ -138,7 +136,7 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
         >
           <MaterialCommunityIcons name='package' size={16} color={PRIMARY_COLOR.LIGHT} />
           <Text className='font-inter-medium text-sm text-primary'>
-            {isReceivingOrder ? 'Receiving...' : 'Receive Order'}
+            {isReceivingOrder ? 'Đang nhận...' : 'Nhận hàng'}
           </Text>
         </TouchableOpacity>
       ) : null}
