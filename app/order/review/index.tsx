@@ -17,6 +17,7 @@ import AddressSelectionModal from '~/features/order/components/address-section/a
 import BranchSelectionModal from '~/features/order/components/address-section/branch/branch-selection-modal'
 import DiarySection from '~/features/order/components/diary-section/diary-section'
 import DiarySelectionModal from '~/features/order/components/diary-section/diary-selection-modal'
+import DressOrderItem from '~/features/order/components/order-summary-section/dress-order-item'
 import OrderSummarySection from '~/features/order/components/order-summary-section/order-summary-section'
 import PresetOrderItem from '~/features/order/components/order-summary-section/preset-order-item'
 import PaymentDetailsSection from '~/features/order/components/payment-details-section/payment-details-section'
@@ -24,18 +25,19 @@ import PaymentMethodsSection from '~/features/order/components/payment-methods-s
 import VouchersSection from '~/features/order/components/vouchers-section/vouchers-section'
 import VouchersSelectionModal from '~/features/order/components/vouchers-section/vouchers-selection-modal'
 import { useGetShippingFee } from '~/features/order/hooks/use-get-shipping-fee'
+import { usePlaceDressOrder } from '~/features/order/hooks/use-place-dress-order'
 import { usePlacePresetOrder } from '~/features/order/hooks/use-place-preset-order'
 import { useReviewOrderQueries } from '~/features/order/hooks/use-review-order-queries'
 import { AddOnOptionItem } from '~/features/order/types'
 import { getOrderItems } from '~/features/order/utils'
-import { PlacePresetOrderFormSchema } from '~/features/order/validations'
+import { useGetDressDetails } from '~/features/preset/hooks/use-get-dress-details'
 import { useGetPresetDetails } from '~/features/preset/hooks/use-get-preset-details'
 import { useAuth } from '~/hooks/use-auth'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { Address } from '~/types/address.type'
 import { Diary } from '~/types/diary.type'
-import { OrderItemTemp, PresetInStorage } from '~/types/order-item.type'
+import { DressInStorage, OrderItemTemp, PresetInStorage } from '~/types/order-item.type'
 import { Branch, DeliveryMethod, OrderItemType, PaymentType } from '~/types/order.type'
 import { FlattenedVoucher, VoucherBatchWithVouchers } from '~/types/voucher.type'
 
@@ -59,7 +61,6 @@ const getDefaultBranch = (branches: Branch[] | null | undefined) => {
 }
 
 const getPaymentDetails = ({
-  orderType,
   price = 0,
   paymentType,
   shippingFee,
@@ -67,7 +68,6 @@ const getPaymentDetails = ({
   addOnOptions,
   depositRate
 }: {
-  orderType: OrderItemType
   price: number
   paymentType: PaymentType
   shippingFee: number
@@ -77,7 +77,7 @@ const getPaymentDetails = ({
 }) => {
   // Original cost (no deposit, no vouchers, no shipping fee)
   // Used to check if this order is able to use voucher that has minimum order value
-  const fullMerchandiseTotal = orderType === OrderItemType.Preset ? price : 0
+  const fullMerchandiseTotal = price
 
   const addOnsSubtotal = addOnOptions.reduce(
     (acc, addOnWithQuantity) => acc + addOnWithQuantity.option.price * addOnWithQuantity.quantity,
@@ -159,22 +159,47 @@ const getPresetPrice = (presetId: string, price: number, orderItems: OrderItemTe
   return price * (presetItem?.quantity || 1)
 }
 
+const getDressPrice = (dressId: string, price: number, orderItems: OrderItemTemp<unknown> | null) => {
+  if (!orderItems) return 0
+
+  const dressItem = (orderItems as OrderItemTemp<DressInStorage>).items[dressId]
+
+  return price * (dressItem?.quantity || 1)
+}
+
 const getAllAddOnOptionsWithQuantities = (
   orderItems: OrderItemTemp<unknown> | null
 ): { option: AddOnOptionItem; quantity: number }[] => {
-  if (!orderItems || orderItems.type !== OrderItemType.Preset) return []
+  if (!orderItems) return []
+  let allAddOnOptions: { option: AddOnOptionItem; quantity: number }[] = []
 
-  const presetItems = orderItems.items as Record<string, PresetInStorage>
-  const allAddOnOptions: { option: AddOnOptionItem; quantity: number }[] = []
+  if (orderItems.type === OrderItemType.Preset) {
+    const presetItems = orderItems.items as Record<string, PresetInStorage>
 
-  Object.values(presetItems).forEach((presetItem) => {
-    presetItem.options.forEach((option) => {
-      allAddOnOptions.push({
-        option,
-        quantity: presetItem.quantity
+    Object.values(presetItems).forEach((presetItem) => {
+      presetItem.options.forEach((option) => {
+        allAddOnOptions.push({
+          option,
+          quantity: presetItem.quantity
+        })
       })
     })
-  })
+
+    return allAddOnOptions
+  }
+
+  if (orderItems.type === OrderItemType.ReadyToBuy) {
+    const dressItems = orderItems.items as Record<string, DressInStorage>
+
+    Object.values(dressItems).forEach((dressItem) => {
+      dressItem.options.forEach((option) => {
+        allAddOnOptions.push({
+          option,
+          quantity: dressItem.quantity
+        })
+      })
+    })
+  }
 
   return allAddOnOptions
 }
@@ -182,13 +207,14 @@ const getAllAddOnOptionsWithQuantities = (
 export default function ReviewOrderScreen() {
   const router = useRouter()
   const { user } = useAuth()
-  const { methods, placePresetOrderMutation } = usePlacePresetOrder(clearOrderItems)
-  const { setValue } = methods
+  const { methods: presetMethods, placePresetOrderMutation } = usePlacePresetOrder(clearOrderItems)
+  const { methods: dressMethods, placeDressOrderMutation } = usePlaceDressOrder(clearOrderItems)
 
-  const deliveryMethod = methods.watch('deliveryMethod')
+  const deliveryMethod1 = presetMethods.watch('deliveryMethod')
+  const deliveryMethod2 = dressMethods.watch('deliveryMethod')
 
   // UI states
-  const [tabValue, setTabValue] = useState<DeliveryMethod>(deliveryMethod)
+  const [tabValue, setTabValue] = useState<DeliveryMethod>(deliveryMethod1 || deliveryMethod2)
   const addressSelectionModalRef = useRef<BottomSheetModal>(null)
   const diarySelectionModalRef = useRef<BottomSheetModal>(null)
   const branchSelectionModalRef = useRef<BottomSheetModal>(null)
@@ -197,14 +223,28 @@ export default function ReviewOrderScreen() {
   // Data from AsyncStorage states
   const [orderItems, setOrderItems] = useState<OrderItemTemp<unknown> | null>(null)
   const [presetIds, setPresetIds] = useState<string[]>([])
+  const [dressIds, setDressIds] = useState<string[]>([])
 
-  // Get form values
-  const addressId = methods.watch('addressId')
-  const diaryId = methods.watch('measurementDiaryId')
-  const branchId = methods.watch('branchId')
-  const voucherId = methods.watch('voucherDiscountId')
-  const paymentType = methods.watch('paymentType')
-  const formPresets = methods.watch('presets')
+  // Determine active form methods based on order type
+  const orderType = orderItems?.type as OrderItemType
+  const activeMethods = (orderType === OrderItemType.Preset ? presetMethods : dressMethods) || presetMethods
+
+  // Get form values (choose from active form)
+  const addressId =
+    orderType === OrderItemType.Preset ? presetMethods.watch('addressId') : dressMethods.watch('addressId')
+  const diaryId = orderType === OrderItemType.Preset ? presetMethods.watch('measurementDiaryId') : undefined
+  const branchId = orderType === OrderItemType.Preset ? presetMethods.watch('branchId') : dressMethods.watch('branchId')
+  const voucherId =
+    orderType === OrderItemType.Preset
+      ? presetMethods.watch('voucherDiscountId')
+      : dressMethods.watch('voucherDiscountId')
+  const paymentType =
+    orderType === OrderItemType.Preset
+      ? (presetMethods.watch('paymentType') as PaymentType)
+      : (dressMethods.watch('paymentType') as PaymentType)
+
+  const formPresets = presetMethods.watch('presets')
+  const formDresses = dressMethods.watch('orderItems')
 
   // Queries to get user addresses, profile and diaries
   const {
@@ -220,9 +260,18 @@ export default function ReviewOrderScreen() {
       isLoading: isLoadingLatestMeasurement,
       isFetched: isFetchedLatestMeasurement
     }
-  } = useReviewOrderQueries(user?.userId, diaryId)
+  } = useReviewOrderQueries(user?.userId, diaryId || '')
 
-  const { presetDetails, isLoading: isLoadingPresetDetails } = useGetPresetDetails(presetIds, Boolean(presetIds.length))
+  const {
+    presetDetails,
+    isLoading: isLoadingPresetDetails,
+    refetch: refetchPresetDetails
+  } = useGetPresetDetails(presetIds, Boolean(presetIds.length))
+  const {
+    dressDetails,
+    isLoading: isLoadingDressDetails,
+    refetch: refetchDressDetails
+  } = useGetDressDetails(dressIds, Boolean(dressIds.length))
 
   // Get default address + active diary for auto selecting
   const defaultAddress = getDefaultAddress(addresses)
@@ -248,10 +297,8 @@ export default function ReviewOrderScreen() {
     refetch: refetchShippingFee,
     isFetched: isFetchedShippingFee
   } = useGetShippingFee({
-    province:
-      deliveryMethod === DeliveryMethod.Delivery ? currentAddress?.province || '' : currentBranch?.province || '',
-    district:
-      deliveryMethod === DeliveryMethod.Delivery ? currentAddress?.district || '' : currentBranch?.district || '',
+    province: tabValue === DeliveryMethod.Delivery ? currentAddress?.province || '' : currentBranch?.province || '',
+    district: tabValue === DeliveryMethod.Delivery ? currentAddress?.district || '' : currentBranch?.district || '',
     weight: 500
   })
 
@@ -264,17 +311,17 @@ export default function ReviewOrderScreen() {
     isLoadingVouchers ||
     isLoadingConfig ||
     isLoadingLatestMeasurement ||
-    isLoadingPresetDetails
+    isLoadingPresetDetails ||
+    isLoadingDressDetails
 
-  const orderType = orderItems?.type as OrderItemType
+  // order type already derived above
 
   const { fullMerchandiseTotal, savedAmount, payableMerchandisePortion, totalPaymentNow, addOnsSubtotal } =
     getPaymentDetails({
-      orderType,
       price:
-        orderType === OrderItemType.Preset
+        orderItems?.type === OrderItemType.Preset
           ? presetDetails.reduce((acc, preset) => acc + getPresetPrice(preset.id, preset.price, orderItems), 0)
-          : 0,
+          : dressDetails?.reduce((acc, dress) => acc + getDressPrice(dress.id, dress.price, orderItems), 0),
       paymentType,
       shippingFee: shippingFee || 0,
       voucher: currentVoucher,
@@ -290,7 +337,9 @@ export default function ReviewOrderScreen() {
     refetchBranches,
     refetchVouchers,
     refetchLatestMeasurement,
-    refetchConfig
+    refetchConfig,
+    refetchPresetDetails,
+    refetchDressDetails
   ])
 
   // Modal handlers
@@ -300,12 +349,11 @@ export default function ReviewOrderScreen() {
 
   const handleSelectAddress = useCallback(
     (addressId: string) => {
-      if (setValue) {
-        setValue('addressId', addressId)
-      }
+      presetMethods.setValue('addressId', addressId)
+      dressMethods.setValue('addressId', addressId)
       addressSelectionModalRef.current?.dismiss()
     },
-    [setValue]
+    [presetMethods, dressMethods]
   )
 
   const handlePresentDiaryModal = useCallback(() => {
@@ -314,12 +362,10 @@ export default function ReviewOrderScreen() {
 
   const handleSelectDiary = useCallback(
     (diaryId: string) => {
-      if (setValue) {
-        setValue('measurementDiaryId', diaryId)
-      }
+      presetMethods.setValue('measurementDiaryId', diaryId)
       diarySelectionModalRef.current?.dismiss()
     },
-    [setValue]
+    [presetMethods]
   )
 
   const handlePresentBranchModal = useCallback(() => {
@@ -328,12 +374,11 @@ export default function ReviewOrderScreen() {
 
   const handleSelectBranch = useCallback(
     (branchId: string) => {
-      if (setValue) {
-        setValue('branchId', branchId)
-      }
+      presetMethods.setValue('branchId', branchId)
+      dressMethods.setValue('branchId', branchId)
       branchSelectionModalRef.current?.dismiss()
     },
-    [setValue]
+    [presetMethods, dressMethods]
   )
 
   const handlePresentVoucherModal = useCallback(() => {
@@ -342,20 +387,18 @@ export default function ReviewOrderScreen() {
 
   const handleSelectVoucher = useCallback(
     (voucherId: string | null) => {
-      if (setValue) {
-        setValue('voucherDiscountId', voucherId)
-      }
+      presetMethods.setValue('voucherDiscountId', voucherId)
+      dressMethods.setValue('voucherDiscountId', voucherId)
       voucherSelectionModalRef.current?.dismiss()
     },
-    [setValue]
+    [presetMethods, dressMethods]
   )
 
   // Tab handler
   const handleSwitchTab = (value: DeliveryMethod) => {
     setTabValue(value)
-    if (setValue) {
-      setValue('deliveryMethod', value)
-    }
+    presetMethods.setValue('deliveryMethod', value)
+    dressMethods.setValue('deliveryMethod', value)
   }
 
   const handleGoBack = async () => {
@@ -369,28 +412,20 @@ export default function ReviewOrderScreen() {
   }
 
   // Place order
-  const onSubmit: SubmitHandler<PlacePresetOrderFormSchema> = (data) => {
+  const onSubmit: SubmitHandler<any> = (data) => {
     if (!currentUserProfile?.phoneNumber) {
       // TODO: create a custom component for toast error
       toast.error('Please add your phone number first')
       return
     }
 
-    console.log({
-      ...data,
-      fullMerchandiseTotal,
-      savedAmount,
-      payableMerchandisePortion,
-      totalPaymentNow,
-      addOnsSubtotal
-    })
-
-    const { measurementDiaryId, ...rest } = data
+    console.log(data)
 
     if (orderType === OrderItemType.Preset) {
+      const { measurementDiaryId, ...rest } = data
       placePresetOrderMutation.mutate(rest)
-    } else {
-      console.log('Not implemented')
+    } else if (orderType === OrderItemType.ReadyToBuy) {
+      placeDressOrderMutation.mutate(data)
     }
   }
 
@@ -399,30 +434,44 @@ export default function ReviewOrderScreen() {
 
     if (!items) return
 
-    // Remove in form
-    const newPresetsForm = formPresets.map((preset) => ({
-      ...preset,
-      options: preset.options.filter((option) => option.addOnOptionId !== addOnOptionId)
-    }))
+    if (items.type === OrderItemType.Preset) {
+      // Remove in form
+      const newPresetsForm = (formPresets as any[]).map((preset: any) => ({
+        ...preset,
+        options: preset.options.filter((option: any) => option.addOnOptionId !== addOnOptionId)
+      }))
+      presetMethods.setValue('presets', newPresetsForm)
 
-    setValue('presets', newPresetsForm)
+      // Remove in Storage
+      const presetItems = items.items as Record<string, PresetInStorage>
+      const preset = presetItems[presetId]
+      const newOptions = preset.options.filter((option) => option.addOnOptionId !== addOnOptionId)
+      preset.options = newOptions
+    }
 
-    // Remove in Storage
-    const presetItems = items.items as Record<string, PresetInStorage>
-    const preset = presetItems[presetId]
-    const newOptions = preset.options.filter((option) => option.addOnOptionId !== addOnOptionId)
-    preset.options = newOptions
+    if (items.type === OrderItemType.ReadyToBuy) {
+      // Remove in form
+      const newDressForm = (formDresses as any[]).map((dress: any) => ({
+        ...dress,
+        options: dress.options.filter((option: any) => option.addOnOptionId !== addOnOptionId)
+      }))
+      dressMethods.setValue('orderItems', newDressForm)
+
+      // Remove in Storage
+      const dressItems = items.items as Record<string, DressInStorage>
+      const dress = dressItems[presetId]
+      const newOptions = dress.options.filter((option) => option.addOnOptionId !== addOnOptionId)
+      dress.options = newOptions
+    }
 
     await AsyncStorage.setItem('order-items', JSON.stringify(items))
-
-    // Update order items state to trigger recalculation
     setOrderItems(items)
   }
 
-  // Set preset to form
+  // Set data to form
   useFocusEffect(
     useCallback(() => {
-      const getPreset = async () => {
+      const getOrderItemsFromStorage = async () => {
         const items = await getOrderItems()
 
         if (!items) {
@@ -443,52 +492,73 @@ export default function ReviewOrderScreen() {
             }))
           }))
 
-          setValue('presets', newPresetsForm)
+          presetMethods.setValue('presets', newPresetsForm)
           const presetIds = Object.keys(presetItems)
           setPresetIds(presetIds)
         }
+
+        if (items.type === OrderItemType.ReadyToBuy) {
+          const dressItems = items.items as Record<string, DressInStorage>
+          const newDressForm = Object.values(dressItems).map((dress) => ({
+            maternityDressDetailId: dress.maternityDressDetailId,
+            quantity: dress.quantity,
+            options: dress.options.map((opt) => ({
+              addOnOptionId: opt.addOnOptionId,
+              value: opt.value
+            }))
+          }))
+
+          dressMethods.setValue('orderItems', newDressForm)
+          const dressIds = Object.keys(dressItems)
+          setDressIds(dressIds)
+        }
       }
 
-      getPreset()
-    }, [router, setValue])
+      getOrderItemsFromStorage()
+    }, [router, presetMethods, dressMethods])
   )
 
   // Set latest measurement to form
   useEffect(() => {
-    if (isFetchedLatestMeasurement && latestMeasurement && setValue && diaryId) {
-      setValue('measurementId', latestMeasurement.id)
+    if (isFetchedLatestMeasurement && latestMeasurement && diaryId) {
+      presetMethods.setValue('measurementId', latestMeasurement.id)
     }
-  }, [isFetchedLatestMeasurement, latestMeasurement, setValue, diaryId])
+  }, [isFetchedLatestMeasurement, latestMeasurement, presetMethods, diaryId])
 
   // Set default address to form if delivery method is delivery
   useEffect(() => {
-    if (isFetchedAddresses && defaultAddress?.id && setValue && deliveryMethod === DeliveryMethod.Delivery) {
-      setValue('addressId', defaultAddress.id)
-      setValue('branchId', null)
+    if (isFetchedAddresses && defaultAddress?.id && tabValue === DeliveryMethod.Delivery) {
+      presetMethods.setValue('addressId', defaultAddress.id)
+      presetMethods.setValue('branchId', null)
+      dressMethods.setValue('addressId', defaultAddress.id)
+      dressMethods.setValue('branchId', null)
     }
-  }, [isFetchedAddresses, defaultAddress, setValue, deliveryMethod])
+  }, [isFetchedAddresses, defaultAddress, tabValue, presetMethods, dressMethods])
 
   // Set default branch to form if delivery method is pick up
   useEffect(() => {
-    if (isFetchedBranches && defaultBranch?.id && setValue && deliveryMethod === DeliveryMethod.PickUp) {
-      setValue('branchId', defaultBranch.id)
-      setValue('addressId', null)
+    if (isFetchedBranches && defaultBranch?.id && tabValue === DeliveryMethod.PickUp) {
+      presetMethods.setValue('branchId', defaultBranch.id)
+      presetMethods.setValue('addressId', null)
+      dressMethods.setValue('branchId', defaultBranch.id)
+      dressMethods.setValue('addressId', null)
     }
-  }, [isFetchedBranches, defaultBranch, setValue, deliveryMethod])
+  }, [isFetchedBranches, defaultBranch, tabValue, presetMethods, dressMethods])
 
   // Set active diary to form
   useEffect(() => {
-    if (isFetchedDiaries && activeDiary?.id && setValue) {
-      setValue('measurementDiaryId', activeDiary.id)
+    if (isFetchedDiaries && activeDiary?.id) {
+      presetMethods.setValue('measurementDiaryId', activeDiary.id)
     }
-  }, [isFetchedDiaries, activeDiary, setValue])
+  }, [isFetchedDiaries, activeDiary, presetMethods])
 
   // Set shipping fee to form
   useEffect(() => {
-    if (isFetchedShippingFee && shippingFee && setValue) {
-      setValue('shippingFee', shippingFee)
+    if (isFetchedShippingFee && shippingFee) {
+      presetMethods.setValue('shippingFee', shippingFee)
+      dressMethods.setValue('shippingFee', shippingFee)
     }
-  }, [isFetchedShippingFee, shippingFee, setValue])
+  }, [isFetchedShippingFee, shippingFee, presetMethods, dressMethods])
 
   const renderOrderSummaryContent = () => {
     if (!orderItems) {
@@ -521,7 +591,32 @@ export default function ReviewOrderScreen() {
       )
     }
 
-    // TODO: Handle other order types here
+    if (orderType === OrderItemType.ReadyToBuy && dressIds.length && dressDetails) {
+      return (
+        <View>
+          {dressDetails.map((dress, index) => {
+            const quantity = (orderItems.items[dress.id] as DressInStorage)?.quantity || 1
+            const dressItems = orderItems.items as Record<string, DressInStorage>
+
+            return (
+              <React.Fragment key={dress.id}>
+                <DressOrderItem
+                  dress={dress}
+                  dressOptions={dressItems[dress.id].options}
+                  onRemoveAddOnOption={removeAddOnOption}
+                  iconSize={SMALL_ICON_SIZE}
+                  quantity={quantity}
+                />
+                {index !== dressDetails.length - 1 ? (
+                  <View className='border-b border-dashed border-muted-foreground/30 my-1' />
+                ) : null}
+              </React.Fragment>
+            )
+          })}
+        </View>
+      )
+    }
+
     return (
       <View className='flex items-center justify-center min-h-60 px-6'>
         <MaterialCommunityIcons name='package-variant' size={48} color='#E5E7EB' />
@@ -557,13 +652,13 @@ export default function ReviewOrderScreen() {
         </View>
 
         <BottomSheetModalProvider>
-          <FormProvider {...methods}>
+          <FormProvider {...(activeMethods as any)}>
             <ScrollView
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{ paddingBottom: 56 }}
               refreshControl={refreshControl}
             >
-              <View className='flex flex-col gap-4 p-2 flex-1'>
+              <View className='flex flex-col gap-3 p-2 flex-1'>
                 {/* Address Section */}
                 <Animated.View entering={FadeInDown.delay(100)}>
                   <AddressSection
@@ -581,15 +676,17 @@ export default function ReviewOrderScreen() {
                 </Animated.View>
 
                 {/* Diary Section */}
-                <Animated.View entering={FadeInDown.delay(200)}>
-                  <DiarySection
-                    isLoading={isLoadingDiaries}
-                    diary={currentDiary}
-                    handlePresentDiaryModal={handlePresentDiaryModal}
-                    latestMeasurement={latestMeasurement}
-                    iconSize={SMALL_ICON_SIZE}
-                  />
-                </Animated.View>
+                {orderType === OrderItemType.Preset ? (
+                  <Animated.View entering={FadeInDown.delay(200)}>
+                    <DiarySection
+                      isLoading={isLoadingDiaries}
+                      diary={currentDiary}
+                      handlePresentDiaryModal={handlePresentDiaryModal}
+                      latestMeasurement={latestMeasurement}
+                      iconSize={SMALL_ICON_SIZE}
+                    />
+                  </Animated.View>
+                ) : null}
 
                 {/* Order Summary Section */}
                 <Animated.View entering={FadeInDown.delay(300)}>
@@ -615,7 +712,12 @@ export default function ReviewOrderScreen() {
 
                 {/* Payment Methods Section */}
                 <Animated.View entering={FadeInDown.delay(500)}>
-                  <PaymentMethodsSection iconSize={SMALL_ICON_SIZE} depositRate={config?.depositRate || 0} />
+                  <PaymentMethodsSection
+                    iconSize={SMALL_ICON_SIZE}
+                    depositRate={config?.depositRate || 0}
+                    orderType={orderType}
+                    paymentType={paymentType}
+                  />
                 </Animated.View>
 
                 <Animated.View entering={FadeInDown.delay(600)} className='gap-2'>
@@ -662,11 +764,11 @@ export default function ReviewOrderScreen() {
                 </Text>
               </View>
               <Button
-                onPress={methods.handleSubmit(onSubmit)}
-                disabled={placePresetOrderMutation.isPending || isLoading}
+                onPress={activeMethods.handleSubmit(onSubmit)}
+                disabled={placePresetOrderMutation.isPending || placeDressOrderMutation.isPending || isLoading}
               >
                 <Text className='font-inter-medium'>
-                  {placePresetOrderMutation.isPending ? 'Đang đặt...' : 'Đặt hàng'}
+                  {placePresetOrderMutation.isPending || placeDressOrderMutation.isPending ? 'Đang đặt...' : 'Đặt hàng'}
                 </Text>
               </Button>
             </View>
@@ -690,7 +792,7 @@ export default function ReviewOrderScreen() {
               />
             ) : null}
 
-            {branches && Array.isArray(branches) && deliveryMethod === DeliveryMethod.PickUp ? (
+            {branches && Array.isArray(branches) && tabValue === DeliveryMethod.PickUp ? (
               <BranchSelectionModal
                 ref={branchSelectionModalRef}
                 branches={branches}

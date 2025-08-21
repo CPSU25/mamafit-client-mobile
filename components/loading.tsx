@@ -6,7 +6,7 @@ export default function Loading() {
   return (
     <SafeView>
       <View className='flex-1 items-center justify-center'>
-        <ActivityIndicator size='large' color={PRIMARY_COLOR.LIGHT} />
+        <ActivityIndicator size='small' color={PRIMARY_COLOR.LIGHT} />
       </View>
     </SafeView>
   )

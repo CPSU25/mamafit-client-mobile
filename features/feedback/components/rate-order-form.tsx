@@ -101,7 +101,7 @@ export default function RateOrderForm({ orderItem, index }: RateOrderFormProps) 
             <View className='flex-1 h-20 justify-between'>
               <View>
                 <Text className='text-sm font-inter-medium' numberOfLines={1}>
-                  {orderItem?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
+                  {orderItem?.preset?.name || 'Váy bầu tùy chỉnh'}
                 </Text>
 
                 <View className='flex-row items-center gap-2'>
@@ -231,7 +231,7 @@ export default function RateOrderForm({ orderItem, index }: RateOrderFormProps) 
             <View className='flex-1 h-20 justify-between'>
               <View>
                 <Text className='text-sm font-inter-medium' numberOfLines={1}>
-                  {orderItem?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
+                  {orderItem?.preset?.name || 'Váy bầu tùy chỉnh'}
                 </Text>
 
                 <View className='flex-row items-center gap-2'>
@@ -369,9 +369,7 @@ export default function RateOrderForm({ orderItem, index }: RateOrderFormProps) 
                 </Text>
 
                 <View className='flex-row items-center gap-2'>
-                  <Text className='text-xs text-muted-foreground flex-1'>
-                    {orderItem?.designRequest?.description || 'Váy Bầu Tùy Chỉnh'}
-                  </Text>
+                  <Text className='text-xs text-muted-foreground flex-1'>{orderItem?.designRequest?.description}</Text>
                 </View>
               </View>
               <View className='items-end'>

@@ -12,7 +12,7 @@ export interface PresetInStorage {
   options: AddOnOptionItem[]
 }
 
-export interface ReadyToBuyInStorage {
+export interface DressInStorage {
   maternityDressDetailId: string
   quantity: number
   options: AddOnOptionItem[]

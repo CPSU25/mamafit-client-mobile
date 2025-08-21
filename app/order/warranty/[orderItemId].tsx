@@ -192,7 +192,7 @@ export default function ViewWarrantyHistory() {
                     <View className='flex-1 h-20 justify-between'>
                       <View>
                         <Text className='text-sm font-inter-medium' numberOfLines={1}>
-                          {generalStats.parentOrder?.order?.items?.[0]?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
+                          {generalStats.parentOrder?.order?.items?.[0]?.preset?.styleName || 'Không có kiểu'}
                         </Text>
 
                         <View className='flex-row items-center gap-2'>

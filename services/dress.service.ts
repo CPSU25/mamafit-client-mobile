@@ -1,6 +1,6 @@
 import { api } from '~/lib/axios/axios'
 import { BasePaginationResponse, BaseResponse, Style } from '~/types/common'
-import { Dress, DressDetail } from '~/types/dress.type'
+import { Dress, DressDetail, DressVariant } from '~/types/dress.type'
 import { Feedback } from '~/types/feedback.type'
 
 class DressService {
@@ -16,6 +16,12 @@ class DressService {
 
   async getDress(dressId: string) {
     const { data } = await api.get<BaseResponse<DressDetail>>(`maternity-dress/${dressId}`)
+
+    return data.data
+  }
+
+  async getDressDetail(dressDetailId: string) {
+    const { data } = await api.get<BaseResponse<DressVariant>>(`maternity-dress-detail/${dressDetailId}`)
 
     return data.data
   }

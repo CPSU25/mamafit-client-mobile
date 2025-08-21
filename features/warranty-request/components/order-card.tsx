@@ -59,9 +59,7 @@ export default function OrderCard({
           </View>
           <View className='flex-1 h-20 justify-between'>
             <View>
-              <Text className='native:text-sm font-inter-medium'>
-                {orderItem?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
-              </Text>
+              <Text className='native:text-sm font-inter-medium'>{orderItem?.preset?.name || 'Váy bầu tùy chỉnh'}</Text>
               <Text className='native:text-xs text-muted-foreground'>SKU: {orderItem?.preset?.sku}</Text>
             </View>
             <View className='flex-row items-center gap-2'>

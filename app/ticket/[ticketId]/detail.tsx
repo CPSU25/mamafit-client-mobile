@@ -54,11 +54,11 @@ export default function ViewTicketDetailScreen() {
               <View className='flex-1 h-20 justify-between pr-2'>
                 <View>
                   <Text className='native:text-sm font-inter-medium'>
-                    {ticket?.order?.items?.[0]?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
+                    {ticket?.order?.items?.[0]?.preset?.name || 'Váy bầu tùy chỉnh'}
                   </Text>
                   <View className='flex-row items-center justify-between'>
                     <Text className='native:text-xs text-muted-foreground'>
-                      {ticket?.order?.items?.[0]?.preset?.styleName ? 'Váy Bầu Tùy Chỉnh' : 'Váy Bầu Tùy Chỉnh'}
+                      {ticket?.order?.items?.[0]?.preset?.styleName || 'Không có kiểu'}
                     </Text>
                     <Text className='native:text-xs text-muted-foreground'>
                       x{ticket?.order?.items?.[0]?.quantity || 1}

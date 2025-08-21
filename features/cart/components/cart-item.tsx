@@ -128,7 +128,7 @@ export default function CartItem({ item, setSelectedItems, selectedItems }: Cart
         <View className='flex-1'>
           <View className='flex-1'>
             <Text className='font-inter-medium pr-4' numberOfLines={1}>
-              {item.preset?.name || 'Không có tên'}
+              {item.preset?.name || 'Váy bầu tùy chỉnh'}
             </Text>
             <Text className='text-xs text-muted-foreground'>{item.preset?.styleName || 'Không có kiểu'}</Text>
           </View>
@@ -220,7 +220,7 @@ export default function CartItem({ item, setSelectedItems, selectedItems }: Cart
         <View className='flex-1'>
           <View className='flex-1'>
             <Text className='font-inter-medium pr-4' numberOfLines={1}>
-              {item.maternityDressDetail?.name || 'Không có tên'}
+              {item.maternityDressDetail?.name || 'Váy có sẵn'}
             </Text>
             <Text className='text-xs text-muted-foreground'>
               Phân loại: {item.maternityDressDetail?.color} - {item.maternityDressDetail?.size}
