@@ -48,7 +48,7 @@ export default function PaymentDetailsSection({
 
         {savedAmount > 0 ? (
           <View className='flex-row items-baseline'>
-            <Text className='text-xs text-muted-foreground flex-1'>Giảm Giá</Text>
+            <Text className='text-xs text-muted-foreground flex-1'>Giảm giá</Text>
             <Text className='text-xs text-primary'>
               -<Text className='underline text-xs text-primary'>đ</Text>
               {savedAmount.toLocaleString('vi-VN')}
@@ -68,7 +68,7 @@ export default function PaymentDetailsSection({
 
         {addOnsSubtotal > 0 && addOnsCount > 0 ? (
           <View className='flex-row items-baseline'>
-            <Text className='text-xs text-muted-foreground flex-1'>Phụ Kiện ({addOnsCount})</Text>
+            <Text className='text-xs text-muted-foreground flex-1'>Phí dịch vụ thêm ({addOnsCount})</Text>
             <Text className='text-xs text-muted-foreground'>
               <Text className='underline text-xs text-muted-foreground'>đ</Text>
               {addOnsSubtotal.toLocaleString('vi-VN')}

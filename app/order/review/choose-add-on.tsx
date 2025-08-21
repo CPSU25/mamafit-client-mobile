@@ -18,7 +18,7 @@ import { getOrderItems, getValidPair, transformAddOns, transformOptions } from '
 import { selectAddOnOptionFormSchema, SelectAddOnOptionFormSchema } from '~/features/order/validations'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
-import { OrderItemTemp, PresetInStorage } from '~/types/order-item.type'
+import { DressInStorage, OrderItemTemp, PresetInStorage } from '~/types/order-item.type'
 import { OrderItemType } from '~/types/order.type'
 
 export default function ChooseAddOnScreen() {
@@ -56,42 +56,45 @@ export default function ChooseAddOnScreen() {
 
     if (!orderItems) return
 
+    const validPair = getValidPair(optionDetail, data.positionId, data.sizeId, data.type)
+    if (!validPair) return
+
+    const addOnOption: AddOnOptionItem = {
+      addOnOptionId: validPair.id,
+      name: validPair.name,
+      sizeName: data.sizeName,
+      positionName: data.positionName,
+      value: data.value,
+      type: data.type,
+      price: validPair.price,
+      positionId: validPair.positionId,
+      sizeId: data.sizeId
+    }
+
     if (orderItems.type === OrderItemType.Preset && type === OrderItemType.Preset) {
-      let presetOrderItem = orderItems as OrderItemTemp<PresetInStorage>
-
+      const presetOrderItem = orderItems as OrderItemTemp<PresetInStorage>
       const preset = presetOrderItem.items[itemId as string]
-
-      if (preset.presetId === itemId) {
-        const validPair = getValidPair(optionDetail, data.positionId, data.sizeId, data.type)
-
-        if (!validPair) {
-          return
-        }
-
-        const addOnOption: AddOnOptionItem = {
-          addOnOptionId: validPair.id,
-          name: validPair.name,
-          sizeName: data.sizeName,
-          positionName: data.positionName,
-          value: data.value,
-          type: data.type,
-          price: validPair.price,
-          positionId: validPair.positionId,
-          sizeId: data.sizeId
-        }
-
-        // Prevent duplicated options on the same position
+      if (preset?.presetId === itemId) {
         const filteredOptions = preset.options.filter(
           (option) => option.addOnOptionId !== addOnOption.addOnOptionId && option.positionId !== addOnOption.positionId
         )
-
-        const updatedPreset = {
-          ...preset,
-          options: [...filteredOptions, addOnOption]
-        }
-        presetOrderItem.items[itemId as string] = updatedPreset
-
+        presetOrderItem.items[itemId as string] = { ...preset, options: [...filteredOptions, addOnOption] }
         await AsyncStorage.setItem('order-items', JSON.stringify(presetOrderItem))
+        router.back()
+      }
+      return
+    }
+
+    if (orderItems.type === OrderItemType.ReadyToBuy && type === OrderItemType.ReadyToBuy) {
+      const dressOrderItem = orderItems as OrderItemTemp<DressInStorage>
+      const dress = dressOrderItem.items[itemId as string]
+      if (dress?.maternityDressDetailId === itemId) {
+        const filteredOptions = dress.options.filter(
+          (option: AddOnOptionItem) =>
+            option.addOnOptionId !== addOnOption.addOnOptionId && option.positionId !== addOnOption.positionId
+        )
+        dressOrderItem.items[itemId as string] = { ...dress, options: [...filteredOptions, addOnOption] }
+        await AsyncStorage.setItem('order-items', JSON.stringify(dressOrderItem))
         router.back()
       }
     }

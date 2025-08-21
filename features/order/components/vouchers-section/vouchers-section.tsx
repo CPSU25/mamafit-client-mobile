@@ -23,7 +23,7 @@ export default function VouchersSection({ iconSize, voucher, onPress, savedAmoun
             <Text className='font-inter-medium text-sm'>MamaFit Vouchers</Text>
           </View>
           <View className='flex flex-row items-center gap-1'>
-            <Text className='text-xs text-muted-foreground'>Xem Tất Cả</Text>
+            <Text className='text-xs text-muted-foreground'>Xem tất cả</Text>
             <Feather name='chevron-right' size={20} color='lightgray' />
           </View>
         </View>

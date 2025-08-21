@@ -17,6 +17,7 @@ import DesignRequestInformation from '~/features/order/components/order-detail/d
 import DesignRequestOrderItem from '~/features/order/components/order-detail/design-request-order-item'
 import DesignerInformation from '~/features/order/components/order-detail/designer-information'
 import DiaryInformation from '~/features/order/components/order-detail/diary-information'
+import DressOrderItem from '~/features/order/components/order-detail/dress-order-item'
 import OrderDetails from '~/features/order/components/order-detail/order-details'
 import OrderDetailsActions from '~/features/order/components/order-detail/order-details-actions'
 import PresetOrderItem from '~/features/order/components/order-detail/preset-order-item'
@@ -104,6 +105,11 @@ export default function ViewOrderDetailScreen() {
 
   const isWarrantyOrder = useMemo(
     () => Boolean(order && orderItemTypeSet[0] === OrderItemType.Warranty),
+    [order, orderItemTypeSet]
+  )
+
+  const isReadyToBuyOrder = useMemo(
+    () => Boolean(order && orderItemTypeSet[0] === OrderItemType.ReadyToBuy),
     [order, orderItemTypeSet]
   )
 
@@ -396,6 +402,22 @@ export default function ViewOrderDetailScreen() {
                               {index !== order?.items?.length - 1 ? <Separator /> : null}
                             </View>
                           ))}
+                    </View>
+                  ) : null}
+
+                  {isReadyToBuyOrder ? (
+                    <View className='gap-2'>
+                      {order?.items?.map((orderItem, index) => (
+                        <View key={orderItem.id}>
+                          <DressOrderItem
+                            orderItem={orderItem}
+                            dress={orderItem.maternityDressDetail}
+                            dressOptions={orderItem.addOnOptions}
+                            quantity={orderItem.quantity}
+                          />
+                          {index !== order?.items?.length - 1 ? <Separator /> : null}
+                        </View>
+                      ))}
                     </View>
                   ) : null}
 

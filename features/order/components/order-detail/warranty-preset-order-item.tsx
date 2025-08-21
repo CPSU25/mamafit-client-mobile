@@ -75,7 +75,7 @@ export default function WarrantyPresetOrderItem({
         <View className='flex-1 h-20 justify-between'>
           <View>
             <Text className='text-sm font-inter-medium' numberOfLines={1}>
-              {preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
+              {preset?.name || 'Váy bầu tùy chỉnh'}
             </Text>
             <View className='flex-row items-center gap-2'>
               <Text className='text-xs text-muted-foreground flex-1'>{preset?.sku ? `SKU: ${preset?.sku}` : ''}</Text>

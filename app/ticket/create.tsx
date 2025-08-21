@@ -132,11 +132,11 @@ export default function CreateTicketScreen() {
                       <View className='flex-1 h-20 justify-between pr-2'>
                         <View>
                           <Text className='native:text-sm font-inter-medium'>
-                            {selectedOrderItem?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
+                            {selectedOrderItem?.preset?.name || 'Váy bầu tùy chỉnh'}
                           </Text>
                           <View className='flex-row items-center justify-between'>
                             <Text className='native:text-xs text-muted-foreground'>
-                              {selectedOrderItem?.preset?.styleName ? 'Váy Bầu Tùy Chỉnh' : 'Váy Bầu Tùy Chỉnh'}
+                              {selectedOrderItem?.preset?.styleName || 'Không có kiểu'}
                             </Text>
                             <Text className='native:text-xs text-muted-foreground'>
                               x{selectedOrderItem?.quantity || 1}

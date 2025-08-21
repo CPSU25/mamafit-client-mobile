@@ -16,7 +16,7 @@ import { useAuth } from '~/hooks/use-auth'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { ICON_SIZE, PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
-import { PresetInStorage, ReadyToBuyInStorage } from '~/types/order-item.type'
+import { DressInStorage, PresetInStorage } from '~/types/order-item.type'
 import { OrderItemType } from '~/types/order.type'
 
 export interface SelectedItem {
@@ -40,6 +40,10 @@ export default function CartScreen() {
   const isLoading = isLoadingCart || isLoadingAuth
 
   const orderItemTypeSet = useMemo(() => [...new Set(cart?.map((item) => item.type) || [])], [cart])
+  const selectedItemsTypeSet = useMemo(
+    () => [...new Set(selectedItems?.map((item) => item.type) || [])],
+    [selectedItems]
+  )
 
   useEffect(() => {
     if (cart && Array.isArray(cart) && cart.length > 0) {
@@ -82,9 +86,7 @@ export default function CartScreen() {
   }
 
   const handleCheckOut = async () => {
-    if (orderItemTypeSet.length > 1) return
-
-    if (orderItemTypeSet[0] === OrderItemType.Preset) {
+    if (selectedItemsTypeSet[0] === OrderItemType.Preset) {
       await AsyncStorage.setItem(
         'order-items',
         JSON.stringify({
@@ -104,7 +106,7 @@ export default function CartScreen() {
       )
     }
 
-    if (orderItemTypeSet[0] === OrderItemType.ReadyToBuy) {
+    if (selectedItemsTypeSet[0] === OrderItemType.ReadyToBuy) {
       await AsyncStorage.setItem(
         'order-items',
         JSON.stringify({
@@ -118,7 +120,7 @@ export default function CartScreen() {
               }
               return acc
             },
-            {} as Record<string, ReadyToBuyInStorage>
+            {} as Record<string, DressInStorage>
           )
         })
       )

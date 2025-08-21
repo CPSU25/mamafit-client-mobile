@@ -79,7 +79,7 @@ const VouchersSelectionModal = forwardRef<BottomSheetModal, VouchersSelectionMod
           />
         )}
       >
-        <Text className='text-xl font-inter-semibold text-center'>Chọn Mã Giảm Giá</Text>
+        <Text className='text-xl font-inter-medium text-center'>Chọn mã giảm giá</Text>
         <BottomSheetFlatList
           data={vouchers}
           keyExtractor={(voucher) => voucher.voucherId}

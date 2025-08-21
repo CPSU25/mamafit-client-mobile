@@ -5,40 +5,60 @@ import { Card } from '~/components/ui/card'
 import { Label } from '~/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
 import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
-import { PaymentType } from '~/types/order.type'
-import { PlacePresetOrderFormSchema } from '../../validations'
+import { OrderItemType, PaymentType } from '~/types/order.type'
+import { PlaceDressOrderFormSchema, PlacePresetOrderFormSchema } from '../../validations'
 
 interface PaymentMethodsSectionProps {
   iconSize: number
   depositRate: number
+  orderType: OrderItemType
+  paymentType: PaymentType
 }
 
-export default function PaymentMethodsSection({ iconSize, depositRate }: PaymentMethodsSectionProps) {
-  const { control } = useFormContext<PlacePresetOrderFormSchema>()
+export default function PaymentMethodsSection({
+  iconSize,
+  depositRate,
+  orderType,
+  paymentType
+}: PaymentMethodsSectionProps) {
+  const { control, setValue } = useFormContext<PlacePresetOrderFormSchema | PlaceDressOrderFormSchema>()
 
   return (
     <Card className='p-3' style={[styles.container]}>
       <Controller
         control={control}
         name='paymentType'
-        render={({ field: { value, onChange } }) => (
-          <RadioGroup value={value} onValueChange={(val) => onChange(val as PaymentType)} className='gap-3'>
-            <RadioGroupItemWithLabel
-              value='FULL'
-              onPress={() => onChange('FULL')}
-              label='Thanh toán hết (Ngân hàng)'
-              description='Thanh toán đầy đủ đơn hàng'
-              icon={<MaterialCommunityIcons name='credit-card-check' size={iconSize} color={PRIMARY_COLOR.LIGHT} />}
-            />
-            <RadioGroupItemWithLabel
-              value='DEPOSIT'
-              onPress={() => onChange('DEPOSIT')}
-              label={`Đặt cọc ${depositRate * 100}% (Ngân hàng)`}
-              description={`Thanh toán ${depositRate * 100}% của tổng số tiền`}
-              icon={<MaterialCommunityIcons name='credit-card-clock' size={iconSize} color={PRIMARY_COLOR.LIGHT} />}
-            />
-          </RadioGroup>
-        )}
+        render={({ field: { onChange } }) => {
+          const handlePaymentTypeChange = (newPaymentType: PaymentType) => {
+            onChange(newPaymentType)
+            setValue('paymentType', newPaymentType)
+          }
+
+          return (
+            <RadioGroup
+              value={paymentType}
+              onValueChange={(val) => handlePaymentTypeChange(val as PaymentType)}
+              className='gap-3'
+            >
+              <RadioGroupItemWithLabel
+                value={PaymentType.Full}
+                onPress={() => handlePaymentTypeChange(PaymentType.Full)}
+                label='Thanh toán hết (Ngân hàng)'
+                description='Thanh toán đầy đủ đơn hàng'
+                icon={<MaterialCommunityIcons name='credit-card-check' size={iconSize} color={PRIMARY_COLOR.LIGHT} />}
+              />
+              {orderType === OrderItemType.Preset ? (
+                <RadioGroupItemWithLabel
+                  value={PaymentType.Deposit}
+                  onPress={() => handlePaymentTypeChange(PaymentType.Deposit)}
+                  label={`Đặt cọc ${depositRate * 100}% (Ngân hàng)`}
+                  description={`Thanh toán ${depositRate * 100}% của tổng số tiền`}
+                  icon={<MaterialCommunityIcons name='credit-card-clock' size={iconSize} color={PRIMARY_COLOR.LIGHT} />}
+                />
+              ) : null}
+            </RadioGroup>
+          )
+        }}
       />
     </Card>
   )

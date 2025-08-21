@@ -32,7 +32,7 @@ export default function PresetOrderItem({
   const hasOptions = presetOptions && Array.isArray(presetOptions) && presetOptions.length > 0
 
   return (
-    <View className='p-3 gap-2'>
+    <View className='p-3 gap-3'>
       <View className='flex-row items-center gap-4'>
         <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
           <Image source={{ uri: presetImage }} className='w-full h-full' resizeMode='contain' />
@@ -40,11 +40,9 @@ export default function PresetOrderItem({
 
         <View className='flex-1 h-20 justify-between'>
           <View>
-            <Text className='native:text-sm font-inter-medium'>{preset?.styleName || 'Váy Bầu Tùy Chỉnh'}</Text>
+            <Text className='native:text-sm font-inter-medium'>{preset?.name || 'Váy bầu tùy chỉnh'}</Text>
             <View className='flex-row items-center justify-between'>
-              <Text className='native:text-xs text-muted-foreground'>
-                {preset?.styleName ? 'Made-to-Order Custom Style' : 'Tailored Just for You'}
-              </Text>
+              <Text className='native:text-xs text-muted-foreground'>{preset?.styleName || 'Không có kiểu'}</Text>
               <Text className='native:text-xs text-muted-foreground'>x{quantity || 1}</Text>
             </View>
           </View>
@@ -57,9 +55,9 @@ export default function PresetOrderItem({
         </View>
       </View>
 
-      <View className='gap-2'>
+      <View className='gap-3'>
         {componentOptions && componentOptions.length > 0 ? (
-          <View className='bg-muted/50 rounded-xl p-3 gap-2 mt-2'>
+          <View className='bg-muted/50 rounded-xl p-3 gap-2'>
             {getOrderedComponentOptions(componentOptions).map((option) =>
               option ? (
                 <View className='flex-row items-center justify-between' key={option.componentName}>
@@ -71,7 +69,7 @@ export default function PresetOrderItem({
           </View>
         ) : null}
 
-        <View className='bg-blue-50 rounded-2xl p-1'>
+        <View className='bg-blue-50 rounded-xl p-1'>
           <TouchableOpacity
             onPress={() => router.push(`/order/review/choose-add-on?itemId=${preset.id}&type=${OrderItemType.Preset}`)}
           >
@@ -107,7 +105,9 @@ export default function PresetOrderItem({
                 className='flex-row items-center gap-2 justify-center py-2'
               >
                 <Feather name='plus' size={iconSize} color='#2563eb' />
-                <Text className='native:text-sm text-blue-600 font-inter-medium'>Thêm ({presetOptions.length})</Text>
+                <Text className='native:text-sm text-blue-600 font-inter-medium'>
+                  Thêm dịch vụ({presetOptions.length})
+                </Text>
               </TouchableOpacity>
             </>
           ) : null}

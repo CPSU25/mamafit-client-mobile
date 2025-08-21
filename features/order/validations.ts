@@ -13,10 +13,15 @@ export const presetFormSchema = z.object({
   options: z.array(addOnOptionFormSchema)
 })
 
+export const dressFormSchema = z.object({
+  maternityDressDetailId: z.string().min(1, { message: 'Maternity dress detail is required' }),
+  quantity: z.number().min(1, { message: 'Quantity is required' }),
+  options: z.array(addOnOptionFormSchema)
+})
+
 // Schema for preset order placement
 export const placePresetOrderFormSchema = z
   .object({
-    presets: z.array(presetFormSchema),
     addressId: z.string().nullable(),
     branchId: z.string().nullable(),
     shippingFee: z.number().min(0, { message: 'Shipping fee is required' }),
@@ -26,7 +31,8 @@ export const placePresetOrderFormSchema = z
     isOnline: z.boolean(),
     paymentMethod: z.enum([PaymentMethod.Cash, PaymentMethod.OnlineBanking]),
     paymentType: z.enum([PaymentType.Full, PaymentType.Deposit]),
-    deliveryMethod: z.enum([DeliveryMethod.Delivery, DeliveryMethod.PickUp])
+    deliveryMethod: z.enum([DeliveryMethod.Delivery, DeliveryMethod.PickUp]),
+    presets: z.array(presetFormSchema)
   })
   .superRefine((data, ctx) => {
     if (data.deliveryMethod === DeliveryMethod.Delivery && !data.addressId) {
@@ -54,6 +60,19 @@ export const placePresetOrderFormSchema = z
       })
     }
   })
+
+// Schema for ready to buy order placement
+export const placeDressOrderFormSchema = z.object({
+  addressId: z.string().nullable(),
+  branchId: z.string().nullable(),
+  shippingFee: z.number().min(0, { message: 'Shipping fee is required' }),
+  voucherDiscountId: z.string().nullable(),
+  isOnline: z.boolean(),
+  paymentMethod: z.enum([PaymentMethod.Cash, PaymentMethod.OnlineBanking]),
+  paymentType: z.enum([PaymentType.Full, PaymentType.Deposit]),
+  deliveryMethod: z.enum([DeliveryMethod.Delivery, DeliveryMethod.PickUp]),
+  orderItems: z.array(dressFormSchema)
+})
 
 // Schema for design request order placement
 export const placeDesignRequestOrderFormSchema = z.object({
@@ -91,6 +110,7 @@ export const cancelOrderFormSchema = z.object({
 
 export type AddOnOptionFormSchema = z.infer<typeof addOnOptionFormSchema>
 export type PlacePresetOrderFormSchema = z.infer<typeof placePresetOrderFormSchema>
+export type PlaceDressOrderFormSchema = z.infer<typeof placeDressOrderFormSchema>
 export type PlaceDesignRequestOrderFormSchema = z.infer<typeof placeDesignRequestOrderFormSchema>
 export type SelectAddOnOptionFormSchema = z.infer<typeof selectAddOnOptionFormSchema>
 export type CancelOrderFormSchema = z.infer<typeof cancelOrderFormSchema>

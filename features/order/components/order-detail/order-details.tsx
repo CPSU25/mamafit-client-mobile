@@ -54,7 +54,7 @@ export default function OrderDetails({
 
       <View className='gap-1 px-3 pb-3'>
         <View className='flex-row items-center gap-2'>
-          <Text className='flex-1 text-xs text-muted-foreground/80'>Mã đơn hàng</Text>
+          <Text className='flex-1 text-xs text-muted-foreground/80'>Mã đơn</Text>
           <Text className='text-foreground/80 text-xs'>#{orderCode}</Text>
         </View>
 
@@ -87,7 +87,7 @@ export default function OrderDetails({
 
             {serviceAmount ? (
               <View className='flex-row items-center gap-2'>
-                <Text className='flex-1 text-xs text-muted-foreground/80'>Phí dịch vụ</Text>
+                <Text className='flex-1 text-xs text-muted-foreground/80'>Phí dịch vụ thêm</Text>
                 <Text className='text-foreground/80 text-xs'>
                   đ{serviceAmount > 0 ? serviceAmount.toLocaleString('vi-VN') : '0'}
                 </Text>
@@ -96,7 +96,7 @@ export default function OrderDetails({
 
             {voucherDiscountId && discountSubtotal ? (
               <View className='flex-row items-center gap-2'>
-                <Text className='flex-1 text-xs text-muted-foreground/80'>Giảm Giá Voucher</Text>
+                <Text className='flex-1 text-xs text-muted-foreground/80'>Giảm giá</Text>
                 <Text className='text-foreground/80 text-xs'>
                   đ{discountSubtotal > 0 ? discountSubtotal.toLocaleString('vi-VN') : '0'}
                 </Text>
