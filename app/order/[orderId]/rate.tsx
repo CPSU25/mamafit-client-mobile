@@ -1,5 +1,5 @@
-import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { useEffect } from 'react'
 import { FormProvider, SubmitHandler, useFieldArray } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
@@ -8,11 +8,12 @@ import Animated, { FadeInDown } from 'react-native-reanimated'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import RateOrderForm from '~/features/feedback/components/rate-order-form'
 import { useRateOrder } from '~/features/feedback/hooks/use-rate-order'
 import { RateOrderFormSchema } from '~/features/feedback/validations'
-import { useGetOrder } from '~/features/order/hooks/use-get-order'
+import { useGetOrderForFeedback } from '~/features/order/hooks/use-get-order-for-feedback'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function RateOrderScreen() {
@@ -20,7 +21,7 @@ export default function RateOrderScreen() {
   const { methods, rateOrderMutation } = useRateOrder()
   const { orderId } = useLocalSearchParams<{ orderId: string }>()
 
-  const { data: order, isLoading: isLoadingOrder } = useGetOrder(orderId)
+  const { data: order, isLoading: isLoadingOrder } = useGetOrderForFeedback(orderId)
 
   const { fields, append } = useFieldArray({
     control: methods.control,
@@ -62,7 +63,7 @@ export default function RateOrderScreen() {
     <SafeView>
       <View className='flex flex-row items-center gap-3 px-4 pt-4'>
         <TouchableOpacity onPress={handleGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='font-inter-medium text-xl'>Đánh giá đơn hàng</Text>
       </View>

@@ -1,9 +1,10 @@
-import { Feather } from '@expo/vector-icons'
 import { format } from 'date-fns'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import React from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import SafeView from '~/components/safe-view'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { useGetDiaryDetail } from '~/features/diary/hooks/use-get-diary-detail'
 import { useColorScheme } from '~/hooks/use-color-scheme'
@@ -100,7 +101,7 @@ export default function DiarySettingScreen() {
       <View className='flex flex-row items-center justify-between p-4'>
         <View className='flex flex-row items-center gap-3'>
           <TouchableOpacity onPress={handleGoBack}>
-            <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
           <Text className='font-inter-medium text-xl'>Cài đặt</Text>
         </View>

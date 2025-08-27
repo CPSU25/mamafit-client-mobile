@@ -1,9 +1,10 @@
-import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { PlusCircle, Search } from 'lucide-react-native'
 import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { useDebounce } from 'use-debounce'
 import SafeView from '~/components/safe-view'
+import { Icon } from '~/components/ui/icon'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import DiariesList from '~/features/diary/components/lists/diaries-list'
@@ -20,7 +21,7 @@ export default function DiaryScreen() {
       <View className='flex flex-row justify-between items-center p-4'>
         <Text className='text-xl font-inter-medium'>Nhật ký mang thai</Text>
         <TouchableOpacity onPress={() => router.push('/diary/create')}>
-          <Feather name='plus' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={PlusCircle} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>
       <View className='bg-muted h-2' />
@@ -29,7 +30,7 @@ export default function DiaryScreen() {
       <Input
         className='mx-4 mt-4'
         placeholder='Tìm kiếm'
-        StartIcon={<Feather name='search' size={24} color={PRIMARY_COLOR.LIGHT} />}
+        StartIcon={<Icon as={Search} size={20} color={PRIMARY_COLOR.LIGHT} />}
         value={nameSearch}
         onChangeText={setNameSearch}
       />

@@ -26,9 +26,7 @@ export const SlideItem: React.FC<Props> = (props) => {
 
   return (
     <Animated.View testID={testID} style={{ flex: 1 }} {...animatedViewProps}>
-      <TouchableOpacity
-        style={{ overflow: 'hidden', borderRadius: 16, boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.3)' }}
-      >
+      <TouchableOpacity style={[{ overflow: 'hidden' }, rounded && { borderRadius: 16 }]}>
         <Animated.Image
           style={[style, rounded && { borderRadius: 16 }, { width: '100%', height: '100%' }]}
           source={source}

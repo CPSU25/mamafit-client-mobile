@@ -1,9 +1,10 @@
-import { Feather } from '@expo/vector-icons'
+import { ChevronLeft, ChevronRight } from 'lucide-react-native'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, useWindowDimensions, View } from 'react-native'
 import { LineChart } from 'react-native-gifted-charts'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { useGetDiaryDetail } from '~/features/diary/hooks/use-get-diary-detail'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
@@ -127,10 +128,10 @@ export default function WeightOverTimeChart({ currentWeekData, diaryId, onRefetc
         {/* Navigation Buttons */}
         <View className='flex flex-row items-center gap-2'>
           <Button size='icon' variant='outline' onPress={() => handleNavigation('prev')}>
-            <Feather name='chevron-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={ChevronLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
           </Button>
           <Button size='icon' variant='outline' onPress={() => handleNavigation('next')}>
-            <Feather name='chevron-right' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={ChevronRight} size={24} color={PRIMARY_COLOR.LIGHT} />
           </Button>
         </View>
       </View>

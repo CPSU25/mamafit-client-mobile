@@ -1,13 +1,14 @@
-import { Feather } from '@expo/vector-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import AddOnsList from '~/features/order/components/add-on-section/add-ons-list'
 import AddOptionForm from '~/features/order/components/add-on-section/add-option-form'
@@ -18,7 +19,7 @@ import { getOrderItems, getValidPair, transformAddOns, transformOptions } from '
 import { selectAddOnOptionFormSchema, SelectAddOnOptionFormSchema } from '~/features/order/validations'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
-import { OrderItemTemp, PresetInStorage } from '~/types/order-item.type'
+import { DressInStorage, OrderItemTemp, PresetInStorage } from '~/types/order-item.type'
 import { OrderItemType } from '~/types/order.type'
 
 export default function ChooseAddOnScreen() {
@@ -56,42 +57,45 @@ export default function ChooseAddOnScreen() {
 
     if (!orderItems) return
 
+    const validPair = getValidPair(optionDetail, data.positionId, data.sizeId, data.type)
+    if (!validPair) return
+
+    const addOnOption: AddOnOptionItem = {
+      addOnOptionId: validPair.id,
+      name: validPair.name,
+      sizeName: data.sizeName,
+      positionName: data.positionName,
+      value: data.value,
+      type: data.type,
+      price: validPair.price,
+      positionId: validPair.positionId,
+      sizeId: data.sizeId
+    }
+
     if (orderItems.type === OrderItemType.Preset && type === OrderItemType.Preset) {
-      let presetOrderItem = orderItems as OrderItemTemp<PresetInStorage>
-
+      const presetOrderItem = orderItems as OrderItemTemp<PresetInStorage>
       const preset = presetOrderItem.items[itemId as string]
-
-      if (preset.presetId === itemId) {
-        const validPair = getValidPair(optionDetail, data.positionId, data.sizeId, data.type)
-
-        if (!validPair) {
-          return
-        }
-
-        const addOnOption: AddOnOptionItem = {
-          addOnOptionId: validPair.id,
-          name: validPair.name,
-          sizeName: data.sizeName,
-          positionName: data.positionName,
-          value: data.value,
-          type: data.type,
-          price: validPair.price,
-          positionId: validPair.positionId,
-          sizeId: data.sizeId
-        }
-
-        // Prevent duplicated options on the same position
+      if (preset?.presetId === itemId) {
         const filteredOptions = preset.options.filter(
           (option) => option.addOnOptionId !== addOnOption.addOnOptionId && option.positionId !== addOnOption.positionId
         )
-
-        const updatedPreset = {
-          ...preset,
-          options: [...filteredOptions, addOnOption]
-        }
-        presetOrderItem.items[itemId as string] = updatedPreset
-
+        presetOrderItem.items[itemId as string] = { ...preset, options: [...filteredOptions, addOnOption] }
         await AsyncStorage.setItem('order-items', JSON.stringify(presetOrderItem))
+        router.back()
+      }
+      return
+    }
+
+    if (orderItems.type === OrderItemType.ReadyToBuy && type === OrderItemType.ReadyToBuy) {
+      const dressOrderItem = orderItems as OrderItemTemp<DressInStorage>
+      const dress = dressOrderItem.items[itemId as string]
+      if (dress?.maternityDressDetailId === itemId) {
+        const filteredOptions = dress.options.filter(
+          (option: AddOnOptionItem) =>
+            option.addOnOptionId !== addOnOption.addOnOptionId && option.positionId !== addOnOption.positionId
+        )
+        dressOrderItem.items[itemId as string] = { ...dress, options: [...filteredOptions, addOnOption] }
+        await AsyncStorage.setItem('order-items', JSON.stringify(dressOrderItem))
         router.back()
       }
     }
@@ -163,7 +167,7 @@ export default function ChooseAddOnScreen() {
     <SafeView>
       <View className='flex-row items-center gap-3 p-4'>
         <TouchableOpacity onPress={handleGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='font-inter-medium text-xl'>{getScreenTitle()}</Text>
       </View>

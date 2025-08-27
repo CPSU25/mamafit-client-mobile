@@ -53,7 +53,7 @@ export default function OrdersList({ currentStatus }: OrdersListProps) {
       ListFooterComponent={
         isFetchingNextPage ? (
           <View className='py-4'>
-            <ActivityIndicator size='large' color={PRIMARY_COLOR.LIGHT} />
+            <ActivityIndicator size='small' color={PRIMARY_COLOR.LIGHT} />
           </View>
         ) : null
       }

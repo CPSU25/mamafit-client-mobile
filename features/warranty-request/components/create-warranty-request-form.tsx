@@ -96,12 +96,10 @@ export default function CreateWarrantyRequestForm({ index, orderItem }: CreateWa
         </View>
         <View className='flex-1 h-20 justify-between pr-2'>
           <View>
-            <Text className='native:text-sm font-inter-medium'>
-              {orderItem?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
-            </Text>
+            <Text className='native:text-sm font-inter-medium'>{orderItem?.preset?.name || 'Váy bầu tùy chỉnh'}</Text>
             <View className='flex-row items-center justify-between'>
               <Text className='native:text-xs text-muted-foreground'>
-                {orderItem?.preset?.styleName ? 'Váy Bầu Tùy Chỉnh' : 'Váy Bầu Tùy Chỉnh'}
+                {orderItem?.preset?.styleName || 'Không có kiểu'}
               </Text>
               <Text className='native:text-xs text-muted-foreground'>x{orderItem?.quantity || 1}</Text>
             </View>

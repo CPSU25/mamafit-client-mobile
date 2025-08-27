@@ -1,12 +1,13 @@
-import { Feather } from '@expo/vector-icons'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormProvider, SubmitHandler, useFieldArray } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import { WarningCard } from '~/components/ui/alert-card'
+import { Icon } from '~/components/ui/icon'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
 import PreviewAddressCard from '~/features/order/components/address-section/address/preview-address-card'
@@ -179,8 +180,8 @@ export default function CreateWarrantyRequestScreen() {
           {!currentUserProfile?.phoneNumber ? (
             <TouchableOpacity onPress={() => router.push('/setting/account')}>
               <WarningCard
-                title='Oops! No phone number found'
-                description='Please add your phone number first'
+                title='Oops! Không tìm thấy số điện thoại'
+                description='Vui lòng thêm số điện thoại của bạn trước'
                 hasAnimation={false}
               />
             </TouchableOpacity>
@@ -197,8 +198,8 @@ export default function CreateWarrantyRequestScreen() {
       return (
         <TouchableOpacity onPress={() => router.push('/setting/my-addresses/create')}>
           <WarningCard
-            title='Oops! No address found'
-            description='Please add your address first to select this delivery method'
+            title='Oops! Không tìm thấy địa chỉ'
+            description='Vui lòng thêm địa chỉ của bạn trước để chọn phương thức giao hàng này'
           />
         </TouchableOpacity>
       )
@@ -206,8 +207,8 @@ export default function CreateWarrantyRequestScreen() {
   }
 
   const selectedWarrantyType = useMemo(() => {
-    return getWarrantyType(selectedOrderItems, orderRequests, config?.warrantyPeriod ?? 0)
-  }, [selectedOrderItems, orderRequests, config?.warrantyPeriod])
+    return getWarrantyType(selectedOrderItems, orderRequests, config?.warrantyPeriod ?? 0, config?.warrantyTime ?? 0)
+  }, [selectedOrderItems, orderRequests, config?.warrantyPeriod, config?.warrantyTime])
 
   if (isLoading) {
     return <Loading />
@@ -217,7 +218,7 @@ export default function CreateWarrantyRequestScreen() {
     <SafeView>
       <View className='flex flex-row items-center gap-3 p-4'>
         <TouchableOpacity onPress={handleGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='font-inter-medium text-xl'>Dịch vụ bảo hành</Text>
       </View>

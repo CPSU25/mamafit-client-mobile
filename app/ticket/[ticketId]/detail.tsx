@@ -1,9 +1,10 @@
-import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { VideoThumbnail } from '~/components/ui/video-picker'
 import { useGetTicket } from '~/features/ticket/hooks/use-get-ticket'
@@ -35,7 +36,7 @@ export default function ViewTicketDetailScreen() {
     <SafeView>
       <View className='flex flex-row items-center gap-2 p-4 bg-background'>
         <TouchableOpacity onPress={handleGoBack} className='p-1'>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='font-inter-semibold text-xl text-foreground'>Thông Tin Hỗ Trợ</Text>
       </View>
@@ -54,11 +55,11 @@ export default function ViewTicketDetailScreen() {
               <View className='flex-1 h-20 justify-between pr-2'>
                 <View>
                   <Text className='native:text-sm font-inter-medium'>
-                    {ticket?.order?.items?.[0]?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
+                    {ticket?.order?.items?.[0]?.preset?.name || 'Váy bầu tùy chỉnh'}
                   </Text>
                   <View className='flex-row items-center justify-between'>
                     <Text className='native:text-xs text-muted-foreground'>
-                      {ticket?.order?.items?.[0]?.preset?.styleName ? 'Váy Bầu Tùy Chỉnh' : 'Váy Bầu Tùy Chỉnh'}
+                      {ticket?.order?.items?.[0]?.preset?.styleName || 'Không có kiểu'}
                     </Text>
                     <Text className='native:text-xs text-muted-foreground'>
                       x{ticket?.order?.items?.[0]?.quantity || 1}

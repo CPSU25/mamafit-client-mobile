@@ -38,9 +38,7 @@ const OrderItemRow = ({
         </View>
         <View className='flex-1 h-20 justify-between pr-2'>
           <View>
-            <Text className='native:text-sm font-inter-medium'>
-              {orderItem?.preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
-            </Text>
+            <Text className='native:text-sm font-inter-medium'>{orderItem?.preset?.name || 'Váy bầu tùy chỉnh'}</Text>
             <Text className='native:text-xs text-muted-foreground'>SKU: {orderItem?.preset?.sku}</Text>
           </View>
           <View className='items-end'>
@@ -64,7 +62,7 @@ const OrderCard = ({
   return (
     <Card style={styles.container}>
       <View className='flex-row items-center gap-2 p-2'>
-        <Text className='native:text-sm font-inter-medium flex-1 pl-1'>Đơn Hàng #{order.code}</Text>
+        <Text className='native:text-sm font-inter-medium flex-1 pl-1'>Đơn hàng #{order.code}</Text>
       </View>
 
       <Separator />
@@ -85,7 +83,7 @@ const OrderCard = ({
       <View className='flex-row items-center gap-2 p-3'>
         <Text className='flex-1 text-xs text-muted-foreground/80'>Nhận hàng</Text>
         <Text className='text-foreground/80 text-xs'>
-          {order?.receivedAt ? format(new Date(order.receivedAt), "MMM dd, yyyy 'at' hh:mm a") : 'N/A'}
+          {order?.receivedAt ? format(new Date(order.receivedAt), "MMM dd, yyyy 'lúc' hh:mm a") : 'N/A'}
         </Text>
       </View>
     </Card>

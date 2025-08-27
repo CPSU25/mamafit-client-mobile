@@ -1,8 +1,9 @@
-import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
+import { ArrowLeft } from 'lucide-react-native'
 import { useMemo, useState } from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
+import { Icon } from '~/components/ui/icon'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Text } from '~/components/ui/text'
 import RegisterStep from '~/features/auth/components/register-step'
@@ -47,7 +48,7 @@ export default function AuthScreen() {
   const renderHeader = () => (
     <View className='top-16 left-4 flex flex-col gap-8'>
       <TouchableOpacity onPress={handleGoBack} className='w-10 h-10 flex items-center justify-center'>
-        <Feather name='arrow-left' size={24} color='white' />
+        <Icon as={ArrowLeft} size={24} color='white' />
       </TouchableOpacity>
 
       <View className='flex flex-col items-start'>
@@ -74,12 +75,8 @@ export default function AuthScreen() {
 
       {renderHeader()}
 
-      <View className='mt-24 flex-1 bg-background rounded-t-3xl p-4 pt-6'>
-        <Tabs
-          value={tabValue}
-          onValueChange={setTabValue}
-          className='w-full max-w-[400px] mx-auto flex-1 flex flex-col gap-3'
-        >
+      <View className='mt-24 flex-1 bg-background rounded-t-3xl px-4 pt-4'>
+        <Tabs value={tabValue} onValueChange={setTabValue} className='w-full max-w-[400px] flex-1 flex flex-col gap-3'>
           <TabsList className='flex-row w-full'>
             <TabsTrigger value='sign-in' className='flex-1'>
               <Text>Đăng nhập</Text>

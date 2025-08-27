@@ -17,7 +17,8 @@ export const calculateWarrantyStatus = (receivedAt: string, period: number) => {
 export const getWarrantyType = (
   selectedOrderItems: OrderItem[] | null,
   orderRequests: Order[] | null | undefined,
-  warrantyPeriod: number
+  warrantyPeriod: number,
+  warrantyTime: number
 ): 'free' | 'expired' | null => {
   if (!selectedOrderItems || selectedOrderItems.length === 0) return null
 
@@ -29,19 +30,23 @@ export const getWarrantyType = (
   if (!owningOrder?.receivedAt) return null
 
   const { isFree } = calculateWarrantyStatus(owningOrder.receivedAt, warrantyPeriod)
-  return isFree ? 'free' : 'expired'
+  const hasFreeRequests = (firstSelected?.warrantyRound ?? 0) < warrantyTime
+
+  return isFree && hasFreeRequests ? 'free' : 'expired'
 }
 
 export const canSelectOrderItem = (
   orderItem: OrderItem,
   selectedWarrantyType: 'free' | 'expired' | null,
   receivedAt: string,
-  warrantyPeriod: number
+  warrantyPeriod: number,
+  warrantyTime: number
 ): boolean => {
   if (selectedWarrantyType === null) return true
 
   const { isFree } = calculateWarrantyStatus(receivedAt, warrantyPeriod)
-  const currentItemType = isFree ? 'free' : 'expired'
+  const hasFreeRequests = (orderItem?.warrantyRound ?? 0) < warrantyTime
+  const currentItemType = isFree && hasFreeRequests ? 'free' : 'expired'
 
   return selectedWarrantyType === currentItemType
 }

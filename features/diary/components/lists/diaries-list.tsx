@@ -1,9 +1,10 @@
-import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { PlusCircle } from 'lucide-react-native'
 import { ActivityIndicator, FlatList, Pressable, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import Loading from '~/components/loading'
 import { Button } from '~/components/ui/button'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { useGetDiaries } from '~/features/diary/hooks/use-get-diaries'
 import { useRefreshs } from '~/hooks/use-refresh'
@@ -27,6 +28,7 @@ export default function DiariesList({ nameSearch }: { nameSearch: string }) {
   return (
     <FlatList
       data={diaries?.pages.flatMap((page) => page.items)}
+      keyExtractor={(item) => item.id}
       renderItem={({ item, index }) => (
         <Animated.View entering={FadeInDown.duration(200).delay(index * 50)}>
           <Pressable
@@ -56,7 +58,7 @@ export default function DiariesList({ nameSearch }: { nameSearch: string }) {
               className='mt-8 flex flex-row items-center gap-2'
               onPress={() => router.push('/diary/create')}
             >
-              <Feather name='plus' size={16} color='white' />
+              <Icon as={PlusCircle} size={16} color='white' />
               <Text className='font-inter-medium'>Tạo Nhật Ký</Text>
             </Button>
           </View>

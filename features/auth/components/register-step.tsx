@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons'
+import { Lock, Mail, Phone } from 'lucide-react-native'
 import { useEffect } from 'react'
 import {
   Control,
@@ -14,6 +14,7 @@ import { OtpInput } from 'react-native-otp-entry'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import FieldError from '~/components/field-error'
 import { Button } from '~/components/ui/button'
+import { Icon } from '~/components/ui/icon'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import { useCountDown } from '~/hooks/use-count-down'
@@ -180,7 +181,7 @@ interface SendCodeProps {
 
 function SendCode({ control, errors, isSendingCode, next, bottom }: SendCodeProps) {
   return (
-    <View className='flex-1 flex flex-col gap-4 mt-6'>
+    <View className='flex-1 flex flex-col gap-4'>
       <Controller
         control={control}
         name='phoneNumber'
@@ -191,7 +192,7 @@ function SendCode({ control, errors, isSendingCode, next, bottom }: SendCodeProp
             onChangeText={onChange}
             placeholder='Số điện thoại'
             keyboardType='phone-pad'
-            StartIcon={<Feather name='phone' size={20} color={PRIMARY_COLOR.LIGHT} />}
+            StartIcon={<Icon as={Phone} size={20} color={PRIMARY_COLOR.LIGHT} />}
             autoFocus
             spellCheck={false}
             className={isFormError(errors, 'phoneNumber') ? 'border-rose-500' : ''}
@@ -207,7 +208,7 @@ function SendCode({ control, errors, isSendingCode, next, bottom }: SendCodeProp
             value={value}
             onChangeText={onChange}
             placeholder='Email'
-            StartIcon={<Feather name='mail' size={20} color={PRIMARY_COLOR.LIGHT} />}
+            StartIcon={<Icon as={Mail} size={20} color={PRIMARY_COLOR.LIGHT} />}
             spellCheck={false}
             className={isFormError(errors, 'email') ? 'border-rose-500' : ''}
           />
@@ -336,7 +337,7 @@ function CreatePassword({
             value={value}
             onChangeText={onChange}
             placeholder='Nhập mật khẩu'
-            StartIcon={<Feather name='lock' size={20} color={PRIMARY_COLOR.LIGHT} />}
+            StartIcon={<Icon as={Lock} size={20} color={PRIMARY_COLOR.LIGHT} />}
             autoFocus
             spellCheck={false}
             secureTextEntry

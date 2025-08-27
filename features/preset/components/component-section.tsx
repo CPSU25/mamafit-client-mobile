@@ -1,13 +1,14 @@
-import { Feather } from '@expo/vector-icons'
+import { CircleCheckBig } from 'lucide-react-native'
 import { useEffect } from 'react'
 import { Control, Controller, FieldValues, Path, UseFormSetValue } from 'react-hook-form'
 import { Image, TouchableOpacity, View } from 'react-native'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '~/components/ui/accordion'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { useGetComponentsByStyleId } from '~/features/component/hooks/use-get-components'
+import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { cn, getOrderedComponentsWithOptions } from '~/lib/utils'
 import { useGetDefaultPreset } from '../hooks/use-get-default-preset'
-import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 interface ComponentSectionProps<T extends FieldValues> {
   control: Control<T>
@@ -74,8 +75,8 @@ export default function ComponentSection<T extends FieldValues>({
                         <Image source={{ uri: option.images[0] }} className='w-16 h-16 rounded-xl' />
                         <Text className='native:text-xs text-center'>{option.name}</Text>
                         {option.id === value && (
-                          <Feather
-                            name='check-circle'
+                          <Icon
+                            as={CircleCheckBig}
                             size={16}
                             color={PRIMARY_COLOR.LIGHT}
                             className='absolute top-2 left-2'

@@ -1,9 +1,10 @@
-import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import * as React from 'react'
 import { FlatList, TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import ChatRoom from '~/features/chat/components/chat-room'
@@ -32,9 +33,9 @@ export default function ChatScreen() {
       <View className='flex-1'>
         <View className='flex flex-row items-center gap-3 p-4'>
           <TouchableOpacity onPress={handleGoBack}>
-            <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
-          <Text className='font-inter-medium text-xl'>Trò Chuyện</Text>
+          <Text className='font-inter-medium text-xl'>Trò chuyện</Text>
         </View>
 
         <View className='bg-muted h-2' />

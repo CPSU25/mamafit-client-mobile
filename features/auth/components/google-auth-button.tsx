@@ -48,7 +48,7 @@ export default function GoogleAuthButton() {
   return (
     <Button
       variant='outline'
-      className='flex flex-row items-start justify-center gap-2'
+      className='flex flex-row items-center justify-center gap-2'
       onPress={signIn}
       disabled={isSigningInWithGoogle}
     >

@@ -1,10 +1,11 @@
-import { Feather } from '@expo/vector-icons'
 import { format } from 'date-fns'
 import { useRouter } from 'expo-router'
+import { ArrowLeft, ImageIcon, Video } from 'lucide-react-native'
 import { FlatList, TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { useGetTickets } from '~/features/ticket/hooks/use-get-tickets'
@@ -34,7 +35,7 @@ export default function ViewTicketHistoryScreen() {
     <SafeView>
       <View className='flex flex-row items-center gap-2 p-4 bg-background'>
         <TouchableOpacity onPress={handleGoBack} className='p-1'>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='font-inter-medium text-xl text-foreground'>Lịch sử hỗ trợ</Text>
       </View>
@@ -71,7 +72,7 @@ export default function ViewTicketHistoryScreen() {
                   ) : null}
                 </View>
                 <Text className='text-[9px] text-muted-foreground'>
-                  {format(new Date(item.createdAt), "MMM dd, yyyy 'at' hh:mm a")}
+                  {format(new Date(item.createdAt), "MMM dd, yyyy 'lúc' hh:mm a")}
                 </Text>
               </View>
 
@@ -88,13 +89,13 @@ export default function ViewTicketHistoryScreen() {
                 </View>
                 <View className='flex-row items-center gap-4'>
                   <View className='items-center gap-1'>
-                    <Feather name='video' size={18} color={PRIMARY_COLOR.LIGHT} />
+                    <Icon as={Video} size={18} color={PRIMARY_COLOR.LIGHT} />
                     <Text className='text-[8px] text-muted-foreground font-inter-medium'>
                       {item.videos.length} Video
                     </Text>
                   </View>
                   <View className='items-center gap-1'>
-                    <Feather name='image' size={18} color={PRIMARY_COLOR.LIGHT} />
+                    <Icon as={ImageIcon} size={18} color={PRIMARY_COLOR.LIGHT} />
                     <Text className='text-[8px] text-muted-foreground font-inter-medium'>{item.images.length} Ảnh</Text>
                   </View>
                 </View>
@@ -112,7 +113,7 @@ export default function ViewTicketHistoryScreen() {
         contentContainerClassName='gap-4 p-4'
         ListEmptyComponent={
           <View className='flex-1 items-center justify-center p-8'>
-            <Text className='text-center text-muted-foreground'>Không tìm thấy lịch sử hỗ trợ</Text>
+            <Text className='text-center text-muted-foreground text-sm'>Không tìm thấy lịch sử hỗ trợ</Text>
           </View>
         }
       />

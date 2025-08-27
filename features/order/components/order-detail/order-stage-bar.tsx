@@ -273,7 +273,7 @@ export default function OrderStageBar({
                 </View>
                 {milestone?.milestone.name === 'Order Placed' ? (
                   <Text className='text-[10px] text-muted-foreground/50 text-right'>
-                    {orderPlacedAt ? format(new Date(orderPlacedAt), "MMM dd, yyyy 'at' hh:mm a") : null}
+                    {orderPlacedAt ? format(new Date(orderPlacedAt), "MMM dd, yyyy 'lúc' hh:mm a") : null}
                   </Text>
                 ) : milestone.progress === 100 && milestone.isDone ? (
                   <MaterialCommunityIcons name='check' size={16} color='lightgray' />

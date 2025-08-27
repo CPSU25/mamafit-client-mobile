@@ -1,8 +1,9 @@
-import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import SafeView from '~/components/safe-view'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import OrdersList from '~/features/order/components/orders-list'
 import { ORDER_STATUS_TYPES } from '~/features/order/constants'
@@ -77,9 +78,9 @@ export default function OrdersByStatusScreen() {
     <SafeView>
       <View className='flex flex-row items-center gap-3 p-4'>
         <TouchableOpacity onPress={handleGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-medium text-xl'>Đơn hàng của tôi</Text>
+        <Text className='font-inter-medium text-xl'>Đơn mua</Text>
       </View>
 
       <View className='px-4 pt-2'>

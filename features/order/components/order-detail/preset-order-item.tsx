@@ -39,15 +39,15 @@ export default function PresetOrderItem({
   }, [milestones])
 
   return (
-    <View className='gap-2 p-3'>
-      <View className='flex-row items-start gap-2'>
+    <View className='gap-3 p-3'>
+      <View className='flex-row items-start gap-3'>
         <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
           <Image source={{ uri: preset?.images?.[0] }} className='w-full h-full' resizeMode='contain' />
         </View>
         <View className='flex-1 h-20 justify-between'>
           <View>
             <Text className='text-sm font-inter-medium' numberOfLines={1}>
-              {preset?.styleName || 'Váy Bầu Tùy Chỉnh'}
+              {preset?.name || 'Váy bầu tùy chỉnh'}
             </Text>
 
             <View className='flex-row items-center gap-2'>
@@ -77,7 +77,7 @@ export default function PresetOrderItem({
               {option.itemServiceType === 'PATTERN' && (
                 <Image source={require('~/assets/icons/pattern.png')} className='w-8 h-8' />
               )}
-              <View className='flex-1'>
+              <View className='flex-1 ml-1'>
                 <Text className='native:text-sm font-inter-medium' numberOfLines={1}>
                   {option.name}{' '}
                   {option.itemServiceType === 'TEXT' && (

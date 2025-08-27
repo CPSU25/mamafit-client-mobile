@@ -1,6 +1,8 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { ChevronRight } from 'lucide-react-native'
 import { TouchableOpacity, View } from 'react-native'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
 import { FlattenedVoucher } from '~/types/voucher.type'
@@ -23,8 +25,8 @@ export default function VouchersSection({ iconSize, voucher, onPress, savedAmoun
             <Text className='font-inter-medium text-sm'>MamaFit Vouchers</Text>
           </View>
           <View className='flex flex-row items-center gap-1'>
-            <Text className='text-xs text-muted-foreground'>Xem Tất Cả</Text>
-            <Feather name='chevron-right' size={20} color='lightgray' />
+            <Text className='text-xs text-muted-foreground'>Xem tất cả</Text>
+            <Icon as={ChevronRight} size={20} color='lightgray' />
           </View>
         </View>
         {voucher && <PreviewVoucherCard voucher={voucher} savedAmount={savedAmount} />}

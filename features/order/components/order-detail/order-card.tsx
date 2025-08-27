@@ -1,10 +1,12 @@
-import { Feather, MaterialIcons } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { XCircle } from 'lucide-react-native'
 import { useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { Image, TouchableOpacity, useWindowDimensions, View } from 'react-native'
 import { Card } from '~/components/ui/card'
 import { Dialog, DialogContent, DialogTrigger } from '~/components/ui/dialog'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
@@ -58,7 +60,9 @@ export default function OrderCard({ order }: OrderCardProps) {
     return <Text>Invalid Order</Text>
   }
 
-  return (
+  return isLoadingFeedbackStatus ? (
+    <Skeleton className='h-72 rounded-2xl bg-background' />
+  ) : (
     <TouchableOpacity
       onPress={() =>
         router.push({
@@ -71,34 +75,32 @@ export default function OrderCard({ order }: OrderCardProps) {
     >
       <Card className='overflow-hidden'>
         {/* Tag Section */}
-        <View className='p-2'>
-          <View className='flex-row items-center gap-2 flex-wrap'>
-            {order.type === OrderType.Warranty ? (
-              <View className='px-3 py-1.5 bg-blue-50 rounded-lg flex-row items-center gap-1.5'>
-                <MaterialIcons name='safety-check' size={14} color='#2563eb' />
-                <Text className='text-xs text-blue-600 font-inter-medium'>Đơn bảo hành</Text>
-              </View>
-            ) : null}
+        <View className='flex-row items-center gap-2 flex-wrap p-2'>
+          {order.type === OrderType.Warranty ? (
+            <View className='px-3 py-1.5 bg-blue-50 rounded-lg flex-row items-center gap-1.5'>
+              <MaterialIcons name='safety-check' size={14} color='#2563eb' />
+              <Text className='text-xs text-blue-600 font-inter-medium'>Bảo hành</Text>
+            </View>
+          ) : null}
 
-            {orderItemTypeSet.map((type, index) => (
-              <View
-                key={index}
-                className={cn(
-                  'px-3 py-1.5 rounded-xl flex-row items-center gap-1.5',
-                  getOrderItemTypeStyle(type).tagColor
-                )}
-              >
-                <MaterialIcons
-                  name={getOrderItemTypeStyle(type).icon}
-                  size={14}
-                  color={getOrderItemTypeStyle(type).iconColor}
-                />
-                <Text className={cn('text-xs font-inter-medium', getOrderItemTypeStyle(type).textColor)}>
-                  {getOrderItemTypeStyle(type).text}
-                </Text>
-              </View>
-            ))}
-          </View>
+          {orderItemTypeSet.map((type, index) => (
+            <View
+              key={index}
+              className={cn(
+                'px-3 py-1.5 rounded-lg flex-row items-center gap-1.5',
+                getOrderItemTypeStyle(type).tagColor
+              )}
+            >
+              <MaterialIcons
+                name={getOrderItemTypeStyle(type).icon}
+                size={14}
+                color={getOrderItemTypeStyle(type).iconColor}
+              />
+              <Text className={cn('text-xs font-inter-medium', getOrderItemTypeStyle(type).textColor)}>
+                {getOrderItemTypeStyle(type).text}
+              </Text>
+            </View>
+          ))}
         </View>
 
         <Separator />
@@ -128,9 +130,9 @@ export default function OrderCard({ order }: OrderCardProps) {
           })}
         </View>
 
-        <View className='mx-2 mt-3 mb-2 items-end'>
+        <View className='mx-2 mt-5 mb-1 items-end'>
           <Text className='text-xs'>
-            Tổng {order.items?.length} sản phẩm:{' '}
+            Tổng {order.items?.map((item) => item.quantity).reduce((acc, curr) => acc + curr, 0)} sản phẩm:{' '}
             <Text className='text-sm font-inter-semibold'>
               <Text className='text-xs font-inter-semibold underline'>đ</Text>
               {totalPrice.toLocaleString('vi-VN')}
@@ -138,106 +140,99 @@ export default function OrderCard({ order }: OrderCardProps) {
           </Text>
         </View>
 
-        {isLoadingFeedbackStatus ? (
-          <View className='p-2'>
-            <Skeleton className='h-11 rounded-xl' />
-          </View>
-        ) : (
-          <View className='p-2 flex-row justify-end gap-2'>
-            {isDisplayViewDetailsButton ? (
-              <TouchableOpacity
-                className='px-6 py-2 border border-border rounded-xl items-center'
-                onPress={() =>
-                  router.push({
-                    pathname: '/order/[orderId]',
-                    params: {
-                      orderId: order.id
-                    }
-                  })
-                }
-              >
-                <Text className='text-sm font-inter-medium'>Xem chi tiết</Text>
-              </TouchableOpacity>
-            ) : null}
+        <View className='p-2 flex-row justify-end gap-2'>
+          {isDisplayViewDetailsButton ? (
+            <TouchableOpacity
+              className='px-6 py-2 border border-border rounded-xl items-center'
+              onPress={() =>
+                router.push({
+                  pathname: '/order/[orderId]',
+                  params: {
+                    orderId: order.id
+                  }
+                })
+              }
+            >
+              <Text className='text-sm font-inter-medium'>Xem chi tiết</Text>
+            </TouchableOpacity>
+          ) : null}
 
-            {isDisplayReceiveButton ? (
-              <TouchableOpacity
-                className='px-6 py-2 border border-border rounded-xl items-center'
-                onPress={() => mutate(order?.id)}
-                disabled={isPending}
-              >
-                <Text className='text-sm font-inter-medium'>{isPending ? 'Đang Nhận...' : 'Nhận hàng'}</Text>
-              </TouchableOpacity>
-            ) : null}
+          {isDisplayReceiveButton ? (
+            <TouchableOpacity
+              className='px-6 py-2 border border-border rounded-xl items-center'
+              onPress={() => mutate(order?.id)}
+              disabled={isPending}
+            >
+              <Text className='text-sm font-inter-medium'>{isPending ? 'Đang Nhận...' : 'Nhận hàng'}</Text>
+            </TouchableOpacity>
+          ) : null}
 
-            {isDisplayCancelButton ? (
-              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger asChild>
-                  <TouchableOpacity className='px-6 py-2 rounded-xl items-center border border-border'>
-                    <Text className='text-sm font-inter-medium text-rose-600'>
+          {isDisplayCancelButton ? (
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <TouchableOpacity className='px-6 py-2 rounded-xl items-center border border-border'>
+                  <Text className='text-sm font-inter-medium text-rose-600'>
+                    {cancelOrderMutation.isPending ? 'Đang hủy...' : 'Hủy đơn'}
+                  </Text>
+                </TouchableOpacity>
+              </DialogTrigger>
+              <DialogContent
+                style={{
+                  marginBottom: keyboardHeight / 2.5,
+                  width: width - 30,
+                  padding: 16
+                }}
+              >
+                <FormProvider {...methods}>
+                  <View className='gap-2'>
+                    <Text className='font-inter-semibold text-xl'>Hủy đơn #{order?.code}</Text>
+                    <Text className='text-sm text-muted-foreground'>
+                      Hành động này không thể hoàn tác. Vui lòng xác nhận nếu bạn muốn hủy đơn hàng.
+                    </Text>
+                  </View>
+
+                  <CancelOrderForm />
+
+                  <TouchableOpacity
+                    className='p-3 rounded-xl flex-row items-center justify-center gap-2 bg-rose-50'
+                    onPress={methods.handleSubmit(onSubmit)}
+                    disabled={cancelOrderMutation.isPending}
+                  >
+                    <Icon as={XCircle} size={16} color='#e11d48' />
+                    <Text className='text-sm text-rose-600 font-inter-medium'>
                       {cancelOrderMutation.isPending ? 'Đang hủy...' : 'Hủy đơn'}
                     </Text>
                   </TouchableOpacity>
-                </DialogTrigger>
-                <DialogContent
-                  displayCloseButton={false}
-                  style={{
-                    marginBottom: keyboardHeight / 2.5,
-                    width: width - 30,
-                    padding: 16
-                  }}
-                >
-                  <FormProvider {...methods}>
-                    <View className='gap-2'>
-                      <Text className='font-inter-semibold text-xl'>Hủy đơn #{order?.code}</Text>
-                      <Text className='text-sm text-muted-foreground'>
-                        Hành động này không thể hoàn tác. Vui lòng xác nhận nếu bạn muốn hủy đơn hàng.
-                      </Text>
-                    </View>
+                </FormProvider>
+              </DialogContent>
+            </Dialog>
+          ) : null}
 
-                    <CancelOrderForm />
+          {isDisplayPayButton ? (
+            <TouchableOpacity
+              className='px-6 py-2 rounded-xl items-center border border-border'
+              onPress={() =>
+                router.push({
+                  pathname: '/payment/[orderId]/qr-code',
+                  params: {
+                    orderId: order.id
+                  }
+                })
+              }
+            >
+              <Text className='text-sm font-inter-medium'>Trả tiền</Text>
+            </TouchableOpacity>
+          ) : null}
 
-                    <TouchableOpacity
-                      className='p-3 rounded-xl flex-row items-center justify-center gap-2 bg-rose-50'
-                      onPress={methods.handleSubmit(onSubmit)}
-                      disabled={cancelOrderMutation.isPending}
-                    >
-                      <Feather name='x' size={16} color='#e11d48' />
-                      <Text className='text-sm text-rose-600 font-inter-medium'>
-                        {cancelOrderMutation.isPending ? 'Đang hủy...' : 'Hủy đơn'}
-                      </Text>
-                    </TouchableOpacity>
-                  </FormProvider>
-                </DialogContent>
-              </Dialog>
-            ) : null}
-
-            {isDisplayPayButton ? (
-              <TouchableOpacity
-                className='px-6 py-2 rounded-xl items-center border border-border'
-                onPress={() =>
-                  router.push({
-                    pathname: '/payment/[orderId]/qr-code',
-                    params: {
-                      orderId: order.id
-                    }
-                  })
-                }
-              >
-                <Text className='text-sm font-inter-medium'>Trả tiền</Text>
-              </TouchableOpacity>
-            ) : null}
-
-            {isDisplayRateButton && !feedbackStatus ? (
-              <TouchableOpacity
-                className='px-6 py-2 rounded-xl items-center border border-border'
-                onPress={() => router.push({ pathname: '/order/[orderId]/rate', params: { orderId: order.id } })}
-              >
-                <Text className='text-sm font-inter-medium'>Đánh giá</Text>
-              </TouchableOpacity>
-            ) : null}
-          </View>
-        )}
+          {isDisplayRateButton && !feedbackStatus ? (
+            <TouchableOpacity
+              className='px-6 py-2 rounded-xl items-center border border-border'
+              onPress={() => router.push({ pathname: '/order/[orderId]/rate', params: { orderId: order.id } })}
+            >
+              <Text className='text-sm font-inter-medium'>Đánh giá</Text>
+            </TouchableOpacity>
+          ) : null}
+        </View>
       </Card>
     </TouchableOpacity>
   )
@@ -248,24 +243,25 @@ const PresetOrderItem = ({ item }: { item: OrderItem }) => {
   const itemPrice = price * quantity
 
   return (
-    <View className='flex-row items-start gap-3 px-2'>
-      <View className='w-20 h-20 rounded-xl overflow-hidden bg-gray-50'>
-        <Image source={{ uri: preset?.images[0] }} className='w-full h-full' resizeMode='contain' />
+    <View className='flex-row items-start gap-2 px-2'>
+      <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
+        <Image source={{ uri: preset?.images?.[0] }} className='w-full h-full' resizeMode='contain' />
       </View>
       <View className='flex-1 h-20 justify-between'>
         <View>
-          <Text className='text-sm font-inter-medium'>{preset?.styleName || 'Váy Bầu Tùy Chỉnh'}</Text>
-          <View className='flex-row items-center justify-between'>
-            <Text className='text-xs text-muted-foreground flex-1' numberOfLines={2}>
-              {preset?.styleName ? 'Váy Bầu Tùy Chỉnh' : 'Váy Bầu Tùy Chỉnh'}
-            </Text>
-            <Text className='text-xs text-muted-foreground'>x{quantity}</Text>
+          <Text className='text-sm font-inter-medium' numberOfLines={1}>
+            {preset?.name || 'Váy bầu tùy chỉnh'}
+          </Text>
+
+          <View className='flex-row items-center gap-2'>
+            <Text className='text-xs text-muted-foreground flex-1'>{preset?.sku ? `SKU: ${preset?.sku}` : ''}</Text>
+            <Text className='text-xs text-muted-foreground'>x{quantity || 1}</Text>
           </View>
         </View>
         <View className='items-end'>
           <Text className='text-xs'>
             <Text className='text-xs underline'>đ</Text>
-            {itemPrice.toLocaleString('vi-VN')}
+            {itemPrice?.toLocaleString('vi-VN') || '0'}
           </Text>
         </View>
       </View>
@@ -304,5 +300,45 @@ const DesignRequestOrderItem = ({ item }: { item: OrderItem }) => {
 }
 
 const ReadyToBuyOrderItem = ({ item }: { item: OrderItem }) => {
-  return <Text>To Be Implemented</Text>
+  const { maternityDressDetail, quantity, price } = item
+  const itemPrice = price * quantity
+
+  return (
+    <View className='flex-row items-center gap-2 px-2'>
+      <View className='w-20 h-20 overflow-hidden relative rounded-xl'>
+        <Image
+          source={{ uri: maternityDressDetail?.image[0] }}
+          style={{
+            width: '100%',
+            height: '180%',
+            borderRadius: 12,
+            position: 'absolute',
+            top: 0,
+            left: 0
+          }}
+          resizeMode='cover'
+        />
+      </View>
+
+      <View className='flex-1 h-20 justify-between'>
+        <View>
+          <Text className='native:text-sm font-inter-medium' numberOfLines={1}>
+            {maternityDressDetail?.name || 'Không có tên'}
+          </Text>
+          <View className='flex-row items-center justify-between'>
+            <Text className='native:text-xs text-muted-foreground'>
+              Phân loại: {maternityDressDetail?.color} - {maternityDressDetail?.size}
+            </Text>
+            <Text className='native:text-xs text-muted-foreground'>x{quantity || 1}</Text>
+          </View>
+        </View>
+        <View className='items-end'>
+          <Text className='native:text-xs'>
+            <Text className='native:text-xs underline'>đ</Text>
+            {itemPrice?.toLocaleString('vi-VN') || '0'}
+          </Text>
+        </View>
+      </View>
+    </View>
+  )
 }

@@ -1,8 +1,10 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { format } from 'date-fns'
 import { useRouter } from 'expo-router'
+import { Link } from 'lucide-react-native'
 import { TouchableOpacity, View } from 'react-native'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { getWarrantyRequestStatus } from '~/features/warranty-request/utils'
 import { styles } from '~/lib/constants/constants'
@@ -25,10 +27,10 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
 
   const formatWarrantyDate = (date: string | undefined) => {
     if (!date) return 'N/A'
-    return format(new Date(date), "MMM dd, yyyy 'at' hh:mm a")
+    return format(new Date(date), "MMM dd, yyyy 'lúc' hh:mm a")
   }
 
-  const { text, color, backgroundColor } = getWarrantyRequestStatus(warrantyRequestDetail?.warrantyRequest.status)
+  const { text, color, backgroundColor } = getWarrantyRequestStatus(warrantyRequestDetail?.warrantyRequest?.status)
 
   return (
     <Card style={styles.container}>
@@ -38,11 +40,11 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
 
         {warrantyRequestDetail?.warrantyRequest?.requestType === 'FEE' ? (
           <View className='px-2 bg-rose-50 border border-rose-100 rounded-lg'>
-            <Text className='text-xs font-inter-medium text-rose-600'>Có Phí</Text>
+            <Text className='text-xs font-inter-medium text-rose-600'>Có phí</Text>
           </View>
         ) : (
           <View className='px-2 bg-emerald-50 border border-emerald-100 rounded-lg'>
-            <Text className='text-xs font-inter-medium text-emerald-600'>Miễn Phí</Text>
+            <Text className='text-xs font-inter-medium text-emerald-600'>Miễn phí</Text>
           </View>
         )}
       </View>
@@ -51,18 +53,18 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
         <View className={cn('gap-1.5 px-3', !isSameOrder && 'pb-3')}>
           {isSameOrder ? (
             <View className='flex-row items-start gap-2'>
-              <Text className='flex-1 text-xs text-muted-foreground/80'>Mã Đơn</Text>
+              <Text className='flex-1 text-xs text-muted-foreground/80'>Mã đơn</Text>
               <Text className='text-foreground/80 text-xs'>#{warrantyRequestDetail?.originalOrders[0]?.code}</Text>
             </View>
           ) : null}
 
           <View className='flex-row items-center gap-2'>
-            <Text className='flex-1 text-xs text-muted-foreground/80'>Mã Yêu Cầu</Text>
+            <Text className='flex-1 text-xs text-muted-foreground/80'>Mã yêu cầu bảo hành</Text>
             <Text className='text-foreground/80 text-xs'>#{warrantyRequestDetail?.warrantyRequest?.sku}</Text>
           </View>
 
           <View className='flex-row items-center gap-2'>
-            <Text className='flex-1 text-xs text-muted-foreground/80'>Trạng Thái</Text>
+            <Text className='flex-1 text-xs text-muted-foreground/80'>Trạng thái bảo hành</Text>
             <Text className='text-xs px-2 py-0.5 font-inter-medium rounded-lg' style={{ color, backgroundColor }}>
               {text}
             </Text>
@@ -70,8 +72,8 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
 
           {warrantyRequestDetail?.warrantyRequest?.requestType === 'FEE' ? (
             <View className='flex-row items-center gap-2'>
-              <Text className='flex-1 text-xs text-muted-foreground/80'>Tổng Phí</Text>
-              <Text className='text-xs px-2 py-0.5 font-inter-medium rounded-lg'>
+              <Text className='flex-1 text-xs text-muted-foreground/80'>Tổng phí</Text>
+              <Text className='text-xs py-0.5 font-inter-medium rounded-lg'>
                 {warrantyRequestDetail?.warrantyRequest?.totalFee
                   ? `đ${warrantyRequestDetail?.warrantyRequest?.totalFee.toLocaleString('vi-VN')}`
                   : 'N/A'}
@@ -80,9 +82,9 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
           ) : null}
 
           <View className='flex-row items-center gap-2'>
-            <Text className='flex-1 text-xs text-muted-foreground/80'>Ngày Gửi</Text>
+            <Text className='flex-1 text-xs text-muted-foreground/80'>Ngày gửi</Text>
             <Text className='text-foreground/80 text-xs'>
-              {formatWarrantyDate(warrantyRequestDetail?.warrantyRequest.createdAt)}
+              {formatWarrantyDate(warrantyRequestDetail?.warrantyRequest?.createdAt)}
             </Text>
           </View>
         </View>
@@ -97,7 +99,7 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
               onPress={handleGoToOrder}
               className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-2 bg-blue-600'
             >
-              <Feather name='link' size={16} color='white' />
+              <Icon as={Link} size={16} color='white' />
               <Text className='text-sm text-white font-inter-medium'>Xem đơn hàng</Text>
             </TouchableOpacity>
           </View>

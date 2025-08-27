@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons'
+import { SquarePen } from 'lucide-react-native'
 import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { TouchableOpacity, useWindowDimensions, View } from 'react-native'
@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '~/components/ui/dialog'
+import { Icon } from '~/components/ui/icon'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import { useKeyboardOffset } from '~/hooks/use-keyboard-offset'
@@ -98,16 +99,17 @@ export function MeasurementField({
               {error && <Text className='text-xs text-destructive mt-0.5'>{error.message}</Text>}
             </View>
 
-            <View className='flex flex-row items-baseline gap-1'>
-              <Text className='text-primary font-inter-semibold'>{getDisplayValue()}</Text>
-              <Text className='text-xs text-muted-foreground mr-1.5'>{unit}</Text>
-              <Feather name='edit' size={12} color='gray' />
+            <View className='flex flex-row items-center gap-1'>
+              <View className='flex-row items-baseline gap-1'>
+                <Text className='text-primary font-inter-semibold'>{getDisplayValue()}</Text>
+                <Text className='text-xs text-muted-foreground mr-1.5'>{unit}</Text>
+              </View>
+              <Icon as={SquarePen} size={12} color='gray' />
             </View>
           </Animated.View>
         </TouchableOpacity>
       </DialogTrigger>
       <DialogContent
-        displayCloseButton={false}
         style={{
           marginBottom: keyboardHeight / 3,
           width: width - 30,

@@ -1,12 +1,13 @@
-import { Feather } from '@expo/vector-icons'
 import { format } from 'date-fns'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { useCallback, useState } from 'react'
 import { FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import Loading from '~/components/loading'
 import Ratings from '~/components/ratings'
 import SafeView from '~/components/safe-view'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { useGetRatedOrders } from '~/features/feedback/hooks/use-get-rated-orders'
 import { useGetUnratedOrder } from '~/features/feedback/hooks/use-get-unrated-orders'
@@ -51,7 +52,7 @@ export default function FeedbackHistoryScreen() {
     <SafeView>
       <View className='flex flex-row items-center gap-3 p-4'>
         <TouchableOpacity onPress={handleGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='font-inter-medium text-xl'>Đánh giá của tôi</Text>
       </View>
@@ -100,7 +101,7 @@ export default function FeedbackHistoryScreen() {
                     <Ratings rating={item.feedbacks[0].rated} displayCount={false} size={14} />
                     <Text className='text-xs text-muted-foreground'>
                       {item.feedbacks[0].createdAt
-                        ? format(new Date(item.feedbacks[0].createdAt), "MMM dd, yyyy 'at' hh:mm a")
+                        ? format(new Date(item.feedbacks[0].createdAt), "MMM dd, yyyy 'lúc' hh:mm a")
                         : 'N/A'}
                     </Text>
                   </View>
@@ -121,7 +122,7 @@ export default function FeedbackHistoryScreen() {
                   ) : null}
                   <View className='bg-muted/50 rounded-2xl overflow-hidden'>
                     {item.itemType === OrderItemType.Preset || item.itemType === OrderItemType.Warranty ? (
-                      <View className='flex-row items-center gap-3'>
+                      <View className='flex-row items-center gap-3 p-1'>
                         <View className='w-[60px] h-[60px]'>
                           <Image
                             source={{ uri: item.preset?.images?.[0] }}
@@ -147,6 +148,29 @@ export default function FeedbackHistoryScreen() {
                         <View className='flex-1'>
                           <Text className='text-sm font-inter-medium'>Yêu cầu thiết kế</Text>
                           <Text className='text-xs text-muted-foreground'>{item.designRequest?.description}</Text>
+                        </View>
+                      </View>
+                    ) : null}
+                    {item.itemType === OrderItemType.ReadyToBuy ? (
+                      <View className='flex-row items-center gap-3 p-1'>
+                        <View className='w-[60px] h-[60px] overflow-hidden relative rounded-xl'>
+                          <Image
+                            source={{ uri: item.maternityDressDetail?.image[0] }}
+                            style={{
+                              width: '100%',
+                              height: '180%',
+                              position: 'absolute',
+                              top: 0,
+                              left: 0
+                            }}
+                            resizeMode='cover'
+                          />
+                        </View>
+                        <View className='flex-1'>
+                          <Text className='text-sm font-inter-medium' numberOfLines={1}>
+                            {item.maternityDressDetail?.name}
+                          </Text>
+                          <Text className='text-xs text-muted-foreground'>{item.maternityDressDetail?.sku}</Text>
                         </View>
                       </View>
                     ) : null}

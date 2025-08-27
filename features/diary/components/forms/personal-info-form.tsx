@@ -1,9 +1,10 @@
-import { Feather, MaterialIcons } from '@expo/vector-icons'
+import { Book, Hash, Ruler, Weight } from 'lucide-react-native'
 import { Controller, useFormContext } from 'react-hook-form'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import FieldError from '~/components/field-error'
+import { Icon } from '~/components/ui/icon'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import { useFieldError } from '~/hooks/use-field-error'
@@ -37,7 +38,7 @@ export default function PersonalInfoForm() {
                 <Input
                   placeholder='Tên nhật ký'
                   keyboardType='default'
-                  StartIcon={<Feather name='book' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                  StartIcon={<Icon as={Book} size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
                   value={value}
                   onChangeText={onChange}
@@ -65,7 +66,7 @@ export default function PersonalInfoForm() {
                 <Input
                   placeholder='Cân nặng'
                   keyboardType='numeric'
-                  StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                  StartIcon={<Icon as={Weight} size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
                   value={value}
                   onChangeText={onChange}
@@ -83,7 +84,7 @@ export default function PersonalInfoForm() {
                 <Input
                   placeholder='Chiều cao'
                   keyboardType='numeric'
-                  StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                  StartIcon={<Icon as={Ruler} size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
                   value={value}
                   onChangeText={onChange}
@@ -112,7 +113,7 @@ export default function PersonalInfoForm() {
                 <Input
                   placeholder='Tuổi'
                   keyboardType='numeric'
-                  StartIcon={<MaterialIcons name='numbers' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                  StartIcon={<Icon as={Hash} size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
                   value={value}
                   onChangeText={onChange}

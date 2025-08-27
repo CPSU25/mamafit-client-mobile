@@ -1,12 +1,14 @@
-import { Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { useMemo, useRef, useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { useAddToCart } from '~/features/cart/hooks/use-add-to-cart'
@@ -17,6 +19,7 @@ import DesignRequestInformation from '~/features/order/components/order-detail/d
 import DesignRequestOrderItem from '~/features/order/components/order-detail/design-request-order-item'
 import DesignerInformation from '~/features/order/components/order-detail/designer-information'
 import DiaryInformation from '~/features/order/components/order-detail/diary-information'
+import DressOrderItem from '~/features/order/components/order-detail/dress-order-item'
 import OrderDetails from '~/features/order/components/order-detail/order-details'
 import OrderDetailsActions from '~/features/order/components/order-detail/order-details-actions'
 import PresetOrderItem from '~/features/order/components/order-detail/preset-order-item'
@@ -104,6 +107,11 @@ export default function ViewOrderDetailScreen() {
 
   const isWarrantyOrder = useMemo(
     () => Boolean(order && orderItemTypeSet[0] === OrderItemType.Warranty),
+    [order, orderItemTypeSet]
+  )
+
+  const isReadyToBuyOrder = useMemo(
+    () => Boolean(order && orderItemTypeSet[0] === OrderItemType.ReadyToBuy),
     [order, orderItemTypeSet]
   )
 
@@ -257,7 +265,7 @@ export default function ViewOrderDetailScreen() {
         >
           <View className='relative z-10 px-4' style={{ paddingTop: Math.max(top + 20, 40) }}>
             <TouchableOpacity onPress={handleGoBack} className='mb-6 mr-auto'>
-              <Feather name='arrow-left' size={24} color={styleConfig.textColor} />
+              <Icon as={ArrowLeft} size={24} color={styleConfig.textColor} />
             </TouchableOpacity>
 
             <View className='flex-row items-center gap-2 mb-1'>
@@ -333,7 +341,7 @@ export default function ViewOrderDetailScreen() {
                     {order?.type === OrderType.Warranty ? (
                       <View className='px-3 py-1.5 bg-blue-50 rounded-lg flex-row items-center gap-1.5'>
                         <MaterialIcons name='safety-check' size={14} color='#2563eb' />
-                        <Text className='text-xs text-blue-600 font-inter-medium'>Đơn bảo hành</Text>
+                        <Text className='text-xs text-blue-600 font-inter-medium'>Bảo hành</Text>
                       </View>
                     ) : null}
 
@@ -368,7 +376,7 @@ export default function ViewOrderDetailScreen() {
                   ) : null}
 
                   {isPresetOrder || isWarrantyOrder ? (
-                    <View className='gap-2'>
+                    <>
                       {isWarrantyOrder
                         ? order?.items?.map((orderItem, index) => (
                             <View key={orderItem.id}>
@@ -396,13 +404,32 @@ export default function ViewOrderDetailScreen() {
                               {index !== order?.items?.length - 1 ? <Separator /> : null}
                             </View>
                           ))}
-                    </View>
+                    </>
+                  ) : null}
+
+                  {isReadyToBuyOrder ? (
+                    <>
+                      {order?.items?.map((orderItem, index) => (
+                        <View key={orderItem.id}>
+                          <DressOrderItem
+                            orderItem={orderItem}
+                            dress={orderItem.maternityDressDetail}
+                            dressOptions={orderItem.addOnOptions}
+                            quantity={orderItem.quantity}
+                          />
+                          {index !== order?.items?.length - 1 ? <Separator /> : null}
+                        </View>
+                      ))}
+                    </>
                   ) : null}
 
                   <Separator />
 
                   <View className='p-3 flex-row'>
-                    <Text className='text-sm font-inter-medium flex-1'>Tổng sản phẩm: {order?.items?.length || 0}</Text>
+                    <Text className='text-sm font-inter-medium flex-1'>
+                      Tổng sản phẩm:{' '}
+                      {order?.items?.map((item) => item.quantity).reduce((acc, curr) => acc + curr, 0) || 0}
+                    </Text>
                     <Text className='font-inter-medium text-sm'>
                       <Text className='underline font-inter-medium text-xs'>đ</Text>
                       {merchandiseTotal ? merchandiseTotal.toLocaleString('vi-VN') : '0'}
@@ -434,6 +461,7 @@ export default function ViewOrderDetailScreen() {
                   discountSubtotal={order?.discountSubtotal}
                   isViewMoreOrderDetails={toggleViewMoreStates}
                   orderCode={order?.code}
+                  orderReceivedAt={order?.receivedAt}
                   orderPlacedAt={order?.createdAt}
                   toggleViewMore={toggleViewMore}
                   totalAmount={order?.totalAmount}

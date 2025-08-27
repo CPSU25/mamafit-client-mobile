@@ -1,4 +1,8 @@
-import { PlaceDesignRequestOrderFormSchema, PlacePresetOrderFormSchema } from '~/features/order/validations'
+import {
+  PlaceDesignRequestOrderFormSchema,
+  PlaceDressOrderFormSchema,
+  PlacePresetOrderFormSchema
+} from '~/features/order/validations'
 import { api } from '~/lib/axios/axios'
 import { AddOn } from '~/types/add-on.type'
 import { BasePaginationResponse, BaseResponse } from '~/types/common'
@@ -26,6 +30,12 @@ class OrderService {
 
   async placePresetOrder(presetOrder: Omit<PlacePresetOrderFormSchema, 'measurementDiaryId'>) {
     const { data } = await api.post<BaseResponse<string>>('order/preset', presetOrder)
+
+    return data.data
+  }
+
+  async placeDressOrder(dressOrder: PlaceDressOrderFormSchema) {
+    const { data } = await api.post<BaseResponse<string>>('order/ready-to-buy', dressOrder)
 
     return data.data
   }
@@ -71,6 +81,12 @@ class OrderService {
 
   async getOrder(orderId: string) {
     const { data } = await api.get<BaseResponse<OrderDetail>>(`order/${orderId}`)
+
+    return data.data
+  }
+
+  async getOrderForFeedback(orderId: string) {
+    const { data } = await api.get<BaseResponse<OrderDetail>>(`order/for-feedback/${orderId}`)
 
     return data.data
   }

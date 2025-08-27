@@ -1,7 +1,8 @@
-import { Feather } from '@expo/vector-icons'
 import { formatDistanceToNow } from 'date-fns'
+import { ChevronRight, Lock } from 'lucide-react-native'
 import { View } from 'react-native'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { useGetWeekOfPregnancy } from '~/features/diary/hooks/use-get-week-of-pregnancy'
@@ -43,26 +44,26 @@ export default function MeasurementCard({ measurement, diaryId }: MeasurementCar
         </View>
         {isLocked && (
           <View className='absolute -top-1.5 -right-1.5 bg-rose-100 rounded-full p-0.5'>
-            <Feather name='lock' size={12} color='#e11d48' />
+            <Icon as={Lock} size={12} color='#e11d48' />
           </View>
         )}
       </View>
       <View className='flex-1 gap-0.5'>
         <Text className='text-sm'>
-          Cân Nặng: <Text className='text-sm font-inter-medium'>{measurement?.weight || 'N/A'} kg</Text>
+          Cân nặng: <Text className='text-sm font-inter-medium'>{measurement?.weight || 'N/A'} kg</Text>
         </Text>
         <View className='flex-row items-center justify-between gap-2'>
-          <View className='flex-row items-center gap-1.5'>
+          <View className='flex-row items-center gap-2'>
             <View className='w-2 h-2 rounded-full bg-sky-400' />
             <Text className='text-sm font-inter-medium'>{measurement?.bust || 'N/A'} cm</Text>
           </View>
           <Separator orientation='vertical' className='h-3' />
-          <View className='flex-row items-center gap-1.5'>
+          <View className='flex-row items-center gap-2'>
             <View className='w-2 h-2 rounded-full bg-rose-400' />
             <Text className='text-sm font-inter-medium'>{measurement?.waist || 'N/A'} cm</Text>
           </View>
           <Separator orientation='vertical' className='h-3' />
-          <View className='flex-row items-center gap-1.5'>
+          <View className='flex-row items-center gap-2'>
             <View className='w-2 h-2 rounded-full bg-amber-400' />
             <Text className='text-sm font-inter-medium'>{measurement?.hip || 'N/A'} cm</Text>
           </View>
@@ -72,7 +73,7 @@ export default function MeasurementCard({ measurement, diaryId }: MeasurementCar
           updated {formatDistanceToNow(new Date(measurement?.updatedAt || ''))} ago
         </Text>
       </View>
-      <Feather name='chevron-right' size={20} color='lightgray' />
+      <Icon as={ChevronRight} size={20} color='lightgray' />
     </Card>
   )
 }

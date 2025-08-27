@@ -51,8 +51,7 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
     value: OrderStatus.Created,
     urlValue: 'to-pay',
     title: 'Đơn hàng đang chờ thanh toán',
-    description:
-      'Đơn hàng của bạn đã được ghi nhận. Vui lòng hoàn tất thanh toán để chúng tôi bắt đầu chuẩn bị hoặc tiến hành thiết kế sản phẩm.'
+    description: 'Đơn hàng của bạn đã được ghi nhận. Vui lòng hoàn tất thanh toán để chúng tôi bắt đầu xử lý đơn hàng.'
   },
   {
     id: 2,
@@ -60,8 +59,7 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
     value: OrderStatus.Confirmed,
     urlValue: 'confirmed',
     title: 'Đơn hàng đã được xác nhận',
-    description:
-      'Thanh toán đã thành công và đơn hàng được xác nhận. Chúng tôi đang chuẩn bị hàng có sẵn hoặc khởi động quy trình thiết kế theo yêu cầu.'
+    description: 'Thanh toán đã thành công và đơn hàng được xác nhận. Chúng tôi đang chuẩn bị xử lý đơn hàng cho bạn.'
   },
   {
     id: 4,
@@ -69,8 +67,7 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
     value: OrderStatus.InProgress,
     urlValue: 'in-progress',
     title: 'Đơn hàng đang được xử lý',
-    description:
-      'Đơn hàng của bạn đang trong quá trình xử lý. Với hàng có sẵn chúng tôi kiểm tra chất lượng, với thiết kế chúng tôi tiến hành sản xuất theo yêu cầu.'
+    description: 'Đơn hàng của bạn đang trong quá trình xử lý bởi đội ngũ của chúng tôi.'
   },
   {
     id: 6,
@@ -104,7 +101,7 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
     value: OrderStatus.PickUpInProgress,
     urlValue: 'pick-up-in-progress',
     title: 'Shipper đang đến lấy hàng',
-    description: 'Nhân viên vận chuyển đang đến địa chỉ của bạn để nhận sản phẩm và gửi về xưởng xử lý hoặc bảo hành.'
+    description: 'Nhân viên vận chuyển đang đến địa chỉ của bạn để nhận sản phẩm và gửi về xưởng xử lý.'
   },
   {
     id: 10,
@@ -124,7 +121,7 @@ export const ORDER_STATUS_TYPES: OrderStatusType[] = [
   },
   {
     id: 12,
-    label: 'Đã nhận hàng',
+    label: 'Đã hoàn tất',
     value: OrderStatus.Completed,
     urlValue: 'to-rate',
     title: 'Đơn hàng đã hoàn tất',

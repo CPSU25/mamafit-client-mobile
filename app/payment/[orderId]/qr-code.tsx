@@ -1,9 +1,9 @@
-import { Feather } from '@expo/vector-icons'
 import { useQueryClient } from '@tanstack/react-query'
 import * as FileSystem from 'expo-file-system'
 import * as MediaLibrary from 'expo-media-library'
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
 import LottieView from 'lottie-react-native'
+import { Check, CircleCheckBig, CreditCard, Download } from 'lucide-react-native'
 import { useCallback, useState } from 'react'
 import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
@@ -12,6 +12,7 @@ import SafeView from '~/components/safe-view'
 import { WarningCard } from '~/components/ui/alert-card'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { useGetPaymentStatus } from '~/features/order/hooks/use-get-payment-status'
@@ -140,13 +141,13 @@ export default function PaymentQRCode() {
                 loop={false}
                 style={{ width: 300, height: 300 }}
               />
-              <Text className='text-2xl font-inter-semibold mt-10'>Thanh Toán Thành Công!</Text>
-              <Text className='text-sm text-muted-foreground mt-2 mx-10 text-center'>
-                Giao dịch của bạn đã hoàn tất. Cảm ơn bạn đã mua hàng!
+              <Text className='text-2xl font-inter-bold mt-10'>Thanh Toán Thành Công!</Text>
+              <Text className='text-sm text-muted-foreground mx-10 text-center'>
+                Giao dịch của bạn đã hoàn tất. Cảm ơn bạn đã tin tưởng và mua hàng!
               </Text>
             </View>
 
-            <View className='flex flex-col gap-2 w-full mt-32'>
+            <View className='flex flex-col gap-2 w-full mt-36'>
               <Button
                 className='w-full'
                 onPress={() =>
@@ -156,10 +157,10 @@ export default function PaymentQRCode() {
                   })
                 }
               >
-                <Text className='font-inter-medium'>Xem đơn hàng</Text>
+                <Text className='native:text-sm font-inter-medium'>Xem đơn hàng</Text>
               </Button>
               <Button className='w-full' variant='outline' onPress={handleGoHome}>
-                <Text className='font-inter-medium'>Quay Về Trang Chủ</Text>
+                <Text className='native:text-sm font-inter-medium'>Về trang chủ</Text>
               </Button>
             </View>
           </View>
@@ -180,15 +181,15 @@ export default function PaymentQRCode() {
             isDarkColorScheme ? 'bg-emerald-950/20' : 'bg-emerald-50'
           )}
         >
-          <Feather name='check-circle' size={32} color='#10b981' />
+          <Icon as={CircleCheckBig} size={32} color='#10b981' />
           <View className='flex-1'>
             <Text
               className={cn('text-xl font-inter-semibold', isDarkColorScheme ? 'text-emerald-400' : 'text-emerald-600')}
             >
-              Đơn Hàng Đã Xác Nhận!
+              Đơn hàng đã xác nhận!
             </Text>
             <Text className={cn('text-xs', isDarkColorScheme ? 'text-emerald-300/80' : 'text-emerald-600')}>
-              Số Đơn Hàng: #{qrCodeData?.orderWithItem?.code}
+              Mã đơn: #{qrCodeData?.orderWithItem?.code}
             </Text>
           </View>
         </Animated.View>
@@ -197,14 +198,14 @@ export default function PaymentQRCode() {
           <Animated.View entering={FadeInDown.delay(200)}>
             <Card className='p-3 flex-row items-center gap-2' style={[styles.container]}>
               {isPaymentSuccess ? (
-                <Feather name='check' size={18} color='#10b981' />
+                <Icon as={Check} size={18} color='#10b981' />
               ) : (
                 <ActivityIndicator size='small' color={PRIMARY_COLOR.LIGHT} />
               )}
               <Text
                 className={cn('text-sm font-inter-medium flex-1', isDarkColorScheme ? 'text-white' : 'text-gray-900')}
               >
-                Trạng Thái Thanh Toán
+                Trạng thái
               </Text>
               <Text
                 className={cn(
@@ -242,15 +243,15 @@ export default function PaymentQRCode() {
                     Quét mã QR
                   </Text>
                   <Text className={cn('text-xs', isDarkColorScheme ? 'text-primary-foreground/70' : 'text-primary/70')}>
-                    Thanh toán với ứng dụng ngân hàng của bạn để xác nhận đơn hàng
+                    Thanh toán với ứng dụng ngân hàng của bạn
                   </Text>
                 </View>
               </View>
               <Image source={{ uri: qrCodeData?.qrUrl }} className='w-full h-96 mt-4 rounded-2xl' />
               <View className='p-1 gap-2 mt-2'>
                 <WarningCard
-                  title='Lưu Ý Thanh Toán'
-                  description='Vui lòng giữ nguyên mô tả chuyển khoản để xác nhận thanh toán tự động.'
+                  title='Lưu ý'
+                  description='Vui lòng giữ nguyên mô tả chuyển khoản để hệ thống có thể xác nhận thanh toán tự động.'
                   delay={400}
                 />
                 <Button
@@ -262,9 +263,9 @@ export default function PaymentQRCode() {
                   onPress={() => handleDownload(qrCodeData?.qrUrl)}
                   disabled={downloading}
                 >
-                  <Feather name='download' size={16} color={PRIMARY_COLOR.LIGHT} />
+                  <Icon as={Download} size={16} color={PRIMARY_COLOR.LIGHT} />
                   <Text className='native:text-sm font-inter-medium text-primary'>
-                    {downloading ? 'Đang Tải...' : 'Tải QR Code'}
+                    {downloading ? 'Đang tải...' : 'Tải xuống QR'}
                   </Text>
                 </Button>
               </View>
@@ -274,7 +275,7 @@ export default function PaymentQRCode() {
           <Animated.View entering={FadeInDown.delay(500)}>
             <Card style={[styles.container]}>
               <View className='p-3 flex-row items-center gap-2'>
-                <Feather name='credit-card' size={16} color={isDarkColorScheme ? 'white' : 'black'} />
+                <Icon as={CreditCard} size={16} color={isDarkColorScheme ? 'white' : 'black'} />
                 <Text className={cn('text-sm font-inter-medium', isDarkColorScheme ? 'text-white' : 'text-gray-900')}>
                   Thông tin thanh toán
                 </Text>

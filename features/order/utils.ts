@@ -261,7 +261,7 @@ export const getOrderItemTypeStyle = (type: OrderItemType): OrderItemStyleType =
       return {
         iconColor: '#9333ea',
         icon: 'design-services',
-        text: 'Đơn yêu cầu thiết kế',
+        text: 'Yêu cầu thiết kế',
         textColor: 'text-purple-600',
         tagColor: 'bg-purple-50'
       }
@@ -270,7 +270,7 @@ export const getOrderItemTypeStyle = (type: OrderItemType): OrderItemStyleType =
       return {
         iconColor: '#0d9488',
         icon: 'library-add-check',
-        text: 'Đơn váy bầu tùy chỉnh',
+        text: 'Váy bầu tùy chỉnh',
         textColor: 'text-teal-600',
         tagColor: 'bg-teal-50'
       }
@@ -278,7 +278,7 @@ export const getOrderItemTypeStyle = (type: OrderItemType): OrderItemStyleType =
       return {
         iconColor: '#d97706',
         icon: 'shopping-cart',
-        text: 'Đơn hàng có sẵn',
+        text: 'Hàng có sẵn',
         textColor: 'text-amber-600',
         tagColor: 'bg-amber-50'
       }
@@ -286,7 +286,7 @@ export const getOrderItemTypeStyle = (type: OrderItemType): OrderItemStyleType =
       return {
         iconColor: '#4b5563',
         icon: 'circle',
-        text: 'Đơn khác',
+        text: 'Khác',
         textColor: 'text-gray-600',
         tagColor: 'bg-gray-50'
       }

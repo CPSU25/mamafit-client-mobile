@@ -1,10 +1,11 @@
-import { Feather } from '@expo/vector-icons'
+import { Lock, Mail } from 'lucide-react-native'
 import { Controller, SubmitHandler } from 'react-hook-form'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import FieldError from '~/components/field-error'
 import { useNotifications } from '~/components/providers/notifications.provider'
 import { Button } from '~/components/ui/button'
+import { Icon } from '~/components/ui/icon'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
@@ -32,7 +33,7 @@ export default function SignInForm() {
   }
 
   return (
-    <View className='flex-1 flex flex-col mt-6'>
+    <View className='flex-1 flex flex-col'>
       <View className='flex flex-col gap-4'>
         <Controller
           control={control}
@@ -43,7 +44,7 @@ export default function SignInForm() {
               value={value}
               onChangeText={onChange}
               placeholder='Email hoặc tên đăng nhập'
-              StartIcon={<Feather name='mail' size={20} color={PRIMARY_COLOR.LIGHT} />}
+              StartIcon={<Icon as={Mail} size={20} color={PRIMARY_COLOR.LIGHT} />}
               autoFocus
               spellCheck={false}
               className={isFormError(errors, 'identifier') ? 'border-rose-500' : ''}
@@ -59,7 +60,7 @@ export default function SignInForm() {
               value={value}
               onChangeText={onChange}
               placeholder='Mật khẩu'
-              StartIcon={<Feather name='lock' size={20} color={PRIMARY_COLOR.LIGHT} />}
+              StartIcon={<Icon as={Lock} size={20} color={PRIMARY_COLOR.LIGHT} />}
               secureTextEntry
               spellCheck={false}
               className={isFormError(errors, 'password') ? 'border-rose-500' : ''}

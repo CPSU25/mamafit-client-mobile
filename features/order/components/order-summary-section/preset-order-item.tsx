@@ -1,7 +1,9 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { ChevronDown, ChevronRight, Plus } from 'lucide-react-native'
 import { Image, TouchableOpacity, View } from 'react-native'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { getOrderedComponentOptions } from '~/lib/utils'
 import { OrderItemType } from '~/types/order.type'
@@ -25,41 +27,40 @@ export default function PresetOrderItem({
   quantity
 }: PresetOrderItemProps) {
   const router = useRouter()
-  const presetImage = preset.images && Array.isArray(preset.images) && preset.images.length > 0 ? preset.images[0] : ''
   const componentOptions =
     preset.componentOptions && Array.isArray(preset.componentOptions) ? preset.componentOptions : []
 
   const hasOptions = presetOptions && Array.isArray(presetOptions) && presetOptions.length > 0
 
   return (
-    <View className='p-3 gap-2'>
-      <View className='flex-row items-center gap-4'>
+    <View className='p-3 gap-3'>
+      <View className='flex-row items-start gap-3'>
         <View className='w-20 h-20 rounded-xl overflow-hidden bg-muted/50'>
-          <Image source={{ uri: presetImage }} className='w-full h-full' resizeMode='contain' />
+          <Image source={{ uri: preset?.images?.[0] }} className='w-full h-full' resizeMode='contain' />
         </View>
-
         <View className='flex-1 h-20 justify-between'>
           <View>
-            <Text className='native:text-sm font-inter-medium'>{preset?.styleName || 'Váy Bầu Tùy Chỉnh'}</Text>
-            <View className='flex-row items-center justify-between'>
-              <Text className='native:text-xs text-muted-foreground'>
-                {preset?.styleName ? 'Made-to-Order Custom Style' : 'Tailored Just for You'}
-              </Text>
-              <Text className='native:text-xs text-muted-foreground'>x{quantity || 1}</Text>
+            <Text className='text-sm font-inter-medium' numberOfLines={1}>
+              {preset?.name || 'Váy bầu tùy chỉnh'}
+            </Text>
+
+            <View className='flex-row items-center gap-2'>
+              <Text className='text-xs text-muted-foreground flex-1'>{preset?.sku ? `SKU: ${preset?.sku}` : ''}</Text>
+              <Text className='text-xs text-muted-foreground'>x{quantity || 1}</Text>
             </View>
           </View>
           <View className='items-end'>
-            <Text className='native:text-xs'>
-              <Text className='native:text-xs underline'>đ</Text>
+            <Text className='text-xs'>
+              <Text className='text-xs underline'>đ</Text>
               {preset?.price?.toLocaleString('vi-VN') || '0'}
             </Text>
           </View>
         </View>
       </View>
 
-      <View className='gap-2'>
+      <View className='gap-3'>
         {componentOptions && componentOptions.length > 0 ? (
-          <View className='bg-muted/50 rounded-xl p-3 gap-2 mt-2'>
+          <View className='bg-muted/50 rounded-xl p-3 gap-2'>
             {getOrderedComponentOptions(componentOptions).map((option) =>
               option ? (
                 <View className='flex-row items-center justify-between' key={option.componentName}>
@@ -71,7 +72,7 @@ export default function PresetOrderItem({
           </View>
         ) : null}
 
-        <View className='bg-blue-50 rounded-2xl p-1'>
+        <View className='bg-blue-50 rounded-xl p-1'>
           <TouchableOpacity
             onPress={() => router.push(`/order/review/choose-add-on?itemId=${preset.id}&type=${OrderItemType.Preset}`)}
           >
@@ -79,9 +80,9 @@ export default function PresetOrderItem({
               <MaterialCommunityIcons name='plus-box-multiple' size={iconSize} color='#2563eb' />
               <Text className='font-inter-medium native:text-sm text-blue-600 flex-1'>MamaFit Add-Ons</Text>
               {hasOptions ? (
-                <Feather name='chevron-down' size={iconSize} color='#2563eb' />
+                <Icon as={ChevronDown} size={iconSize} color='#2563eb' />
               ) : (
-                <Feather name='chevron-right' size={iconSize} color='#2563eb' />
+                <Icon as={ChevronRight} size={iconSize} color='#2563eb' />
               )}
             </View>
           </TouchableOpacity>
@@ -106,8 +107,10 @@ export default function PresetOrderItem({
                 }
                 className='flex-row items-center gap-2 justify-center py-2'
               >
-                <Feather name='plus' size={iconSize} color='#2563eb' />
-                <Text className='native:text-sm text-blue-600 font-inter-medium'>Thêm ({presetOptions.length})</Text>
+                <Icon as={Plus} size={iconSize} color='#2563eb' />
+                <Text className='native:text-sm text-blue-600 font-inter-medium'>
+                  Thêm dịch vụ ({presetOptions.length})
+                </Text>
               </TouchableOpacity>
             </>
           ) : null}

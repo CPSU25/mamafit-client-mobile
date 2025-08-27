@@ -59,7 +59,10 @@ export default function OrderSummarySection({
       <Separator />
       <View className='p-3 flex flex-row'>
         <Text className='text-sm font-inter-medium flex-1'>
-          Tổng sản phẩm: {Object.keys(orderItems?.items || {}).length}
+          Tổng sản phẩm:{' '}
+          {Object.values(orderItems?.items ?? {})
+            .map((item) => (item as { quantity: number }).quantity)
+            .reduce((acc, curr) => acc + curr, 0)}
         </Text>
         <Text className='font-inter-medium text-sm'>
           <Text className='underline font-inter-medium text-xs'>đ</Text>

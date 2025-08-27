@@ -1,9 +1,11 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { XCircle } from 'lucide-react-native'
 import { useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { TouchableOpacity, useWindowDimensions, View } from 'react-native'
 import { Dialog, DialogContent, DialogTrigger } from '~/components/ui/dialog'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { useKeyboardOffset } from '~/hooks/use-keyboard-offset'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
@@ -60,12 +62,11 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
               <DialogTrigger asChild>
                 <TouchableOpacity className='flex-1 flex-row items-center gap-2 justify-center p-2 rounded-xl border border-rose-100 bg-rose-50'>
                   <MaterialCommunityIcons name='cancel' size={16} color='#e11d48' />
-                  <Text className='font-inter-medium text-sm text-rose-600'>G</Text>
+                  <Text className='font-inter-medium text-sm text-rose-600'>Hủy đơn</Text>
                 </TouchableOpacity>
               </DialogTrigger>
 
               <DialogContent
-                displayCloseButton={false}
                 style={{
                   marginBottom: keyboardHeight / 2.5,
                   width: width - 30,
@@ -74,10 +75,8 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
               >
                 <FormProvider {...methods}>
                   <View className='gap-2'>
-                    <Text className='font-inter-semibold text-xl'>Cancel Order #{orderCode}</Text>
-                    <Text className='text-sm text-muted-foreground'>
-                      This action cannot be undone. Please confirm if you want to cancel the order .
-                    </Text>
+                    <Text className='font-inter-semibold text-xl'>Hủy đơn hàng #{orderCode}</Text>
+                    <Text className='text-sm text-muted-foreground'>Bạn có chắc chắn muốn hủy đơn hàng này không?</Text>
                   </View>
 
                   <CancelOrderForm />
@@ -87,9 +86,9 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
                     onPress={methods.handleSubmit(onSubmit)}
                     disabled={cancelOrderMutation.isPending}
                   >
-                    <Feather name='x' size={16} color='#e11d48' />
+                    <Icon as={XCircle} size={16} color='#e11d48' />
                     <Text className='text-sm text-rose-600 font-inter-medium'>
-                      {cancelOrderMutation.isPending ? 'Canceling...' : 'Cancel Order'}
+                      {cancelOrderMutation.isPending ? 'Đang hủy...' : 'Hủy đơn'}
                     </Text>
                   </TouchableOpacity>
                 </FormProvider>
@@ -108,7 +107,7 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
             }
           >
             <MaterialCommunityIcons name='credit-card' size={16} color='#059669' />
-            <Text className='text-sm font-inter-medium text-emerald-600'>Pay Now</Text>
+            <Text className='text-sm font-inter-medium text-emerald-600'>Trả tiền</Text>
           </TouchableOpacity>
         </View>
       ) : null}
@@ -126,7 +125,7 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
           }
         >
           <MaterialCommunityIcons name='credit-card' size={16} color='#059669' />
-          <Text className='text-sm font-inter-medium text-emerald-600'>Pay Now</Text>
+          <Text className='text-sm font-inter-medium text-emerald-600'>Trả tiền</Text>
         </TouchableOpacity>
       ) : null}
 
@@ -138,7 +137,7 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
         >
           <MaterialCommunityIcons name='package' size={16} color={PRIMARY_COLOR.LIGHT} />
           <Text className='font-inter-medium text-sm text-primary'>
-            {isReceivingOrder ? 'Receiving...' : 'Receive Order'}
+            {isReceivingOrder ? 'Đang nhận...' : 'Nhận hàng'}
           </Text>
         </TouchableOpacity>
       ) : null}
