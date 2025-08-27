@@ -1,5 +1,6 @@
-import { Feather } from '@expo/vector-icons'
+import { AlertTriangle } from 'lucide-react-native'
 import { Controller, useFormContext } from 'react-hook-form'
+import { Icon } from '~/components/ui/icon'
 import { Input } from '~/components/ui/input'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { isFormError } from '~/lib/utils'
@@ -20,8 +21,8 @@ export default function CancelOrderForm() {
           {...field}
           value={value}
           onChangeText={onChange}
-          placeholder='Lý Do'
-          StartIcon={<Feather name='alert-triangle' size={20} color={PRIMARY_COLOR.LIGHT} />}
+          placeholder='Lý do'
+          StartIcon={<Icon as={AlertTriangle} size={20} color={PRIMARY_COLOR.LIGHT} />}
           autoFocus
           spellCheck={false}
           className={isFormError(errors, 'canceledReason') ? 'border-rose-500' : ''}

@@ -1,6 +1,6 @@
-import { Feather } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Redirect, useRouter } from 'expo-router'
+import { ArrowLeft, CircleDollarSign, MessageCircle } from 'lucide-react-native'
 import { useEffect, useMemo, useState } from 'react'
 import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -8,6 +8,7 @@ import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import CartItem from '~/features/cart/components/cart-item'
@@ -143,12 +144,12 @@ export default function CartScreen() {
       <View className='flex flex-row items-center justify-between p-4'>
         <View className='flex flex-row items-center gap-3'>
           <TouchableOpacity onPress={handleGoBack}>
-            <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
           <Text className='font-inter-medium text-xl'>Giỏ hàng</Text>
         </View>
         <TouchableOpacity onPress={() => router.push('/chat')}>
-          <Feather name='message-circle' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={MessageCircle} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>
       <View className='bg-muted h-2' />
@@ -180,10 +181,10 @@ export default function CartScreen() {
           paddingBottom: bottom
         }}
       >
-        <View className='flex flex-row items-center gap-4 p-4'>
-          <Feather name='dollar-sign' size={20} color={PRIMARY_COLOR.LIGHT} />
-          <Text className='text-sm font-inter-medium'>Tổng</Text>
-          <Text className='font-inter-semibold text-lg text-primary ml-auto'>
+        <View className='flex flex-row items-center gap-2 p-4'>
+          <Icon as={CircleDollarSign} size={20} color={PRIMARY_COLOR.LIGHT} />
+          <Text className='text-sm font-inter-medium flex-1'>Tổng</Text>
+          <Text className='font-inter-semibold text-lg text-primary'>
             <Text className='underline font-inter-semibold text-primary'>đ</Text>
             {totalPrice > 0 ? totalPrice.toLocaleString('vi-VN') : 0}
           </Text>

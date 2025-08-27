@@ -1,6 +1,8 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { ChevronRight } from 'lucide-react-native'
 import { TouchableOpacity, View } from 'react-native'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
@@ -33,7 +35,7 @@ export default function PreviewAddressCard({ address, fullName, phoneNumber, onP
             {address?.street}, {address?.ward}, {address?.district}, {address?.province}
           </Text>
         </View>
-        <Feather name='chevron-right' size={20} color='lightgray' className='self-center' />
+        <Icon as={ChevronRight} size={20} color='lightgray' className='self-center' />
       </Card>
     </TouchableOpacity>
   )

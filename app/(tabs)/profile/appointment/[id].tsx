@@ -1,8 +1,19 @@
-import { Feather, MaterialIcons } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { format, parse } from 'date-fns'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import {
+  Activity,
+  ArrowLeft,
+  CalendarDays,
+  Clock,
+  FileText,
+  MapIcon,
+  MapPin,
+  Phone,
+  XCircle
+} from 'lucide-react-native'
 import { useMemo, useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { Alert, Image, Linking, ScrollView, TouchableOpacity, useWindowDimensions, View } from 'react-native'
@@ -13,6 +24,7 @@ import SafeView from '~/components/safe-view'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Card } from '~/components/ui/card'
 import { Dialog, DialogContent, DialogTrigger } from '~/components/ui/dialog'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import CancelAppointmentForm from '~/features/appointment/components/cancel-appointment-form'
@@ -133,7 +145,7 @@ export default function AppointmentDetailScreen() {
     <SafeView>
       <View className='flex flex-row items-center gap-3 p-4 bg-background'>
         <TouchableOpacity onPress={handleGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='font-inter-medium text-xl text-foreground'>Thông tin lịch hẹn</Text>
       </View>
@@ -162,14 +174,14 @@ export default function AppointmentDetailScreen() {
                 <Separator className='my-2.5' />
 
                 <View className='flex-row items-start gap-1 mb-1'>
-                  <Feather name='map-pin' size={16} color={PRIMARY_COLOR.LIGHT} />
+                  <Icon as={MapPin} size={16} color={PRIMARY_COLOR.LIGHT} />
                   <Text className='text-xs text-muted-foreground flex-1' numberOfLines={2}>
                     {appointment?.branch.street}, {appointment?.branch.ward}, {appointment?.branch.district},
                     {appointment?.branch.province}
                   </Text>
                 </View>
                 <View className='flex-row items-center gap-1'>
-                  <Feather name='clock' size={16} color={PRIMARY_COLOR.LIGHT} />
+                  <Icon as={Clock} size={16} color={PRIMARY_COLOR.LIGHT} />
                   <Text className='text-xs text-muted-foreground'>
                     {appointment?.branch.openingHour && appointment?.branch.closingHour ? (
                       <>
@@ -208,7 +220,7 @@ export default function AppointmentDetailScreen() {
                 className='px-4 py-2 rounded-xl flex-row items-center justify-center gap-2 bg-blue-50 mt-1'
                 onPress={() => openInMaps(appointment?.branch.latitude ?? 0, appointment?.branch.longitude ?? 0)}
               >
-                <Feather name='map' size={16} color='#2563eb' />
+                <Icon as={MapIcon} size={16} color='#2563eb' />
                 <Text className='text-sm text-blue-600 font-inter-medium'>Mở Google Maps</Text>
               </TouchableOpacity>
             </Card>
@@ -237,7 +249,7 @@ export default function AppointmentDetailScreen() {
                   onPress={() => makePhoneCall(appointment?.branch.branchManager.phoneNumber ?? '')}
                   disabled={isCanceled}
                 >
-                  <Feather name='phone' size={16} color={PRIMARY_COLOR.LIGHT} />
+                  <Icon as={Phone} size={16} color={PRIMARY_COLOR.LIGHT} />
                   <Text className='text-sm text-primary font-inter-medium'>Gọi</Text>
                 </TouchableOpacity>
               </View>
@@ -250,7 +262,7 @@ export default function AppointmentDetailScreen() {
               <View className='flex-row items-center justify-between mb-2'>
                 <View className='flex-row items-center gap-2'>
                   <View className='w-8 h-8 bg-green-100 rounded-full items-center justify-center'>
-                    <Feather name='calendar' size={14} color='#059669' />
+                    <Icon as={CalendarDays} size={14} color='#059669' />
                   </View>
                   <Text className='text-sm text-muted-foreground'>Ngày & giờ</Text>
                 </View>
@@ -262,7 +274,7 @@ export default function AppointmentDetailScreen() {
               <View className='flex-row items-center justify-between mb-2'>
                 <View className='flex-row items-center gap-2'>
                   <View className={cn('w-8 h-8 rounded-full items-center justify-center', bgColor)}>
-                    <Feather name='activity' size={14} color={iconColor} />
+                    <Icon as={Activity} size={14} color={iconColor} />
                   </View>
                   <Text className='text-sm text-muted-foreground'>Trạng thái</Text>
                 </View>
@@ -275,7 +287,7 @@ export default function AppointmentDetailScreen() {
               <View className='flex-row items-center justify-between'>
                 <View className='flex-row items-center gap-2'>
                   <View className='w-8 h-8 bg-amber-100 rounded-full items-center justify-center'>
-                    <Feather name='file-text' size={14} color='#d97706' />
+                    <Icon as={FileText} size={14} color='#d97706' />
                   </View>
                   <Text className='text-sm text-muted-foreground'>Ghi chú</Text>
                 </View>
@@ -301,12 +313,11 @@ export default function AppointmentDetailScreen() {
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                   <DialogTrigger asChild>
                     <TouchableOpacity className='p-3 rounded-xl flex-row items-center justify-center gap-2 bg-rose-50'>
-                      <Feather name='x' size={16} color='#e11d48' />
+                      <Icon as={XCircle} size={16} color='#e11d48' />
                       <Text className='text-sm text-rose-600 font-inter-medium'>Hủy lịch hẹn</Text>
                     </TouchableOpacity>
                   </DialogTrigger>
                   <DialogContent
-                    displayCloseButton={false}
                     style={{
                       marginBottom: keyboardHeight / 2.5,
                       width: width - 30,
@@ -326,7 +337,7 @@ export default function AppointmentDetailScreen() {
                         onPress={methods.handleSubmit(onSubmit)}
                         disabled={cancelAppointmentMutation.isPending}
                       >
-                        <Feather name='x' size={16} color='#e11d48' />
+                        <Icon as={XCircle} size={16} color='#e11d48' />
                         <Text className='text-sm text-rose-600 font-inter-medium'>
                           {cancelAppointmentMutation.isPending ? 'Đang hủy...' : 'Hủy lịch hẹn'}
                         </Text>
@@ -343,7 +354,7 @@ export default function AppointmentDetailScreen() {
                 <View className='flex-row items-center justify-between mb-2'>
                   <View className='flex-row items-center gap-2'>
                     <View className='w-8 h-8 bg-rose-100 rounded-full items-center justify-center'>
-                      <Feather name='calendar' size={14} color='#e11d48' />
+                      <Icon as={CalendarDays} size={14} color='#e11d48' />
                     </View>
                     <Text className='text-sm text-muted-foreground'>Đã hủy lúc</Text>
                   </View>
@@ -355,7 +366,7 @@ export default function AppointmentDetailScreen() {
                 <View className='flex-row items-center justify-between'>
                   <View className='flex-row items-center gap-2'>
                     <View className='w-8 h-8 bg-rose-100 rounded-full items-center justify-center'>
-                      <Feather name='file-text' size={14} color='#e11d48' />
+                      <Icon as={FileText} size={14} color='#e11d48' />
                     </View>
                     <Text className='text-sm text-muted-foreground'>Lý do</Text>
                   </View>

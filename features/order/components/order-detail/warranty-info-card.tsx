@@ -1,8 +1,10 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { format } from 'date-fns'
 import { useRouter } from 'expo-router'
+import { Link } from 'lucide-react-native'
 import { TouchableOpacity, View } from 'react-native'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { getWarrantyRequestStatus } from '~/features/warranty-request/utils'
 import { styles } from '~/lib/constants/constants'
@@ -97,7 +99,7 @@ export default function WarrantyInfoCard({ warrantyRequestDetail, isSameOrder }:
               onPress={handleGoToOrder}
               className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-2 bg-blue-600'
             >
-              <Feather name='link' size={16} color='white' />
+              <Icon as={Link} size={16} color='white' />
               <Text className='text-sm text-white font-inter-medium'>Xem đơn hàng</Text>
             </TouchableOpacity>
           </View>

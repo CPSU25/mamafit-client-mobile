@@ -1,10 +1,11 @@
-import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
 import FieldError from '~/components/field-error'
 import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import CreateDesignRequestForm from '~/features/design-request/components/create-request-form'
 import { usePlaceDesignRequestOrder } from '~/features/order/hooks/use-place-design-request-order'
@@ -46,7 +47,7 @@ export default function DesignRequestScreen() {
     <SafeView>
       <View className='flex flex-row items-center gap-3 p-4'>
         <TouchableOpacity onPress={handleGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='font-inter-medium text-xl'>Liên hệ Designer</Text>
       </View>

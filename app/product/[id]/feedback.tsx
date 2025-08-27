@@ -1,9 +1,10 @@
-import { Feather } from '@expo/vector-icons'
 import { format } from 'date-fns'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft, MessageCircle, ShoppingBag } from 'lucide-react-native'
 import { FlatList, TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import FeedbackItem from '~/features/dress/components/feedback-item'
@@ -40,16 +41,16 @@ export default function ViewDressFeedbackScreen() {
       <View className='flex flex-row justify-between items-center p-4'>
         <View className='flex-row items-center gap-3 flex-1'>
           <TouchableOpacity onPress={handleGoBack}>
-            <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
           <Text className='font-inter-medium text-xl'>Đánh giá</Text>
         </View>
         <View className='flex flex-row items-center gap-6 mr-1.5'>
           <TouchableOpacity onPress={() => router.push('/cart')}>
-            <Feather name='shopping-bag' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={ShoppingBag} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push('/chat')}>
-            <Feather name='message-circle' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={MessageCircle} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
         </View>
       </View>

@@ -1,7 +1,9 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { format } from 'date-fns'
+import { ChevronDown, ChevronUp } from 'lucide-react-native'
 import { TouchableOpacity, View } from 'react-native'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
 import { PRIMARY_COLOR, styles } from '~/lib/constants/constants'
@@ -156,12 +158,12 @@ export default function OrderDetails({
           {isViewMoreOrderDetails ? (
             <TouchableOpacity className='flex-row items-center gap-1 justify-center p-2' onPress={toggleViewMore}>
               <Text className='text-muted-foreground text-xs'>Thu gọn</Text>
-              <Feather name='chevron-up' color={isDarkColorScheme ? 'lightgray' : 'gray'} size={16} />
+              <Icon as={ChevronUp} color={isDarkColorScheme ? 'lightgray' : 'gray'} size={16} />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity className='flex-row items-center gap-1 justify-center p-2' onPress={toggleViewMore}>
               <Text className='text-muted-foreground text-xs'>Xem thêm</Text>
-              <Feather name='chevron-down' color={isDarkColorScheme ? 'lightgray' : 'gray'} size={16} />
+              <Icon as={ChevronDown} color={isDarkColorScheme ? 'lightgray' : 'gray'} size={16} />
             </TouchableOpacity>
           )}
         </View>

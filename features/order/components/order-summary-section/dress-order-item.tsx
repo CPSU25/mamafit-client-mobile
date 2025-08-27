@@ -1,7 +1,9 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { ChevronDown, ChevronRight, Plus } from 'lucide-react-native'
 import { Image, TouchableOpacity, View } from 'react-native'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { DressVariant } from '~/types/dress.type'
 import { OrderItemType } from '~/types/order.type'
@@ -73,9 +75,9 @@ export default function DressOrderItem({
             <MaterialCommunityIcons name='plus-box-multiple' size={iconSize} color='#2563eb' />
             <Text className='font-inter-medium native:text-sm text-blue-600 flex-1'>MamaFit Add-Ons</Text>
             {hasOptions ? (
-              <Feather name='chevron-down' size={iconSize} color='#2563eb' />
+              <Icon as={ChevronDown} size={iconSize} color='#2563eb' />
             ) : (
-              <Feather name='chevron-right' size={iconSize} color='#2563eb' />
+              <Icon as={ChevronRight} size={iconSize} color='#2563eb' />
             )}
           </View>
         </TouchableOpacity>
@@ -100,7 +102,7 @@ export default function DressOrderItem({
               }
               className='flex-row items-center gap-2 justify-center py-2'
             >
-              <Feather name='plus' size={iconSize} color='#2563eb' />
+              <Icon as={Plus} size={iconSize} color='#2563eb' />
               <Text className='native:text-sm text-blue-600 font-inter-medium'>
                 Thêm dịch vụ ({dressOptions.length})
               </Text>

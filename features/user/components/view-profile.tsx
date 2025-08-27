@@ -1,6 +1,7 @@
-import { Feather } from '@expo/vector-icons'
+import { Mail, Phone, UserRound } from 'lucide-react-native'
 import { View } from 'react-native'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { placeholderImage, PRIMARY_COLOR } from '~/lib/constants/constants'
@@ -25,7 +26,7 @@ export default function ViewProfile({ user }: ViewProfileProps) {
 
       <View className='flex-row items-center'>
         <View className='p-2 bg-primary/10 rounded-full'>
-          <Feather name='user' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={UserRound} size={18} color={PRIMARY_COLOR.LIGHT} />
         </View>
         <View className='ml-3 flex-1'>
           <Text className='font-inter-medium text-sm'>Tên tài khoản</Text>
@@ -36,7 +37,7 @@ export default function ViewProfile({ user }: ViewProfileProps) {
       <Separator />
       <View className='flex-row items-center'>
         <View className='p-2 bg-primary/10 rounded-full'>
-          <Feather name='user' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={UserRound} size={18} color={PRIMARY_COLOR.LIGHT} />
         </View>
         <View className='ml-3 flex-1'>
           <Text className='font-inter-medium text-sm'>Tên đăng nhập</Text>
@@ -47,7 +48,7 @@ export default function ViewProfile({ user }: ViewProfileProps) {
       <Separator />
       <View className='flex-row items-center'>
         <View className='p-2 bg-primary/10 rounded-full'>
-          <Feather name='mail' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={Mail} size={18} color={PRIMARY_COLOR.LIGHT} />
         </View>
         <View className='ml-3 flex-1'>
           <Text className='font-inter-medium text-sm'>Email</Text>
@@ -58,7 +59,7 @@ export default function ViewProfile({ user }: ViewProfileProps) {
       <Separator />
       <View className='flex-row items-center'>
         <View className='p-2 bg-primary/10 rounded-full'>
-          <Feather name='phone' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={Phone} size={18} color={PRIMARY_COLOR.LIGHT} />
         </View>
         <View className='ml-3 flex-1'>
           <Text className='font-inter-medium text-sm'>Số điện thoại</Text>

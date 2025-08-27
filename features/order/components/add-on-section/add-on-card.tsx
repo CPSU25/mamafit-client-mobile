@@ -1,5 +1,6 @@
-import { Feather } from '@expo/vector-icons'
+import { ChevronRight } from 'lucide-react-native'
 import { Image, View } from 'react-native'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { AddOnImageConfig, AddOnMap } from '../../types'
 
@@ -38,7 +39,7 @@ export default function AddOnCard({ addOn, getAddOnImage }: AddOnCardProps) {
           ) : null}
         </View>
       </View>
-      <Feather name='chevron-right' size={18} color='lightgray' />
+      <Icon as={ChevronRight} size={18} color='lightgray' />
     </View>
   )
 }

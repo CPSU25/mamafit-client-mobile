@@ -1,12 +1,13 @@
-import { Feather } from '@expo/vector-icons'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormProvider, SubmitHandler, useFieldArray } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import { WarningCard } from '~/components/ui/alert-card'
+import { Icon } from '~/components/ui/icon'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
 import PreviewAddressCard from '~/features/order/components/address-section/address/preview-address-card'
@@ -217,7 +218,7 @@ export default function CreateWarrantyRequestScreen() {
     <SafeView>
       <View className='flex flex-row items-center gap-3 p-4'>
         <TouchableOpacity onPress={handleGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='font-inter-medium text-xl'>Dịch vụ bảo hành</Text>
       </View>

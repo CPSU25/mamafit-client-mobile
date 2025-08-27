@@ -1,9 +1,10 @@
-import { Feather } from '@expo/vector-icons'
+import { ChevronLeft, ChevronRight } from 'lucide-react-native'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, useWindowDimensions, View } from 'react-native'
 import { LineChart } from 'react-native-gifted-charts'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { useGetDiaryDetail } from '~/features/diary/hooks/use-get-diary-detail'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
@@ -175,10 +176,10 @@ export default function WaistHipOverTimeChart({
         {/* Navigation Buttons */}
         <View className='flex flex-row items-center gap-2'>
           <Button size='icon' variant='outline' onPress={() => handleNavigation('prev')} disabled={isLoading}>
-            <Feather name='chevron-left' size={24} color={WAIST_HIP_CHART_COLORS.WAIST.primary} />
+            <Icon as={ChevronLeft} size={24} color={WAIST_HIP_CHART_COLORS.WAIST.primary} />
           </Button>
           <Button size='icon' variant='outline' onPress={() => handleNavigation('next')} disabled={isLoading}>
-            <Feather name='chevron-right' size={24} color={WAIST_HIP_CHART_COLORS.HIP.primary} />
+            <Icon as={ChevronRight} size={24} color={WAIST_HIP_CHART_COLORS.HIP.primary} />
           </Button>
         </View>
       </View>

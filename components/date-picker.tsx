@@ -1,11 +1,12 @@
-import { Feather } from '@expo/vector-icons'
 import { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import { format } from 'date-fns'
+import { CalendarDays, XCircle } from 'lucide-react-native'
 import { Control, Controller, FieldErrors, FieldValues, Path } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
 import { useFieldError } from '~/hooks/use-field-error'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { isFormError } from '~/lib/utils'
+import { Icon } from './ui/icon'
 import { Input } from './ui/input'
 import { Text } from './ui/text'
 
@@ -73,10 +74,10 @@ export default function DatePicker<T extends FieldValues>({
             <Input
               value={value ? format(new Date(value), 'dd/MM/yyyy') : ''}
               placeholder={placeholder}
-              StartIcon={<Feather name='calendar' size={20} color={PRIMARY_COLOR.LIGHT} />}
+              StartIcon={<Icon as={CalendarDays} size={20} color={PRIMARY_COLOR.LIGHT} />}
               {...(value &&
                 !disabled && {
-                  EndIcon: <Feather name='x-circle' size={20} color='gray' />,
+                  EndIcon: <Icon as={XCircle} size={20} color='gray' />,
                   onEndIconPress: () => onChange(null)
                 })}
               readOnly

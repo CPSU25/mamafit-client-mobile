@@ -1,6 +1,6 @@
-import { Feather } from '@expo/vector-icons'
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { isBefore, parse } from 'date-fns'
+import { FileText } from 'lucide-react-native'
 import { useMemo } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
@@ -8,6 +8,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated'
 import DatePicker from '~/components/date-picker'
 import FieldError from '~/components/field-error'
 import { InfoCard } from '~/components/ui/alert-card'
+import { Icon } from '~/components/ui/icon'
 import { Input } from '~/components/ui/input'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
@@ -57,10 +58,10 @@ export default function BookAppointmentForm({ availableSlots, bookingDate, isLoa
           name='note'
           render={({ field: { onChange, value } }) => (
             <Input
-              placeholder='Ghi Chú'
+              placeholder='Ghi chú'
               value={value}
               onChangeText={onChange}
-              StartIcon={<Feather name='file-text' size={20} color={PRIMARY_COLOR.LIGHT} />}
+              StartIcon={<Icon as={FileText} size={20} color={PRIMARY_COLOR.LIGHT} />}
             />
           )}
         />

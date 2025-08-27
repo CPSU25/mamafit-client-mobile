@@ -1,5 +1,5 @@
-import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { useEffect } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
@@ -9,6 +9,7 @@ import SafeView from '~/components/safe-view'
 import { InfoCard, WarningCard } from '~/components/ui/alert-card'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { MeasurementField } from '~/features/diary/components/measurement-field'
 import { useEditMeasurementDetail } from '~/features/diary/hooks/use-edit-measurement-detail'
@@ -135,7 +136,7 @@ export default function DiaryHistoryDetailScreen() {
           <View className='flex flex-row items-center justify-between p-4'>
             <View className='flex flex-row items-center gap-3'>
               <TouchableOpacity onPress={handleGoBack}>
-                <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+                <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
               </TouchableOpacity>
               <Text className='text-xl font-inter-medium flex-1'>
                 Số đo tuần thứ {measurementDetail?.weekOfPregnancy}

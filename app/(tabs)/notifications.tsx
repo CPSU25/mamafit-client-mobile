@@ -1,9 +1,10 @@
-import { Feather } from '@expo/vector-icons'
 import { Redirect, useRouter } from 'expo-router'
+import { ChevronRight, MessageCircle, ShoppingBag } from 'lucide-react-native'
 import React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import NotificationsList from '~/features/notifications/components/notifications-list'
@@ -61,10 +62,10 @@ export default function NotificationsScreen() {
         <Text className='text-xl font-inter-medium'>Thông báo</Text>
         <View className='flex flex-row items-center gap-6 mr-1.5'>
           <TouchableOpacity onPress={() => router.push('/cart')}>
-            <Feather name='shopping-bag' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={ShoppingBag} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push('/chat')}>
-            <Feather name='message-circle' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={MessageCircle} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
         </View>
       </View>
@@ -102,7 +103,7 @@ function NotificationCard({ notification }: { notification: NotificationFilter }
         <Text className='text-sm font-inter-medium'>{notification.name}</Text>
         <Text className='text-muted-foreground text-xs'>{notification.description}</Text>
       </View>
-      <Feather name='chevron-right' size={18} color='lightgray' />
+      <Icon as={ChevronRight} size={18} color='lightgray' />
     </View>
   )
 }

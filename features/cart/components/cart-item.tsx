@@ -1,7 +1,8 @@
-import { Feather } from '@expo/vector-icons'
+import { Check, Minus, Plus, Trash2 } from 'lucide-react-native'
 import { useEffect, useState } from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
 import { SelectedItem } from '~/app/cart'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { cn } from '~/lib/utils'
@@ -111,11 +112,11 @@ export default function CartItem({ item, setSelectedItems, selectedItems }: Cart
             disabled={isDisabled}
           >
             <View className={cn('w-5 h-5 rounded-md border border-muted-foreground', isSelected && 'bg-primary')}>
-              {isSelected && <Feather name='check' size={16} color='white' />}
+              {isSelected && <Icon as={Check} size={16} color='white' />}
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => removeItem(item.itemId)} disabled={removeCartItemMutation.isPending}>
-            <Feather name='trash-2' size={16} color='#f43f5e' />
+            <Icon as={Trash2} size={16} color='#f43f5e' />
           </TouchableOpacity>
         </View>
 
@@ -146,8 +147,8 @@ export default function CartItem({ item, setSelectedItems, selectedItems }: Cart
                   onPress={handleDecrement}
                   disabled={updateCartItemMutation.isPending || quantity <= 1}
                 >
-                  <Feather
-                    name='minus'
+                  <Icon
+                    as={Minus}
                     size={12}
                     color={quantity <= 1 || updateCartItemMutation.isPending ? 'lightgray' : PRIMARY_COLOR.LIGHT}
                   />
@@ -160,8 +161,8 @@ export default function CartItem({ item, setSelectedItems, selectedItems }: Cart
                   onPress={handleIncrement}
                   disabled={updateCartItemMutation.isPending || quantity >= 99}
                 >
-                  <Feather
-                    name='plus'
+                  <Icon
+                    as={Plus}
                     size={12}
                     color={quantity >= 99 || updateCartItemMutation.isPending ? 'lightgray' : PRIMARY_COLOR.LIGHT}
                   />
@@ -191,11 +192,11 @@ export default function CartItem({ item, setSelectedItems, selectedItems }: Cart
             disabled={isDisabled}
           >
             <View className={cn('w-5 h-5 rounded-md border border-muted-foreground', isSelected && 'bg-primary')}>
-              {isSelected && <Feather name='check' size={16} color='white' />}
+              {isSelected && <Icon as={Check} size={16} color='white' />}
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => removeItem(item.itemId)} disabled={removeCartItemMutation.isPending}>
-            <Feather name='trash-2' size={16} color='#f43f5e' />
+            <Icon as={Trash2} size={16} color='#f43f5e' />
           </TouchableOpacity>
         </View>
 
@@ -237,8 +238,8 @@ export default function CartItem({ item, setSelectedItems, selectedItems }: Cart
                   onPress={handleDecrement}
                   disabled={updateCartItemMutation.isPending || quantity <= 1}
                 >
-                  <Feather
-                    name='minus'
+                  <Icon
+                    as={Minus}
                     size={12}
                     color={quantity <= 1 || updateCartItemMutation.isPending ? 'lightgray' : PRIMARY_COLOR.LIGHT}
                   />
@@ -251,8 +252,8 @@ export default function CartItem({ item, setSelectedItems, selectedItems }: Cart
                   onPress={handleIncrement}
                   disabled={updateCartItemMutation.isPending || quantity >= 99}
                 >
-                  <Feather
-                    name='plus'
+                  <Icon
+                    as={Plus}
                     size={12}
                     color={quantity >= 99 || updateCartItemMutation.isPending ? 'lightgray' : PRIMARY_COLOR.LIGHT}
                   />

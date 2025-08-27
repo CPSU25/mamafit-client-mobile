@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons'
+import { Info, Weight } from 'lucide-react-native'
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { View } from 'react-native'
@@ -6,6 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import FieldError from '~/components/field-error'
 import { TipCard } from '~/components/ui/alert-card'
+import { Icon } from '~/components/ui/icon'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
@@ -39,7 +40,7 @@ export default function PreviewMeasurementForm() {
               <Input
                 placeholder='Cân nặng'
                 keyboardType='numeric'
-                StartIcon={<Feather name='activity' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                StartIcon={<Icon as={Weight} size={20} color={PRIMARY_COLOR.LIGHT} />}
                 {...field}
                 value={value}
                 onChangeText={onChange}
@@ -70,7 +71,7 @@ export default function PreviewMeasurementForm() {
                   <Input
                     placeholder='Vòng ngực'
                     keyboardType='numeric'
-                    StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                    StartIcon={<Icon as={Info} size={20} color={PRIMARY_COLOR.LIGHT} />}
                     {...field}
                     value={value}
                     onChangeText={onChange}
@@ -91,7 +92,7 @@ export default function PreviewMeasurementForm() {
                   <Input
                     placeholder='Vòng eo'
                     keyboardType='numeric'
-                    StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                    StartIcon={<Icon as={Info} size={20} color={PRIMARY_COLOR.LIGHT} />}
                     {...field}
                     value={value}
                     onChangeText={onChange}
@@ -112,7 +113,7 @@ export default function PreviewMeasurementForm() {
                   <Input
                     placeholder='Vòng hông'
                     keyboardType='numeric'
-                    StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                    StartIcon={<Icon as={Info} size={20} color={PRIMARY_COLOR.LIGHT} />}
                     {...field}
                     value={value}
                     onChangeText={onChange}

@@ -1,5 +1,6 @@
-import { Feather } from '@expo/vector-icons'
+import { XCircle } from 'lucide-react-native'
 import { Image, TouchableOpacity, View } from 'react-native'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { AddOnOptionItem } from '../../types'
 
@@ -14,7 +15,7 @@ export default function PreviewAddOnOptionCard({ option, onRemove, iconSize, qua
   return (
     <View className='flex-row items-center gap-2 px-2 py-0.5 rounded-lg'>
       <TouchableOpacity onPress={onRemove} className='pr-1'>
-        <Feather name='x-circle' color='lightgray' size={iconSize} />
+        <Icon as={XCircle} size={iconSize} color='lightgray' />
       </TouchableOpacity>
 
       {option.type === 'IMAGE' && <Image source={{ uri: option.value }} className='w-8 h-8 rounded-lg' />}

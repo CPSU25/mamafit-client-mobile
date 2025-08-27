@@ -1,7 +1,8 @@
-import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft, PlusCircle } from 'lucide-react-native'
 import { TouchableOpacity, View } from 'react-native'
 import SafeView from '~/components/safe-view'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import HistoriesList from '~/features/diary/components/lists/histories-list'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
@@ -22,11 +23,11 @@ export default function DiaryHistoryScreen() {
     <SafeView>
       <View className='flex flex-row items-center gap-3 p-4'>
         <TouchableOpacity onPress={handleGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='text-xl font-inter-medium flex-1'>Lịch sử số đo</Text>
         <TouchableOpacity onPress={() => router.push({ pathname: '/diary/[id]/create', params: { id } })}>
-          <Feather name='plus' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={PlusCircle} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>
 

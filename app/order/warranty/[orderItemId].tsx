@@ -1,12 +1,14 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { format } from 'date-fns'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft, Link } from 'lucide-react-native'
 import { useEffect, useMemo, useRef } from 'react'
 import { Animated, FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { VideoThumbnail } from '~/components/ui/video-picker'
@@ -138,7 +140,7 @@ export default function ViewWarrantyHistory() {
     <SafeView>
       <View className='flex-row items-center gap-2 px-4 pt-4'>
         <TouchableOpacity onPress={handleGoBack} className='p-1'>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='font-inter-medium text-xl text-foreground'>Lịch sử bảo hành</Text>
       </View>
@@ -253,7 +255,7 @@ export default function ViewWarrantyHistory() {
                       }
                       className='bg-primary/10 border border-primary/20 rounded-xl p-2 flex-row justify-center items-center gap-2'
                     >
-                      <Feather name='link' size={16} color={PRIMARY_COLOR.LIGHT} />
+                      <Icon as={Link} size={16} color={PRIMARY_COLOR.LIGHT} />
                       <Text className='text-primary font-inter-medium text-sm'>Xem đơn hàng</Text>
                     </TouchableOpacity>
                   </View>
@@ -443,7 +445,7 @@ export default function ViewWarrantyHistory() {
                       }
                       className='bg-primary/10 border border-primary/20 rounded-xl p-2 flex-row justify-center items-center gap-2'
                     >
-                      <Feather name='link' size={16} color={PRIMARY_COLOR.LIGHT} />
+                      <Icon as={Link} size={16} color={PRIMARY_COLOR.LIGHT} />
                       <Text className='text-primary font-inter-medium text-sm'>Xem đơn hàng</Text>
                     </TouchableOpacity>
                   </View>

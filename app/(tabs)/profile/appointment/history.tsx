@@ -1,12 +1,13 @@
-import { Feather } from '@expo/vector-icons'
 import { format } from 'date-fns'
 import { useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { useMemo } from 'react'
 import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import AppointmentCard from '~/components/card/appointment-card'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { useGetAppointments } from '~/features/appointment/hooks/use-get-appointments'
 import { DateRange, SectionData } from '~/features/appointment/types'
@@ -116,7 +117,7 @@ export default function AppointmentHistoryScreen() {
     <SafeView>
       <View className='flex flex-row items-center gap-3 p-4 bg-background'>
         <TouchableOpacity onPress={handleGoBack} className='p-1'>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='font-inter-medium text-xl text-foreground'>Lịch sử lịch hẹn</Text>
       </View>
