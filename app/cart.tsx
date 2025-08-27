@@ -126,7 +126,9 @@ export default function CartScreen() {
       )
     }
 
-    setSelectedItems([])
+    setTimeout(() => {
+      setSelectedItems([])
+    }, 500)
     router.push('/order/review')
   }
 

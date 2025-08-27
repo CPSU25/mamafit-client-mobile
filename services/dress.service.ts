@@ -35,7 +35,9 @@ class DressService {
   async getFeedbacks(dressId: string) {
     const { data } = await api.get<BaseResponse<Feedback[]>>(`feedback/maternity-dress/${dressId}`)
 
-    const feedbacks = data?.data ?? []
+    const feedbacks = (data?.data ?? []).sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
 
     const totalFeedbacks = feedbacks.length
     const totalRating = feedbacks.reduce((sum, f) => sum + f.rated, 0)

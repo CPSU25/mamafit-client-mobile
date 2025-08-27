@@ -76,6 +76,12 @@ export const useCreateMeasurement = (measurementDiaryId: string, onSuccess: () =
       queryClient.invalidateQueries({ queryKey: ['diaries'] })
       queryClient.invalidateQueries({ queryKey: ['week-of-pregnancy'] })
       router.back()
+    },
+    onError: (error) => {
+      console.log(error.response)
+      measurementsMethods.setError('root', {
+        message: error.response?.data.errorMessage || ERROR_MESSAGES.SOMETHING_WENT_WRONG
+      })
     }
   })
 

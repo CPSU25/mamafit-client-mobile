@@ -1,22 +1,22 @@
 import { AntDesign, Feather } from '@expo/vector-icons'
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useCallback, useRef } from 'react'
-import { Dimensions, FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native'
+import { useCallback, useRef, useState } from 'react'
+import { Dimensions, ScrollView, TouchableOpacity, View } from 'react-native'
+import RenderHtml from 'react-native-render-html'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
-import Ratings from '~/components/ratings'
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import DressCarousel from '~/features/dress/components/dress-carousel'
 import DressVariantSelectionModal from '~/features/dress/components/dress-variant-selection-modal'
+import FeedbackItem from '~/features/dress/components/feedback-item'
 import { useGetDress } from '~/features/dress/hooks/use-get-dress'
 import { useGetFeedbacks } from '~/features/dress/hooks/use-get-feedbacks'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
-import { Feedback } from '~/types/feedback.type'
-import RenderHtml from 'react-native-render-html'
+
+const COLLAPSED_DESC_HEIGHT = 180
 
 export default function ProductDetailScreen() {
   const router = useRouter()
@@ -37,6 +37,9 @@ export default function ProductDetailScreen() {
   const { bottom } = useSafeAreaInsets()
 
   const variantSelectionModalRef = useRef<BottomSheetModal>(null)
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
+  const [descriptionHeight, setDescriptionHeight] = useState(0)
+  const canExpandDescription = descriptionHeight > COLLAPSED_DESC_HEIGHT
 
   const handlePresentVariantModal = useCallback(() => {
     variantSelectionModalRef.current?.present()
@@ -54,10 +57,6 @@ export default function ProductDetailScreen() {
     }
   }
 
-  // const toggleDescription = () => {
-  //   setIsDescriptionExpanded((prev) => !prev)
-  // }
-
   const { refreshControl } = useRefreshs([refetchDress, refetchFeedbacks])
 
   if (isLoadingDress || isLoadingFeedbacks) {
@@ -67,9 +66,7 @@ export default function ProductDetailScreen() {
   return (
     <BottomSheetModalProvider>
       <View className='relative flex-1'>
-        <ScrollView className='flex-1' showsVerticalScrollIndicator={false} refreshControl={refreshControl}>
-          <DressCarousel images={dress?.images ?? []} />
-
+        <View className='z-10 relative'>
           <TouchableOpacity onPress={handleGoBack} className='absolute top-10 left-4 bg-black/50 rounded-full p-1.5'>
             <Feather name='arrow-left' size={24} color='white' />
           </TouchableOpacity>
@@ -79,9 +76,13 @@ export default function ProductDetailScreen() {
           >
             <Feather name='shopping-bag' size={24} color='white' />
           </TouchableOpacity>
+        </View>
 
-          <View className='flex flex-col gap-2 mb-28'>
-            <View className='flex flex-row items-center justify-between px-4 pt-4'>
+        <ScrollView className='flex-1' showsVerticalScrollIndicator={false} refreshControl={refreshControl}>
+          <DressCarousel images={dress?.images ?? []} />
+
+          <View className='mb-20'>
+            <View className='flex flex-row items-center justify-between px-4 pt-4 pb-2'>
               {hasMultiplePrices && minPrice !== maxPrice ? (
                 <View className='flex-row items-center gap-1'>
                   <Text className='text-primary font-inter-semibold text-xl'>
@@ -102,101 +103,134 @@ export default function ProductDetailScreen() {
               <Text className='font-inter-medium text-xs'>Đã bán {dress?.soldCount}</Text>
             </View>
 
-            <Text className='font-inter-medium my-1 px-4' numberOfLines={2}>
+            <Text className='font-inter-medium my-1 px-4 pb-2' numberOfLines={2}>
               {dress?.name}
             </Text>
 
+            {feedbacks?.feedbacks?.length ? (
+              <>
+                <View className='bg-muted h-2' />
+                <TouchableOpacity
+                  className='flex-row items-center gap-1 px-4 py-2'
+                  onPress={() =>
+                    router.push({
+                      pathname: '/product/[id]/feedback',
+                      params: {
+                        id
+                      }
+                    })
+                  }
+                >
+                  <Text className='font-inter-medium text-sm'>{feedbacks?.averageRating?.toFixed(1)}</Text>
+                  <AntDesign name='star' size={14} color='orange' />
+                  <Text className='ml-2 font-inter-medium text-sm flex-1'>
+                    Đánh giá sản phẩm{' '}
+                    <Text className='text-muted-foreground text-[10px]'>({feedbacks?.totalFeedbacks})</Text>
+                  </Text>
+                  <Text className='text-muted-foreground text-xs'>Xem tất cả</Text>
+                  <Feather name='chevron-right' size={16} color='lightgray' />
+                </TouchableOpacity>
+
+                <Separator />
+
+                {feedbacks?.feedbacks?.slice(0, 2).map((feedback, index) => (
+                  <View key={feedback.id}>
+                    <FeedbackItem feedback={feedback} className='px-4 py-2' />
+                    {index !== 1 && <Separator />}
+                  </View>
+                ))}
+              </>
+            ) : null}
+
             <View className='bg-muted h-2' />
 
-            <TouchableOpacity className='flex flex-row items-center gap-1 px-4'>
-              <Text className='font-inter-medium text-sm'>{feedbacks?.averageRating?.toFixed(1)}</Text>
-              <AntDesign name='star' size={14} color='orange' />
-              <Text className='ml-2 font-inter-medium text-sm flex-1'>
-                Đánh giá sản phẩm{' '}
-                <Text className='text-muted-foreground text-[10px]'>({feedbacks?.totalFeedbacks})</Text>
-              </Text>
-              <Text className='text-muted-foreground text-xs'>Xem tất cả</Text>
-              <Feather name='chevron-right' size={16} color='lightgray' />
-            </TouchableOpacity>
-            <Separator />
-
-            {feedbacks?.feedbacks?.map((feedback) => (
-              <FeedbackItem key={feedback.id} feedback={feedback} />
-            ))}
-
-            <View className='bg-muted h-2' />
-            <View className='px-4'>
+            <View className='px-4 pt-4'>
               <Text className='font-inter-medium text-sm'>Mô tả</Text>
-              <RenderHtml
-                tagsStyles={{
-                  p: {
-                    color: '#6B7280',
-                    fontSize: 12,
-                    marginVertical: 4,
-                    lineHeight: 16
-                  },
-                  strong: {
-                    fontSize: 12,
-                    fontWeight: 'bold',
-                    marginTop: 1,
-                    marginBottom: 2
-                  },
-                  ul: {
-                    marginVertical: 3,
-                    paddingLeft: 16
-                  },
-                  ol: {
-                    marginVertical: 3,
-                    paddingLeft: 16
-                  },
-                  li: {
-                    color: '#6B7280',
-                    fontSize: 12,
-                    lineHeight: 16,
-                    paddingLeft: 6
+              <View
+                onLayout={(e) => {
+                  if (descriptionHeight === 0) {
+                    setDescriptionHeight(e.nativeEvent.layout.height)
                   }
                 }}
-                renderersProps={{
-                  ul: {
-                    markerTextStyle: {
+                style={
+                  !isDescriptionExpanded && canExpandDescription
+                    ? { maxHeight: COLLAPSED_DESC_HEIGHT, overflow: 'hidden' }
+                    : undefined
+                }
+              >
+                <RenderHtml
+                  tagsStyles={{
+                    p: {
+                      color: '#6B7280',
+                      fontSize: 12,
+                      marginVertical: 4,
+                      lineHeight: 16
+                    },
+                    strong: {
+                      fontSize: 12,
+                      fontWeight: 'bold',
+                      marginTop: 1,
+                      marginBottom: 2
+                    },
+                    ul: {
+                      marginVertical: 3,
+                      paddingLeft: 16
+                    },
+                    ol: {
+                      marginVertical: 3,
+                      paddingLeft: 16
+                    },
+                    li: {
                       color: '#6B7280',
                       fontSize: 12,
                       lineHeight: 16,
-                      includeFontPadding: false,
-                      textAlignVertical: 'center'
-                    },
-                    markerBoxStyle: {
-                      paddingTop: 0,
-                      transform: [{ translateY: 4.5 }]
+                      paddingLeft: 6
                     }
-                  },
-                  ol: {
-                    markerTextStyle: {
-                      color: '#6B7280',
-                      fontSize: 12,
-                      lineHeight: 16,
-                      includeFontPadding: false,
-                      textAlignVertical: 'center'
+                  }}
+                  renderersProps={{
+                    ul: {
+                      markerTextStyle: {
+                        color: '#6B7280',
+                        fontSize: 12,
+                        lineHeight: 16,
+                        includeFontPadding: false,
+                        textAlignVertical: 'center'
+                      },
+                      markerBoxStyle: {
+                        paddingTop: 0,
+                        transform: [{ translateY: 4.5 }]
+                      }
                     },
-                    markerBoxStyle: {
-                      paddingTop: 0,
-                      transform: [{ translateY: 4.5 }]
+                    ol: {
+                      markerTextStyle: {
+                        color: '#6B7280',
+                        fontSize: 12,
+                        lineHeight: 16,
+                        includeFontPadding: false,
+                        textAlignVertical: 'center'
+                      },
+                      markerBoxStyle: {
+                        paddingTop: 0,
+                        transform: [{ translateY: 4.5 }]
+                      }
                     }
-                  }
-                }}
-                enableExperimentalMarginCollapsing={true}
-                contentWidth={Dimensions.get('window').width}
-                source={{ html: dress?.description ?? '' }}
-              />
+                  }}
+                  enableExperimentalMarginCollapsing={true}
+                  contentWidth={Dimensions.get('window').width}
+                  source={{ html: dress?.description ?? '' }}
+                />
+              </View>
             </View>
-            {/* <Separator /> */}
-            {/* <TouchableOpacity
-              onPress={toggleDescription}
-              className='flex flex-row justify-center items-end gap-1 w-full mb-28'
-            >
-              <Text className='text-xs text-muted-foreground'>{isDescriptionExpanded ? 'Thu gọn' : 'Xem thêm'}</Text>
-              <Feather name={isDescriptionExpanded ? 'chevron-up' : 'chevron-down'} size={16} color='gray' />
-            </TouchableOpacity> */}
+            <Separator />
+            {canExpandDescription ? (
+              <TouchableOpacity
+                className='flex flex-row justify-center items-end gap-1 w-full p-3'
+                onPress={() => setIsDescriptionExpanded((prev) => !prev)}
+              >
+                <Text className='text-xs text-muted-foreground'>{isDescriptionExpanded ? 'Thu gọn' : 'Xem thêm'}</Text>
+                <Feather name={isDescriptionExpanded ? 'chevron-up' : 'chevron-down'} size={16} color='gray' />
+              </TouchableOpacity>
+            ) : null}
           </View>
         </ScrollView>
         <View
@@ -225,42 +259,5 @@ export default function ProductDetailScreen() {
         ) : null}
       </View>
     </BottomSheetModalProvider>
-  )
-}
-
-function FeedbackItem({ feedback }: { feedback: Feedback }) {
-  return (
-    <View className='flex flex-col gap-1.5 px-4'>
-      <View className='flex flex-row items-center gap-2'>
-        <Avatar alt="Zach Nugent's Avatar" className='size-6'>
-          <AvatarImage source={{ uri: 'https://github.com/shadcn.png' }} />
-          <AvatarFallback>
-            <Text>ZN</Text>
-          </AvatarFallback>
-        </Avatar>
-        <Text className='font-inter-medium text-xs'>cần thêm người feedback</Text>
-      </View>
-      <Ratings rating={feedback.rated} displayCount={false} />
-      <Text className='text-muted-foreground text-xs'>Phân loại: Trắng, S</Text>
-      <Text numberOfLines={2} className='text-xs'>
-        {feedback.description}
-      </Text>
-      <FlatList
-        data={feedback.images}
-        renderItem={({ item }) => (
-          <TouchableOpacity>
-            <Image
-              source={{
-                uri: item
-              }}
-              className='size-32 rounded-xl'
-            />
-          </TouchableOpacity>
-        )}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerClassName='gap-2'
-      />
-    </View>
   )
 }

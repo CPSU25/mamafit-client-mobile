@@ -28,7 +28,7 @@ class FeedbackService {
   async getUnratedOrders() {
     const { data } = await api.get<BaseResponse<Order[]>>('order/for-feedback')
 
-    return data.data
+    return data.data?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
   }
 }
 
