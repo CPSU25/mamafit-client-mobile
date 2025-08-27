@@ -79,7 +79,7 @@ export default function OrdersByStatusScreen() {
         <TouchableOpacity onPress={handleGoBack}>
           <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
-        <Text className='font-inter-medium text-xl'>Đơn hàng của tôi</Text>
+        <Text className='font-inter-medium text-xl'>Đơn mua</Text>
       </View>
 
       <View className='px-4 pt-2'>
