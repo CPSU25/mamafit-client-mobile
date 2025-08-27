@@ -49,7 +49,7 @@ export default function DesignBuilderScreen() {
 
   return (
     <ImageBackground
-      source={preset?.images?.[0] ? { uri: preset.images[0] } : require('~/assets/images/mamafit-cover.png')}
+      source={preset?.images?.[0] ? { uri: preset.images[0] } : require('~/assets/images/mamafit-cover.jpg')}
       className='flex-1'
     >
       <SafeView>

@@ -20,7 +20,7 @@ export default function HomeScreen() {
 
   const ListHeaderComponent = useCallback(
     () => (
-      <View className='px-4 pt-2 pb-4 bg-background gap-4 mb-2'>
+      <View className='px-4 pt-2 pb-6 bg-background gap-4 mb-2'>
         <View className='flex-row gap-3'>
           <TouchableOpacity className='relative flex-1' onPress={() => router.push('/diary/create')}>
             <LinearGradient

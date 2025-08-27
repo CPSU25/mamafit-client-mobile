@@ -54,18 +54,22 @@ export default function DesignRequestScreen() {
 
       <View className='bg-muted h-2' />
 
-      <View className='flex-1 p-4'>
-        <FormProvider {...methods}>
-          <CreateDesignRequestForm
-            pickImages={pickImages}
-            resetImages={resetImages}
-            isUploading={isUploading}
-            isMaxReached={isMaxReached}
-            currentImages={currentImages}
-          />
-        </FormProvider>
+      <View className='flex-1'>
+        <View className='p-4'>
+          <FormProvider {...methods}>
+            <CreateDesignRequestForm
+              pickImages={pickImages}
+              resetImages={resetImages}
+              isUploading={isUploading}
+              isMaxReached={isMaxReached}
+              currentImages={currentImages}
+            />
+          </FormProvider>
+        </View>
+
         <View className='flex-1' />
-        <View className='flex flex-col gap-2'>
+
+        <View className='flex flex-col gap-2 px-4'>
           {rootMsg && <FieldError message={rootMsg} />}
           <Button
             onPress={methods.handleSubmit(onSubmit)}

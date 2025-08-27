@@ -181,7 +181,7 @@ export default function ProfileScreen() {
         <View className='bg-muted h-2' />
 
         <TouchableOpacity className='flex-row items-center px-4 py-2.5' onPress={() => router.push('/design')}>
-          <View className='w-10 h-10 bg-blue-50 border border-blue-100 rounded-full justify-center items-center'>
+          <View className='w-10 h-10 bg-blue-50 rounded-full justify-center items-center'>
             <Icon as={Paintbrush} size={18} color='#2563eb' />
           </View>
           <View className='ml-3.5 flex-1'>
@@ -197,7 +197,7 @@ export default function ProfileScreen() {
           className='flex-row items-center px-4 py-2.5'
           onPress={() => router.push('/profile/appointment')}
         >
-          <View className='w-10 h-10 bg-amber-50 border border-amber-100 rounded-full justify-center items-center'>
+          <View className='w-10 h-10 bg-amber-50 rounded-full justify-center items-center'>
             <Icon as={CalendarDays} size={18} color='#d97706' />
           </View>
           <View className='ml-3.5 flex-1'>
@@ -213,7 +213,7 @@ export default function ProfileScreen() {
           className='flex-row items-center px-4 py-2.5'
           onPress={() => router.push('/order/warranty/create')}
         >
-          <View className='w-10 h-10 bg-emerald-50 border border-emerald-100 rounded-full justify-center items-center'>
+          <View className='w-10 h-10 bg-emerald-50 rounded-full justify-center items-center'>
             <Icon as={ShieldPlus} size={18} color='#059669' />
           </View>
           <View className='ml-3.5 flex-1'>
@@ -226,7 +226,7 @@ export default function ProfileScreen() {
         <Separator />
 
         <TouchableOpacity className='flex-row items-center px-4 py-2.5' onPress={() => router.push('/ticket/create')}>
-          <View className='w-10 h-10 bg-rose-50 border border-rose-100 rounded-full justify-center items-center'>
+          <View className='w-10 h-10 bg-rose-50 rounded-full justify-center items-center'>
             <Icon as={MessageCircleWarning} size={18} color='#e11d48' />
           </View>
           <View className='ml-3.5 flex-1'>

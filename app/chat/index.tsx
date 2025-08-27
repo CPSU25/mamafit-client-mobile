@@ -35,7 +35,7 @@ export default function ChatScreen() {
           <TouchableOpacity onPress={handleGoBack}>
             <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
-          <Text className='font-inter-medium text-xl'>Trò Chuyện</Text>
+          <Text className='font-inter-medium text-xl'>Trò chuyện</Text>
         </View>
 
         <View className='bg-muted h-2' />
