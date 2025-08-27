@@ -1,9 +1,9 @@
-import { Feather } from '@expo/vector-icons'
 import { useQueryClient } from '@tanstack/react-query'
 import * as FileSystem from 'expo-file-system'
 import * as MediaLibrary from 'expo-media-library'
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
 import LottieView from 'lottie-react-native'
+import { Check, CircleCheckBig, CreditCard, Download } from 'lucide-react-native'
 import { useCallback, useState } from 'react'
 import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
@@ -12,6 +12,7 @@ import SafeView from '~/components/safe-view'
 import { WarningCard } from '~/components/ui/alert-card'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { useGetPaymentStatus } from '~/features/order/hooks/use-get-payment-status'
@@ -180,7 +181,7 @@ export default function PaymentQRCode() {
             isDarkColorScheme ? 'bg-emerald-950/20' : 'bg-emerald-50'
           )}
         >
-          <Feather name='check-circle' size={32} color='#10b981' />
+          <Icon as={CircleCheckBig} size={32} color='#10b981' />
           <View className='flex-1'>
             <Text
               className={cn('text-xl font-inter-semibold', isDarkColorScheme ? 'text-emerald-400' : 'text-emerald-600')}
@@ -197,7 +198,7 @@ export default function PaymentQRCode() {
           <Animated.View entering={FadeInDown.delay(200)}>
             <Card className='p-3 flex-row items-center gap-2' style={[styles.container]}>
               {isPaymentSuccess ? (
-                <Feather name='check' size={18} color='#10b981' />
+                <Icon as={Check} size={18} color='#10b981' />
               ) : (
                 <ActivityIndicator size='small' color={PRIMARY_COLOR.LIGHT} />
               )}
@@ -262,7 +263,7 @@ export default function PaymentQRCode() {
                   onPress={() => handleDownload(qrCodeData?.qrUrl)}
                   disabled={downloading}
                 >
-                  <Feather name='download' size={16} color={PRIMARY_COLOR.LIGHT} />
+                  <Icon as={Download} size={16} color={PRIMARY_COLOR.LIGHT} />
                   <Text className='native:text-sm font-inter-medium text-primary'>
                     {downloading ? 'Đang tải...' : 'Tải xuống QR'}
                   </Text>
@@ -274,7 +275,7 @@ export default function PaymentQRCode() {
           <Animated.View entering={FadeInDown.delay(500)}>
             <Card style={[styles.container]}>
               <View className='p-3 flex-row items-center gap-2'>
-                <Feather name='credit-card' size={16} color={isDarkColorScheme ? 'white' : 'black'} />
+                <Icon as={CreditCard} size={16} color={isDarkColorScheme ? 'white' : 'black'} />
                 <Text className={cn('text-sm font-inter-medium', isDarkColorScheme ? 'text-white' : 'text-gray-900')}>
                   Thông tin thanh toán
                 </Text>

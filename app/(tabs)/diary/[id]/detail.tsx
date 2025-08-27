@@ -1,10 +1,11 @@
-import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft, Clock, Settings } from 'lucide-react-native'
 import React, { useCallback, useRef, useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Text } from '~/components/ui/text'
 import CurrentMeasurementsCard from '~/features/diary/components/cards/current-measurements-card'
@@ -48,15 +49,15 @@ const DiaryHeader = ({ diaryId, onGoBack }: DiaryHeaderProps) => {
     <>
       <View className='flex flex-row items-center gap-3 p-4'>
         <TouchableOpacity onPress={onGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='text-xl font-inter-medium flex-1'>Chi tiết nhật ký</Text>
         <View className='flex-row items-center gap-4'>
           <TouchableOpacity onPress={() => router.push({ pathname: '/diary/[id]/history', params: { id: diaryId } })}>
-            <Feather name='clock' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={Clock} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push({ pathname: '/diary/[id]/setting', params: { id: diaryId } })}>
-            <Feather name='settings' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={Settings} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
         </View>
       </View>

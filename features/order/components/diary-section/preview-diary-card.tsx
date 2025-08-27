@@ -1,5 +1,6 @@
-import { Feather } from '@expo/vector-icons'
+import { ChevronRight } from 'lucide-react-native'
 import { TouchableOpacity, View } from 'react-native'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
@@ -31,7 +32,7 @@ export default function PreviewDiaryCard({ diary, isLoading, onPress }: PreviewD
             <Text className='text-xs text-muted-foreground'>Thai kỳ: Lần {diary?.numberOfPregnancy}</Text>
           </View>
         </View>
-        <Feather name='chevron-right' size={20} color='lightgray' />
+        <Icon as={ChevronRight} size={20} color='lightgray' />
       </View>
     </TouchableOpacity>
   )

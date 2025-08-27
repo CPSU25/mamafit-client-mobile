@@ -1,10 +1,12 @@
-import { Feather, MaterialIcons } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { XCircle } from 'lucide-react-native'
 import { useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { Image, TouchableOpacity, useWindowDimensions, View } from 'react-native'
 import { Card } from '~/components/ui/card'
 import { Dialog, DialogContent, DialogTrigger } from '~/components/ui/dialog'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
@@ -175,7 +177,6 @@ export default function OrderCard({ order }: OrderCardProps) {
                 </TouchableOpacity>
               </DialogTrigger>
               <DialogContent
-                displayCloseButton={false}
                 style={{
                   marginBottom: keyboardHeight / 2.5,
                   width: width - 30,
@@ -197,7 +198,7 @@ export default function OrderCard({ order }: OrderCardProps) {
                     onPress={methods.handleSubmit(onSubmit)}
                     disabled={cancelOrderMutation.isPending}
                   >
-                    <Feather name='x' size={16} color='#e11d48' />
+                    <Icon as={XCircle} size={16} color='#e11d48' />
                     <Text className='text-sm text-rose-600 font-inter-medium'>
                       {cancelOrderMutation.isPending ? 'Đang hủy...' : 'Hủy đơn'}
                     </Text>

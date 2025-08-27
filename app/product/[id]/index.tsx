@@ -1,11 +1,13 @@
-import { AntDesign, Feather } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft, ChevronDown, ChevronRight, ChevronUp, ShoppingBag } from 'lucide-react-native'
 import { useCallback, useRef, useState } from 'react'
 import { Dimensions, ScrollView, TouchableOpacity, View } from 'react-native'
 import RenderHtml from 'react-native-render-html'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import DressCarousel from '~/features/dress/components/dress-carousel'
@@ -68,13 +70,13 @@ export default function ProductDetailScreen() {
       <View className='relative flex-1'>
         <View className='z-10 relative'>
           <TouchableOpacity onPress={handleGoBack} className='absolute top-10 left-4 bg-black/50 rounded-full p-1.5'>
-            <Feather name='arrow-left' size={24} color='white' />
+            <Icon as={ArrowLeft} size={24} color='white' />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => router.push('/cart')}
             className='absolute top-10 right-4 bg-black/50 rounded-full p-1.5'
           >
-            <Feather name='shopping-bag' size={24} color='white' />
+            <Icon as={ShoppingBag} size={24} color='white' />
           </TouchableOpacity>
         </View>
 
@@ -128,7 +130,7 @@ export default function ProductDetailScreen() {
                     <Text className='text-muted-foreground text-[10px]'>({feedbacks?.totalFeedbacks})</Text>
                   </Text>
                   <Text className='text-muted-foreground text-xs'>Xem tất cả</Text>
-                  <Feather name='chevron-right' size={16} color='lightgray' />
+                  <Icon as={ChevronRight} size={16} color='lightgray' />
                 </TouchableOpacity>
 
                 <Separator />
@@ -228,7 +230,7 @@ export default function ProductDetailScreen() {
                 onPress={() => setIsDescriptionExpanded((prev) => !prev)}
               >
                 <Text className='text-xs text-muted-foreground'>{isDescriptionExpanded ? 'Thu gọn' : 'Xem thêm'}</Text>
-                <Feather name={isDescriptionExpanded ? 'chevron-up' : 'chevron-down'} size={16} color='gray' />
+                <Icon as={isDescriptionExpanded ? ChevronUp : ChevronDown} size={16} color='gray' />
               </TouchableOpacity>
             ) : null}
           </View>
@@ -241,7 +243,7 @@ export default function ProductDetailScreen() {
             className='flex-1 flex-row items-center gap-2 justify-center p-2 rounded-xl border border-primary/20 bg-primary/10'
             onPress={handlePresentVariantModal}
           >
-            <Feather name='shopping-bag' size={16} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={ShoppingBag} size={16} color={PRIMARY_COLOR.LIGHT} />
             <Text className='text-sm font-inter-medium text-primary'>Thêm giỏ hàng</Text>
           </TouchableOpacity>
         </View>

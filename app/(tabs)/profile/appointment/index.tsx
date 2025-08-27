@@ -1,9 +1,9 @@
-import { Feather } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import { format, parse } from 'date-fns'
 import { LinearGradient } from 'expo-linear-gradient'
 import * as Location from 'expo-location'
 import { useFocusEffect, useRouter } from 'expo-router'
+import { ArrowLeft, Clock, RefreshCcw } from 'lucide-react-native'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { Dimensions, TouchableOpacity, View } from 'react-native'
@@ -12,6 +12,7 @@ import { useDerivedValue, useSharedValue } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
 import { Button } from '~/components/ui/button'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import BookAppointmentForm from '~/features/appointment/components/book-appointment-form'
 import BranchCard from '~/features/appointment/components/branch-card'
@@ -322,14 +323,14 @@ export default function AppointmentScreen() {
         <View className='flex-row items-center gap-3 p-4'>
           <View className='flex-row items-center gap-3 flex-1'>
             <TouchableOpacity onPress={handleGoBack}>
-              <Feather name='arrow-left' size={24} color='white' />
+              <Icon as={ArrowLeft} size={24} color='white' />
             </TouchableOpacity>
             <Text className='font-inter-medium text-xl text-white'>
               {selectedBranch ? selectedBranch.name : formattedDate}
             </Text>
           </View>
           <TouchableOpacity onPress={() => router.push('/profile/appointment/history')}>
-            <Feather name='clock' size={24} color='white' />
+            <Icon as={Clock} size={24} color='white' />
           </TouchableOpacity>
         </View>
 
@@ -402,7 +403,7 @@ export default function AppointmentScreen() {
                           onPress={handleRefreshBranches}
                           disabled={isRefetching}
                         >
-                          <Feather name='refresh-ccw' size={18} color='black' />
+                          <Icon as={RefreshCcw} size={18} color='black' />
                         </TouchableOpacity>
                       </View>
                       <BottomSheetFlatList
@@ -436,7 +437,7 @@ export default function AppointmentScreen() {
                           onPress={handleRefreshSlots}
                           disabled={isRefetchingAvailableSlots}
                         >
-                          <Feather name='refresh-ccw' size={18} color='black' />
+                          <Icon as={RefreshCcw} size={18} color='black' />
                         </TouchableOpacity>
                       </View>
                       <View className='flex-1 gap-4 p-4'>

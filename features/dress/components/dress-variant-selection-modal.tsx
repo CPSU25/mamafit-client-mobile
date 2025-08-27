@@ -1,8 +1,9 @@
-import { Feather } from '@expo/vector-icons'
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { BlurView } from 'expo-blur'
+import { Minus, Plus, ShoppingBag } from 'lucide-react-native'
 import { forwardRef, useMemo, useState } from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { useAddToCart } from '~/features/cart/hooks/use-add-to-cart'
@@ -268,7 +269,7 @@ const DressVariantSelectionModal = forwardRef<BottomSheetModal, DressVariantSele
                   onPress={handleDecreaseQuantity}
                   disabled={selectedQuantity <= 1}
                 >
-                  <Feather name='minus' size={12} color={PRIMARY_COLOR.LIGHT} />
+                  <Icon as={Minus} size={12} color={PRIMARY_COLOR.LIGHT} />
                 </TouchableOpacity>
 
                 <View className='w-12 h-8 border border-border rounded-lg items-center justify-center'>
@@ -280,7 +281,7 @@ const DressVariantSelectionModal = forwardRef<BottomSheetModal, DressVariantSele
                   onPress={handleIncreaseQuantity}
                   disabled={!selectedVariant || selectedQuantity >= (selectedVariant?.quantity ?? 1)}
                 >
-                  <Feather name='plus' size={12} color={PRIMARY_COLOR.LIGHT} />
+                  <Icon as={Plus} size={12} color={PRIMARY_COLOR.LIGHT} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -293,7 +294,7 @@ const DressVariantSelectionModal = forwardRef<BottomSheetModal, DressVariantSele
             disabled={!selectedVariant || selectedQuantity < 1 || addToCartMutation.isPending}
             className='flex-row items-center gap-2 justify-center p-2 rounded-xl border border-primary/20 bg-primary/10'
           >
-            <Feather name='shopping-bag' size={16} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={ShoppingBag} size={16} color={PRIMARY_COLOR.LIGHT} />
             <Text className='text-sm font-inter-medium text-primary'>
               {addToCartMutation.isPending ? 'Đang thêm...' : `Thêm giỏ hàng (${selectedQuantity})`}
             </Text>

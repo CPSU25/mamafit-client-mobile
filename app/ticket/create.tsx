@@ -1,5 +1,5 @@
-import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { ArrowLeft, Clock } from 'lucide-react-native'
 import { useCallback, useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { Image, TouchableOpacity, View } from 'react-native'
@@ -7,6 +7,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import ChooseOrderItem from '~/features/ticket/components/choose-order-item'
 import CreateTicketForm from '~/features/ticket/components/create-ticket-form'
@@ -91,12 +92,12 @@ export default function CreateTicketScreen() {
       <View className='flex-row items-center gap-2 p-4'>
         <View className='flex-row items-center gap-3 flex-1'>
           <TouchableOpacity onPress={handleGoBack}>
-            <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
           <Text className='font-inter-medium text-xl'>Hỗ trợ</Text>
         </View>
         <TouchableOpacity onPress={() => router.push('/ticket/history')}>
-          <Feather name='clock' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={Clock} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
       </View>
 

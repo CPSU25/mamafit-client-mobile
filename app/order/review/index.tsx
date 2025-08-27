@@ -1,8 +1,9 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from 'expo-blur'
 import { useFocusEffect, useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native'
@@ -10,6 +11,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated'
 import { toast } from 'sonner-native'
 import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
+import { Icon } from '~/components/ui/icon'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Text } from '~/components/ui/text'
 import AddressSection from '~/features/order/components/address-section/address-section'
@@ -646,7 +648,7 @@ export default function ReviewOrderScreen() {
 
         <View className='flex-row items-center gap-3 p-4'>
           <TouchableOpacity onPress={handleGoBack}>
-            <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
           <Text className='font-inter-medium text-xl'>Thanh toán</Text>
         </View>

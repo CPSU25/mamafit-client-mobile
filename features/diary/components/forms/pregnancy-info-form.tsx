@@ -1,4 +1,4 @@
-import { Feather, MaterialIcons } from '@expo/vector-icons'
+import { Hash, Info, Repeat } from 'lucide-react-native'
 import { Controller, useFormContext } from 'react-hook-form'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
@@ -7,6 +7,7 @@ import DatePicker from '~/components/date-picker'
 import FieldError from '~/components/field-error'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '~/components/ui/accordion'
 import { WarningCard } from '~/components/ui/alert-card'
+import { Icon } from '~/components/ui/icon'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import { useFieldError } from '~/hooks/use-field-error'
@@ -63,7 +64,7 @@ export default function PregnancyInfoForm() {
                 <Input
                   placeholder='Số lần mang thai'
                   keyboardType='numeric'
-                  StartIcon={<MaterialIcons name='numbers' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                  StartIcon={<Icon as={Hash} size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
                   value={value}
                   onChangeText={onChange}
@@ -96,7 +97,7 @@ export default function PregnancyInfoForm() {
                 <Input
                   placeholder='Vòng ngực'
                   keyboardType='numeric'
-                  StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                  StartIcon={<Icon as={Info} size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
                   value={value}
                   onChangeText={onChange}
@@ -115,7 +116,7 @@ export default function PregnancyInfoForm() {
                 <Input
                   placeholder='Vòng eo'
                   keyboardType='numeric'
-                  StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                  StartIcon={<Icon as={Info} size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
                   value={value}
                   onChangeText={onChange}
@@ -134,7 +135,7 @@ export default function PregnancyInfoForm() {
                 <Input
                   placeholder='Vòng hông'
                   keyboardType='numeric'
-                  StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                  StartIcon={<Icon as={Info} size={20} color={PRIMARY_COLOR.LIGHT} />}
                   {...field}
                   value={value}
                   onChangeText={onChange}
@@ -172,7 +173,7 @@ export default function PregnancyInfoForm() {
                       <Input
                         placeholder='Chu kỳ kinh trung bình'
                         keyboardType='numeric'
-                        StartIcon={<Feather name='repeat' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                        StartIcon={<Icon as={Repeat} size={20} color={PRIMARY_COLOR.LIGHT} />}
                         {...field}
                         value={value ?? undefined}
                         onChangeText={onChange}
@@ -204,7 +205,7 @@ export default function PregnancyInfoForm() {
                       <Input
                         placeholder='Tuổi thai siêu âm'
                         keyboardType='numeric'
-                        StartIcon={<Feather name='info' size={20} color={PRIMARY_COLOR.LIGHT} />}
+                        StartIcon={<Icon as={Info} size={20} color={PRIMARY_COLOR.LIGHT} />}
                         {...field}
                         value={value ?? undefined}
                         onChangeText={onChange}

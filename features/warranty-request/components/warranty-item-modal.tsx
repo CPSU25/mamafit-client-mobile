@@ -1,9 +1,11 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { format } from 'date-fns'
 import { BlurView } from 'expo-blur'
+import { RefreshCcw } from 'lucide-react-native'
 import { forwardRef, useMemo } from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { VideoThumbnail } from '~/components/ui/video-picker'
 import { WarrantyItem } from '~/types/warranty.type'
@@ -53,7 +55,7 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                   onPress={handleRefetchWarrantyItem}
                   disabled={isRefetching}
                 >
-                  <Feather name='refresh-ccw' size={18} color='black' />
+                  <Icon as={RefreshCcw} size={18} color='black' />
                 </TouchableOpacity>
               </View>
 

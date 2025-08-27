@@ -1,5 +1,5 @@
-import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
@@ -7,6 +7,7 @@ import Animated, { FadeInDown, FadeOutDown, useAnimatedStyle, withSpring } from 
 import FieldError from '~/components/field-error'
 import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import PersonalInfoForm from '~/features/diary/components/forms/personal-info-form'
 import PregnancyInfoForm from '~/features/diary/components/forms/pregnancy-info-form'
@@ -241,7 +242,7 @@ export default function CreateDiaryScreen() {
     <SafeView>
       <View className='flex flex-row items-center justify-start p-4 relative'>
         <TouchableOpacity onPress={handleGoBack} className='absolute left-3 z-10'>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='font-inter-medium text-xl text-center flex-1'>Tạo nhật ký mới</Text>
       </View>

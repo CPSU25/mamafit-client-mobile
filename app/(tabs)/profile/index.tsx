@@ -1,10 +1,21 @@
-import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import {
+  CalendarDays,
+  ChevronRight,
+  MessageCircle,
+  MessageCircleWarning,
+  Moon,
+  Paintbrush,
+  Settings,
+  ShieldPlus,
+  ShoppingBag
+} from 'lucide-react-native'
 import { useState } from 'react'
 import { Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Switch } from '~/components/ui/switch'
 import { Text } from '~/components/ui/text'
@@ -129,15 +140,15 @@ export default function ProfileScreen() {
         <View className='flex flex-row items-center justify-between p-4'>
           <CurrentUser currentUser={currentUser} />
           {isAuthenticated ? (
-            <View className='flex flex-row items-center gap-6 mr-2'>
+            <View className='flex-row items-center gap-6 mr-2'>
               <TouchableOpacity onPress={() => router.push('/setting')}>
-                <Feather name='settings' size={24} color={PRIMARY_COLOR.LIGHT} />
+                <Icon as={Settings} size={24} color={PRIMARY_COLOR.LIGHT} />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => router.push('/cart')}>
-                <Feather name='shopping-bag' size={24} color={PRIMARY_COLOR.LIGHT} />
+                <Icon as={ShoppingBag} size={24} color={PRIMARY_COLOR.LIGHT} />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => router.push('/chat')}>
-                <Feather name='message-circle' size={24} color={PRIMARY_COLOR.LIGHT} />
+                <Icon as={MessageCircle} size={24} color={PRIMARY_COLOR.LIGHT} />
               </TouchableOpacity>
             </View>
           ) : (
@@ -156,7 +167,7 @@ export default function ProfileScreen() {
           <Text className='font-inter-medium text-sm'>Đơn mua</Text>
           <TouchableOpacity className='flex flex-row items-start' onPress={() => router.push(`/order/status/to-rate`)}>
             <Text className='text-[10px] text-muted-foreground mr-0.5'>Xem lịch sử mua hàng</Text>
-            <Feather name='chevron-right' size={18} color='lightgray' />
+            <Icon as={ChevronRight} size={18} color='lightgray' />
           </TouchableOpacity>
         </View>
         <View className='flex flex-row items-center justify-around mb-6'>
@@ -169,18 +180,31 @@ export default function ProfileScreen() {
 
         <View className='bg-muted h-2' />
 
+        <TouchableOpacity className='flex-row items-center px-4 py-2.5' onPress={() => router.push('/design')}>
+          <View className='w-10 h-10 bg-blue-50 rounded-full justify-center items-center'>
+            <Icon as={Paintbrush} size={18} color='#2563eb' />
+          </View>
+          <View className='ml-3.5 flex-1'>
+            <Text className='font-inter-medium text-sm'>Váy bầu tùy chỉnh</Text>
+            <Text className='text-xs text-muted-foreground'>Thiết kế váy bầu theo yêu cầu</Text>
+          </View>
+          <Icon as={ChevronRight} size={18} color='lightgray' className='ml-auto' />
+        </TouchableOpacity>
+
+        <Separator />
+
         <TouchableOpacity
           className='flex-row items-center px-4 py-2.5'
           onPress={() => router.push('/profile/appointment')}
         >
-          <View className='p-2 bg-primary/10 rounded-full'>
-            <Feather name='calendar' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <View className='w-10 h-10 bg-amber-50 rounded-full justify-center items-center'>
+            <Icon as={CalendarDays} size={18} color='#d97706' />
           </View>
           <View className='ml-3.5 flex-1'>
             <Text className='font-inter-medium text-sm'>Lịch hẹn</Text>
             <Text className='text-xs text-muted-foreground'>Đặt lịch hẹn tại chi nhánh gần nhất</Text>
           </View>
-          <Feather name='chevron-right' size={18} color='lightgray' className='ml-auto' />
+          <Icon as={ChevronRight} size={18} color='lightgray' className='ml-auto' />
         </TouchableOpacity>
 
         <Separator />
@@ -189,34 +213,34 @@ export default function ProfileScreen() {
           className='flex-row items-center px-4 py-2.5'
           onPress={() => router.push('/order/warranty/create')}
         >
-          <View className='p-2 bg-primary/10 rounded-full'>
-            <Feather name='shield' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <View className='w-10 h-10 bg-emerald-50 rounded-full justify-center items-center'>
+            <Icon as={ShieldPlus} size={18} color='#059669' />
           </View>
           <View className='ml-3.5 flex-1'>
             <Text className='font-inter-medium text-sm'>Dịch vụ bảo hành</Text>
             <Text className='text-xs text-muted-foreground'>Báo lỗi sản phẩm và gửi bảo hành</Text>
           </View>
-          <Feather name='chevron-right' size={18} color='lightgray' className='ml-auto' />
+          <Icon as={ChevronRight} size={18} color='lightgray' className='ml-auto' />
         </TouchableOpacity>
 
         <Separator />
 
         <TouchableOpacity className='flex-row items-center px-4 py-2.5' onPress={() => router.push('/ticket/create')}>
-          <View className='p-2 bg-primary/10 rounded-full'>
-            <Feather name='alert-triangle' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <View className='w-10 h-10 bg-rose-50 rounded-full justify-center items-center'>
+            <Icon as={MessageCircleWarning} size={18} color='#e11d48' />
           </View>
           <View className='ml-3.5 flex-1'>
             <Text className='font-inter-medium text-sm'>Yêu cầu hỗ trợ</Text>
             <Text className='text-xs text-muted-foreground'>Gửi yêu cầu hỗ trợ tới hệ thống</Text>
           </View>
-          <Feather name='chevron-right' size={18} color='lightgray' className='ml-auto' />
+          <Icon as={ChevronRight} size={18} color='lightgray' className='ml-auto' />
         </TouchableOpacity>
 
         <Separator />
 
         <Pressable className='flex-row items-center px-4 py-2.5' onPress={toggleColorScheme}>
-          <View className='p-2 bg-primary/10 rounded-full'>
-            <Feather name='moon' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <View className='w-10 h-10 bg-muted rounded-full justify-center items-center'>
+            <Icon as={Moon} size={18} color='black' />
           </View>
           <Text className='font-inter-medium text-sm ml-3.5 flex-1'>Chế độ tối</Text>
           <Switch checked={checked} onCheckedChange={toggleColorScheme} />

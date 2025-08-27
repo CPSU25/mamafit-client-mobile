@@ -1,10 +1,11 @@
-import { Feather } from '@expo/vector-icons'
 import { useVideoPlayer, VideoView } from 'expo-video'
+import { AlertCircle, RefreshCcw, X } from 'lucide-react-native'
 import { Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
 import { useVideoPicker } from '~/hooks/use-video-picker'
 import { ICON_SIZE } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
 import { cn } from '~/lib/utils'
+import { Icon } from './icon'
 import { Text } from './text'
 
 interface VideoPickerTriggerProps {
@@ -27,7 +28,7 @@ export function VideoPickerTrigger({
   if (isMaxReached) {
     return (
       <View className='flex flex-col items-center justify-center gap-2'>
-        <Feather name='alert-circle' size={40} color='#f43f5e' />
+        <Icon as={AlertCircle} size={40} color='#f43f5e' />
         <Text className='text-xs font-medium text-rose-600'>
           Max {maxVideos} videos reached. Remove some to add more.
         </Text>
@@ -84,7 +85,7 @@ export function VideoThumbnail({
           onPress={onRemove}
           className='absolute top-1 right-1 w-6 h-6 bg-rose-500 rounded-full flex items-center justify-center shadow-lg border border-white'
         >
-          <Feather name='x' size={12} color='white' />
+          <Icon as={X} size={12} color='white' />
         </Pressable>
       ) : null}
     </View>
@@ -120,7 +121,7 @@ export function VideoResetButton({ onReset }: VideoResetButtonProps) {
       onPress={onReset}
       className='flex flex-row items-center justify-center gap-2 p-3 bg-rose-100 rounded-xl'
     >
-      <Feather name='refresh-cw' size={16} color='#f43f5e' />
+      <Icon as={RefreshCcw} size={16} color='#f43f5e' />
       <Text className='text-sm font-medium text-rose-600'>Clear all videos</Text>
     </TouchableOpacity>
   )

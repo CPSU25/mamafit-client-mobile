@@ -1,10 +1,11 @@
-import Feather from '@expo/vector-icons/Feather'
 import { BlurView } from 'expo-blur'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
+import { MessageCircle, Search, ShoppingBag } from 'lucide-react-native'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FlatList, Pressable, TouchableOpacity, View } from 'react-native'
 import SafeView from '~/components/safe-view'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import DressesList from '~/features/dress/components/dresses-list'
 import { useGetStyles } from '~/features/dress/hooks/use-get-styles'
@@ -19,7 +20,7 @@ export default function HomeScreen() {
 
   const ListHeaderComponent = useCallback(
     () => (
-      <View className='px-4 pt-2 pb-4 bg-background gap-4 mb-2'>
+      <View className='px-4 pt-2 pb-6 bg-background gap-4 mb-2'>
         <View className='flex-row gap-3'>
           <TouchableOpacity className='relative flex-1' onPress={() => router.push('/diary/create')}>
             <LinearGradient
@@ -70,7 +71,7 @@ export default function HomeScreen() {
         </View>
 
         <View className='flex-row gap-3'>
-          <TouchableOpacity className='relative flex-1' onPress={() => router.push('/design-request/create')}>
+          <TouchableOpacity className='relative flex-1' onPress={() => router.push('/design/request')}>
             <LinearGradient
               colors={['#f472b6', '#ec4899', '#db2777']}
               start={{ x: 0, y: 0 }}
@@ -148,16 +149,16 @@ export default function HomeScreen() {
           className='flex flex-row flex-1 items-center h-11 border border-input rounded-xl px-3 bg-background'
         >
           <View className='flex flex-row items-center gap-2'>
-            <Feather name='search' size={18} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={Search} size={18} color={PRIMARY_COLOR.LIGHT} />
             <Text className='text-sm text-muted-foreground'>Tìm kiếm</Text>
           </View>
         </Pressable>
-        <View className='flex flex-row items-center gap-6 mr-2'>
+        <View className='flex flex-row items-center gap-4 mr-2'>
           <TouchableOpacity onPress={() => router.push('/cart')}>
-            <Feather name='shopping-bag' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={ShoppingBag} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push('/chat')}>
-            <Feather name='message-circle' size={24} color={PRIMARY_COLOR.LIGHT} />
+            <Icon as={MessageCircle} size={24} color={PRIMARY_COLOR.LIGHT} />
           </TouchableOpacity>
         </View>
       </View>

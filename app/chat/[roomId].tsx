@@ -1,10 +1,11 @@
-import { Feather } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft, ImageIcon } from 'lucide-react-native'
 import { useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native'
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
 import SafeView from '~/components/safe-view'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
+import { Icon } from '~/components/ui/icon'
 import { Input } from '~/components/ui/input'
 import { Text } from '~/components/ui/text'
 import RoomMessage from '~/features/chat/components/room-message'
@@ -100,7 +101,7 @@ export default function ChatRoomScreen() {
         <View className='flex-1'>
           <View className='flex-row items-center gap-3 p-4'>
             <TouchableOpacity onPress={handleGoBack}>
-              <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+              <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
             </TouchableOpacity>
 
             {isLoadingRoom ? (
@@ -170,7 +171,7 @@ export default function ChatRoomScreen() {
                 isUploading ? (
                   <ActivityIndicator size='small' color={PRIMARY_COLOR.LIGHT} />
                 ) : (
-                  <Feather name='image' size={20} color={PRIMARY_COLOR.LIGHT} />
+                  <Icon as={ImageIcon} size={20} color={PRIMARY_COLOR.LIGHT} />
                 )
               }
               onStartIconPress={handleSendImage}

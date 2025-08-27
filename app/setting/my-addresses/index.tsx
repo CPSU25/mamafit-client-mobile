@@ -1,11 +1,13 @@
-import { AntDesign, Feather } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { ArrowLeft, MapPin } from 'lucide-react-native'
 import { FlatList, TouchableOpacity, View } from 'react-native'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { useGetAddresses } from '~/features/user/hooks/use-get-addresses'
 import { useColorScheme } from '~/hooks/use-color-scheme'
@@ -35,7 +37,7 @@ export default function MyAddressesScreen() {
           {item.street}
         </Text>
         <View className='flex-row items-center gap-1'>
-          <Feather name='map-pin' size={14} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={MapPin} size={14} color={PRIMARY_COLOR.LIGHT} />
           <Text className='text-sm text-muted-foreground' numberOfLines={1}>
             {item.ward}, {item.district}, {item.province}
           </Text>
@@ -55,7 +57,7 @@ export default function MyAddressesScreen() {
     <SafeView>
       <View className='flex flex-row items-center gap-3 p-4'>
         <TouchableOpacity onPress={handleGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='font-inter-medium text-xl'>Danh sách địa chỉ</Text>
       </View>

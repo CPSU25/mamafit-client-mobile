@@ -1,11 +1,12 @@
-import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { TouchableOpacity, View } from 'react-native'
 import { useDebounce } from 'use-debounce'
 import FieldError from '~/components/field-error'
 import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import AddAddressForm from '~/features/user/components/add-address-form'
 import { useAddAddress } from '~/features/user/hooks/use-add-address'
@@ -47,7 +48,7 @@ export default function CreateAddressScreen() {
     <SafeView>
       <View className='flex flex-row items-center gap-3 p-4'>
         <TouchableOpacity onPress={handleGoBack}>
-          <Feather name='arrow-left' size={24} color={PRIMARY_COLOR.LIGHT} />
+          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
         </TouchableOpacity>
         <Text className='font-inter-semibold text-xl'>Thêm Địa Chỉ</Text>
       </View>

@@ -1,9 +1,10 @@
-import { Feather } from '@expo/vector-icons'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useRouter } from 'expo-router'
+import { Clock, FileText } from 'lucide-react-native'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import OrderItemProgress from '~/features/order/components/order-detail/order-item-progress'
 import WarrantyItemModal from '~/features/warranty-request/components/warranty-item-modal'
@@ -138,7 +139,7 @@ export default function WarrantyPresetOrderItem({
             className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-2 border border-border'
             disabled={isLoadingWarrantyItem}
           >
-            <Feather name='file-text' size={16} color='black' />
+            <Icon as={FileText} size={16} color='black' />
             <Text className='text-sm font-inter-medium'>Xem chi tiết</Text>
           </TouchableOpacity>
         </View>
@@ -148,7 +149,7 @@ export default function WarrantyPresetOrderItem({
             onPress={() => handleViewHistory(orderItem?.parentOrderItemId ?? '')}
             className='w-full px-4 py-2 rounded-xl flex-row items-center justify-center gap-2 bg-blue-50 border border-blue-100'
           >
-            <Feather name='clock' size={16} color='#2563eb' />
+            <Icon as={Clock} size={16} color='#2563eb' />
             <Text className='text-sm text-blue-600 font-inter-medium'>Xem lịch sử</Text>
           </TouchableOpacity>
         </View>

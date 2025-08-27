@@ -41,7 +41,6 @@ export default function DiaryInformation({ diary }: DiaryInformationProps) {
           </TouchableOpacity>
         </DialogTrigger>
         <DialogContent
-          displayCloseButton={false}
           style={{
             padding: 16,
             width: width - 30

@@ -1,21 +1,18 @@
 import { Tabs, useSegments } from 'expo-router'
+import { Bell, BookHeart, House, UserRound } from 'lucide-react-native'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { useColorScheme } from '~/hooks/use-color-scheme'
-import { SvgIcon } from '~/lib/constants/svg-icon'
+import { THEME } from '~/lib/constants/theme'
 import { cn } from '~/lib/utils'
 
 const TabIcon = ({ focused, icon, title }: { focused: boolean; icon: React.ReactNode; title: string }) => {
   return (
-    <View className='flex-1 mt-2 flex flex-col items-center'>
+    <View className='flex-1 mt-1.5 flex flex-col items-center'>
       {icon}
-      <Text
-        className={cn(
-          'text-xs w-full text-center mt-0.5 font-inter-medium',
-          focused ? 'text-primary' : 'text-muted-foreground'
-        )}
-      >
+      <Text className={cn('text-[10px] w-full text-center mt-0.5', focused ? 'text-primary' : 'text-muted-foreground')}>
         {title}
       </Text>
     </View>
@@ -27,31 +24,33 @@ const navigationOptions = [
     id: 1,
     name: 'index',
     title: 'Trang chủ',
-    icon: (focused: boolean) => SvgIcon.home({ size: 26, color: focused ? 'PRIMARY' : 'GRAY' })
+    icon: (focused: boolean) => (
+      <Icon as={House} size={23} color={focused ? THEME.light.primary : THEME.light.mutedForeground} />
+    )
   },
   {
     id: 2,
     name: 'diary',
     title: 'Nhật ký',
-    icon: (focused: boolean) => SvgIcon.diary({ size: 26, color: focused ? 'PRIMARY' : 'GRAY' })
+    icon: (focused: boolean) => (
+      <Icon as={BookHeart} size={23} color={focused ? THEME.light.primary : THEME.light.mutedForeground} />
+    )
   },
   {
     id: 3,
-    name: 'canvas',
-    title: 'Thiết kế',
-    icon: (focused: boolean) => SvgIcon.penTool({ size: 26, color: focused ? 'PRIMARY' : 'GRAY' })
+    name: 'notifications',
+    title: 'Thông báo',
+    icon: (focused: boolean) => (
+      <Icon as={Bell} size={23} color={focused ? THEME.light.primary : THEME.light.mutedForeground} />
+    )
   },
   {
     id: 4,
-    name: 'notifications',
-    title: 'Thông báo',
-    icon: (focused: boolean) => SvgIcon.notification({ size: 26, color: focused ? 'PRIMARY' : 'GRAY' })
-  },
-  {
-    id: 5,
     name: 'profile',
-    title: 'Tôi',
-    icon: (focused: boolean) => SvgIcon.user({ size: 26, color: focused ? 'PRIMARY' : 'GRAY' })
+    title: 'Tài khoản',
+    icon: (focused: boolean) => (
+      <Icon as={UserRound} size={23} color={focused ? THEME.light.primary : THEME.light.mutedForeground} />
+    )
   }
 ]
 
@@ -70,9 +69,8 @@ export default function TabsLayout() {
   const isDiaryDetail = isHiddenTabBar(segments, '/diary/detail')
   const isDiaryHistory = isHiddenTabBar(segments, '/diary/history')
   const isDiarySetting = isHiddenTabBar(segments, '/diary/setting')
-  const isCreateCanvas = isHiddenTabBar(segments, '/canvas/create')
 
-  const isHidden = isCreateDiary || isAppointment || isDiaryDetail || isDiaryHistory || isDiarySetting || isCreateCanvas
+  const isHidden = isCreateDiary || isAppointment || isDiaryDetail || isDiaryHistory || isDiarySetting
 
   return (
     <Tabs
@@ -85,8 +83,7 @@ export default function TabsLayout() {
         tabBarStyle: {
           backgroundColor: isDarkColorScheme ? 'black' : 'white',
           position: 'absolute',
-          borderTopWidth: 1,
-          height: bottom + 60,
+          height: bottom + 50,
           display: isHidden ? 'none' : 'flex'
         }
       }}

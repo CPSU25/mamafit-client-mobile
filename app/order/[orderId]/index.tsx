@@ -1,12 +1,14 @@
-import { Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { useMemo, useRef, useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Loading from '~/components/loading'
 import { Card } from '~/components/ui/card'
+import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
 import { useAddToCart } from '~/features/cart/hooks/use-add-to-cart'
@@ -263,7 +265,7 @@ export default function ViewOrderDetailScreen() {
         >
           <View className='relative z-10 px-4' style={{ paddingTop: Math.max(top + 20, 40) }}>
             <TouchableOpacity onPress={handleGoBack} className='mb-6 mr-auto'>
-              <Feather name='arrow-left' size={24} color={styleConfig.textColor} />
+              <Icon as={ArrowLeft} size={24} color={styleConfig.textColor} />
             </TouchableOpacity>
 
             <View className='flex-row items-center gap-2 mb-1'>

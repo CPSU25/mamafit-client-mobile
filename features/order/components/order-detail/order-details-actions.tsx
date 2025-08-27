@@ -1,9 +1,11 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { XCircle } from 'lucide-react-native'
 import { useState } from 'react'
 import { FormProvider, SubmitHandler } from 'react-hook-form'
 import { TouchableOpacity, useWindowDimensions, View } from 'react-native'
 import { Dialog, DialogContent, DialogTrigger } from '~/components/ui/dialog'
+import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { useKeyboardOffset } from '~/hooks/use-keyboard-offset'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
@@ -65,7 +67,6 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
               </DialogTrigger>
 
               <DialogContent
-                displayCloseButton={false}
                 style={{
                   marginBottom: keyboardHeight / 2.5,
                   width: width - 30,
@@ -85,7 +86,7 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
                     onPress={methods.handleSubmit(onSubmit)}
                     disabled={cancelOrderMutation.isPending}
                   >
-                    <Feather name='x' size={16} color='#e11d48' />
+                    <Icon as={XCircle} size={16} color='#e11d48' />
                     <Text className='text-sm text-rose-600 font-inter-medium'>
                       {cancelOrderMutation.isPending ? 'Đang hủy...' : 'Hủy đơn'}
                     </Text>
