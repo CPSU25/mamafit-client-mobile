@@ -15,7 +15,7 @@ import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { OrderItemType } from '~/types/order.type'
 import { PresetWithComponentOptions } from '~/types/preset.type'
 
-export default function CreateCanvasScreen() {
+export default function DesignBuilderScreen() {
   const [preset, setPreset] = useState<PresetWithComponentOptions | null>(null)
   const [open, setOpen] = useState(false)
 

@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons'
+import { Feather, Octicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
@@ -169,12 +169,25 @@ export default function ProfileScreen() {
 
         <View className='bg-muted h-2' />
 
+        <TouchableOpacity className='flex-row items-center px-4 py-2.5' onPress={() => router.push('/design')}>
+          <View className='w-10 h-10 bg-blue-50 border border-blue-100 rounded-full justify-center items-center'>
+            <Octicons name='paintbrush' size={18} color='#2563eb' />
+          </View>
+          <View className='ml-3.5 flex-1'>
+            <Text className='font-inter-medium text-sm'>Váy bầu tùy chỉnh</Text>
+            <Text className='text-xs text-muted-foreground'>Thiết kế váy bầu theo yêu cầu</Text>
+          </View>
+          <Feather name='chevron-right' size={18} color='lightgray' className='ml-auto' />
+        </TouchableOpacity>
+
+        <Separator />
+
         <TouchableOpacity
           className='flex-row items-center px-4 py-2.5'
           onPress={() => router.push('/profile/appointment')}
         >
-          <View className='p-2 bg-primary/10 rounded-full'>
-            <Feather name='calendar' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <View className='w-10 h-10 bg-amber-50 border border-amber-100 rounded-full justify-center items-center'>
+            <Octicons name='calendar' size={18} color='#d97706' />
           </View>
           <View className='ml-3.5 flex-1'>
             <Text className='font-inter-medium text-sm'>Lịch hẹn</Text>
@@ -189,8 +202,8 @@ export default function ProfileScreen() {
           className='flex-row items-center px-4 py-2.5'
           onPress={() => router.push('/order/warranty/create')}
         >
-          <View className='p-2 bg-primary/10 rounded-full'>
-            <Feather name='shield' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <View className='w-10 h-10 bg-emerald-50 border border-emerald-100 rounded-full justify-center items-center'>
+            <Octicons name='shield-check' size={18} color='#059669' />
           </View>
           <View className='ml-3.5 flex-1'>
             <Text className='font-inter-medium text-sm'>Dịch vụ bảo hành</Text>
@@ -202,8 +215,8 @@ export default function ProfileScreen() {
         <Separator />
 
         <TouchableOpacity className='flex-row items-center px-4 py-2.5' onPress={() => router.push('/ticket/create')}>
-          <View className='p-2 bg-primary/10 rounded-full'>
-            <Feather name='alert-triangle' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <View className='w-10 h-10 bg-rose-50 border border-rose-100 rounded-full justify-center items-center'>
+            <Octicons name='alert' size={18} color='#e11d48' />
           </View>
           <View className='ml-3.5 flex-1'>
             <Text className='font-inter-medium text-sm'>Yêu cầu hỗ trợ</Text>
@@ -215,8 +228,8 @@ export default function ProfileScreen() {
         <Separator />
 
         <Pressable className='flex-row items-center px-4 py-2.5' onPress={toggleColorScheme}>
-          <View className='p-2 bg-primary/10 rounded-full'>
-            <Feather name='moon' size={18} color={PRIMARY_COLOR.LIGHT} />
+          <View className='w-10 h-10 bg-muted rounded-full justify-center items-center'>
+            <Octicons name='moon' size={18} color='black' />
           </View>
           <Text className='font-inter-medium text-sm ml-3.5 flex-1'>Chế độ tối</Text>
           <Switch checked={checked} onCheckedChange={toggleColorScheme} />

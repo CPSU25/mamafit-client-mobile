@@ -37,18 +37,12 @@ const navigationOptions = [
   },
   {
     id: 3,
-    name: 'canvas',
-    title: 'Thiết kế',
-    icon: (focused: boolean) => SvgIcon.penTool({ size: 26, color: focused ? 'PRIMARY' : 'GRAY' })
-  },
-  {
-    id: 4,
     name: 'notifications',
     title: 'Thông báo',
     icon: (focused: boolean) => SvgIcon.notification({ size: 26, color: focused ? 'PRIMARY' : 'GRAY' })
   },
   {
-    id: 5,
+    id: 4,
     name: 'profile',
     title: 'Tôi',
     icon: (focused: boolean) => SvgIcon.user({ size: 26, color: focused ? 'PRIMARY' : 'GRAY' })
@@ -70,9 +64,8 @@ export default function TabsLayout() {
   const isDiaryDetail = isHiddenTabBar(segments, '/diary/detail')
   const isDiaryHistory = isHiddenTabBar(segments, '/diary/history')
   const isDiarySetting = isHiddenTabBar(segments, '/diary/setting')
-  const isCreateCanvas = isHiddenTabBar(segments, '/canvas/create')
 
-  const isHidden = isCreateDiary || isAppointment || isDiaryDetail || isDiaryHistory || isDiarySetting || isCreateCanvas
+  const isHidden = isCreateDiary || isAppointment || isDiaryDetail || isDiaryHistory || isDiarySetting
 
   return (
     <Tabs

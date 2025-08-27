@@ -108,15 +108,12 @@ export default function RootLayout() {
             options={{ title: 'Setting', headerShown: false, animation: 'ios_from_right' }}
           />
           <Stack.Screen
-            name='design-request/create'
-            options={{ title: 'Create Design Request', headerShown: false, animation: 'ios_from_right' }}
-          />
-          <Stack.Screen
             name='payment/[orderId]/qr-code'
             options={{ title: 'Payment', headerShown: false, animation: 'ios_from_right' }}
           />
           <Stack.Screen name='order' options={{ title: 'Orders', headerShown: false, animation: 'ios_from_right' }} />
           <Stack.Screen name='ticket' options={{ title: 'Tickets', headerShown: false, animation: 'ios_from_right' }} />
+          <Stack.Screen name='design' options={{ title: 'Design', headerShown: false, animation: 'ios_from_right' }} />
         </Stack>
       </ThemeProvider>
     </AppProvider>

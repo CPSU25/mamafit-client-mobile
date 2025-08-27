@@ -12,7 +12,7 @@ import { PlaceDesignRequestOrderFormSchema } from '~/features/order/validations'
 import { useImagePicker } from '~/hooks/use-image-picker'
 import { FILE_PATH, PRIMARY_COLOR } from '~/lib/constants/constants'
 
-export default function CreateDesignRequest() {
+export default function DesignRequestScreen() {
   const router = useRouter()
   const { methods, placeDesignRequestMutation } = usePlaceDesignRequestOrder()
   const {
