@@ -1,13 +1,21 @@
 export enum NotificationTypeRealTime {
   ORDER_PROGRESS,
+  ASSIGNMENT,
   APPOINTMENT,
-  PAYMENT
+  VOUCHER,
+  PAYMENT,
+  MEASUREMENT,
+  WARRANTY
 }
 
 export enum NotificationTypeDB {
   OrderProgress = 'ORDER_PROGRESS',
   Appointment = 'APPOINTMENT',
-  Payment = 'PAYMENT'
+  Payment = 'PAYMENT',
+  Measurement = 'MEASUREMENT',
+  Assignment = 'ASSIGNMENT',
+  Voucher = 'VOUCHER',
+  Warranty = 'WARRANTY'
 }
 
 export interface Notification<T> {

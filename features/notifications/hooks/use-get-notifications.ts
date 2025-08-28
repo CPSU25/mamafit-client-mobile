@@ -7,7 +7,7 @@ export const useGetNotifications = (type?: NotificationTypeDB) => {
   const { isAuthenticated, user } = useAuth()
 
   return useInfiniteQuery({
-    queryKey: ['notifications', user?.userId],
+    queryKey: ['notifications', type, user?.userId],
     queryFn: ({ pageParam }) => notificationService.getNotifications(pageParam, 10, type),
     enabled: isAuthenticated,
     initialPageParam: 1,
