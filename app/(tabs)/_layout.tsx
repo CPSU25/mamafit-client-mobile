@@ -12,7 +12,12 @@ const TabIcon = ({ focused, icon, title }: { focused: boolean; icon: React.React
   return (
     <View className='flex-1 mt-1.5 flex flex-col items-center'>
       {icon}
-      <Text className={cn('text-[10px] w-full text-center mt-0.5', focused ? 'text-primary' : 'text-muted-foreground')}>
+      <Text
+        className={cn(
+          'text-[9px] w-full text-center mt-1 font-inter-medium',
+          focused ? 'text-primary' : 'text-muted-foreground'
+        )}
+      >
         {title}
       </Text>
     </View>
@@ -25,7 +30,7 @@ const navigationOptions = [
     name: 'index',
     title: 'Trang chủ',
     icon: (focused: boolean) => (
-      <Icon as={House} size={23} color={focused ? THEME.light.primary : THEME.light.mutedForeground} />
+      <Icon as={House} size={21} color={focused ? THEME.light.primary : THEME.light.mutedForeground} />
     )
   },
   {
@@ -33,7 +38,7 @@ const navigationOptions = [
     name: 'diary',
     title: 'Nhật ký',
     icon: (focused: boolean) => (
-      <Icon as={BookHeart} size={23} color={focused ? THEME.light.primary : THEME.light.mutedForeground} />
+      <Icon as={BookHeart} size={21} color={focused ? THEME.light.primary : THEME.light.mutedForeground} />
     )
   },
   {
@@ -41,7 +46,7 @@ const navigationOptions = [
     name: 'notifications',
     title: 'Thông báo',
     icon: (focused: boolean) => (
-      <Icon as={Bell} size={23} color={focused ? THEME.light.primary : THEME.light.mutedForeground} />
+      <Icon as={Bell} size={21} color={focused ? THEME.light.primary : THEME.light.mutedForeground} />
     )
   },
   {
@@ -49,7 +54,7 @@ const navigationOptions = [
     name: 'profile',
     title: 'Tài khoản',
     icon: (focused: boolean) => (
-      <Icon as={UserRound} size={23} color={focused ? THEME.light.primary : THEME.light.mutedForeground} />
+      <Icon as={UserRound} size={21} color={focused ? THEME.light.primary : THEME.light.mutedForeground} />
     )
   }
 ]
@@ -69,8 +74,10 @@ export default function TabsLayout() {
   const isDiaryDetail = isHiddenTabBar(segments, '/diary/detail')
   const isDiaryHistory = isHiddenTabBar(segments, '/diary/history')
   const isDiarySetting = isHiddenTabBar(segments, '/diary/setting')
+  const isNotificationsByType = isHiddenTabBar(segments, '/notifications/[notificationType]')
 
-  const isHidden = isCreateDiary || isAppointment || isDiaryDetail || isDiaryHistory || isDiarySetting
+  const isHidden =
+    isCreateDiary || isAppointment || isDiaryDetail || isDiaryHistory || isDiarySetting || isNotificationsByType
 
   return (
     <Tabs

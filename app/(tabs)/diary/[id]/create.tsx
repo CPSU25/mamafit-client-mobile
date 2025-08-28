@@ -222,7 +222,7 @@ export default function CreateMeasurementScreen() {
                 onPress={handleSubmitMeasurement(onSubmitStepTwo)}
                 disabled={createMeasurementMutation.isPending}
               >
-                <Text className='font-inter-medium'>{createMeasurementMutation.isPending ? 'Đang Gửi...' : 'Gửi'}</Text>
+                <Text className='font-inter-medium'>{createMeasurementMutation.isPending ? 'Đang gửi...' : 'Gửi'}</Text>
               </Button>
             </View>
           </Animated.View>
