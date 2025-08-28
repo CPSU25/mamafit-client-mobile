@@ -20,7 +20,7 @@ export default function ProgressToast({ currentProgress, title }: ProgressToastP
       </View>
       <Separator />
       <View className='flex-row items-center gap-3 p-3'>
-        <View className='p-2 rounded-xl bg-primary/10'>{SvgIcon.setting2({ size: 24 })}</View>
+        <View className='p-2 rounded-xl bg-primary/10'>{SvgIcon.setting2Solid({ size: 24 })}</View>
         <View className='flex-1 gap-1'>
           <Text className='text-sm font-inter-medium' numberOfLines={1}>
             {title}

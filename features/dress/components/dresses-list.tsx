@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router'
+import type { ComponentType } from 'react'
 import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-import type { ComponentType } from 'react'
 import { Text } from '~/components/ui/text'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
@@ -12,9 +12,10 @@ interface DressesListProps {
   search?: string
   styleId?: string
   headerComponent?: ComponentType<any> | null
+  refetchStyles: () => void
 }
 
-export default function DressesList({ search, styleId, headerComponent }: DressesListProps) {
+export default function DressesList({ search, styleId, headerComponent, refetchStyles }: DressesListProps) {
   const router = useRouter()
 
   const {
@@ -26,7 +27,7 @@ export default function DressesList({ search, styleId, headerComponent }: Dresse
     isLoading
   } = useGetDresses(search, styleId)
 
-  const { refreshControl } = useRefreshs([refetch])
+  const { refreshControl } = useRefreshs([refetch, refetchStyles])
 
   return (
     <FlatList

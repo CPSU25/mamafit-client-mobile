@@ -18,7 +18,7 @@ export default function MessageToast({ message }: { message: Message<MessageType
       <Card className='mx-2' style={[styles.container]}>
         <View className='flex-row items-center gap-2 px-3 py-1'>
           <View className='size-2 rounded-full bg-emerald-500' />
-          <Text className='text-xs font-inter-medium'>New incoming message</Text>
+          <Text className='text-xs font-inter-medium'>Tin nhắn mới</Text>
         </View>
         <Separator />
         <View className='flex-row items-center gap-3 p-3'>

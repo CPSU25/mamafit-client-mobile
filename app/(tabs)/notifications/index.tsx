@@ -12,12 +12,14 @@ import { useMarkAsRead } from '~/features/notifications/hooks/use-mark-as-read'
 import { useAuth } from '~/hooks/use-auth'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { SvgIcon } from '~/lib/constants/svg-icon'
+import { NotificationTypeDB } from '~/types/notification.type'
 
 interface NotificationFilter {
   id: number
   name: string
   description: string
   icon: React.ReactNode
+  urlValue: string
 }
 
 const notificationFilters: NotificationFilter[] = [
@@ -25,25 +27,29 @@ const notificationFilters: NotificationFilter[] = [
     id: 1,
     name: 'Khuyến mãi',
     description: 'Khuyến mãi và ưu đãi mới nhất.',
-    icon: SvgIcon.promotions({ size: 28 })
+    urlValue: `/notifications/${NotificationTypeDB.Voucher}`,
+    icon: SvgIcon.promotions({ size: 32 })
   },
   {
     id: 2,
     name: 'Cập nhật đơn hàng',
     description: 'Theo dõi đơn hàng của bạn từ đầu đến cuối.',
-    icon: SvgIcon.orderUpdates({ size: 28 })
+    urlValue: `/notifications/${NotificationTypeDB.OrderProgress}`,
+    icon: SvgIcon.orderUpdates({ size: 32 })
   },
   {
     id: 3,
-    name: 'Trạng thái thanh toán',
+    name: 'Thông tin tài chính',
     description: 'Đừng quên thanh toán hóa đơn đúng hạn.',
-    icon: SvgIcon.paymentStatus({ size: 28 })
+    urlValue: `/notifications/${NotificationTypeDB.Payment}`,
+    icon: SvgIcon.paymentStatus({ size: 32 })
   },
   {
     id: 4,
     name: 'Nhắc nhở lịch hẹn',
     description: 'Đừng quên lịch hẹn của bạn.',
-    icon: SvgIcon.appointmentReminders({ size: 28 })
+    urlValue: `/notifications/${NotificationTypeDB.Appointment}`,
+    icon: SvgIcon.appointmentReminders({ size: 32 })
   }
 ]
 
@@ -58,7 +64,7 @@ export default function NotificationsScreen() {
 
   return (
     <SafeView>
-      <View className='flex flex-row justify-between items-center p-4'>
+      <View className='flex flex-row justify-between items-center p-4 bg-background'>
         <Text className='text-xl font-inter-medium'>Thông báo</Text>
         <View className='flex flex-row items-center gap-6 mr-1.5'>
           <TouchableOpacity onPress={() => router.push('/cart')}>
@@ -74,22 +80,23 @@ export default function NotificationsScreen() {
 
       {notificationFilters.map((notification, index) => {
         return (
-          <React.Fragment key={notification.id}>
+          <View key={notification.id} className='bg-background'>
             {index !== 0 && <Separator />}
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push(notification.urlValue as any)}>
               <NotificationCard notification={notification} />
             </TouchableOpacity>
             {index === notificationFilters.length - 1 && <View className='bg-muted h-2' />}
-          </React.Fragment>
+          </View>
         )
       })}
 
-      <View className='flex flex-row justify-between items-center px-4 pt-4'>
-        <Text className='text-sm font-inter-medium'>Đơn hàng</Text>
+      <View className='flex flex-row justify-between items-center px-4 pt-0.5 pb-2 bg-muted'>
+        <Text className='text-sm font-inter-medium'>Cập nhật mới nhất</Text>
         <TouchableOpacity onPress={() => markAllAsRead()} disabled={isPending}>
           <Text className='text-xs text-muted-foreground'>Đọc tất cả</Text>
         </TouchableOpacity>
       </View>
+
       <NotificationsList />
     </SafeView>
   )
@@ -97,9 +104,9 @@ export default function NotificationsScreen() {
 
 function NotificationCard({ notification }: { notification: NotificationFilter }) {
   return (
-    <View className='flex flex-row items-center gap-4 px-4 py-2'>
-      <View className='border-2 border-muted rounded-full'>{notification.icon}</View>
-      <View className='flex flex-col items-start flex-1'>
+    <View className='flex flex-row items-center px-4 py-2.5'>
+      {notification.icon}
+      <View className='flex flex-col items-start flex-1 ml-3.5'>
         <Text className='text-sm font-inter-medium'>{notification.name}</Text>
         <Text className='text-muted-foreground text-xs'>{notification.description}</Text>
       </View>

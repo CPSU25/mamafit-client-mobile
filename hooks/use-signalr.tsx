@@ -128,37 +128,39 @@ export const useSignalR = () => {
         currentNotifications.current = new Set(recentMessages)
       }
 
-      const isOnNotificationScreen = segments.length > 0 && segments.some((segment) => segment === 'notifications')
-
       console.log('NotificationHub', notification)
 
-      if (!isOnNotificationScreen) {
-        // TODO: Add notification to the query cache
-        // 2: Payment related notification
-        if (notification.type === NotificationTypeRealTime.PAYMENT) {
-          queryClient.setQueryData(
-            ['payment-status', notification.metadata?.orderId, user?.userId],
-            (oldData: string | undefined) => {
-              if (!oldData) return oldData
-              return notification.metadata?.paymentStatus
-            }
-          )
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
 
-          queryClient.invalidateQueries({ queryKey: ['order'] })
-          queryClient.invalidateQueries({ queryKey: ['orders'] })
-          queryClient.invalidateQueries({ queryKey: ['orders-count'] })
-          queryClient.invalidateQueries({ queryKey: ['order-items-milestones'] })
-          queryClient.invalidateQueries({ queryKey: ['designer-info'] })
-        }
-
-        const newNotification: Notification<NotificationTypeDB> = {
-          ...notification,
-          type: formatRealTimeNotificationType(notification.type)
-        }
-        toast.custom(<NotificationToast notification={newNotification} />)
+      if (notification.type === NotificationTypeRealTime.PAYMENT) {
+        queryClient.setQueryData(
+          ['payment-status', notification.metadata?.orderId, user?.userId],
+          (oldData: string | undefined) => {
+            if (!oldData) return oldData
+            return notification.metadata?.paymentStatus
+          }
+        )
       }
+
+      if (
+        notification.type === NotificationTypeRealTime.ORDER_PROGRESS ||
+        notification.type === NotificationTypeRealTime.PAYMENT
+      ) {
+        queryClient.invalidateQueries({ queryKey: ['order'] })
+        queryClient.invalidateQueries({ queryKey: ['orders'] })
+        queryClient.invalidateQueries({ queryKey: ['orders-count'] })
+        queryClient.invalidateQueries({ queryKey: ['order-items-milestones'] })
+        queryClient.invalidateQueries({ queryKey: ['designer-info'] })
+      }
+
+      const newNotification: Notification<NotificationTypeDB> = {
+        ...notification,
+        type: formatRealTimeNotificationType(notification.type)
+      }
+
+      toast.custom(<NotificationToast notification={newNotification} />)
     },
-    [segments, user?.userId, queryClient]
+    [user?.userId, queryClient]
   )
 
   // Listen for new messages/notifications when authenticated

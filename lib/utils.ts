@@ -7,11 +7,11 @@ import { twMerge } from 'tailwind-merge'
 import { MessageTypeDB, MessageTypeRealTime } from '~/types/chat.type'
 import { AuthTokens } from '~/types/common'
 import { ComponentWithOptions } from '~/types/component.type'
+import { NotificationTypeDB, NotificationTypeRealTime } from '~/types/notification.type'
 import { ComponentOptionWithComponent } from '~/types/preset.type'
 import { ORDERED_COMPONENTS_OPTIONS } from './constants/constants'
 import { clear, setTokens } from './redux-toolkit/slices/auth.slice'
 import { store } from './redux-toolkit/store'
-import { NotificationTypeDB, NotificationTypeRealTime } from '~/types/notification.type'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -175,12 +175,18 @@ export const formatRealtimeMessageType = (type: MessageTypeRealTime) => {
 
 export const formatRealTimeNotificationType = (type: NotificationTypeRealTime) => {
   switch (type) {
-    case NotificationTypeRealTime.ORDER_PROGRESS:
-      return NotificationTypeDB.OrderProgress
     case NotificationTypeRealTime.APPOINTMENT:
       return NotificationTypeDB.Appointment
     case NotificationTypeRealTime.PAYMENT:
       return NotificationTypeDB.Payment
+    case NotificationTypeRealTime.MEASUREMENT:
+      return NotificationTypeDB.Measurement
+    case NotificationTypeRealTime.ASSIGNMENT:
+      return NotificationTypeDB.Assignment
+    case NotificationTypeRealTime.VOUCHER:
+      return NotificationTypeDB.Voucher
+    case NotificationTypeRealTime.WARRANTY:
+      return NotificationTypeDB.Warranty
     default:
       return NotificationTypeDB.OrderProgress
   }

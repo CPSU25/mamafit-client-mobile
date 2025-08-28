@@ -16,7 +16,7 @@ export default function HomeScreen() {
   const router = useRouter()
   const [currentStyle, setCurrentStyle] = useState('all')
 
-  const { data: styles } = useGetStyles()
+  const { data: styles, refetch: refetchStyles } = useGetStyles()
 
   const ListHeaderComponent = useCallback(
     () => (
@@ -205,7 +205,11 @@ export default function HomeScreen() {
         />
       </View>
 
-      <DressesList headerComponent={ListHeaderComponent} styleId={currentStyle === 'all' ? undefined : currentStyle} />
+      <DressesList
+        refetchStyles={refetchStyles}
+        headerComponent={ListHeaderComponent}
+        styleId={currentStyle === 'all' ? undefined : currentStyle}
+      />
     </SafeView>
   )
 }
