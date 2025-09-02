@@ -2,32 +2,32 @@ import { OrderStatus } from '~/types/order.type'
 import { AddOnImageConfig, OrderStatusType } from './types'
 
 export const ADD_ON_IMAGE_CONFIG: Record<string, AddOnImageConfig> = {
-  Embroidery: {
+  Thêu: {
     url: require('~/assets/icons/embroidery.png'),
     color: '#FFEAF2',
     textColor: '#BE185D'
   },
-  'Pattern Printing': {
+  'In Họa Tiết': {
     url: require('~/assets/icons/pattern-printing.png'),
     color: '#E1FBF2',
     textColor: '#10B981'
   },
-  'Rhinestone Attachment': {
+  'Đính đá Rhinestone': {
     url: require('~/assets/icons/rhinestone.png'),
     color: '#F3FEFA',
     textColor: '#14B8A6'
   },
-  'Lace Applique': {
+  'Gắn ren': {
     url: require('~/assets/icons/lace.png'),
     color: '#E8F2FF',
     textColor: '#2563EB'
   },
-  'Bead Attachment': {
+  'Đính Hạt': {
     url: require('~/assets/icons/beads.png'),
     color: '#FAF8FF',
     textColor: '#7C3AED'
   },
-  'Personal Tag Attachment': {
+  'Đính Thẻ Cá Nhân': {
     url: require('~/assets/icons/personal-tag.png'),
     color: '#FFFBE6',
     textColor: '#EA580C'

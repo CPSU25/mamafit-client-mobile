@@ -147,7 +147,7 @@ export default function DiaryHistoryDetailScreen() {
           <View className='flex flex-col gap-4 p-4'>
             {isEditable ? (
               <WarningCard
-                title='Thông Tin Quan Trọng'
+                title='Thông tin quan trọng'
                 delay={100}
                 description='Giúp chúng tôi dự đoán số đo chính xác hơn.'
               />

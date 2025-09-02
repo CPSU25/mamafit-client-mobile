@@ -1,4 +1,4 @@
-import { AddAddressFormSchema } from '~/features/user/validations'
+import { AddAddressFormSchema, EditProfileFormSchema } from '~/features/user/validations'
 import { api } from '~/lib/axios/axios'
 import { Address } from '~/types/address.type'
 import { BaseResponse, User } from '~/types/common'
@@ -8,6 +8,22 @@ class UserService {
     if (!userId) return null
 
     const { data } = await api.get<BaseResponse<User>>(`user/${userId}`)
+    return data.data
+  }
+
+  async editProfile(input: EditProfileFormSchema) {
+    const payload = { ...input }
+
+    const hasOldPassword = payload.oldPassword && payload.oldPassword.trim().length > 0
+    const hasNewPassword = payload.newPassword && payload.newPassword.trim().length > 0
+
+    if (!hasOldPassword || !hasNewPassword) {
+      delete payload.oldPassword
+      delete payload.newPassword
+    }
+
+    const { data } = await api.put<BaseResponse<User>>(`user/token`, payload)
+
     return data.data
   }
 

@@ -131,8 +131,10 @@ export default function FeedbackHistoryScreen() {
                           />
                         </View>
                         <View className='flex-1'>
-                          <Text className='text-sm font-inter-medium'>{item.preset?.name}</Text>
-                          <Text className='text-xs text-muted-foreground'>{item.preset?.styleName}</Text>
+                          <Text className='text-sm font-inter-medium'>{item.preset?.name || 'Váy bầu tùy chỉnh'}</Text>
+                          <Text className='text-xs text-muted-foreground'>
+                            {item.preset?.styleName || 'Không có kiểu'}
+                          </Text>
                         </View>
                       </View>
                     ) : null}
@@ -147,7 +149,9 @@ export default function FeedbackHistoryScreen() {
                         </View>
                         <View className='flex-1'>
                           <Text className='text-sm font-inter-medium'>Yêu cầu thiết kế</Text>
-                          <Text className='text-xs text-muted-foreground'>{item.designRequest?.description}</Text>
+                          <Text className='text-xs text-muted-foreground' numberOfLines={1}>
+                            {item.designRequest?.description}
+                          </Text>
                         </View>
                       </View>
                     ) : null}

@@ -9,20 +9,18 @@ import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
 import { useKeyboardOffset } from '~/hooks/use-keyboard-offset'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
-import { OrderStatus } from '~/types/order.type'
+import { DeliveryMethod, Order, OrderItemType, OrderStatus } from '~/types/order.type'
 import { useCancelOrder } from '../../hooks/use-cancel-order'
 import { useReceiveOrder } from '../../hooks/use-receive-order'
 import { CancelOrderFormSchema } from '../../validations'
 import CancelOrderForm from './cancel-order-form'
 
 interface OrderDetailsActionsProps {
-  status: OrderStatus
   bottom: number
-  orderId: string
-  orderCode: string
+  order: Order
 }
 
-export default function OrderDetailsActions({ status, bottom, orderId, orderCode }: OrderDetailsActionsProps) {
+export default function OrderDetailsActions({ bottom, order }: OrderDetailsActionsProps) {
   const router = useRouter()
   const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -32,22 +30,33 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
   const { width } = useWindowDimensions()
   const keyboardHeight = useKeyboardOffset()
 
+  const orderItemTypeSet = [...new Set(order?.items?.map((item) => item.itemType))]
+
   const onSubmit: SubmitHandler<CancelOrderFormSchema> = (data) => {
-    if (!orderId) return
+    if (!order.id) return
 
     console.log(data)
 
-    cancelOrderMutation.mutate({ orderId, canceledReason: data.canceledReason })
+    cancelOrderMutation.mutate({ orderId: order.id, canceledReason: data.canceledReason })
   }
+
+  const isDisplayReceiveButton =
+    orderItemTypeSet[0] !== OrderItemType.DesignRequest &&
+    ((order?.status === OrderStatus.Delevering &&
+      order?.branchId === null &&
+      order?.deliveryMethod === DeliveryMethod.Delivery) ||
+      (order?.status === OrderStatus.ReceivedAtBranch &&
+        order?.branchId &&
+        order?.deliveryMethod === DeliveryMethod.PickUp))
 
   return (
     <View
       className='absolute bottom-0 bg-background left-0 right-0 px-2 pt-3'
       style={{ paddingBottom: bottom, boxShadow: '0 -2px 6px -1px rgba(0, 0, 0, 0.1)' }}
     >
-      {status === OrderStatus.Completed ? (
+      {order?.status === OrderStatus.Completed ? (
         <TouchableOpacity
-          onPress={() => router.push({ pathname: '/order/[orderId]/rate', params: { orderId } })}
+          onPress={() => router.push({ pathname: '/order/[orderId]/rate', params: { orderId: order?.id } })}
           className='flex-row items-center gap-2 flex-1 justify-center p-2 rounded-xl border border-indigo-100 bg-indigo-50'
         >
           <MaterialCommunityIcons name='star-circle' size={16} color='#4f46e5' />
@@ -55,7 +64,7 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
         </TouchableOpacity>
       ) : null}
 
-      {status === OrderStatus.Created || status === OrderStatus.AwaitingPaidWarranty ? (
+      {order?.status === OrderStatus.Created || order?.status === OrderStatus.AwaitingPaidWarranty ? (
         <View className='flex-row items-center gap-2'>
           <View className='flex-1'>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -75,7 +84,7 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
               >
                 <FormProvider {...methods}>
                   <View className='gap-2'>
-                    <Text className='font-inter-semibold text-xl'>Hủy đơn hàng #{orderCode}</Text>
+                    <Text className='font-inter-semibold text-xl'>Hủy đơn hàng #{order?.code}</Text>
                     <Text className='text-sm text-muted-foreground'>Bạn có chắc chắn muốn hủy đơn hàng này không?</Text>
                   </View>
 
@@ -101,7 +110,7 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
               router.push({
                 pathname: '/payment/[orderId]/qr-code',
                 params: {
-                  orderId
+                  orderId: order.id
                 }
               })
             }
@@ -112,14 +121,14 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
         </View>
       ) : null}
 
-      {status === OrderStatus.AwaitingPaidRest ? (
+      {order?.status === OrderStatus.AwaitingPaidRest ? (
         <TouchableOpacity
           className='flex-1 flex-row items-center gap-2 justify-center p-2 rounded-xl border border-emerald-100 bg-emerald-50'
           onPress={() =>
             router.push({
               pathname: '/payment/[orderId]/qr-code',
               params: {
-                orderId
+                orderId: order?.id
               }
             })
           }
@@ -129,10 +138,10 @@ export default function OrderDetailsActions({ status, bottom, orderId, orderCode
         </TouchableOpacity>
       ) : null}
 
-      {status === OrderStatus.Delevering ? (
+      {isDisplayReceiveButton ? (
         <TouchableOpacity
           className='flex-row items-center gap-2 flex-1 justify-center px-4 py-2 rounded-xl border border-primary/10 bg-primary/5'
-          onPress={() => receiveOrder(orderId)}
+          onPress={() => receiveOrder(order?.id)}
           disabled={isReceivingOrder}
         >
           <MaterialCommunityIcons name='package' size={16} color={PRIMARY_COLOR.LIGHT} />

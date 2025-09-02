@@ -15,6 +15,7 @@ import DressVariantSelectionModal from '~/features/dress/components/dress-varian
 import FeedbackItem from '~/features/dress/components/feedback-item'
 import { useGetDress } from '~/features/dress/hooks/use-get-dress'
 import { useGetFeedbacks } from '~/features/dress/hooks/use-get-feedbacks'
+import { useAuth } from '~/hooks/use-auth'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
@@ -23,6 +24,7 @@ const COLLAPSED_DESC_HEIGHT = 180
 export default function ProductDetailScreen() {
   const router = useRouter()
   const { id } = useLocalSearchParams<{ id: string }>()
+  const { isAuthenticated, isLoading } = useAuth()
 
   const { data: dress, isLoading: isLoadingDress, refetch: refetchDress } = useGetDress(id)
   const { data: feedbacks, isLoading: isLoadingFeedbacks, refetch: refetchFeedbacks } = useGetFeedbacks(id)
@@ -44,8 +46,13 @@ export default function ProductDetailScreen() {
   const canExpandDescription = descriptionHeight > COLLAPSED_DESC_HEIGHT
 
   const handlePresentVariantModal = useCallback(() => {
+    if (!isAuthenticated) {
+      router.push('/auth?focus=sign-in')
+      return
+    }
+
     variantSelectionModalRef.current?.present()
-  }, [])
+  }, [isAuthenticated, router])
 
   const handleDismissVariantModal = useCallback(() => {
     variantSelectionModalRef.current?.dismiss()
@@ -61,7 +68,7 @@ export default function ProductDetailScreen() {
 
   const { refreshControl } = useRefreshs([refetchDress, refetchFeedbacks])
 
-  if (isLoadingDress || isLoadingFeedbacks) {
+  if (isLoadingDress || isLoadingFeedbacks || isLoading) {
     return <Loading />
   }
 

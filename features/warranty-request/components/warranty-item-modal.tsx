@@ -79,12 +79,12 @@ const WarrantyItemModal = forwardRef<BottomSheetModal, WarrantyItemModalProps>(
                 <View className='flex-1 gap-1 p-3 rounded-2xl border border-border'>
                   <View className='flex-row items-center gap-2'>
                     <MaterialCommunityIcons name='clock-outline' size={16} color='#6b7280' />
-                    <Text className='text-xs text-muted-foreground'>Thời gian ước tính</Text>
+                    <Text className='text-xs text-muted-foreground'>Dự kiến xong</Text>
                   </View>
                   <Text className='text-sm font-inter-medium'>
                     {warrantyItem.warrantyRequestItems?.estimateTime
                       ? format(new Date(warrantyItem?.warrantyRequestItems?.estimateTime), 'MMM dd, yyyy')
-                      : 'Pending'}
+                      : 'N/A'}
                   </Text>
                 </View>
                 <View className='gap-1 p-3 rounded-2xl border border-border bg-muted/20'>

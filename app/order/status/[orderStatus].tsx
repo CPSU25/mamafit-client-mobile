@@ -2,6 +2,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { ArrowLeft } from 'lucide-react-native'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
+import BackToHomeButton from '~/components/back-to-home-button'
 import SafeView from '~/components/safe-view'
 import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
@@ -77,10 +78,13 @@ export default function OrdersByStatusScreen() {
   return (
     <SafeView>
       <View className='flex flex-row items-center gap-3 p-4'>
-        <TouchableOpacity onPress={handleGoBack}>
-          <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
-        </TouchableOpacity>
-        <Text className='font-inter-medium text-xl'>Đơn mua</Text>
+        <View className='flex-row items-center gap-3 flex-1'>
+          <TouchableOpacity onPress={handleGoBack}>
+            <Icon as={ArrowLeft} size={24} color={PRIMARY_COLOR.LIGHT} />
+          </TouchableOpacity>
+          <Text className='font-inter-medium text-xl'>Đơn mua</Text>
+        </View>
+        <BackToHomeButton color={PRIMARY_COLOR.LIGHT} />
       </View>
 
       <View className='px-4 pt-2'>

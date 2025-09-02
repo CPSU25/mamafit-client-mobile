@@ -5,25 +5,24 @@ import { Image, TouchableOpacity, View } from 'react-native'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '~/components/ui/accordion'
 import { Icon } from '~/components/ui/icon'
 import { Text } from '~/components/ui/text'
-import { useGetComponentsByStyleId } from '~/features/component/hooks/use-get-components'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 import { cn, getOrderedComponentsWithOptions } from '~/lib/utils'
-import { useGetDefaultPreset } from '../hooks/use-get-default-preset'
+import { ComponentWithOptions } from '~/types/component.type'
+import { PresetWithComponentOptions } from '~/types/preset.type'
 
 interface ComponentSectionProps<T extends FieldValues> {
   control: Control<T>
   setValue: UseFormSetValue<T>
-  styleId: string
+  defaultPreset: PresetWithComponentOptions | null | undefined
+  componentsByStyle: ComponentWithOptions[] | null | undefined
 }
 
 export default function ComponentSection<T extends FieldValues>({
-  styleId,
+  defaultPreset,
+  componentsByStyle,
   control,
   setValue
 }: ComponentSectionProps<T>) {
-  const { data: defaultPreset } = useGetDefaultPreset(styleId)
-  const { data: componentsByStyle } = useGetComponentsByStyleId(styleId)
-
   useEffect(() => {
     if (defaultPreset) {
       defaultPreset.componentOptions.forEach((option) => {
@@ -66,24 +65,26 @@ export default function ComponentSection<T extends FieldValues>({
                 name={component.name.toLowerCase() as Path<T>}
                 render={({ field: { value, onChange } }) => (
                   <View className='flex-row gap-4 flex-wrap'>
-                    {component.options.map((option) => (
-                      <TouchableOpacity
-                        key={option.id}
-                        className={cn('w-24 py-4 justify-center items-center gap-2 relative')}
-                        onPress={() => onChange(option.id)}
-                      >
-                        <Image source={{ uri: option.images[0] }} className='w-16 h-16 rounded-xl' />
-                        <Text className='native:text-xs text-center'>{option.name}</Text>
-                        {option.id === value && (
-                          <Icon
-                            as={CircleCheckBig}
-                            size={16}
-                            color={PRIMARY_COLOR.LIGHT}
-                            className='absolute top-2 left-2'
-                          />
-                        )}
-                      </TouchableOpacity>
-                    ))}
+                    {component.options && Array.isArray(component.options)
+                      ? component.options.map((option) => (
+                          <TouchableOpacity
+                            key={option.id}
+                            className={cn('w-24 py-4 justify-center items-center gap-2 relative')}
+                            onPress={() => onChange(option.id)}
+                          >
+                            <Image source={{ uri: option.images[0] }} className='w-16 h-16 rounded-xl' />
+                            <Text className='native:text-xs text-center'>{option.name}</Text>
+                            {option.id === value && (
+                              <Icon
+                                as={CircleCheckBig}
+                                size={16}
+                                color={PRIMARY_COLOR.LIGHT}
+                                className='absolute top-2 left-2'
+                              />
+                            )}
+                          </TouchableOpacity>
+                        ))
+                      : null}
                   </View>
                 )}
               />
