@@ -57,8 +57,8 @@ export default function AddressSection({
           ) : null}
           <PreviewAddressCard
             address={address}
-            fullName={currentUserProfile?.fullName || undefined}
-            phoneNumber={currentUserProfile?.phoneNumber || undefined}
+            fullName={currentUserProfile?.fullName || currentUserProfile?.userEmail?.split('@')[0] || ''}
+            phoneNumber={currentUserProfile?.phoneNumber || ''}
             onPress={handlePresentAddressModal}
           />
         </View>

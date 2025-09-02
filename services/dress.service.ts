@@ -1,7 +1,8 @@
 import { api } from '~/lib/axios/axios'
 import { BasePaginationResponse, BaseResponse, Style } from '~/types/common'
-import { Dress, DressDetail, DressVariant } from '~/types/dress.type'
+import { AutocompleteDress, Dress, DressDetail, DressVariant } from '~/types/dress.type'
 import { Feedback } from '~/types/feedback.type'
+import { OrderItemType } from '~/types/order.type'
 
 class DressService {
   async getDresses(page: number = 1, pageSize: number = 4, search?: string, styleId?: string) {
@@ -48,6 +49,26 @@ class DressService {
       averageRating,
       totalFeedbacks
     }
+  }
+
+  async getFeedbacksByType(itemType: OrderItemType) {
+    const { data } = await api.get<BaseResponse<Feedback[]>>(`feedback/item-type`, {
+      params: {
+        itemType
+      }
+    })
+
+    return data.data?.filter((f) => f.rated >= 4)
+  }
+
+  async getAutocomplete(search: string) {
+    const { data } = await api.get<BaseResponse<AutocompleteDress[]>>(`maternity-dress/autocomplete`, {
+      params: {
+        query: search
+      }
+    })
+
+    return data.data
   }
 }
 

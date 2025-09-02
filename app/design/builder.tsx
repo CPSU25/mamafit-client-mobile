@@ -85,17 +85,19 @@ export default function DesignBuilderScreen() {
                   {preset?.price ? preset.price.toLocaleString('vi-VN') : '0'}
                 </Text>
               </View>
+
+              <Button onPress={addToCartMethods.handleSubmit(handleAddToCart)} disabled={addToCartMutation.isPending}>
+                <Text className='font-inter-medium'>
+                  {addToCartMutation.isPending ? 'Đang thêm...' : 'Thêm giỏ hàng'}
+                </Text>
+              </Button>
+
               <TouchableOpacity
                 onPress={toggleDrawer}
                 className='bg-primary/10 rounded-full w-12 h-12 justify-center items-center'
               >
                 <FontAwesome name='paint-brush' size={24} color={PRIMARY_COLOR.LIGHT} />
               </TouchableOpacity>
-              <Button onPress={addToCartMethods.handleSubmit(handleAddToCart)} disabled={addToCartMutation.isPending}>
-                <Text className='font-inter-medium'>
-                  {addToCartMutation.isPending ? 'Đang thêm...' : 'Thêm giỏ hàng'}
-                </Text>
-              </Button>
             </View>
           </View>
         </Drawer>

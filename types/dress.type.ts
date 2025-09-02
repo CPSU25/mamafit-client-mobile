@@ -49,3 +49,9 @@ export interface DressDetail {
   updatedAt: string
   details: DressVariant[]
 }
+
+export interface AutocompleteDress {
+  images: string[]
+  name: string
+  id: string
+}

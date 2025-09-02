@@ -4,6 +4,7 @@ import { ArrowLeft, CircleDollarSign, MessageCircle } from 'lucide-react-native'
 import { useEffect, useMemo, useState } from 'react'
 import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import BackToHomeButton from '~/components/back-to-home-button'
 import Loading from '~/components/loading'
 import SafeView from '~/components/safe-view'
 import { Button } from '~/components/ui/button'
@@ -148,9 +149,12 @@ export default function CartScreen() {
           </TouchableOpacity>
           <Text className='font-inter-medium text-xl'>Giỏ hàng</Text>
         </View>
-        <TouchableOpacity onPress={() => router.push('/chat')}>
-          <Icon as={MessageCircle} size={24} color={PRIMARY_COLOR.LIGHT} />
-        </TouchableOpacity>
+        <View className='flex-row items-center gap-4'>
+          <TouchableOpacity onPress={() => router.push('/chat')}>
+            <Icon as={MessageCircle} size={24} color={PRIMARY_COLOR.LIGHT} />
+          </TouchableOpacity>
+          <BackToHomeButton color={PRIMARY_COLOR.LIGHT} />
+        </View>
       </View>
       <View className='bg-muted h-2' />
 

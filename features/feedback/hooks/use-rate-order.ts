@@ -27,6 +27,7 @@ export const useRateOrder = () => {
       queryClient.invalidateQueries({ queryKey: ['dresses'] })
       queryClient.invalidateQueries({ queryKey: ['dress'] })
       queryClient.invalidateQueries({ queryKey: ['feedbacks'] })
+      queryClient.invalidateQueries({ queryKey: ['feedbacks-by-type'] })
 
       router.replace('/order/feedback/rated')
     }

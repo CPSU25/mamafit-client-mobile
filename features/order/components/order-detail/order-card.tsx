@@ -13,7 +13,7 @@ import { Text } from '~/components/ui/text'
 import { useGetFeedbackStatus } from '~/features/feedback/hooks/use-get-feedback-status'
 import { useKeyboardOffset } from '~/hooks/use-keyboard-offset'
 import { cn } from '~/lib/utils'
-import { Order, OrderItem, OrderItemType, OrderStatus, OrderType } from '~/types/order.type'
+import { DeliveryMethod, Order, OrderItem, OrderItemType, OrderStatus, OrderType } from '~/types/order.type'
 import { useCancelOrder } from '../../hooks/use-cancel-order'
 import { useReceiveOrder } from '../../hooks/use-receive-order'
 import { getOrderItemTypeStyle } from '../../utils'
@@ -45,8 +45,15 @@ export default function OrderCard({ order }: OrderCardProps) {
   const isDisplayRateButton = order.status === OrderStatus.Completed
   const isDisplayCancelButton = order.status === OrderStatus.Created
   const isDisplayViewDetailsButton = order.status !== OrderStatus.Created
+
   const isDisplayReceiveButton =
-    order.status === OrderStatus.Delevering && orderItemTypeSet[0] !== OrderItemType.DesignRequest
+    orderItemTypeSet[0] !== OrderItemType.DesignRequest &&
+    ((order?.status === OrderStatus.Delevering &&
+      order?.branchId === null &&
+      order?.deliveryMethod === DeliveryMethod.Delivery) ||
+      (order?.status === OrderStatus.ReceivedAtBranch &&
+        order?.branchId &&
+        order?.deliveryMethod === DeliveryMethod.PickUp))
 
   const onSubmit: SubmitHandler<CancelOrderFormSchema> = (data) => {
     if (!order?.id) return
@@ -274,7 +281,7 @@ const DesignRequestOrderItem = ({ item }: { item: OrderItem }) => {
   const itemPrice = price * quantity
 
   return (
-    <View className='flex-row items-start gap-3 px-2'>
+    <View className='flex-row items-start gap-2 px-2'>
       <View className='w-20 h-20 rounded-xl overflow-hidden bg-gray-50'>
         <Image source={{ uri: designRequest?.images[0] }} className='w-full h-full' resizeMode='cover' />
       </View>

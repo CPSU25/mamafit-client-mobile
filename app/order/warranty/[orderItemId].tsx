@@ -356,13 +356,13 @@ export default function ViewWarrantyHistory() {
                       <View className='flex-1 gap-1 px-2 py-1 rounded-xl bg-orange-50 border border-orange-100'>
                         <View className='flex-row items-center gap-1.5'>
                           <MaterialCommunityIcons name='clock-outline' size={14} color='#ea580c' />
-                          <Text className='text-xs text-orange-600'>Dự kiến</Text>
+                          <Text className='text-xs text-orange-600'>Dự kiến xong</Text>
                         </View>
                         <Text className='text-xs font-inter-medium text-orange-600'>
                           <Text className='text-sm font-inter-medium text-orange-600'>
                             {item.warrantyRequestItems?.estimateTime
                               ? format(new Date(item.warrantyRequestItems?.estimateTime), 'MMM dd, yyyy')
-                              : 'Pending'}
+                              : 'N/A'}
                           </Text>
                         </Text>
                       </View>

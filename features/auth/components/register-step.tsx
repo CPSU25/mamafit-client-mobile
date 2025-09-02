@@ -55,7 +55,7 @@ export default function RegisterStep({ currentStep, setCurrentStep, setTabValue 
       formState: { errors }
     },
     sendCodeMutation: { mutate: sendCode, isPending: isSendingCode },
-    resendCodeMutation: { mutateAsync: resendCode },
+    resendCodeMutation: { mutateAsync: resendCode, isPending: isResendingCode },
     verifyCodeMutation: { mutate: verifyCode, isPending: isVerifyingCode },
     completeRegisterMutation: { mutate: completeRegister, isPending: isCompletingRegister }
   } = useRegister({
@@ -74,15 +74,17 @@ export default function RegisterStep({ currentStep, setCurrentStep, setTabValue 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (nextAppState === 'active' && currentStep === 2) {
-        resetCountdown()
-        start()
+        if (isReady) {
+          resetCountdown()
+          start()
+        }
       }
     })
 
     return () => {
       subscription.remove()
     }
-  }, [currentStep, resetCountdown, start])
+  }, [currentStep, resetCountdown, start, isReady])
 
   useEffect(() => {
     if (currentStep === 2) {
@@ -128,8 +130,12 @@ export default function RegisterStep({ currentStep, setCurrentStep, setTabValue 
   }
 
   const handleResendCode = async () => {
-    await resendCode({ email, phoneNumber: getValues('phoneNumber') })
-    start()
+    try {
+      await resendCode({ email, phoneNumber: getValues('phoneNumber') })
+      start()
+    } catch (error) {
+      console.error('Failed to resend code:', error)
+    }
   }
 
   switch (currentStep) {
@@ -148,6 +154,7 @@ export default function RegisterStep({ currentStep, setCurrentStep, setTabValue 
           handleResendCode={handleResendCode}
           isReady={isReady}
           timeLeft={timeLeft}
+          isResendingCode={isResendingCode}
         />
       )
     case 3:
@@ -235,6 +242,7 @@ interface VerifyCodeProps {
   email: string
   isReady: boolean
   timeLeft: number
+  isResendingCode: boolean
 }
 
 function VerifyCode({
@@ -247,7 +255,8 @@ function VerifyCode({
   handleResendCode,
   isReady,
   errors,
-  timeLeft
+  timeLeft,
+  isResendingCode
 }: VerifyCodeProps) {
   return (
     <View className='flex-1 flex flex-col mt-6'>
@@ -301,8 +310,14 @@ function VerifyCode({
         Sai email? <Text className='text-primary font-inter-semibold'>Gửi đến email khác</Text>
       </Text>
       <View className='flex-1' />
-      <Button onPress={handleResendCode} disabled={!isReady || isVerifyingCode} style={{ marginBottom: bottom }}>
-        <Text className='font-inter-medium'>{isReady ? 'Gửi lại' : `Gửi lại trong (${timeLeft}s)`} </Text>
+      <Button
+        onPress={handleResendCode}
+        disabled={!isReady || isResendingCode || isVerifyingCode}
+        style={{ marginBottom: bottom }}
+      >
+        <Text className='font-inter-medium'>
+          {isResendingCode ? 'Đang gửi...' : isReady ? 'Gửi lại' : `Gửi lại trong (${timeLeft}s)`}
+        </Text>
       </Button>
     </View>
   )
@@ -348,7 +363,7 @@ function CreatePassword({
       {isFormError(errors, 'password') && <FieldError message={errors.password?.message || ''} />}
       <View className='flex-1' />
       <Button onPress={handleSubmit(onSubmit)} disabled={isCompletingRegister} style={{ marginBottom: bottom }}>
-        <Text className='font-inter-medium'>{isCompletingRegister ? 'Đang Tạo...' : 'Tạo Tài Khoản'}</Text>
+        <Text className='font-inter-medium'>{isCompletingRegister ? 'Đang tạo...' : 'Tạo tài khoản'}</Text>
       </Button>
     </View>
   )
