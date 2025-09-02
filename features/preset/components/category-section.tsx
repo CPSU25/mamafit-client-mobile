@@ -3,9 +3,10 @@ import { Control, Controller, FieldValues, Path, UseFormSetValue, UseFormWatch }
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
 import { Text } from '~/components/ui/text'
 import { cn } from '~/lib/utils'
-import { useGetCategories } from '../hooks/use-get-categories'
+import { Category } from '~/types/common'
 
 interface CategorySectionProps<T extends FieldValues> {
+  categories: Category[] | undefined
   control: Control<T>
   watch: UseFormWatch<T>
   setValue: UseFormSetValue<T>
@@ -13,13 +14,12 @@ interface CategorySectionProps<T extends FieldValues> {
 }
 
 export default function CategorySection<T extends FieldValues>({
+  categories,
   control,
   watch,
   setValue,
   name
 }: CategorySectionProps<T>) {
-  const { data: categories } = useGetCategories()
-
   const scrollViewRef = useRef<ScrollView>(null)
   const [scrollViewWidth, setScrollViewWidth] = useState(0)
   const [categoryLayouts, setCategoryLayouts] = useState<{ [key: string]: { x: number; width: number } }>({})
@@ -68,36 +68,45 @@ export default function CategorySection<T extends FieldValues>({
         name={name}
         render={({ field: { value, onChange } }) => (
           <View className='flex-row gap-4 items-center p-4'>
-            {categories?.map((category) => (
-              <TouchableOpacity
-                key={category.id}
-                className={cn(
-                  'justify-center items-center gap-2 relative rounded-2xl',
-                  category.id === value ? 'bg-purple-50' : ''
-                )}
-                onPress={() => onChange(category.id)}
-                onLayout={(event) => handleCategoryLayout(category.id, event)}
-                style={{
-                  boxShadow: '0px 0px 4px 0px rgba(0, 0, 0, 0.2)'
-                }}
-              >
-                <Image source={{ uri: category.images[0] }} className='w-72 h-40 rounded-t-2xl' resizeMode='cover' />
-                <View className='flex-row items-center gap-2 mb-2'>
-                  {category.id === value ? (
-                    <View className='w-5 h-5 border border-primary rounded-full justify-center items-center'>
-                      <View className='w-3 h-3 bg-primary rounded-full' />
-                    </View>
-                  ) : (
-                    <View className='w-5 h-5 border border-border rounded-full' />
-                  )}
-                  <Text
-                    className={cn('text-center text-sm font-inter-medium', category.id === value ? 'text-primary' : '')}
+            {categories && Array.isArray(categories)
+              ? categories?.map((category) => (
+                  <TouchableOpacity
+                    key={category.id}
+                    className={cn(
+                      'justify-center items-center gap-2 relative rounded-2xl',
+                      category.id === value ? 'bg-purple-50' : ''
+                    )}
+                    onPress={() => onChange(category.id)}
+                    onLayout={(event) => handleCategoryLayout(category.id, event)}
+                    style={{
+                      boxShadow: '0px 0px 4px 0px rgba(0, 0, 0, 0.2)'
+                    }}
                   >
-                    {category.name}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ))}
+                    <Image
+                      source={{ uri: category.images[0] }}
+                      className='w-72 h-40 rounded-t-2xl'
+                      resizeMode='cover'
+                    />
+                    <View className='flex-row items-center gap-2 mb-2'>
+                      {category.id === value ? (
+                        <View className='w-5 h-5 border border-primary rounded-full justify-center items-center'>
+                          <View className='w-3 h-3 bg-primary rounded-full' />
+                        </View>
+                      ) : (
+                        <View className='w-5 h-5 border border-border rounded-full' />
+                      )}
+                      <Text
+                        className={cn(
+                          'text-center text-sm font-inter-medium',
+                          category.id === value ? 'text-primary' : ''
+                        )}
+                      >
+                        {category.name}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))
+              : null}
           </View>
         )}
       />

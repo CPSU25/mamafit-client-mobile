@@ -36,9 +36,11 @@ export default function DesignRequestInformation({
                 </View>
                 <View className='flex-1 h-20 justify-between'>
                   <View>
-                    <Text className='text-sm font-inter-medium'>{preset.name ? preset.name : 'Untitled Preset'}</Text>
-                    <View className='flex-row'>
-                      <Text className='text-xs text-muted-foreground ml-auto'>x1</Text>
+                    <Text className='text-sm font-inter-medium'>{preset.name ? preset.name : 'Váy bầu tùy chỉnh'}</Text>
+                    <View className='flex-row items-center gap-2'>
+                      <Text className='text-xs text-muted-foreground flex-1'>
+                        {preset?.sku ? `SKU: ${preset?.sku}` : ''}
+                      </Text>
                     </View>
                   </View>
                   <View className='items-end'>

@@ -72,12 +72,12 @@ export default function CurrentMeasurementsCard({ measurement, diaryId }: Curren
               }
               className='bg-white/10 rounded-xl px-3 py-2'
             >
-              <Text className='text-white text-xs font-inter-semibold'>Chỉnh Sửa Ngay!</Text>
+              <Text className='text-white text-xs font-inter-semibold'>Chỉnh sửa ngay!</Text>
             </TouchableOpacity>
           )}
           <Text className='text-white text-xs font-inter-medium lowercase'>
             {measurement?.updatedAt !== '0001-01-01T00:00:00'
-              ? `Cập nhật ${formatDistanceToNow(new Date(measurement?.updatedAt || ''))} trước`
+              ? `updated ${formatDistanceToNow(new Date(measurement?.updatedAt || ''))} ago`
               : 'chưa có thời gian'}
           </Text>
         </Animated.View>

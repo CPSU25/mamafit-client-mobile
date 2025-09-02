@@ -170,6 +170,7 @@ export interface Order {
   canceledAt: string | null
   canceledReason: string | null
   receivedAt: string | null
+  receivedAtBranch: string | null
   subTotalAmount: number
   warrantyCode: string | null
 }

@@ -1,14 +1,30 @@
 import { useRouter } from 'expo-router'
 import { ArrowLeft, ChevronRight, CircleUserRound, MapPin } from 'lucide-react-native'
 import { TouchableOpacity, View } from 'react-native'
+import { useNotifications } from '~/components/providers/notifications.provider'
 import SafeView from '~/components/safe-view'
+import { Button } from '~/components/ui/button'
 import { Icon } from '~/components/ui/icon'
 import { Separator } from '~/components/ui/separator'
 import { Text } from '~/components/ui/text'
+import { useLogout } from '~/features/auth/hooks/use-logout'
+import { useAuth } from '~/hooks/use-auth'
 import { PRIMARY_COLOR } from '~/lib/constants/constants'
 
 export default function SettingScreen() {
   const router = useRouter()
+  const { tokens } = useAuth()
+  const { expoPushToken } = useNotifications()
+
+  const {
+    logoutMutation: { mutate, isPending }
+  } = useLogout()
+
+  const handleLogout = async () => {
+    if (!tokens?.refreshToken || !expoPushToken) return
+
+    mutate({ refreshToken: tokens.refreshToken, notificationToken: expoPushToken })
+  }
 
   const handleGoBack = () => {
     if (router.canGoBack()) {
@@ -52,7 +68,15 @@ export default function SettingScreen() {
         </View>
         <Icon as={ChevronRight} size={20} color='lightgray' className='ml-auto' />
       </TouchableOpacity>
-      <Separator />
+
+      <View className='flex-1' />
+
+      <View className='px-4'>
+        <Text className='text-xs text-muted-foreground text-center mb-2'>MamaFit &copy; 2025</Text>
+        <Button variant='outline' onPress={handleLogout} disabled={isPending}>
+          <Text className='text-rose-500 font-inter-medium'>{isPending ? 'Đang đăng xuất...' : 'Đăng xuất'}</Text>
+        </Button>
+      </View>
     </SafeView>
   )
 }

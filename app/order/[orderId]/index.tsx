@@ -6,6 +6,7 @@ import { ArrowLeft } from 'lucide-react-native'
 import { useMemo, useRef, useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import BackToHomeButton from '~/components/back-to-home-button'
 import Loading from '~/components/loading'
 import { Card } from '~/components/ui/card'
 import { Icon } from '~/components/ui/icon'
@@ -14,6 +15,7 @@ import { Text } from '~/components/ui/text'
 import { useAddToCart } from '~/features/cart/hooks/use-add-to-cart'
 import { useGetDesignRequestPreset } from '~/features/design-request/hooks/use-get-design-request-preset'
 import { useGetDesignerInfo } from '~/features/design-request/hooks/use-get-designer-info'
+import { useGetFeedbackStatus } from '~/features/feedback/hooks/use-get-feedback-status'
 import DeliveryInformation from '~/features/order/components/order-detail/delivery-information'
 import DesignRequestInformation from '~/features/order/components/order-detail/design-request-information'
 import DesignRequestOrderItem from '~/features/order/components/order-detail/design-request-order-item'
@@ -36,7 +38,7 @@ import { useGetConfig } from '~/hooks/use-get-config'
 import { useRefreshs } from '~/hooks/use-refresh'
 import { styles } from '~/lib/constants/constants'
 import { cn } from '~/lib/utils'
-import { OrderItemType, OrderStatus, OrderType } from '~/types/order.type'
+import { DeliveryMethod, OrderItemType, OrderStatus, OrderType } from '~/types/order.type'
 import { PresetWithComponentOptions } from '~/types/preset.type'
 
 interface StyleConfig {
@@ -90,6 +92,11 @@ export default function ViewOrderDetailScreen() {
   const { orderId } = useLocalSearchParams() as { orderId: string }
 
   const { data: config, isLoading: isLoadingConfig, refetch: refetchConfig } = useGetConfig()
+  const {
+    data: feedbackStatus,
+    isLoading: isLoadingFeedbackStatus,
+    refetch: refetchFeedbackStatus
+  } = useGetFeedbackStatus(orderId)
 
   const {
     data: order,
@@ -183,17 +190,16 @@ export default function ViewOrderDetailScreen() {
   const isLoadingWarrantyOrder = isLoadingOrder || isLoadingCurrentUser || isLoadingConfig || isLoadingWarrantyDetail
   const isLoadingDesignRequestOrder = isLoadingOrder || isLoadingDesignerInfo || isLoadingDesignRequestDetail
 
-  const isLoading = isPresetOrder
-    ? isLoadingPresetOrder
-    : isWarrantyOrder
-      ? isLoadingWarrantyOrder
-      : isLoadingDesignRequestOrder
+  const isLoading =
+    (isPresetOrder ? isLoadingPresetOrder : isWarrantyOrder ? isLoadingWarrantyOrder : isLoadingDesignRequestOrder) ||
+    isLoadingFeedbackStatus
 
   const { refreshControl: presetRefreshControl } = useRefreshs([
     refetchOrder,
     refetchCurrentUser,
     refetchConfig,
-    refetchMilestones
+    refetchMilestones,
+    refetchFeedbackStatus
   ])
 
   const { refreshControl: warrantyRefreshControl } = useRefreshs([
@@ -201,13 +207,15 @@ export default function ViewOrderDetailScreen() {
     refetchCurrentUser,
     refetchConfig,
     refetchWarrantyRequestDetail,
-    refetchMilestones
+    refetchMilestones,
+    refetchFeedbackStatus
   ])
 
   const { refreshControl: designRefreshControl } = useRefreshs([
     refetchOrder,
     refetchDesignerInfo,
-    refetchDesignRequestDetail
+    refetchDesignRequestDetail,
+    refetchFeedbackStatus
   ])
 
   const { addToCartMutation } = useAddToCart()
@@ -263,12 +271,15 @@ export default function ViewOrderDetailScreen() {
           className='overflow-hidden flex-1'
           style={styles.container}
         >
-          <View className='relative z-10 px-4' style={{ paddingTop: Math.max(top + 20, 40) }}>
-            <TouchableOpacity onPress={handleGoBack} className='mb-6 mr-auto'>
-              <Icon as={ArrowLeft} size={24} color={styleConfig.textColor} />
-            </TouchableOpacity>
+          <View className='relative z-10' style={{ paddingTop: Math.max(top + 5, 20) }}>
+            <View className='flex-row items-center justify-between mb-4'>
+              <TouchableOpacity onPress={handleGoBack} className='p-4'>
+                <Icon as={ArrowLeft} size={24} color={styleConfig.textColor} />
+              </TouchableOpacity>
+              <BackToHomeButton color={styleConfig.textColor} className='p-4' />
+            </View>
 
-            <View className='flex-row items-center gap-2 mb-1'>
+            <View className='flex-row items-center gap-2 mb-1 px-4'>
               <MaterialCommunityIcons name={icon} size={20} color={styleConfig.iconColor} />
               <Text style={{ color: styleConfig.textColor }} className='font-inter-semibold flex-1'>
                 {title}
@@ -280,12 +291,12 @@ export default function ViewOrderDetailScreen() {
                 color: styleConfig.textColor,
                 opacity: 0.85
               }}
-              className='text-xs'
+              className='text-xs px-4'
             >
               {description}
             </Text>
 
-            <View className='flex-row justify-end space-x-1 mt-2'>
+            <View className='flex-row justify-end space-x-1 mt-2 pr-4'>
               {[...Array(3)].map((_, i) => (
                 <View
                   key={i}
@@ -327,7 +338,7 @@ export default function ViewOrderDetailScreen() {
                     deliveryMethod={order?.deliveryMethod}
                     address={order?.address}
                     branch={order?.branch}
-                    fullName={currentUser?.fullName}
+                    fullName={currentUser?.fullName || currentUser?.userEmail?.split('@')[0]}
                     phoneNumber={currentUser?.phoneNumber}
                   />
                 ) : null}
@@ -470,11 +481,12 @@ export default function ViewOrderDetailScreen() {
             </ScrollView>
 
             {order?.status === OrderStatus.Created ||
-            order?.status === OrderStatus.Completed ||
-            order?.status === OrderStatus.Delevering ||
+            (order?.status === OrderStatus.Completed && !feedbackStatus) ||
+            (order?.status === OrderStatus.Delevering && order?.deliveryMethod === DeliveryMethod.Delivery) ||
             order?.status === OrderStatus.AwaitingPaidWarranty ||
-            order?.status === OrderStatus.AwaitingPaidRest ? (
-              <OrderDetailsActions orderId={order?.id} status={order?.status} bottom={bottom} orderCode={order?.code} />
+            order?.status === OrderStatus.AwaitingPaidRest ||
+            (order?.status === OrderStatus.ReceivedAtBranch && order?.deliveryMethod === DeliveryMethod.PickUp) ? (
+              <OrderDetailsActions order={order} bottom={bottom} />
             ) : null}
           </Card>
         </LinearGradient>

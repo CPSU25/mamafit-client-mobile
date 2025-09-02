@@ -369,7 +369,9 @@ export default function RateOrderForm({ orderItem, index }: RateOrderFormProps) 
                 </Text>
 
                 <View className='flex-row items-center gap-2'>
-                  <Text className='text-xs text-muted-foreground flex-1'>{orderItem?.designRequest?.description}</Text>
+                  <Text className='text-xs text-muted-foreground flex-1' numberOfLines={2}>
+                    {orderItem?.designRequest?.description}
+                  </Text>
                 </View>
               </View>
               <View className='items-end'>
