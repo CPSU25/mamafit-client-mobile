@@ -87,7 +87,7 @@ export default function ViewProfile({
       <View className='px-4 pt-4 flex-row items-center justify-between'>
         <View className='flex-row items-center gap-2'>
           <Icon as={Edit} size={18} color={PRIMARY_COLOR.LIGHT} />
-          <Text className='font-inter-medium text-sm'>Edit Profile</Text>
+          <Text className='font-inter-medium text-sm'>Chỉnh sửa thông tin</Text>
         </View>
         <Switch checked={isEditMode} onCheckedChange={setIsEditMode} />
       </View>
@@ -127,41 +127,43 @@ export default function ViewProfile({
           )}
         </View>
 
-        <View className='gap-2'>
-          <View>
-            <Text className='font-inter-medium text-sm'>Tên đăng nhập</Text>
-            <Text className='text-xs text-muted-foreground'>Dùng để đăng nhập vào hệ thống</Text>
+        {user?.createdBy !== 'GoogleOAuth' && (
+          <View className='gap-2'>
+            <View>
+              <Text className='font-inter-medium text-sm'>Tên đăng nhập</Text>
+              <Text className='text-xs text-muted-foreground'>Dùng để đăng nhập vào hệ thống</Text>
+            </View>
+
+            {isEditMode ? (
+              <Controller
+                control={control}
+                name='userName'
+                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                  <View>
+                    <Input
+                      StartIcon={<Icon as={UserRound} size={18} color={PRIMARY_COLOR.LIGHT} />}
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      placeholder='Enter username'
+                      className={error ? 'border-destructive' : ''}
+                    />
+                    {error && <Text className='text-destructive text-xs mt-1'>{error.message}</Text>}
+                  </View>
+                )}
+              />
+            ) : (
+              <Input
+                StartIcon={<Icon as={UserRound} size={18} color={PRIMARY_COLOR.LIGHT} />}
+                value={user.userName || 'N/A'}
+                editable={false}
+                className='text-muted-foreground text-xs'
+              />
+            )}
           </View>
+        )}
 
-          {isEditMode ? (
-            <Controller
-              control={control}
-              name='userName'
-              render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-                <View>
-                  <Input
-                    StartIcon={<Icon as={UserRound} size={18} color={PRIMARY_COLOR.LIGHT} />}
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    placeholder='Enter username'
-                    className={error ? 'border-destructive' : ''}
-                  />
-                  {error && <Text className='text-destructive text-xs mt-1'>{error.message}</Text>}
-                </View>
-              )}
-            />
-          ) : (
-            <Input
-              StartIcon={<Icon as={UserRound} size={18} color={PRIMARY_COLOR.LIGHT} />}
-              value={user.userName || 'N/A'}
-              editable={false}
-              className='text-muted-foreground text-xs'
-            />
-          )}
-        </View>
-
-        {isEditMode && (
+        {isEditMode && user?.createdBy !== 'GoogleOAuth' && (
           <View className='gap-2'>
             <View className='flex-row items-center justify-between'>
               <View>
@@ -227,7 +229,7 @@ export default function ViewProfile({
           </>
         )}
 
-        {!isEditMode && (
+        {!isEditMode && user?.createdBy !== 'GoogleOAuth' && (
           <View className='gap-2'>
             <View>
               <Text className='font-inter-medium text-sm'>Mật khẩu</Text>
@@ -247,7 +249,7 @@ export default function ViewProfile({
             <Text className='font-inter-medium text-sm'>Email</Text>
             <Text className='text-xs text-muted-foreground'>Nhận hóa đơn và thông tin khác</Text>
           </View>
-          {isEditMode ? (
+          {isEditMode && user?.createdBy !== 'GoogleOAuth' ? (
             <Controller
               control={control}
               name='userEmail'

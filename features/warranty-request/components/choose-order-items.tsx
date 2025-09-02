@@ -1,5 +1,4 @@
-import { useRouter } from 'expo-router'
-import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { InfoCard } from '~/components/ui/alert-card'
 import { Button } from '~/components/ui/button'
@@ -33,8 +32,6 @@ export default function ChooseOrderItems({
   handleNext,
   isDisabled
 }: ChooseOrderItemsProps) {
-  const router = useRouter()
-
   return (
     <View className='flex-1'>
       <FlatList
@@ -42,14 +39,12 @@ export default function ChooseOrderItems({
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           orderRequests && Array.isArray(orderRequests) && orderRequests.length > 0 ? (
-            <TouchableOpacity onPress={() => router.push('/order/warranty/policy')}>
-              <InfoCard delay={100} title='Chính sách bảo hành'>
-                <Text className='text-xs text-sky-600 dark:text-sky-500'>
-                  Mỗi món hàng có {warrantyCount} yêu cầu bảo hành miễn phí. Các yêu cầu sau đó có thể tính phí dịch vụ{' '}
-                  <Text className='text-xs text-sky-600 font-inter-medium underline'>(nhấn để xem thêm)</Text>.
-                </Text>
-              </InfoCard>
-            </TouchableOpacity>
+            <InfoCard delay={100} title='Chính sách bảo hành'>
+              <Text className='text-xs text-sky-600 dark:text-sky-500'>
+                Mỗi món hàng có {warrantyCount} yêu cầu bảo hành miễn phí. Các yêu cầu sau đó có thể tính phí dịch
+                vụ.{' '}
+              </Text>
+            </InfoCard>
           ) : null
         }
         renderItem={({ item, index }) => (
